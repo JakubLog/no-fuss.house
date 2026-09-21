@@ -189,6 +189,7 @@
     transition: transform .9s var(--ease);
   }
   .ph span { position: relative; font: 400 12px/16px var(--mono); text-transform: uppercase; padding: 4px 8px; border: 1px dashed currentColor; }
+  .ph--img::before { display: none; } .ph--img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: scale .9s var(--ease); } .tile:hover .ph--img img { scale: 1.03; }
   .ph--sky { background: var(--shade-700); color: #fff; }
   .ph--lime { background: var(--accent); color: #101318; }
 
@@ -356,8 +357,8 @@
   <section class="section work tone-dark" id="realizacje">
     <div class="work__head mono" data-reveal><span class="fade">Produkty i realizacje</span><span class="fade" style="--i:1">[01]–[08]</span></div>
     <div class="work__grid">
-      <a class="tile tile--xl" href="case-ourmoney-v1.html" data-reveal><span class="tile__tag mono-sm">Własny produkt</span><div class="ph fade"><span>OurMoney — screen aplikacji 16:10</span></div><div class="tile__meta mono"><span>OurMoney — wspólny budżet dla par · case study</span><span>2026 <span class="arrow">→</span></span></div></a>
-      <a class="tile tile--l" href="https://aionmind.com" target="_blank" rel="noopener" data-reveal><span class="tile__tag mono-sm">Własny produkt</span><div class="ph ph--lime fade"><span>AION MIND — screen aplikacji</span></div><div class="tile__meta mono"><span>AION MIND — journaling z AI</span><span>2026 <span class="arrow">↗</span></span></div></a>
+      <a class="tile tile--xl" href="case-ourmoney-v2.html" data-reveal><span class="tile__tag mono-sm">Własny produkt</span><div class="ph ph--img fade"><img src="assets/ourmoney/og-image.png" alt="OurMoney: Razem ogarnijcie finanse" loading="lazy"></div><div class="tile__meta mono"><span>OurMoney — wspólny budżet dla par · case study</span><span>2026 <span class="arrow">→</span></span></div></a>
+      <a class="tile tile--l" href="case-aion-mind-v1.html" data-reveal><span class="tile__tag mono-sm">Własny produkt</span><div class="ph ph--img fade"><img src="assets/aion-mind/og-image.png" alt="AION MIND: przewodnicy i ekrany aplikacji" loading="lazy"></div><div class="tile__meta mono"><span>AION MIND — journaling z AI · case study</span><span>2026 <span class="arrow">→</span></span></div></a>
       <a class="tile tile--l" href="#" data-reveal><span class="tile__tag mono-sm">Produkt cyfrowy</span><div class="ph fade" style="--i:1"><span>Projekt 03</span></div><div class="tile__meta mono"><span>[Nazwa projektu 03]</span><span>[rok]</span></div></a>
       <a class="tile tile--m" href="#" data-reveal><span class="tile__tag mono-sm">Strona WWW</span><div class="ph ph--sky fade"><span>Projekt 04</span></div><div class="tile__meta mono"><span>[Projekt 04]</span><span>[rok] <span class="arrow">↗</span></span></div></a>
       <a class="tile tile--m" href="#" data-reveal><span class="tile__tag mono-sm">Strona WWW</span><div class="ph fade" style="--i:1"><span>Projekt 05</span></div><div class="tile__meta mono"><span>[Projekt 05]</span><span>[rok] <span class="arrow">↗</span></span></div></a>

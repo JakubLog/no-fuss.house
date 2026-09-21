@@ -21,6 +21,10 @@ Każda iteracja to osobny plik, poprzednich nie nadpisujemy.
 | `no-fuss-v4.html` | narracja duetu, liczba mnoga |
 | `no-fuss-v5.html` | **aktualna strona główna**, v4 + link do „O nas" |
 | `o-nas-v1.html` | podstrona „O nas" |
-| `case-ourmoney-v1.html` | case study OurMoney |
+| `case-ourmoney-v1.html` | case study OurMoney, wersja z ilustracjami (archiwum) |
+| `case-ourmoney-v2.html` | **aktualny** case OurMoney, tylko realne ekrany |
+| `case-aion-mind-v1.html` | case study AION MIND |
+| `assets/` | realne ekrany z ourmoney.pl i aionmind.com |
+| `.ux/audits/` | audyty UX |
 
 Treści w `[nawiasach]` to placeholdery.

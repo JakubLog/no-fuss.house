@@ -1,0 +1,167 @@
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>UX Audit: no-fuss, siatka 8 px i warianty typografii (strona główna v5, O nas v1, case OurMoney v1)</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&amp;display=swap" rel="stylesheet"><style>
+:root{--bg:#F7F4EE;--card:#FFFDF8;--ink:#1A1815;--muted:#6B655C;--line:#E2DBCE;
+--p0:#C0392B;--p1:#B8860B;--p2:#4F7A4A;--accent:#1A1815}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+font-family:Inter,'Helvetica Neue',Arial,sans-serif;line-height:1.6;font-size:16px}
+.wrap{max-width:820px;margin:0 auto;padding:56px 24px 96px}
+h1,h2,h3{font-family:Inter,'Helvetica Neue',Arial,sans-serif;font-weight:600;
+font-optical-sizing:auto;font-variation-settings:'opsz' 32;letter-spacing:-.022em;line-height:1.25}
+h1{font-size:2.1rem;margin:0 0 4px}
+h2{font-size:1.4rem;margin:48px 0 12px;padding-top:20px;border-top:1px solid var(--line)}
+h3{font-size:1.05rem;margin:28px 0 8px}
+p{margin:0 0 12px}
+ul{margin:0 0 14px;padding-left:20px}
+li{margin-bottom:6px}
+code{background:#EFE9DD;padding:1px 5px;border-radius:4px;font-size:.87em;
+font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+pre{background:#F1ECE1;border:1px solid var(--line);border-radius:8px;padding:14px 16px;
+overflow-x:auto;margin:0 0 16px;font-size:.85rem;line-height:1.5}
+pre code{background:none;padding:0;font-size:inherit}
+ul ul,ol ol,ul ol,ol ul{margin:6px 0 0}
+ol{margin:0 0 14px;padding-left:22px}
+a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+table{width:100%;border-collapse:collapse;margin:14px 0 20px;font-size:.93rem}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;font-size:.78rem;font-variation-settings:'opsz' 32;
+text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 8px}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:999px;
+padding:5px 13px;font-size:.8rem;color:var(--muted)}
+.chip b{color:var(--ink);font-weight:600}
+.tag{display:inline-block;border-radius:4px;padding:1px 7px;font-size:.74rem;
+font-weight:600;letter-spacing:.03em;vertical-align:middle}
+.ok{background:#E4EDE2;color:var(--p2)}
+.warn{background:#F5EBD2;color:var(--p1)}
+.scroll{overflow-x:auto}
+@media(max-width:640px){.wrap{padding:32px 16px 64px}h1{font-size:1.6rem}}
+</style></head><body><div class="wrap"><p style="color:var(--muted);margin:0 0 2px;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase">inne</p><h1>no-fuss, siatka 8 px i warianty typografii (strona główna v5, O nas v1, case OurMoney v1)</h1><div class="meta"><span class="chip">data: <b>2026-09-21</b></span><span class="chip">produkt: <b>inne</b></span><span class="chip">tryb: <b>hybrid</b></span><span class="chip">p0: <b>0</b></span><span class="chip">p1: <b>4</b></span><span class="chip">p2: <b>4</b></span></div><h3>🔍 UX Audit: no-fuss, siatka i typografia</h3>
+<p><strong>Kontekst</strong> Trzy aktualne strony no-fuss. Pytanie Magdy: czy wszystko stoi na siatce i rytmie 8 px, czy warianty fontów zgadzają się z DESIGN.md i czy nie ma ich za dużo. <strong>Materiał</strong> <code>no-fuss-v5.html</code>, <code>o-nas-v1.html</code>, <code>case-ourmoney-v1.html</code>, <code>DESIGN.md</code>. Pomiar z computed styles przy 1440×900 (skrypt zliczający unikalne zestawy font/rozmiar/interlinia/waga oraz paddingi, marginesy i gapy niebędące wielokrotnością 4 px). Ilustracje telefonu OurMoney i próbki dwóch języków wizualnych wyłączone z pomiaru, bo celowo pokazują cudzy system.</p>
+<h3>✅ Co działa dobrze</h3>
+<ul>
+<li>
+Metadane są zdyscyplinowane: Geist Mono występuje w dwóch rozmiarach (14/20 i 12/16) i niesie 198 z 310 zmierzonych elementów tekstowych. To się zgadza z DESIGN.md co do piksela. <code><span class="tag ok">ZWERYFIKOWANE</span></code>
+</li>
+<li>
+Dwie rodziny krojów na całej stronie, zero trzeciej poza case study, gdzie Instrument Serif jest cytatem z marki klienta. <code><span class="tag ok">ZWERYFIKOWANE</span></code>
+</li>
+<li>
+Makro-rytm jest czysty: guttery 56 px, sekcje 96 px, gap kafli 8 px, wysokości hero i stopki 100svh. Wszystko wielokrotności 8. <code><span class="tag ok">ZWERYFIKOWANE</span></code>
+</li>
+</ul>
+<h3>🔴 P0: krytyczne</h3>
+<p>Brak.</p>
+<h3>🟡 P1: ważne</h3>
+<p><strong>1. Za dużo wariantów kroju treści: 24 zestawy TikTok Sans wobec 4 w DESIGN.md</strong></p>
+<ul>
+<li>
+<strong>Problem:</strong> DESIGN.md definiuje dla TikTok Sans cztery role (display 700, statement 400, title 500, body 400). Na trzech stronach zmierzyłem 24 różne zestawy rozmiar/waga: strona główna 8, O nas 8, case study 12. Przykłady z samego case study: 187, 144, 101, 63, 40, 36, 32, 22, 21,6, 20 px.
+</li>
+<li>
+<strong>Soczewka:</strong> Nielsen, spójność i standardy.
+</li>
+<li>
+<strong>Dlaczego:</strong> każda nowa sekcja dostawała własny <code>clamp()</code>, więc skala nie jest skalą, tylko zbiorem wyjątków. Przy kolejnych podstronach będzie tylko rosło.
+</li>
+<li>
+<strong>Fix:</strong> zamknąć skalę w 7 tokenach CSS i używać wyłącznie ich: <code>--t-mega</code> (imiona, tytuł case), <code>--t-display</code>, <code>--t-h2</code>, <code>--t-statement</code>, <code>--t-title</code>, <code>--t-lead</code>, <code>--t-body</code>. Wszystkie <code>font:</code> w sekcjach zastąpić klasami.
+</li>
+<li>
+<strong>Status:</strong> <code><span class="tag ok">ZWERYFIKOWANE</span></code>
+</li>
+</ul>
+<p><strong>2. Waga 800 nie istnieje w DESIGN.md, a jest na każdej stronie</strong></p>
+<ul>
+<li>
+<strong>Problem:</strong> DESIGN.md zna wagi 400, 500, 700. W kodzie 800 mają: logo, imiona MAGDA/KUBA, tytuł OURMONEY, nagłówki kart postaci, „Oklej nas&quot;, cudzysłów w testimonialu, liczby, marquee. Do tego ten sam rozmiar 86,4 px występuje raz jako 700, raz jako 800 (<code>o-nas-v1.html</code>).
+</li>
+<li>
+<strong>Soczewka:</strong> Nielsen, spójność i standardy.
+</li>
+<li>
+<strong>Dlaczego:</strong> dwie prawie identyczne wagi display obok siebie wyglądają jak błąd, nie jak decyzja.
+</li>
+<li>
+<strong>Fix:</strong> decyzja Magdy, jedna z dwóch: (a) display zostaje 700 wszędzie, 800 znika; (b) 800 wchodzi do DESIGN.md jako osobna rola „mega&quot; tylko dla największych napisów, a wszystko ≤ display wraca na 700.
+</li>
+<li>
+<strong>Status:</strong> <code><span class="tag ok">ZWERYFIKOWANE</span></code>
+</li>
+</ul>
+<p><strong>3. Dwie różne siatki kolumn i stopka poza gutterem</strong></p>
+<ul>
+<li>
+<strong>Problem:</strong> hero i sekcja „o nas&quot; używają 12 kolumn bez gapu (kolumna 4 zaczyna się na 392 px), kafle, usługi i testimoniale używają 12 kolumn z gapem 8 px (kolumna 4 na 394 px, kolumna 7 na 724 zamiast 720). Stopka ma padding 64 px zamiast guttera 56 px, więc jej nagłówek startuje na 221 px, poza jakąkolwiek kolumną. Suwak „Zamieszanie&quot; jest pozycjonowany absolutnie (340 px szerokości, start na 988 px, czyli kolumna 8,4).
+</li>
+<li>
+<strong>Soczewka:</strong> Nielsen, estetyka i spójność.
+</li>
+<li>
+<strong>Dlaczego:</strong> strona ma stale widoczne linie siatki z pionem dokładnie na środku (720 px). Każde odchylenie treści o 2 do 4 px od tej linii widać gołym okiem, bo linia jest wzorcem.
+</li>
+<li>
+<strong>Fix:</strong> jedna definicja <code>.grid12 { grid-template-columns: repeat(12, 1fr); column-gap: 8px }</code> użyta wszędzie, stopka na <code>padding-inline: var(--gutter)</code>, suwak jako element siatki (<code>grid-column: 9 / span 4</code>).
+</li>
+<li>
+<strong>Status:</strong> <code><span class="tag ok">ZWERYFIKOWANE</span></code>
+</li>
+</ul>
+<p><strong>4. Mikro-odstępy poza rytmem 4/8 px</strong></p>
+<ul>
+<li>
+<strong>Problem:</strong> zmierzone wartości spoza wielokrotności 4: tagi i chipy <code>2×6</code> px, podpis kafla <code>margin-top: 10</code>, wiersze „Kto co robi&quot; <code>padding: 22</code> i <code>margin: 10</code>, chipy stacku <code>6×10</code>, meta case study <code>10</code> i <code>2</code>, marquee <code>28,8</code>, <code>mark</code> w nagłówku <code>6,9</code>, suwak <code>padding-bottom: 10</code>, akapity case <code>21,6</code>. Osobna grupa: wartości na siatce 4, ale nie 8 (gapy 12, paddingi 28 i 4).
+</li>
+<li>
+<strong>Soczewka:</strong> Nielsen, spójność i standardy.
+</li>
+<li>
+<strong>Dlaczego:</strong> DESIGN.md deklaruje <code>unit: 4px</code>, więc 12 i 28 są legalne, ale 2, 6, 10, 22 już nie. Część z nich to wartości w <code>em</code>, które dają ułamki (28,8, 21,6, 6,9).
+</li>
+<li>
+<strong>Fix:</strong> tokeny <code>--s1: 4px … --s12: 96px</code> i zamiana: 2×6 → 4×8, 10 → 8 albo 12, 22 → 24, 6×10 → 8×12, odstępy w <code>em</code> → tokeny px. Jeśli rytm ma być twardo 8, to dodatkowo 12 → 8 albo 16, 28 → 24 albo 32.
+</li>
+<li>
+<strong>Status:</strong> <code><span class="tag ok">ZWERYFIKOWANE</span></code>
+</li>
+</ul>
+<h3>🟢 P2: nice to have</h3>
+<ul>
+<li>
+Geist Mono 16/24 bez wersalików w hero (2 elementy) nie jest rolą z DESIGN.md → zamienić na body TikTok Sans 16/24 albo dopisać rolę <code>mono-lg</code>. <code><span class="tag ok">ZWERYFIKOWANE</span></code>
+</li>
+<li>
+Geist Mono 12/16 bez wersalików w kalkulatorze (3 elementy) łamie zasadę „mono zawsze wersalikami&quot; → dodać <code>text-transform</code>. <code><span class="tag ok">ZWERYFIKOWANE</span></code>
+</li>
+<li>
+<code>.line</code> ma <code>padding-bottom: .06em</code>, co daje ułamki 1,9 do 9,9 px → to kompensacja maski reveal, zostawić, ale opisać w DESIGN.md jako wyjątek. <code><span class="tag ok">ZWERYFIKOWANE</span></code>
+</li>
+<li>
+Interlinie nie siedzą na siatce bazowej 4 px (46,7, 39,6, 32,8, 29,2 px) → po zamknięciu skali ustawić interlinie tokenów na wielokrotności 4. <code><span class="tag ok">ZWERYFIKOWANE</span></code>
+</li>
+</ul>
+<h3>🔁 Regresje i powtórki</h3>
+<p>brak wcześniejszych audytów</p>
+<h3>📊 Ogólna ocena</h3>
+<div class="scroll"><table><thead><tr>
+<th>Wymiar</th>
+<th>Ocena (1-5)</th>
+<th>Komentarz</th>
+</tr></thead><tbody>
+<tr><td>Użyteczność</td><td>nie oceniano</td><td>poza zakresem tego audytu</td></tr>
+<tr><td>Spójność wizualna</td><td>3/5</td><td>makro-rytm i mono trzymają system, skala kroju treści i mikro-odstępy się rozjechały</td></tr>
+<tr><td>Flow konwersyjny</td><td>nie oceniano</td><td>poza zakresem</td></tr>
+<tr><td>Obsługa błędów</td><td>nie oceniano</td><td>poza zakresem</td></tr>
+</tbody></table></div>
+<h3>🎯 Top 3 priorytety do wdrożenia</h3>
+<ol>
+<li value="1">
+Zamknąć skalę typografii w 7 tokenach i rozstrzygnąć wagę 800 (P1.1 i P1.2), zaktualizować DESIGN.md.
+</li>
+<li value="2">
+Jedna siatka <code>.grid12</code> z gapem 8 px na wszystkich stronach, stopka i suwak wpięte w kolumny (P1.3).
+</li>
+<li value="3">
+Tokeny odstępów i wymiana wartości 2, 6, 10, 22 oraz odstępów w <code>em</code> (P1.4).
+</li>
+</ol></div></body></html>
