@@ -1,0 +1,25 @@
+# no-fuss
+
+Strona no-fuss: Magda Nestorowicz (design i produkt) i Kuba Fedoszczak (kod).
+Układ i motion wzorowane na haoqi.design, paleta z Figmy no-fuss. Tokeny i zasady: [DESIGN.md](DESIGN.md).
+
+Statyczny HTML, bez builda. Podgląd:
+
+```bash
+python3 -m http.server 4173
+```
+
+## Pliki
+
+Każda iteracja to osobny plik, poprzednich nie nadpisujemy.
+
+| Plik | Co to jest |
+|---|---|
+| `no-fuss-v1.html` | paleta oryginału (krem, czerń, błękitne hero) |
+| `no-fuss-v2.html` | paleta no-fuss: `#101318`, jasne sekcje `#FCFCFB`, limonka |
+| `no-fuss-v3.html` | OurMoney i AION MIND jako produkty własne |
+| `no-fuss-v4.html` | narracja duetu, liczba mnoga |
+| `no-fuss-v5.html` | **aktualna strona główna**, v4 + link do „O nas" |
+| `o-nas-v1.html` | podstrona „O nas" |
+
+Treści w `[nawiasach]` to placeholdery.
