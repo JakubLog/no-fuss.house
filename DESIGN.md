@@ -29,8 +29,8 @@ colors:
     "600": "#FFFFFFA3"
     "700": "#FFFFFFCC"
   grid:
-    line: "rgba(255,255,255,0.10)"   # rysowane w mix-blend-mode: difference
-    cross: "rgba(255,255,255,0.40)"
+    line: "rgba(255,255,255,0.05)"   # rysowane w mix-blend-mode: difference
+    cross: "rgba(255,255,255,0.18)"
 typography:
   display:
     family: "TikTok Sans"            # OFL, Google Fonts
@@ -96,8 +96,7 @@ które nic nie niosą.
 
 Paleta no-fuss: głęboki grafit `#101318`, jasne `#FCFCFB`, jeden neonowy akcent `#BBFF00`.
 Strona jest **mieszana tonalnie**: hero i stopka są zawsze ciemne, sekcje treści naprzemiennie
-jasne (`tone-light`) i ciemne (`tone-dark`). Przełącznik motywu (`A`) zamienia jasne sekcje
-na ciemne (`#101318` / `#15181D` na zmianę), hero i stopka zostają bez zmian.
+jasne (`tone-light`) i ciemne (`tone-dark`). Przełącznika motywu nie ma (usunięty 2026-09-21): tonacja wynika wyłącznie z rytmu sekcji.
 
 Akcent występuje jako **tło** (tagi, zaznaczenie, `mark` w nagłówku, pasek preloadera) z tekstem
 `#101318`, a na ciemnym także jako kolor obiektu 3D, kursora i poświaty w hero. Nigdy jako tekst
@@ -139,7 +138,7 @@ Siatka 12 kolumn, gutter 16 px (mobile) / 56 px (desktop), sekcje z paddingiem p
 asymetrycznie: duży kafel na 8 kolumn dosunięty do prawej, potem pary 5+5, potem trójki
 o różnych offsetach. Pod każdym kaflem wiersz mono: nazwa po lewej, rok po prawej.
 
-Nad całością leży stała warstwa `position: fixed`:
+Stała warstwa `position: fixed` (siatka ma najniższy z-index: nad tłami sekcji, pod całą treścią; HUD leży na wierzchu):
 - **siatka**: 3 piony (lewy gutter, środek, prawy gutter) i 2 poziomy (⅓ i ⅔ wysokości),
   z przerwą 12 px wokół przecięć i krzyżykiem 12 px w każdym przecięciu; rysowana na biało
   w `mix-blend-mode: difference`, więc sama odwraca się na każdym tle,
@@ -203,3 +202,12 @@ dla par, budowany razem) i AION MIND (aplikacja do journalingu z AI, budowana pr
 - **Kto co robi**: tor 2 px z rombem w kolorze akcentu; pozycja rombu (`--v`) animuje się od środka.
 - **Oklej nas**: naklejki przeciągane wskaźnikiem, dotykiem i strzałkami z klawiatury.
 - Okrągłe kształty dozwolone tylko w warstwie zabawy (odznaka, naklejki), nie w UI.
+
+## Komponenty dodane 2026-09-21
+
+- **Suwak „Zamieszanie"** (hero): `input[type=range]`, tor 2 px, uchwyt w kształcie rombu w kolorze akcentu.
+  0% = litery napisu 3D w porządku, 100% = litery rozrzucone, obrócone i drgające. Domyślnie 0.
+- **Testimonial**: kafel `tile` lub limonkowy, cytat w kroju statement, cudzysłów 96 px w akcencie,
+  podpis mono z kwadratowym awatarem 44 px. Układ 7 + 5, trzeci kafel z offsetem.
+- **E-mail**: klik kopiuje adres do schowka i na 1,8 s zamienia etykietę na „Skopiowano ✓";
+  bez Clipboard API działa jak zwykły `mailto:`.

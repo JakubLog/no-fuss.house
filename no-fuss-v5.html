@@ -68,7 +68,10 @@
   .preloader__fill { height: 100%; width: 100%; background: #BBFF00; border-radius: 2px; transform: scaleX(0); transform-origin: left; }
 
   /* ---------- Stała siatka (difference) ---------- */
-  .gridlines { position: fixed; inset: 0; z-index: 20; pointer-events: none; mix-blend-mode: difference; }
+  .gridlines { position: fixed; inset: 0; z-index: 1; pointer-events: none; mix-blend-mode: difference; }
+  /* siatka leży nad tłami sekcji, ale pod całą treścią */
+  :where(.hero, .section, .footer, .duo__p) > :where(*) { z-index: 2; }
+  :where(.section) > :where(*) { position: relative; }
   .gridlines svg { display: block; width: 100%; height: 100%; shape-rendering: crispEdges; }
 
   /* ---------- HUD ---------- */
@@ -134,6 +137,17 @@
     .hero__top p:nth-of-type(2) { grid-column: 7 / span 6; }
     .hero__headline { order: 2; }
   }
+  .fuss { grid-column: 1 / -1; order: 0; display: flex; align-items: center; gap: 12px; margin-bottom: 16px; color: #fff; }
+  .no-webgl .fuss { display: none; }
+  .fuss output { font-variant-numeric: tabular-nums; min-width: 4ch; text-align: right; }
+  .fuss input { -webkit-appearance: none; appearance: none; flex: 1; max-width: 220px; height: 24px; background: transparent; margin: 0; }
+  .fuss input::-webkit-slider-runnable-track { height: 2px; background: rgba(255,255,255,.4); }
+  .fuss input::-moz-range-track { height: 2px; background: rgba(255,255,255,.4); }
+  .fuss input::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; margin-top: -7px; background: var(--accent); border: 2px solid #101318; outline: 1px solid var(--accent); rotate: 45deg; }
+  .fuss input::-moz-range-thumb { width: 12px; height: 12px; background: var(--accent); border: 2px solid #101318; outline: 1px solid var(--accent); border-radius: 0; rotate: 45deg; }
+  .fuss input:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+  @media (min-width: 1024px) { .fuss { position: absolute; right: var(--gutter); bottom: var(--section-y); width: 340px; margin: 0; padding: 0 8px 10px 0; justify-content: flex-end; } }
+
   .display { font: 700 clamp(2.25rem, 7.2svw, 5.5rem)/1 var(--sans); text-transform: uppercase; letter-spacing: -.01em; }
   @media (min-width: 1024px) { .display { font-size: clamp(3rem, 6svw, 5.5rem); } }
 
@@ -212,6 +226,25 @@
     .service__desc { grid-column: 9 / span 4; }
   }
 
+
+  /* ---------- Testimoniale ---------- */
+  .quotes { display: grid; grid-template-columns: repeat(12, 1fr); gap: 8px; }
+  .quote { grid-column: 1 / -1; background: var(--tile); color: var(--tile-ink); padding: 28px 24px; display: flex; flex-direction: column; justify-content: space-between; gap: 40px; min-height: 280px; position: relative; }
+  .quote::before { content: "“"; position: absolute; top: 4px; right: 20px; font: 800 96px/1 var(--sans); color: var(--accent); }
+  .quote blockquote { font: 400 clamp(1.25rem, 1.9svw, 1.75rem)/1.2 var(--sans); letter-spacing: -.01em; max-width: 30ch; padding-right: 48px; }
+  .quote figcaption { display: flex; align-items: center; gap: 12px; }
+  .quote figcaption .ph { width: 44px; height: 44px; flex: none; background: var(--accent); }
+  .quote figcaption .ph::before { opacity: .25; color: #101318; }
+  .quote figcaption small { display: block; opacity: .64; font: inherit; }
+  .quote--lime { background: var(--accent); color: var(--on-accent); }
+  .quote--lime::before { color: #101318; }
+  .quote--lime figcaption .ph { background: #101318; }
+  @media (min-width: 900px) {
+    .quote:nth-child(1) { grid-column: 1 / span 7; }
+    .quote:nth-child(2) { grid-column: 8 / span 5; }
+    .quote:nth-child(3) { grid-column: 4 / span 6; }
+  }
+
   /* ---------- Stopka ---------- */
   .footer {
     position: relative; min-height: 100svh; overflow: hidden;
@@ -220,7 +253,7 @@
   }
   @media (min-width: 1024px) { .footer { padding: 64px; } }
   .footer .hero__bg { z-index: 0; }
-  .footer__cta { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(12, 1fr); gap: 8px; }
+  .footer__cta { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(12, 1fr); gap: 8px; }
   .footer__cta .l1 { grid-column: 1 / -1; }
   .footer__cta .l2 { grid-column: 1 / -1; }
   .footer__cta .l3 { grid-column: 1 / -1; }
@@ -230,7 +263,7 @@
     .footer__cta .l3 { grid-column: 4 / -1; }
   }
   .footer__cta mark { background: var(--accent); color: var(--on-accent); padding: 0 .08em; }
-  .footer__bottom { position: absolute; z-index: 1; left: var(--gutter); right: var(--gutter); bottom: var(--section-y); display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: space-between; }
+  .footer__bottom { position: absolute; z-index: 2; left: var(--gutter); right: var(--gutter); bottom: var(--section-y); display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: space-between; }
   .footer__bottom nav { display: flex; gap: 24px; }
   .footer__bottom a { border-bottom: 1px solid transparent; transition: border-color .2s; }
   .footer__bottom a:hover { border-color: currentColor; }
@@ -269,7 +302,6 @@
       <a href="#realizacje" data-scramble>Realizacje</a>
       <a href="o-nas-v1.html" data-scramble>O nas</a>
       <a href="#kontakt" data-scramble>Kontakt</a>
-      <button type="button" id="themeBtn" class="hide-s" data-scramble aria-label="Przełącz motyw jasny/ciemny, skrót A">Motyw[A]</button>
     </nav>
   </div>
   <div class="hud__row mono">
@@ -292,6 +324,13 @@
       <h2 class="hero__role fade" style="--i:3">Design &amp;<br>Development</h2>
       <p class="fade" style="--i:4">Myślimy systemami. Projektujemy z&nbsp;troską.</p>
       <p class="fade" style="--i:5">no-fuss to Magda Nestorowicz i&nbsp;Kuba Fedoszczak. Magda odpowiada za design i&nbsp;produkt, Kuba za kod. Razem budujemy OurMoney, a&nbsp;Magda także AION&nbsp;MIND.</p>
+    </div>
+
+    <div class="fuss mono-sm fade" style="--i:6">
+      <label for="fussRange">Zamieszanie</label>
+      <input type="range" id="fussRange" min="0" max="100" value="0" step="1" aria-describedby="fussHint">
+      <output id="fussOut" for="fussRange">000%</output>
+      <span class="sr-only" id="fussHint">Suwak miesza litery napisu no fuss w tle. Zero oznacza porządek.</span>
     </div>
 
     <h1 class="hero__headline display" aria-label="Robimy digital bez zbędnego zamieszania">
@@ -338,6 +377,16 @@
       <div class="service" data-reveal><span class="service__no mono fade">04</span><h3 class="service__name"><span class="line"><span>[Usługa 04]</span></span></h3><p class="service__desc fade" style="--i:2">[PLACEHOLDER: jedno zdanie o zakresie i efekcie dla klienta.]</p></div>
     </div>
   </section>
+
+  <!-- ================= TESTIMONIALE ================= -->
+  <section class="section tone-dark" id="opinie" style="background: var(--bg)">
+    <div class="work__head mono" data-reveal><span class="fade">Co mówią klienci</span><span class="fade" style="--i:1">[placeholdery]</span></div>
+    <div class="quotes">
+      <figure class="quote" data-reveal><blockquote class="fade">[PLACEHOLDER: opinia klienta, 2–3 zdania. Najlepiej konkret: co zrobiliśmy i&nbsp;co to dało.]</blockquote><figcaption class="mono-sm fade" style="--i:2"><span class="ph" aria-hidden="true"></span><span>[Imię i&nbsp;nazwisko]<small>[Rola, firma]</small></span></figcaption></figure>
+      <figure class="quote quote--lime" data-reveal><blockquote class="fade" style="--i:1">[PLACEHOLDER: krótka opinia, jedno mocne zdanie.]</blockquote><figcaption class="mono-sm fade" style="--i:3"><span class="ph" aria-hidden="true"></span><span>[Imię i&nbsp;nazwisko]<small>[Rola, firma]</small></span></figcaption></figure>
+      <figure class="quote" data-reveal><blockquote class="fade">[PLACEHOLDER: opinia klienta, 2–3 zdania.]</blockquote><figcaption class="mono-sm fade" style="--i:2"><span class="ph" aria-hidden="true"></span><span>[Imię i&nbsp;nazwisko]<small>[Rola, firma]</small></span></figcaption></figure>
+    </div>
+  </section>
 </main>
 
 <!-- ================= STOPKA ================= -->
@@ -350,7 +399,7 @@
     <span class="line l3" style="--i:2"><span>bez <mark>zamieszania</mark></span></span>
   </h2>
   <div class="footer__bottom mono">
-    <a href="mailto:[email]" data-scramble>[email@no-fuss]</a>
+    <a href="mailto:[email@no-fuss]" data-copy="[email@no-fuss]" data-scramble>[email@no-fuss]</a><span class="sr-only" role="status" id="copyStatus"></span>
     <nav aria-label="Social"><a href="#" data-scramble>[Instagram]</a><a href="#" data-scramble>[LinkedIn]</a><a href="#" data-scramble>[Behance]</a></nav>
     <span>NO-FUSS (C) 2026</span>
   </div>
@@ -370,13 +419,6 @@
   const $ = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 
-  /* ---- motyw ---- */
-  const setTheme = t => { root.classList.toggle('dark', t === 'dark'); root.classList.toggle('light', t !== 'dark'); try { localStorage.setItem('nf-theme', t); } catch (e) {} window.dispatchEvent(new CustomEvent('themechange', { detail: t })); };
-  try { const s = localStorage.getItem('nf-theme'); if (s) setTheme(s); } catch (e) {}
-  const toggleTheme = () => setTheme(root.classList.contains('dark') ? 'light' : 'dark');
-  $('#themeBtn').addEventListener('click', toggleTheme);
-  addEventListener('keydown', e => { if (e.key.toLowerCase() === 'a' && !e.metaKey && !e.ctrlKey && !e.altKey && !/input|textarea/i.test(e.target.tagName)) { toggleTheme(); scramble($('#themeBtn')); } });
-
   /* ---- scramble ---- */
   const CH = '!<>-_\\/[]{}=+*^?#%';
   function scramble(el) {
@@ -391,6 +433,22 @@
   }
   $$('[data-scramble]').forEach(el => { el.addEventListener('mouseenter', () => scramble(el)); el.addEventListener('focus', () => scramble(el)); });
 
+  /* ---- suwak zamieszania ---- */
+  const fr = $('#fussRange');
+  if (fr) fr.addEventListener('input', () => { $('#fussOut').textContent = String(fr.value).padStart(3, '0') + '%'; window.dispatchEvent(new CustomEvent('fusschange', { detail: fr.value / 100 })); });
+
+  /* ---- email: klik kopiuje adres ---- */
+  $$('[data-copy]').forEach(el => el.addEventListener('click', async e => {
+    if (!navigator.clipboard) return;            // brak API: zostaje zwykły mailto
+    e.preventDefault();
+    try {
+      await navigator.clipboard.writeText(el.dataset.copy);
+      const txt = el.dataset.txt || (el.dataset.txt = el.textContent);
+      el._sc = true; el.textContent = 'Skopiowano ✓'; $('#copyStatus').textContent = 'Adres e-mail skopiowany do schowka';
+      clearTimeout(el._t); el._t = setTimeout(() => { el._sc = false; el.textContent = txt; $('#copyStatus').textContent = ''; }, 1800);
+    } catch (err) { location.href = el.href; }
+  }));
+
   /* ---- siatka z krzyżykami ---- */
   const gridSvg = $('#gridSvg');
   function drawGrid() {
@@ -401,7 +459,7 @@
     ys.forEach(py => { let x0 = 0; [...xs, w + gap].forEach(px => { hz += `M${x0} ${py}H${px - gap}`; x0 = px + gap; }); });
     xs.forEach(px => ys.forEach(py => { x += `M${px} ${py - c}V${py + c}M${px - c} ${py}H${px + c}`; }));
     gridSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-    gridSvg.innerHTML = `<path d="${v}${hz}" stroke="rgba(255,255,255,.1)" fill="none"/><path d="${x}" stroke="rgba(255,255,255,.4)" fill="none"/>`;
+    gridSvg.innerHTML = `<path d="${v}${hz}" stroke="rgba(255,255,255,.05)" fill="none"/><path d="${x}" stroke="rgba(255,255,255,.18)" fill="none"/>`;
   }
   drawGrid(); addEventListener('resize', drawGrid);
 
@@ -460,7 +518,7 @@
       coords.textContent = `${pad(tx)} X ${pad(ty)} Y`;
       cur.classList.toggle('is-link', !!e.target.closest?.('a,button'));
       const zone = e.target.closest?.('[data-stickers]');
-      if (zone && Math.hypot(tx - last.x, ty - last.y) > 170) {
+      if (zone && !e.target.closest('.fuss') && Math.hypot(tx - last.x, ty - last.y) > 170) {
         last = { x: tx, y: ty };
         const layer = $('.stickers', zone), r = zone.getBoundingClientRect(), el = document.createElement('div');
         el.className = 'sticker'; el.innerHTML = STICKERS[idx++ % STICKERS.length];
@@ -502,12 +560,24 @@
     const group = new THREE.Group(); scene.add(group);
     let baseW = 1;
 
+    const letters = []; let fuss = 0, fussT = 0;
+    const rnd = (i, k) => { const x = Math.sin(i * 127.1 + k * 311.7) * 43758.5453; return (x - Math.floor(x)) * 2 - 1; };
     new FontLoader().load('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/fonts/helvetiker_bold.typeface.json', font => {
-      const geo = new TextGeometry('no fuss', { font, size: 2, height: .5, curveSegments: 16, bevelEnabled: true, bevelThickness: .34, bevelSize: .2, bevelSegments: 14 });
-      geo.center(); geo.computeBoundingBox(); baseW = geo.boundingBox.max.x - geo.boundingBox.min.x;
-      const mesh = new THREE.Mesh(geo, mat); mesh.rotation.set(-.12, 0, .06); group.add(mesh);
-      fit();
+      const size = 2, k = size / font.data.resolution; let x = 0;
+      [...'no fuss'].forEach((ch, i) => {
+        const adv = (font.data.glyphs[ch] || font.data.glyphs['o']).ha * k;
+        if (ch !== ' ') {
+          const geo = new TextGeometry(ch, { font, size, height: .5, curveSegments: 16, bevelEnabled: true, bevelThickness: .34, bevelSize: .2, bevelSegments: 14 });
+          geo.computeBoundingBox(); const bb = geo.boundingBox, cx = (bb.max.x + bb.min.x) / 2, cy = (bb.max.y + bb.min.y) / 2;
+          geo.translate(-cx, -cy, -.25);
+          const mesh = new THREE.Mesh(geo, mat); mesh.userData = { x: x + cx, y: cy, i }; group.add(mesh); letters.push(mesh);
+        }
+        x += adv;
+      });
+      baseW = x; letters.forEach(m => { m.userData.x -= x / 2; m.userData.y -= size * .36; });
+      group.rotation.set(-.12, 0, .06); fit();
     });
+    addEventListener('fusschange', e => fussT = e.detail);
 
     function fit() {
       const w = hero.clientWidth, h = hero.clientHeight;
@@ -528,9 +598,16 @@
     (function render() {
       requestAnimationFrame(render); if (!visible) return;
       const t = clock.getElapsedTime();
+      fuss += (fussT - fuss) * .12;
+      const wob = reduced ? 0 : 1;
+      letters.forEach(m => { const { x, y, i } = m.userData, f = fuss, w = wob * f;
+        m.position.set(x + rnd(i, 1) * 1.1 * f + Math.sin(t * 1.7 + i) * .12 * w, y + rnd(i, 2) * 1.5 * f + Math.cos(t * 2.1 + i * 2) * .16 * w, rnd(i, 3) * 1.6 * f);
+        m.rotation.set(rnd(i, 4) * 1.2 * f + Math.sin(t * 1.3 + i) * .25 * w, rnd(i, 5) * 1.4 * f, rnd(i, 6) * 1.9 * f + Math.cos(t * 1.9 + i) * .2 * w);
+        m.scale.setScalar(1 + rnd(i, 7) * .35 * f);
+      });
       if (!reduced) {
         group.rotation.y += ((mx * .5) - group.rotation.y) * .05;
-        group.rotation.x += ((my * .3 + Math.sin(t * .6) * .04) - group.rotation.x) * .05;
+        group.rotation.x += ((-.12 + my * .3 + Math.sin(t * .6) * .04) - group.rotation.x) * .05;
         group.position.z = Math.sin(t * .8) * .15;
       }
       renderer.render(scene, camera);
