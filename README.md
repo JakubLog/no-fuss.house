@@ -21,5 +21,6 @@ Każda iteracja to osobny plik, poprzednich nie nadpisujemy.
 | `no-fuss-v4.html` | narracja duetu, liczba mnoga |
 | `no-fuss-v5.html` | **aktualna strona główna**, v4 + link do „O nas" |
 | `o-nas-v1.html` | podstrona „O nas" |
+| `case-ourmoney-v1.html` | case study OurMoney |
 
 Treści w `[nawiasach]` to placeholdery.
