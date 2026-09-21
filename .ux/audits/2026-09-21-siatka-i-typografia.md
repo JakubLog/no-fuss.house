@@ -73,3 +73,12 @@ brak wcześniejszych audytów
 1. Zamknąć skalę typografii w 7 tokenach i rozstrzygnąć wagę 800 (P1.1 i P1.2), zaktualizować DESIGN.md.
 2. Jedna siatka `.grid12` z gapem 8 px na wszystkich stronach, stopka i suwak wpięte w kolumny (P1.3).
 3. Tokeny odstępów i wymiana wartości 2, 6, 10, 22 oraz odstępów w `em` (P1.4).
+
+### ✅ Wdrożone
+2026-09-21, w `no-fuss-v5.html`, `o-nas-v1.html`, `case-ourmoney-v2.html`, `case-aion-mind-v1.html`:
+- P1.1: skala zamknięta w tokenach `--t-*`. Pomiar po zmianie przy 1440 px: 7 rozmiarów TikTok Sans (165,6 / 86,4 / 47,5 / 43,2 / 31,7 / 20,2 / 16) zamiast 24 zestawów. `[zweryfikowane]`
+- P1.2: waga 800 usunięta, zostają 400, 500, 700. `[zweryfikowane]`
+- P1.3: jedna siatka 12 kolumn z gapem 8 px (hero, o nas, intro, wiersze), stopka na gutterze 56 px, suwak wpięty w kolumny 9 do 12. `[zweryfikowane]`
+- P1.4: wartości 2, 6, 10, 14, 18, 22, 28 px i odstępy w `em` zamienione na 4, 8, 16, 24. Pomiar po zmianie: zero wartości spoza wielokrotności 4 px, poza `.line` (maska reveal) i logo. `[zweryfikowane]`
+- P2: akapity hero z Geist Mono 16/24 na body, martwy CSS ilustracji usunięty z case studies, Instrument Serif zniknął z case AION MIND.
+Nie wdrożone: interlinie na siatce bazowej 4 px (rozmiary są płynne, więc interlinia w px nie ma stałej wartości).

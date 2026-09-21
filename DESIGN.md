@@ -32,47 +32,28 @@ colors:
     line: "rgba(255,255,255,0.05)"   # rysowane w mix-blend-mode: difference
     cross: "rgba(255,255,255,0.18)"
 typography:
-  display:
-    family: "TikTok Sans"            # OFL, Google Fonts
-    weight: 700
-    size: "clamp(2.25rem, 6svw, 5.5rem)"   # oryginał: 7.2svw mobile, 6svw lg, 5svw 2xl
-    lineHeight: 1.0
-    transform: uppercase
-  statement:
-    family: "TikTok Sans"
-    weight: 400
-    size: "clamp(1.5rem, 3svw, 2.75rem)"
-    lineHeight: 1.0-1.1
-  title:
-    family: "TikTok Sans"
-    weight: 500
-    size: "30px"
-    lineHeight: 1.25
-  body:
-    family: "TikTok Sans"
-    weight: 400
-    size: "16px"
-    lineHeight: "24px"
-  mono:
-    family: "Geist Mono"             # zamiennik komercyjnego Tronica Mono
-    weight: 400
-    size: "14px"
-    lineHeight: "20px"
-    transform: uppercase
-  mono-sm:
-    family: "Geist Mono"
-    size: "12px"
-    lineHeight: "16px"
-    transform: uppercase
+  # 7 ról sans + 2 mono. W kodzie jako tokeny --t-*. Żadnych rozmiarów spoza tej listy.
+  mega:      { family: "TikTok Sans", weight: 700, size: "clamp(3.5rem, 11.5vw, 11rem)", lineHeight: 0.9 }   # imiona, tytuł case study
+  display:   { family: "TikTok Sans", weight: 700, size: "clamp(2.5rem, 6svw, 5.5rem)", lineHeight: 1.0 }    # nagłówki hero i stopki, liczby
+  h2:        { family: "TikTok Sans", weight: 700, size: "clamp(2rem, 3.3svw, 3rem)", lineHeight: 1.0 }      # nagłówki sekcji, marquee
+  statement: { family: "TikTok Sans", weight: 400, size: "clamp(1.75rem, 3svw, 2.75rem)", lineHeight: 1.1 }  # manifesty, lead w hero case
+  title:     { family: "TikTok Sans", weight: 500, size: "clamp(1.5rem, 2.2svw, 2rem)", lineHeight: 1.15 }   # nazwy usług, cytaty, wiersze list
+  lead:      { family: "TikTok Sans", weight: 400, size: "clamp(1.125rem, 1.4svw, 1.375rem)", lineHeight: 1.35 } # akapity case study
+  body:      { family: "TikTok Sans", weight: 400, size: "16px", lineHeight: "24px" }                         # logo = body 700
+  mono:      { family: "Geist Mono", weight: 400, size: "14px", lineHeight: "20px", transform: uppercase }
+  mono-sm:   { family: "Geist Mono", weight: 400, size: "12px", lineHeight: "16px", transform: uppercase }
+  # Wagi: 400, 500, 700. Waga 800 usunięta 2026-09-21.
+  # Wyjątek: Instrument Serif w rozmiarze display tylko w case OurMoney, jako cytat z marki klienta.
 rounded:
   none: "0px"            # cały system jest ostry; zero zaokrągleń w UI
 spacing:
-  unit: "4px"
+  unit: "8px"          # 4 px dozwolone tylko wewnątrz komponentów (tag, chip)
   gutter-mobile: "16px"
   gutter-desktop: "56px"
   section-y-mobile: "72px"
   section-y-desktop: "96px"
   grid-columns: 12
+  column-gap: "8px"   # jedna siatka wszędzie, także hero, stopka i suwak
   tile-gap: "8px"
 motion:
   ease-out: "cubic-bezier(0.16, 1, 0.3, 1)"
