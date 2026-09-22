@@ -7,7 +7,7 @@
 <meta name="description" content="no-fuss — Magda Nestorowicz (design i produkt) i Kuba Fedoszczak (kod). Produkty cyfrowe bez zbędnego zamieszania.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Instrument+Serif&family=TikTok+Sans:opsz,wght@12..36,300..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=TikTok+Sans:opsz,wght@12..36,300..900&display=swap" rel="stylesheet">
 <style>
   /* Tokeny: DESIGN.md */
   :root {
@@ -373,7 +373,7 @@
   .cs-p { font: var(--t-lead); max-width: 44ch; }
   .cs-p + .cs-p { margin-top: 16px; }
   .cs-cap { color: var(--muted); margin-top: 8px; }
-  .cs-quote { font: 400 clamp(2.5rem, 6svw, 5.5rem)/1 "Instrument Serif", Georgia, serif; letter-spacing: -.03em; }
+  .cs-quote { font: var(--t-display); letter-spacing: -.02em; }
   .cs-quote mark { background: var(--accent); color: #101318; padding: 0 8px; }
   @media (min-width: 1024px) {
     .cs-block > .cs-no { grid-column: 1 / span 2; }
@@ -384,7 +384,6 @@
     .cs-block.flip > .cs-vis { grid-column: 3 / span 5; order: 2; }
   }
 
-  /* telefon w systemie OurMoney (krem + Instrument Serif + Inter) */
 
   /* kalkulator podziału */
   .calc { background: var(--tile); color: var(--tile-ink); padding: 24px; display: grid; gap: 20px; }
@@ -442,7 +441,7 @@
   .screens figcaption { margin-top: 16px; }
   .one { max-width: 320px; margin: 0 auto; }
   .raw { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent); background: #fff; margin-top: 8px; }
-  .bigline { font: 400 clamp(2.5rem, 6svw, 5.5rem)/1 "Instrument Serif", Georgia, serif; letter-spacing: -.03em; }
+  .bigline { font: var(--t-display); letter-spacing: -.02em; }
   .guides { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 8px; } @media (min-width: 900px) { .guides { grid-template-columns: repeat(5, 1fr); } }
   .guides img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; display: block; }
   .guides strong { display: block; font: var(--t-title); margin: 16px 0 4px; }

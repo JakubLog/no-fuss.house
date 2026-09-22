@@ -43,7 +43,6 @@ typography:
   mono:      { family: "Geist Mono", weight: 400, size: "14px", lineHeight: "20px", transform: uppercase }
   mono-sm:   { family: "Geist Mono", weight: 400, size: "12px", lineHeight: "16px", transform: uppercase }
   # Wagi: 400, 500, 700. Waga 800 usunięta 2026-09-21.
-  # Wyjątek: Instrument Serif w rozmiarze display tylko w case OurMoney, jako cytat z marki klienta.
 rounded:
   none: "0px"            # cały system jest ostry; zero zaokrągleń w UI
 spacing:
