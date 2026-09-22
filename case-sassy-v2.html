@@ -497,7 +497,7 @@
   .live__btn { position: absolute; inset: 34px 6px 6px; display: grid; place-items: center; background: rgba(16,19,24,.35); color: #fff; border-radius: 6px; cursor: pointer; transition: background .3s; }
   .live__btn:hover { background: rgba(16,19,24,.55); }
   .live__btn span { background: var(--accent); color: #101318; padding: 12px 20px; font: var(--t-mono); text-transform: uppercase; }
-  .live.is-on .live__btn, .live.is-on img { display: none; } .live iframe { display: none; } .live.is-on iframe { display: block; }
+  .live.is-on .live__btn, .live.is-on img { display: none; } .live .frame__vp { display: none; } .live.is-on .frame__vp { display: block; }
   .live__hint { position: absolute; bottom: 12px; left: 12px; color: #fff; background: rgba(16,19,24,.7); padding: 4px 8px; pointer-events: none; }
   /* switcher: lista po lewej, obraz po prawej */
   .sw2 { display: grid; grid-template-columns: 1fr; gap: 24px var(--gap); align-items: start; }
@@ -528,6 +528,9 @@
   .otb { container-type: inline-size; }
   /* Busy Bee: taśma z reżyserem */
   .reel__meta { display: flex; justify-content: space-between; gap: 16px; margin-top: 12px; }
+
+  .frame__vp { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 6px; background: #fff; }
+  .frame__vp iframe, .browser .frame__vp iframe { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; aspect-ratio: auto; transform-origin: 0 0; transform: scale(var(--s, .75)); border: 0; border-radius: 0; }
 </style>
 </head>
 <body class="is-loading">
@@ -565,7 +568,7 @@
       <div><dt>Stack</dt><dd>Jeden plik HTML</dd></div>
     </dl>
   </section>
-  <div class="stage stage--site" data-reveal><div class="browser live fade" style="max-width: 1100px; margin: 0 auto"><span class="browser__url">sassy-tan.vercel.app</span><img src="assets/sassy/d-00.webp" alt="Sassy"><iframe data-src="https://sassy-tan.vercel.app" title="Sassy, żywa strona" loading="lazy" referrerpolicy="no-referrer"></iframe><button type="button" class="live__btn" aria-label="Załaduj żywą stronę sassy-tan.vercel.app"><span>Otwórz na żywo ↗</span></button></div></div>
+  <div class="stage stage--site" data-reveal><div class="browser live fade" style="max-width: 1100px; margin: 0 auto"><span class="browser__url">sassy-tan.vercel.app</span><img src="assets/sassy/d-00.webp" alt="Sassy"><div class="frame__vp"><iframe data-src="https://sassy-tan.vercel.app" title="Sassy, żywa strona" loading="lazy" referrerpolicy="no-referrer"></iframe></div><button type="button" class="live__btn" aria-label="Załaduj żywą stronę sassy-tan.vercel.app"><span>Otwórz na żywo ↗</span></button></div></div>
   <section class="cs-lite tone-dark" style="background: var(--bg)" data-reveal>
     <div class="cs-lite__head mono"><span class="fade">01 / Zabawki</span><span class="fade" style="--i:1">Klikaj listę · ↑ ↓</span></div>
     <h2 class="cs-lite__title"><span class="line"><span>Wszystko da się złapać</span></span></h2>
@@ -742,6 +745,10 @@
     o.addEventListener('mousemove', e => { if (!held) { const r = o.getBoundingClientRect(); o.style.setProperty('--gx', ((e.clientX - r.left) / r.width * 100) + '%'); o.style.setProperty('--gy', ((e.clientY - r.top) / r.height * 100) + '%'); } });
   });
 })();
+</script>
+<script>
+/* żywa strona: renderuj w 1440 px i skaluj do ramki, żeby układ był desktopowy */
+(() => { const fit = () => document.querySelectorAll('.frame__vp').forEach(vp => vp.style.setProperty('--s', vp.clientWidth / 1440)); fit(); addEventListener('resize', fit); addEventListener('load', fit); })();
 </script>
 </body>
 </html>

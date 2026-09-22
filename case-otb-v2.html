@@ -497,7 +497,7 @@
   .live__btn { position: absolute; inset: 34px 6px 6px; display: grid; place-items: center; background: rgba(16,19,24,.35); color: #fff; border-radius: 6px; cursor: pointer; transition: background .3s; }
   .live__btn:hover { background: rgba(16,19,24,.55); }
   .live__btn span { background: var(--accent); color: #101318; padding: 12px 20px; font: var(--t-mono); text-transform: uppercase; }
-  .live.is-on .live__btn, .live.is-on img { display: none; } .live iframe { display: none; } .live.is-on iframe { display: block; }
+  .live.is-on .live__btn, .live.is-on img { display: none; } .live .frame__vp { display: none; } .live.is-on .frame__vp { display: block; }
   .live__hint { position: absolute; bottom: 12px; left: 12px; color: #fff; background: rgba(16,19,24,.7); padding: 4px 8px; pointer-events: none; }
   /* switcher: lista po lewej, obraz po prawej */
   .sw2 { display: grid; grid-template-columns: 1fr; gap: 24px var(--gap); align-items: start; }
@@ -542,6 +542,9 @@
   .spec dd a:hover { transform: translate(6px, -6px); }
   .spec dd .chip { font: var(--t-mono-sm); text-transform: uppercase; letter-spacing: 0; vertical-align: middle; margin-left: 12px; }
   @media (min-width: 1024px) { .spec div { grid-template-columns: 4fr 8fr; } }
+
+  .frame__vp { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 6px; background: #fff; }
+  .frame__vp iframe, .browser .frame__vp iframe { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; aspect-ratio: auto; transform-origin: 0 0; transform: scale(var(--s, .75)); border: 0; border-radius: 0; }
 </style>
 </head>
 <body class="is-loading">
@@ -579,7 +582,7 @@
       <div><dt>Stack</dt><dd>WordPress</dd></div>
     </dl>
   </section>
-  <div class="stage stage--site" data-reveal><div class="browser live fade" style="max-width: 1100px; margin: 0 auto"><span class="browser__url">otb.vc</span><img src="assets/otb/d-00.webp" alt="OTB Ventures"><iframe data-src="https://otb.vc" title="OTB Ventures, żywa strona" loading="lazy" referrerpolicy="no-referrer"></iframe><button type="button" class="live__btn" aria-label="Załaduj żywą stronę otb.vc"><span>Otwórz na żywo ↗</span></button></div></div>
+  <div class="stage stage--site" data-reveal><div class="browser live fade" style="max-width: 1100px; margin: 0 auto"><span class="browser__url">otb.vc</span><img src="assets/otb/d-00.webp" alt="OTB Ventures"><div class="frame__vp"><iframe data-src="https://otb.vc" title="OTB Ventures, żywa strona" loading="lazy" referrerpolicy="no-referrer"></iframe></div><button type="button" class="live__btn" aria-label="Załaduj żywą stronę otb.vc"><span>Otwórz na żywo ↗</span></button></div></div>
   <section class="cs-lite tone-dark" style="background: var(--bg)" data-reveal>
     <div class="cs-lite__head mono"><span class="fade">01 / Hero</span><span class="fade" style="--i:1">Przeciągnij kulę</span></div>
     <div class="otb fade" style="--i:2" aria-label="Rekonstrukcja hero otb.vc: przeciągnij kulę, gradient idzie za nią"><h3 class="a">Open to</h3><h3 class="b">beyond</h3><div class="otb__ball" role="slider" tabindex="0" aria-label="Kula"></div><span class="otb__hint mono-sm">Open to beyond · rekonstrukcja w&nbsp;HTML</span></div>
@@ -758,6 +761,10 @@
     o.addEventListener('mousemove', e => { if (!held) { const r = o.getBoundingClientRect(); o.style.setProperty('--gx', ((e.clientX - r.left) / r.width * 100) + '%'); o.style.setProperty('--gy', ((e.clientY - r.top) / r.height * 100) + '%'); } });
   });
 })();
+</script>
+<script>
+/* żywa strona: renderuj w 1440 px i skaluj do ramki, żeby układ był desktopowy */
+(() => { const fit = () => document.querySelectorAll('.frame__vp').forEach(vp => vp.style.setProperty('--s', vp.clientWidth / 1440)); fit(); addEventListener('resize', fit); addEventListener('load', fit); })();
 </script>
 </body>
 </html>
