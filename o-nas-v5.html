@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SASSY — CASE STUDY — NO-FUSS©2026</title><!-- case-sassy-v2.html -->
+<title>O NAS — NO-FUSS©2026</title><!-- o-nas v5: v4 + karta agentów AI (AI native) -->
 <meta name="description" content="no-fuss — Magda Nestorowicz (design i produkt) i Kuba Fedoszczak (kod). Produkty cyfrowe bez zbędnego zamieszania.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -306,6 +306,9 @@
   /* karty postaci */
   .sheets { display: grid; gap: 8px; grid-template-columns: 1fr; }
   @media (min-width: 900px) { .sheets { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1200px) { .sheets { grid-template-columns: 1fr 1fr 1fr; } .sheet__photo { grid-column: 1 / -1 !important; grid-row: auto !important; } .sheet__roles, .sheet__bio, .sheet dl { grid-column: 1 / -1 !important; } .sheet__photo .ph { aspect-ratio: 4 / 3; } }
+  .sheet--ai .ph { background: var(--accent); color: #101318; } .sheet--ai .ph::before { opacity: .2; }
+  .sheet--ai .ph svg { width: 42%; height: auto; display: block; }
   .sheet { background: var(--bg); color: var(--ink); padding: 24px 24px 32px; position: relative; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent); }
   .sheet__head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 24px; }
   .sheet__head h3 { font: var(--t-h2); text-transform: uppercase; letter-spacing: -.02em; }
@@ -351,186 +354,56 @@
     .row__track b { left: var(--v, 50%); } .meter i::after { transform: scaleX(var(--v, 0)); }
   }
 
-  /* ================= CASE STUDY ================= */
-  .cs-hero { position: relative; min-height: 100svh; overflow: hidden; color: #fff; padding: calc(var(--section-y) + 24px) var(--gutter) var(--section-y); display: grid; grid-template-columns: repeat(12, 1fr); gap: 32px 8px; align-content: end; }
-  .cs-hero > * { grid-column: 1 / -1; }
-  .cs-hero > .hero__bg, .cs-hero > .stickers { grid-column: auto; }
-  .cs-hero__title { font: var(--t-mega); letter-spacing: -.04em; text-transform: uppercase; }
-  .cs-hero__lead { font: var(--t-statement); max-width: 22ch; }
-  .cs-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 0 8px; }
-  .cs-meta div { padding: 8px 0; border-top: 1px solid rgba(255,255,255,.24); }
-  .cs-meta dt { color: rgba(255,255,255,.64); margin-bottom: 4px; }
-  .cs-meta a { text-decoration: underline; text-underline-offset: 3px; }
-  @media (min-width: 1024px) { .cs-hero__lead { grid-column: 1 / span 5; align-self: end; } .cs-meta { grid-column: 7 / span 6; grid-template-columns: repeat(3, 1fr); } }
-
-  .cs-shot { padding: 0 var(--gutter); margin-top: -1px; background: linear-gradient(#101318 50%, var(--light) 50%); }
-  .cs-shot .ph { aspect-ratio: 16 / 9; position: relative; z-index: 2; }
-
-  .cs-block { display: grid; grid-template-columns: repeat(12, 1fr); gap: 32px 8px; align-items: start; }
-  .cs-block > * { grid-column: 1 / -1; }
   .cs-no { color: var(--muted); }
-  .cs-h { font: var(--t-h2); letter-spacing: -.025em; text-transform: uppercase; }
+  .cs-h { font: var(--t-h2); text-transform: uppercase; letter-spacing: -.02em; }
   .cs-p { font: var(--t-lead); max-width: 44ch; }
-  .cs-p + .cs-p { margin-top: 16px; }
-  .cs-cap { color: var(--muted); margin-top: 8px; }
-  .cs-quote { font: var(--t-display); letter-spacing: -.02em; }
-  .cs-quote mark { background: var(--accent); color: #101318; padding: 0 8px; }
-  @media (min-width: 1024px) {
-    .cs-block > .cs-no { grid-column: 1 / span 2; }
-    .cs-block > .cs-txt { grid-column: 3 / span 4; position: sticky; top: 120px; }
-    .cs-block > .cs-vis { grid-column: 8 / span 5; }
-    .cs-block > .cs-wide { grid-column: 3 / span 10; }
-    .cs-block.flip > .cs-txt { grid-column: 9 / span 4; order: 3; }
-    .cs-block.flip > .cs-vis { grid-column: 3 / span 5; order: 2; }
-  }
+  /* ================= O NAS v2 ================= */
+  .team-hero { padding: calc(var(--section-y) + 40px) var(--gutter) var(--section-y); display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); row-gap: 32px; background: var(--bg); }
+  .team-hero > * { grid-column: 1 / -1; }
+  .team-hero .display { max-width: 12ch; }
+  .team-hero__lead { font: var(--t-statement); color: var(--muted); max-width: 26ch; }
+  @media (min-width: 1024px) { .team-hero .display { grid-column: 1 / span 8; } .team-hero__lead { grid-column: 9 / span 4; align-self: end; } }
 
-  /* telefon w systemie OurMoney (krem + Instrument Serif + Inter) */
 
-  /* kalkulator podziału */
-  .calc { background: var(--tile); color: var(--tile-ink); padding: 24px; display: grid; gap: 20px; }
-  .calc__models { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .calc__models button { padding: 12px 8px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.3); text-align: left; min-height: 44px; }
-  .calc__models button[aria-pressed="true"] { background: var(--accent); color: #101318; box-shadow: none; }
-  .calc label { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; align-items: center; }
-  .calc input[type=range] { grid-column: 1 / -1; -webkit-appearance: none; appearance: none; height: 24px; background: transparent; width: 100%; }
-  .calc input::-webkit-slider-runnable-track { height: 2px; background: rgba(255,255,255,.4); }
-  .calc input::-moz-range-track { height: 2px; background: rgba(255,255,255,.4); }
-  .calc input::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; margin-top: -7px; background: var(--accent); border: 2px solid #101318; outline: 1px solid var(--accent); rotate: 45deg; }
-  .calc input::-moz-range-thumb { width: 12px; height: 12px; background: var(--accent); border: 2px solid #101318; outline: 1px solid var(--accent); border-radius: 0; rotate: 45deg; }
-  .calc__bar { display: flex; height: 72px; }
-  .calc__bar div { display: flex; flex-direction: column; justify-content: space-between; padding: 8px; transition: flex-basis .6s var(--ease); overflow: hidden; white-space: nowrap; min-width: 0; }
-  .calc__bar .a { background: var(--accent); color: #101318; } .calc__bar .b { background: #FCFCFB; color: #101318; }
-  .calc__bar strong { font: var(--t-title); font-variant-numeric: tabular-nums; }
-  .calc output { font-variant-numeric: tabular-nums; }
+  /* karty postaci (styl v1) ze zdjęciem i social mediami */
+  .sheets { display: grid; gap: var(--gap); grid-template-columns: 1fr; padding: var(--section-y) var(--gutter); background: var(--dark); color: #fff; --bg: var(--shade-900); --ink: #fff; --muted: #A9ABAD; }
+  @media (min-width: 900px) { .sheets { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1200px) { .sheets { grid-template-columns: 1fr 1fr 1fr; } .sheet__photo { grid-column: 1 / -1 !important; grid-row: auto !important; } .sheet__roles, .sheet__bio, .sheet dl { grid-column: 1 / -1 !important; } .sheet__photo .ph { aspect-ratio: 4 / 3; } }
+  .sheet--ai .ph { background: var(--accent); color: #101318; } .sheet--ai .ph::before { opacity: .2; }
+  .sheet--ai .ph svg { width: 42%; height: auto; display: block; }
+  .sheet { background: var(--bg); color: var(--ink); padding: 24px 24px 32px; position: relative; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent); display: grid; grid-template-columns: repeat(6, 1fr); gap: 24px var(--gap); }
+  .sheet > * { grid-column: 1 / -1; }
+  .sheet__head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .sheet__head h2 { font: var(--t-h2); text-transform: uppercase; letter-spacing: -.02em; }
+  .sheet__photo { position: relative; }
+  .sheet__photo .ph { aspect-ratio: 3 / 4; }
+  .sheet__roles { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sheet__bio { font: var(--t-lead); max-width: 34ch; }
+  .sheet dl { display: grid; grid-template-columns: minmax(96px, 30%) 1fr; }
+  .sheet dt, .sheet dd { padding: 12px 0; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+  .sheet dt { color: var(--muted); }
+  .sheet dd a { text-decoration: underline; text-underline-offset: 3px; }
+  .sheet dd a:hover { background: var(--accent); color: var(--on-accent); }
+  .meter { display: flex; align-items: center; gap: 16px; }
+  .meter i { flex: 1; height: 10px; box-shadow: inset 0 0 0 1px currentColor; position: relative; }
+  .meter i::after { content: ""; position: absolute; inset: 0; background: var(--accent); transform-origin: left; transform: scaleX(0); transition: transform 1.2s var(--ease) .3s; }
+  .is-in .meter i::after { transform: scaleX(var(--v, 0)); }
+  .sheet__social { display: flex; flex-wrap: wrap; gap: 8px; }
+  .sheet__social a { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; box-shadow: inset 0 0 0 1px currentColor; min-height: 40px; transition: background-color .2s, color .2s; }
+  .sheet__social a::after { content: "↗"; }
+  .sheet__social a:hover { background: var(--accent); color: #101318; box-shadow: none; }
+  .sheets .ph { background: var(--shade-700); }
+  @media (min-width: 900px) { .sheet__photo { grid-column: 1 / span 2; grid-row: 2 / span 3; } .sheet__roles, .sheet__bio, .sheet dl { grid-column: 3 / span 4; } }
 
-  /* jedna subskrypcja */
-  .sub { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; background: var(--accent); color: #101318; padding: 32px 24px; }
-  .sub__card { background: #101318; color: #fff; padding: 16px; aspect-ratio: 1.6; display: flex; flex-direction: column; justify-content: space-between; max-width: 220px; }
-  .sub__card strong { font: var(--t-title); }
-  .sub__arrow { font: var(--t-title); }
-  .sub__ppl { display: flex; justify-content: flex-end; }
-  .sub__ppl span { width: clamp(56px, 8vw, 88px); aspect-ratio: 1; border-radius: 50%; background: #FCFCFB; border: 2px solid #101318; display: grid; place-items: center; font: var(--t-title); }
-  .sub__ppl span + span { margin-left: -18px; background: #101318; color: var(--accent); }
-
-  /* dwa języki */
-
-  /* liczby */
-  .nums { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  @media (min-width: 900px) { .nums { grid-template-columns: repeat(4, 1fr); } }
-  .num { background: var(--tile); color: var(--tile-ink); padding: 20px; min-height: 200px; display: flex; flex-direction: column; justify-content: space-between; }
-  .num strong { font: var(--t-display); letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
-  .num--lime { background: var(--accent); color: #101318; }
-
-  .stack { display: flex; flex-wrap: wrap; gap: 8px; } .stack span { padding: 8px 12px; box-shadow: inset 0 0 0 1px currentColor; }
-  .next { display: block; padding: var(--section-y) var(--gutter); background: var(--accent); color: #101318; position: relative; }
-  .next .cs-hero__title { margin-top: 16px; }
-  .next:hover .arrow { transform: translate(8px, -8px); } .next .arrow { display: inline-block; transition: transform .5s var(--ease); }
-
-  /* realne ekrany */
-  /* iPhone mockup: korpus, ramka, dynamic island */
-  .iph { display: block; background: #101318; padding: 10px; border-radius: 12.5% / 6.2%; box-shadow: inset 0 0 0 2px #3a3f47, 0 40px 60px -24px rgba(16,19,24,.6); position: relative; }
-  .iph::before { content: ""; position: absolute; z-index: 2; top: 20px; left: 50%; width: 26%; height: 3.2%; translate: -50% 0; background: #101318; border-radius: 999px; }
-  .iph::after { content: ""; position: absolute; right: -3px; top: 22%; width: 3px; height: 9%; background: #3a3f47; border-radius: 0 2px 2px 0; }
-  .iph img { display: block; width: 100%; height: auto; border-radius: 10.5% / 5%; }
-  .device { display: block; width: 100%; }
-  .raw img { display: block; width: 100%; height: auto; }
-  .stage { background: var(--accent); padding: 48px var(--gutter) 0; display: flex; gap: 8px; justify-content: center; align-items: flex-end; overflow: hidden; position: relative; z-index: 2; }
-  .stage figure { flex: 0 1 300px; margin-bottom: -12%; } .stage figure:nth-child(2) { margin-bottom: -4%; }
-  .stage--dark { background: #15181D; }
-  .stage--img { padding: 0; display: block; } .stage--img img { display: block; width: 100%; height: auto; }
-  .screens { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px 8px; } @media (min-width: 900px) { .screens { grid-template-columns: repeat(4, 1fr); } }
-  .screens figcaption { margin-top: 16px; }
-  .one { max-width: 320px; margin: 0 auto; }
-  .raw { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent); background: #fff; margin-top: 8px; }
-  .bigline { font: var(--t-display); letter-spacing: -.02em; }
-  .guides { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 8px; } @media (min-width: 900px) { .guides { grid-template-columns: repeat(5, 1fr); } }
-  .guides img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; display: block; }
-  .guides strong { display: block; font: var(--t-title); margin: 16px 0 4px; }
-  .path { display: grid; gap: 8px; grid-template-columns: 1fr; } @media (min-width: 800px) { .path { grid-template-columns: 1fr 1fr; } }
-  .path div { padding: 24px; min-height: 240px; display: flex; flex-direction: column; justify-content: space-between; background: var(--tile); color: var(--tile-ink); }
-  .path div + div { background: var(--accent); color: #101318; }
-  .path strong { font: var(--t-h2); text-transform: uppercase; letter-spacing: -.02em; }
-
-  /* Dziennik AION MIND: klikalna rekonstrukcja ekranu z aionmind.com */
-  .jr { background: #F6F6F4; color: #1B1B1F; font-family: Inter, -apple-system, "Segoe UI", sans-serif; border-radius: 10.5% / 5%; padding: 56px 14px 24px; aspect-ratio: 9 / 18.6; display: flex; flex-direction: column; gap: 12px; overflow: hidden; user-select: none; }
-  .jr__bar { display: flex; align-items: center; gap: 12px; font: 600 15px/1 Inter, sans-serif; }
-  .jr__bar span { flex: 1; text-align: center; }
-  .jr__bar i { width: 22px; height: 22px; display: grid; place-items: center; font-style: normal; font-size: 16px; }
-  .jr__m { text-align: center; font: 600 13px/1 Inter, sans-serif; margin-top: 4px; }
-  .jr__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px 2px; }
-  .jr__grid b { font: 500 10px/1 Inter, sans-serif; color: #8A8A90; text-align: center; padding: 6px 0 4px; }
-  .jr__d { appearance: none; border: 0; height: 32px; border-radius: 6px; font: 500 12px/1 Inter, sans-serif; color: #1B1B1F; background: transparent; cursor: pointer; }
-  .jr__d.out { color: #B9B9BE; }
-  .jr__d.has { background: #C9DBF6; }
-  .jr__d.has + .jr__d.has { border-top-left-radius: 0; border-bottom-left-radius: 0; }
-  .jr__d.has:has(+ .jr__d.has) { border-top-right-radius: 0; border-bottom-right-radius: 0; }
-  .jr__d.done { background: #F1DD9D; } .jr__d.done::before { content: "✓"; font-size: 12px; } .jr__d.done { font-size: 0; }
-  .jr__d.wait { box-shadow: inset 0 0 0 1.5px #F1DD9D; }
-  .jr__d[aria-pressed="true"] { background: #2C4A8C; color: #fff; }
-  .jr__d:focus-visible { outline: 2px solid #2C4A8C; outline-offset: 1px; }
-  .jr__card { border: 0; text-align: left; width: 100%; border-radius: 12px; padding: 12px 14px; cursor: pointer; font-family: inherit; color: inherit; transition: translate .3s var(--ease); }
-  .jr__card:active { translate: 0 1px; }
-  .jr__card--m { background: #BFD5F6; } .jr__card--w { background: #F3DE9A; }
-  .jr__card strong { display: block; font: 600 13px/1.2 Inter, sans-serif; margin-bottom: 4px; }
-  .jr__card strong::before { content: "◎ "; }
-  .jr__card p { font: 400 11px/1.35 Inter, sans-serif; margin: 0 0 10px; }
-  .jr__card span { display: block; text-align: center; font: 500 11px/1 Inter, sans-serif; padding: 9px; border-radius: 999px; background: rgba(255,255,255,.55); }
-  .jr__card[aria-expanded="true"] p { font-weight: 500; }
-  .jr__wk { background: #fff; border-radius: 12px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; font: 600 13px/1 Inter, sans-serif; }
-  .jr__wk small { font: 400 11px/1 Inter, sans-serif; color: #6E6E74; }
-  .jr__toast { position: absolute; left: 50%; bottom: 8%; translate: -50% 0; background: #1B1B1F; color: #fff; font: 500 11px/1 Inter, sans-serif; padding: 10px 14px; border-radius: 999px; opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; }
-  .jr__toast.is-on { opacity: 1; }
-
-  /* ===== case study: mało tekstu, klikalne elementy ===== */
-  .browser { display: block; background: #101318; padding: 28px 6px 6px; border-radius: 12px; position: relative; box-shadow: 0 30px 60px -24px rgba(16,19,24,.5); }
-  .browser::before { content: ""; position: absolute; top: 10px; left: 12px; width: 8px; height: 8px; border-radius: 50%; background: #3a3f47; box-shadow: 14px 0 0 #3a3f47, 28px 0 0 #3a3f47; }
-  .browser img, .browser iframe { display: block; width: 100%; height: auto; border-radius: 6px; border: 0; background: #fff; }
-  .browser iframe { aspect-ratio: 16 / 10; }
-  .browser__url { position: absolute; top: 8px; left: 60px; right: 60px; height: 14px; background: #1c2027; border-radius: 4px; color: #8a8f98; font: 400 9px/14px var(--mono); text-align: center; overflow: hidden; }
-  .cs-lite { padding: var(--section-y) var(--gutter); display: grid; grid-template-columns: repeat(12, 1fr); gap: 32px var(--gap); }
-  .cs-lite > * { grid-column: 1 / -1; }
-  .cs-lite__head { display: flex; justify-content: space-between; gap: 16px; }
-  .cs-lite__title { font: var(--t-h2); text-transform: uppercase; letter-spacing: -.02em; }
-  /* live: przycisk ładuje żywą stronę do ramki */
-  .live { position: relative; width: 100%; }
-  .stage--site { display: block; padding: 48px var(--gutter); }
-  .live__btn { position: absolute; inset: 34px 6px 6px; display: grid; place-items: center; background: rgba(16,19,24,.35); color: #fff; border-radius: 6px; cursor: pointer; transition: background .3s; }
-  .live__btn:hover { background: rgba(16,19,24,.55); }
-  .live__btn span { background: var(--accent); color: #101318; padding: 12px 20px; font: var(--t-mono); text-transform: uppercase; }
-  .live.is-on .live__btn, .live.is-on img { display: none; } .live .frame__vp { display: none; } .live.is-on .frame__vp { display: block; }
-  .live__hint { position: absolute; bottom: 12px; left: 12px; color: #fff; background: rgba(16,19,24,.7); padding: 4px 8px; pointer-events: none; }
-  /* switcher: lista po lewej, obraz po prawej */
-  .sw2 { display: grid; grid-template-columns: 1fr; gap: 24px var(--gap); align-items: start; }
-  @media (min-width: 1024px) { .sw2 { grid-template-columns: repeat(12, 1fr); } .sw2__list { grid-column: 1 / span 4; position: sticky; top: 120px; } .sw2__view { grid-column: 5 / span 8; } }
-  .sw2__list { display: flex; flex-direction: column; }
-  .sw2__list button { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; text-align: left; padding: 16px 0; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); font: var(--t-title); color: var(--muted); transition: color .2s, padding .3s var(--ease); }
-  .sw2__list button:last-child { border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
-  .sw2__list button small { font: var(--t-mono-sm); text-transform: uppercase; white-space: nowrap; }
-  .sw2__list button[aria-selected="true"] { color: var(--ink); padding-left: 12px; }
-  .sw2__list button[aria-selected="true"]::before { content: "→ "; }
-  .sw2__list button:hover { color: var(--ink); }
-  .sw2__view { position: relative; }
-  .sw2__view img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .5s var(--ease); }
-  .sw2__view img.is-on { opacity: 1; position: relative; }
-  .sw2__frame { aspect-ratio: 16 / 10; overflow: hidden; background: #101318; position: relative; }
-  .duo-m { display: flex; gap: 8px; justify-content: center; align-items: flex-start; } .duo-m .iph { width: min(46%, 300px); } .duo-m .iph:nth-child(2) { margin-top: 48px; }
-  .facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--gap); } @media (min-width: 900px) { .facts { grid-template-columns: repeat(4, 1fr); } }
-  .facts div { padding: 24px; background: var(--tile); color: var(--tile-ink); min-height: 140px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; }
-  .facts strong { font: var(--t-title); font-weight: 700; }
-  .facts a { text-decoration: underline; text-underline-offset: 3px; }
-  /* OTB: przeciągana kula na gradiencie */
-  .otb { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 6px; background: radial-gradient(60% 80% at var(--gx, 30%) var(--gy, 60%), #E24A2C 0%, rgba(226,74,44,0) 70%), radial-gradient(70% 90% at calc(100% - var(--gx, 30%)) calc(100% - var(--gy, 60%)), #2A3BD8 0%, rgba(42,59,216,0) 75%), #cfd6ff; color: #fff; cursor: crosshair; user-select: none; touch-action: none; }
-  .otb h3 { position: absolute; font: 400 clamp(2rem, 6.5cqw, 6rem)/1 "TWKEverett", var(--sans); letter-spacing: -.03em; margin: 0; }
-  .otb .a { left: 6%; top: 24%; } .otb .b { right: 8%; bottom: 26%; }
-  .otb__ball { position: absolute; width: 22%; aspect-ratio: 1; border-radius: 50%; left: var(--bx, 40%); top: var(--by, 26%); background: linear-gradient(160deg, #E24A2C, #2A3BD8); box-shadow: 0 40px 60px -30px rgba(16,19,24,.5); cursor: grab; }
-  .otb__ball.is-held { cursor: grabbing; }
-  .otb__hint { position: absolute; left: 16px; bottom: 16px; color: #fff; }
-  .otb { container-type: inline-size; }
-  /* Busy Bee: taśma z reżyserem */
-  .reel__meta { display: flex; justify-content: space-between; gap: 16px; margin-top: 12px; }
-
-  .frame__vp { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 6px; background: #fff; }
-  .frame__vp iframe, .browser .frame__vp iframe { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; aspect-ratio: auto; transform-origin: 0 0; transform: scale(var(--s, .75)); border: 0; border-radius: 0; }
+  .find { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px var(--gap); align-items: start; }
+  .find > * { grid-column: 1 / -1; }
+  .find__list { display: grid; grid-template-columns: 1fr; }
+  .find__list a { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); font: var(--t-title); }
+  .find__list a:last-child { border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+  .find__list a:hover { background: var(--accent); color: #101318; padding-inline: 12px; }
+  .find__list a span { transition: transform .4s var(--ease); display: inline-block; }
+  .find__list a:hover span { transform: translate(4px, -4px); }
+  @media (min-width: 1024px) { .find > .find__head { grid-column: 1 / span 4; position: sticky; top: 120px; } .find > .find__list { grid-column: 5 / span 8; } }
 </style>
 </head>
 <body class="is-loading">
@@ -543,8 +416,8 @@
   <div class="hud__row">
     <a class="logo" href="no-fuss-v5.html" aria-label="no-fuss, strona główna">no<i></i>fuss</a>
     <nav class="nav" aria-label="Główna">
-      <a href="no-fuss-v5.html#realizacje" data-scramble aria-current="page">Realizacje</a>
-      <a href="o-nas-v5.html" data-scramble>O nas</a>
+      <a href="no-fuss-v5.html#realizacje" data-scramble>Realizacje</a>
+      <a href="o-nas-v1.html" data-scramble aria-current="page">O nas</a>
       <a href="#kontakt" data-scramble>Kontakt</a>
     </nav>
   </div>
@@ -557,33 +430,85 @@
 </header>
 
 <main id="top">
-  <section class="cs-hero" id="hero" data-stickers>
-    <div class="hero__bg" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-    <div class="stickers" aria-hidden="true"></div>
-    <p class="mono fade" style="--i:0"><span class="chip">Case study</span> &nbsp;Eksperyment · 07.2026</p>
-    <h1 class="cs-hero__title"><span class="line" style="--i:1"><span>Sassy</span></span></h1>
-    <dl class="cs-meta mono-sm fade" style="--i:4">
-      <div><dt>Typ</dt><dd>Projekt własny</dd></div>
-      <div><dt>Magda</dt><dd>Koncept, design, kod</dd></div>
-      <div><dt>Stack</dt><dd>Jeden plik HTML</dd></div>
-    </dl>
+  <!-- ===== HERO: nagłówek + dwie karty osób ===== -->
+  <section class="team-hero" id="hero" data-reveal>
+    <h1 class="display"><span class="line" style="--i:0"><span>Dwie osoby,</span></span><span class="line" style="--i:1"><span>agenci AI,</span></span><span class="line" style="--i:2"><span>zero zamieszania</span></span></h1>
+    <p class="team-hero__lead fade" style="--i:3">Magda projektuje i&nbsp;prowadzi produkt. Kuba pisze kod i&nbsp;pilnuje, żeby działał. Agenci AI pracują z&nbsp;nami ramię w&nbsp;ramię. Jesteśmy AI native.</p>
   </section>
-  <div class="stage stage--site" data-reveal><div class="browser live fade" style="max-width: 1100px; margin: 0 auto"><span class="browser__url">sassy-tan.vercel.app</span><img src="assets/sassy/d-00.webp" alt="Sassy"><div class="frame__vp"><iframe data-src="https://sassy-tan.vercel.app" title="Sassy, żywa strona" loading="lazy" referrerpolicy="no-referrer"></iframe></div><button type="button" class="live__btn" aria-label="Załaduj żywą stronę sassy-tan.vercel.app"><span>Otwórz na żywo ↗</span></button></div></div>
-  <section class="cs-lite tone-dark" style="background: var(--bg)" data-reveal>
-    <div class="cs-lite__head mono"><span class="fade">01 / Zabawki</span><span class="fade" style="--i:1">Klikaj listę · ↑ ↓</span></div>
-    <h2 class="cs-lite__title"><span class="line"><span>Wszystko da się złapać</span></span></h2>
-    <div class="sw2 fade" style="--i:2"><div class="sw2__list" role="tablist" aria-label="Wszystko da się złapać"><button type="button" role="tab" aria-selected="false" data-cap="Retro pulpit: foldery do przeciągania, aparat robi zdjęcie">Pulpit<small>kamera</small></button><button type="button" role="tab" aria-selected="false" data-cap="Zadania, OKR-y, wykres, ekspres do kawy">Biurko<small>bento</small></button><button type="button" role="tab" aria-selected="false" data-cap="220 h miesięcznie i karta zapala się na czerwono">Business case<small>suwak</small></button><button type="button" role="tab" aria-selected="false" data-cap="Słowo na zmiennym kroju, do rozchudzenia">Waga<small>SERIOUS</small></button><button type="button" role="tab" aria-selected="false" data-cap="Kreda, gąbka, karteczki">Karteczki<small>tablica</small></button><button type="button" role="tab" aria-selected="false" data-cap="Karta w folii z podpisami odręcznymi">Identyfikator<small>koszulka</small></button><button type="button" role="tab" aria-selected="false" data-cap="Snack Run w retro komputerze">Koniec<small>gra</small></button></div><div class="sw2__view"><div class="sw2__frame"><img src="assets/sassy/d-00.webp" alt="Pulpit" loading="lazy"><img src="assets/sassy/d-01.webp" alt="Biurko" loading="lazy"><img src="assets/sassy/d-02.webp" alt="Business case" loading="lazy"><img src="assets/sassy/d-04.webp" alt="Waga" loading="lazy"><img src="assets/sassy/d-06.webp" alt="Karteczki" loading="lazy"><img src="assets/sassy/d-07.webp" alt="Identyfikator" loading="lazy"><img src="assets/sassy/d-09.webp" alt="Koniec" loading="lazy"></div><p class="cs-cap mono-sm" data-cap></p></div></div>
-  </section>
-  <section class="cs-lite" data-reveal>
-    <div class="cs-lite__head mono"><span class="fade">02 / Mobile</span><span class="fade" style="--i:1">390 px</span></div>
-    <div class="duo-m fade" style="--i:2"><span class="iph"><img src="assets/sassy/m-00.webp" alt="Widok mobilny, hero" loading="lazy"></span><span class="iph"><img src="assets/sassy/m-03.webp" alt="Widok mobilny, dalsza część" loading="lazy"></span></div>
-  </section>
-  <section class="cs-lite tone-dark" style="background: var(--bg)" data-reveal>
-    <div class="cs-lite__head mono"><span class="fade">03 / Fakty</span></div>
-    <div class="facts"><div class="fade" style="--i:0"><span class="mono-sm">Koncept, design, kod</span><strong>Magda</strong></div><div class="fade" style="--i:1"><span class="mono-sm">Stack</span><strong>HTML · CSS · JS, 1 plik</strong></div><div class="fade" style="--i:2"><span class="mono-sm">Kiedy</span><strong>Lipiec 2026</strong></div><div class="fade" style="--i:3"><span class="mono-sm">Strona</span><strong><a href="https://sassy-tan.vercel.app" target="_blank" rel="noopener">sassy-tan.vercel.app ↗</a></strong></div></div>
+  <div class="sheets">
+    <article class="sheet" data-reveal>
+      <div class="sheet__head"><h2><span class="line"><span>Magda Nestorowicz</span></span></h2><span class="mono-sm chip">P1</span></div>
+      <div class="sheet__photo fade"><div class="ph"><span>Zdjęcie Magdy 3:4</span></div></div>
+      <p class="sheet__roles fade" style="--i:1"><span class="chip mono-sm">Design</span><span class="chip mono-sm">Produkt</span></p>
+      <p class="sheet__bio fade" style="--i:2">Product Designerka. Buduje OurMoney razem z&nbsp;Kubą i&nbsp;AION MIND, gdzie od pierwszego ekranu doszła do prowadzenia całego produktu.</p>
+      <dl class="mono fade" style="--i:3"><dt>Buduje</dt><dd><a href="case-ourmoney-v2.html">OurMoney</a>, <a href="case-aion-mind-v1.html">AION MIND</a></dd><dt>Supermoc</dt><dd>[placeholder: jedno zdanie]</dd><dt>Narzędzia</dt><dd>[placeholder]</dd><dt>Po godzinach</dt><dd>[placeholder]</dd><dt>Zamieszanie</dt><dd><span class="meter"><i style="--v:.02"></i>0%</span></dd></dl>
+      <nav class="sheet__social mono-sm fade" style="--i:4" aria-label="Social media: Magda Nestorowicz"><a href="#" target="_blank" rel="noopener">LinkedIn</a><a href="#" target="_blank" rel="noopener">Instagram</a><a href="#" target="_blank" rel="noopener">Dribbble</a><a href="#" target="_blank" rel="noopener">X</a></nav>
+    </article>
+    <article class="sheet" data-reveal>
+      <div class="sheet__head"><h2><span class="line"><span>Kuba Fedoszczak</span></span></h2><span class="mono-sm chip">P2</span></div>
+      <div class="sheet__photo fade"><div class="ph"><span>Zdjęcie Kuby 3:4</span></div></div>
+      <p class="sheet__roles fade" style="--i:1"><span class="chip mono-sm">Kod</span></p>
+      <p class="sheet__bio fade" style="--i:2">Developer. Odpowiada za produkcję aplikacji, jej bezpieczeństwo i&nbsp;całą stronę technologiczną OurMoney.</p>
+      <dl class="mono fade" style="--i:3"><dt>Buduje</dt><dd><a href="case-ourmoney-v2.html">OurMoney</a></dd><dt>Supermoc</dt><dd>[placeholder: jedno zdanie]</dd><dt>Stack</dt><dd>[placeholder]</dd><dt>Po godzinach</dt><dd>[placeholder]</dd><dt>Zamieszanie</dt><dd><span class="meter"><i style="--v:.02"></i>0%</span></dd></dl>
+      <nav class="sheet__social mono-sm fade" style="--i:4" aria-label="Social media: Kuba Fedoszczak"><a href="#" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/JakubLog" target="_blank" rel="noopener">GitHub</a><a href="#" target="_blank" rel="noopener">X</a></nav>
+    </article>
+    <article class="sheet sheet--ai" data-reveal>
+      <div class="sheet__head"><h2><span class="line"><span>Agenci AI</span></span></h2><span class="mono-sm chip">P3</span></div>
+      <div class="sheet__photo fade"><div class="ph" role="img" aria-label="Agenci AI"><svg viewBox="0 0 120 120" fill="none" stroke="#101318" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="34" width="84" height="62" rx="14"/><path d="M60 34V18M48 18h24"/><circle cx="44" cy="62" r="5" fill="#101318" stroke="none"/><circle cx="76" cy="62" r="5" fill="#101318" stroke="none"/><path d="M44 80h32M8 56v18M112 56v18"/></svg></div></div>
+      <p class="sheet__roles fade" style="--i:1"><span class="chip mono-sm">Research</span><span class="chip mono-sm">Kod</span><span class="chip mono-sm">Copy</span><span class="chip mono-sm">QA</span></p>
+      <p class="sheet__bio fade" style="--i:2">Pracują z&nbsp;nami ramię w&nbsp;ramię, od researchu po code review. Jesteśmy AI native: nie dokładamy AI do procesu, tylko projektujemy proces z&nbsp;AI w&nbsp;środku.</p>
+      <dl class="mono fade" style="--i:3"><dt>Rola</dt><dd>Trzecia para rąk w&nbsp;każdym projekcie</dd><dt>Narzędzia</dt><dd>Claude Code, [placeholder]</dd><dt>Nadzór</dt><dd>Zawsze człowiek. Magda lub Kuba</dd><dt>Zamieszanie</dt><dd><span class="meter"><i style="--v:.02"></i>0%</span></dd></dl>
+      <nav class="sheet__social mono-sm fade" style="--i:4" aria-label="Więcej o pracy z AI"><a href="no-fuss-v5.html#uslugi">Produkty z&nbsp;AI</a></nav>
+    </article>
+  </div>
+  <div class="marquee" aria-hidden="true"><div class="marquee__t">
+    <span>Dwie osoby ✦</span><span>Agenci AI ✦</span><span>AI native ✦</span><span>Design × Kod ✦</span><span>No fuss ✦</span>
+    <span>Dwie osoby ✦</span><span>Agenci AI ✦</span><span>AI native ✦</span><span>Design × Kod ✦</span><span>No fuss ✦</span>
+    <span>Dwie osoby ✦</span><span>Agenci AI ✦</span><span>AI native ✦</span><span>Design × Kod ✦</span><span>No fuss ✦</span>
+    <span>Dwie osoby ✦</span><span>Agenci AI ✦</span><span>AI native ✦</span><span>Design × Kod ✦</span><span>No fuss ✦</span>
+  </div></div>
+
+  <!-- ================= KTO CO ROBI ================= -->
+  <section class="section">
+    <div class="work__head mono" data-reveal><span class="fade">Kto co robi</span><span class="fade" style="--i:1">[02]</span></div>
+    <div class="split__legend mono-sm"><span>← Magda</span><span>Kuba →</span></div>
+    <div class="row" data-reveal style="--v:4%"><h3><span class="line"><span>Design</span></span></h3><div class="row__track"><b></b></div></div>
+    <div class="row" data-reveal style="--v:10%"><h3><span class="line"><span>Produkt</span></span></h3><div class="row__track"><b></b></div></div>
+    <div class="row" data-reveal style="--v:50%"><h3><span class="line"><span>Strategia i&nbsp;pomysły</span></span></h3><div class="row__track"><b></b></div></div>
+    <div class="row" data-reveal style="--v:92%"><h3><span class="line"><span>Kod</span></span></h3><div class="row__track"><b></b></div></div>
+    <div class="row" data-reveal style="--v:96%"><h3><span class="line"><span>Infrastruktura i&nbsp;bezpieczeństwo</span></span></h3><div class="row__track"><b></b></div></div>
+    <div class="row" data-reveal style="--v:50%"><h3><span class="line"><span>Agenci AI, ramię w&nbsp;ramię</span></span></h3><div class="row__track"><b></b></div></div>
   </section>
 
-  <a class="next" href="case-ourmoney-v2.html" data-reveal><span class="mono fade">Następny projekt</span><span class="cs-hero__title" style="display:block"><span class="line"><span>OurMoney <span class="arrow">→</span></span></span></span></a>
+  <!-- ================= ZNAJDŹ NAS ================= -->
+  <section class="section find" id="social" data-reveal>
+    <div class="find__head"><span class="mono cs-no fade">Znajdź nas / 03</span><h2 class="cs-h fade" style="--i:1; margin-top: 16px"><span class="line"><span>no-fuss w&nbsp;sieci</span></span></h2><p class="cs-p fade" style="--i:2; margin-top: 16px">Wspólne konta studia. Profile osobiste są przy kartach wyżej.</p></div>
+    <nav class="find__list fade" style="--i:2" aria-label="Social media no-fuss">
+      <a href="#" target="_blank" rel="noopener">Instagram <span>↗</span></a>
+      <a href="#" target="_blank" rel="noopener">LinkedIn <span>↗</span></a>
+      <a href="#" target="_blank" rel="noopener">Behance <span>↗</span></a>
+      <a href="#" target="_blank" rel="noopener">GitHub <span>↗</span></a>
+      <a href="mailto:[email@no-fuss]" data-copy="[email@no-fuss]">[email@no-fuss] <span>⧉</span></a>
+    </nav>
+  </section>
+
+  <!-- ================= Z LINKEDINA ================= -->
+  <section class="section find tone-dark" id="posty" style="background: var(--bg)" data-reveal>
+    <div class="find__head"><span class="mono cs-no fade">Z LinkedIna / 04</span><h2 class="cs-h fade" style="--i:1; margin-top: 16px"><span class="line"><span>Co piszemy</span></span></h2><p class="cs-p fade" style="--i:2; margin-top: 16px">Teksty Magdy o&nbsp;designie, produkcie i&nbsp;pracy we dwoje. Każdy wpis prowadzi do LinkedIna.</p><p class="mono-sm cs-no fade" style="--i:3; margin-top: 24px">[Lista do podmiany: tytuł, data, link do posta]</p></div>
+    <nav class="find__list posts fade" style="--i:2" aria-label="Posty Magdy na LinkedInie">
+      <a href="#" target="_blank" rel="noopener"><span class="posts__t">[Tytuł posta 01 — jedno zdanie, które mówi, o&nbsp;czym jest]</span><span class="posts__m mono-sm">[data] · LinkedIn ↗</span></a>
+      <a href="#" target="_blank" rel="noopener"><span class="posts__t">[Tytuł posta 02]</span><span class="posts__m mono-sm">[data] · LinkedIn ↗</span></a>
+      <a href="#" target="_blank" rel="noopener"><span class="posts__t">[Tytuł posta 03]</span><span class="posts__m mono-sm">[data] · LinkedIn ↗</span></a>
+      <a href="#" target="_blank" rel="noopener"><span class="posts__t">[Tytuł posta 04]</span><span class="posts__m mono-sm">[data] · LinkedIn ↗</span></a>
+      <a href="#" target="_blank" rel="noopener" class="posts__all"><span class="posts__t">Wszystkie posty Magdy</span><span class="posts__m mono-sm">LinkedIn ↗</span></a>
+    </nav>
+  </section>
+
+  <!-- ================= OKLEJ NAS ================= -->
+  <section class="section play tone-dark" id="play" style="background: var(--bg)">
+    <div class="play__head" data-reveal><h2><span class="line"><span>Oklej nas</span></span></h2><span class="mono fade" style="--i:2">Przeciągnij naklejki ↓</span></div>
+    <div class="play__photos"><div class="ph"><span>Magda</span></div><div class="ph ph--lime"><span>Kuba</span></div></div>
+  </section>
 </main>
 
 <!-- ================= STOPKA ================= -->
@@ -727,28 +652,23 @@
 </script>
 
 <script>
+/* przeciągane naklejki */
 (() => {
-  /* live: załaduj żywą stronę do ramki po kliknięciu */
-  document.querySelectorAll('.live').forEach(l => { const btn = l.querySelector('.live__btn'), fr = l.querySelector('iframe'); btn.addEventListener('click', () => { fr.src = fr.dataset.src; l.classList.add('is-on'); }); });
-  /* switcher */
-  document.querySelectorAll('.sw2').forEach(sw => { const bs = [...sw.querySelectorAll('.sw2__list button')], ims = [...sw.querySelectorAll('.sw2__view img')], cap = sw.querySelector('[data-cap]');
-    const go = i => { bs.forEach((b, j) => b.setAttribute('aria-selected', i === j)); ims.forEach((im, j) => im.classList.toggle('is-on', i === j)); if (cap) cap.textContent = bs[i].dataset.cap || ''; };
-    bs.forEach((b, i) => b.addEventListener('click', () => go(i))); go(0);
-    sw.addEventListener('keydown', e => { const i = bs.findIndex(b => b.getAttribute('aria-selected') === 'true'); if (e.key === 'ArrowDown') { e.preventDefault(); go((i + 1) % bs.length); bs[(i + 1) % bs.length].focus(); } if (e.key === 'ArrowUp') { e.preventDefault(); go((i - 1 + bs.length) % bs.length); bs[(i - 1 + bs.length) % bs.length].focus(); } });
-  });
-  /* OTB: kula do przeciągania, gradient idzie za nią */
-  document.querySelectorAll('.otb').forEach(o => { const ball = o.querySelector('.otb__ball'); let held = false;
-    const set = (x, y) => { const r = o.getBoundingClientRect(); const px = Math.max(0, Math.min(100, (x - r.left) / r.width * 100)), py = Math.max(0, Math.min(100, (y - r.top) / r.height * 100)); o.style.setProperty('--bx', `calc(${px}% - 11%)`); o.style.setProperty('--by', `calc(${py}% - 11cqw)`); o.style.setProperty('--gx', px + '%'); o.style.setProperty('--gy', py + '%'); };
-    ball.addEventListener('pointerdown', e => { held = true; ball.setPointerCapture(e.pointerId); ball.classList.add('is-held'); e.preventDefault(); });
-    ball.addEventListener('pointermove', e => { if (held) set(e.clientX, e.clientY); });
-    const drop = () => { held = false; ball.classList.remove('is-held'); }; ball.addEventListener('pointerup', drop); ball.addEventListener('pointercancel', drop);
-    o.addEventListener('mousemove', e => { if (!held) { const r = o.getBoundingClientRect(); o.style.setProperty('--gx', ((e.clientX - r.left) / r.width * 100) + '%'); o.style.setProperty('--gy', ((e.clientY - r.top) / r.height * 100) + '%'); } });
+  const play = document.getElementById('play'), list = window.NF_STICKERS; if (!play || !list) return;
+  const spots = [[8, 30], [78, 22], [16, 68], [84, 62], [46, 80], [60, 14]];
+  spots.forEach(([x, y], i) => {
+    const el = document.createElement('div'); el.className = 'drag'; el.tabIndex = 0; el.setAttribute('role', 'img'); el.setAttribute('aria-label', 'Naklejka, przesuwaj strzałkami');
+    el.innerHTML = list[i % list.length];
+    el.style.cssText = `left:${x}%;top:${y}%;--s:${96 + (i * 17) % 40}px;--r:${(i % 2 ? 1 : -1) * (8 + i * 3)}deg`;
+    play.appendChild(el);
+    let ox = 0, oy = 0, held = false;
+    el.addEventListener('pointerdown', e => { held = true; el.setPointerCapture(e.pointerId); el.classList.add('is-held'); const r = el.getBoundingClientRect(); ox = e.clientX - r.left; oy = e.clientY - r.top; e.preventDefault(); });
+    el.addEventListener('pointermove', e => { if (!held) return; const p = play.getBoundingClientRect(); el.style.left = Math.max(0, Math.min(p.width - el.offsetWidth, e.clientX - p.left - ox)) + 'px'; el.style.top = Math.max(0, Math.min(p.height - el.offsetHeight, e.clientY - p.top - oy)) + 'px'; });
+    const drop = () => { held = false; el.classList.remove('is-held'); };
+    el.addEventListener('pointerup', drop); el.addEventListener('pointercancel', drop);
+    el.addEventListener('keydown', e => { const d = { ArrowLeft: [-16, 0], ArrowRight: [16, 0], ArrowUp: [0, -16], ArrowDown: [0, 16] }[e.key]; if (!d) return; e.preventDefault(); el.style.left = el.offsetLeft + d[0] + 'px'; el.style.top = el.offsetTop + d[1] + 'px'; });
   });
 })();
-</script>
-<script>
-/* żywa strona: renderuj w 1440 px i skaluj do ramki, żeby układ był desktopowy */
-(() => { const fit = () => document.querySelectorAll('.frame__vp').forEach(vp => vp.style.setProperty('--s', vp.clientWidth / 1440)); fit(); addEventListener('resize', fit); addEventListener('load', fit); })();
 </script>
 </body>
 </html>

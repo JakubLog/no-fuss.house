@@ -23,7 +23,8 @@ Każda iteracja to osobny plik, poprzednich nie nadpisujemy.
 | `o-nas-v1.html` | podstrona „O nas", hero z dwoma panelami (archiwum) |
 | `o-nas-v2.html` | podstrona „O nas", ciemne i limonkowe karty (archiwum) |
 | `o-nas-v3.html` | podstrona „O nas", karty postaci na jasnym (archiwum) |
-| `o-nas-v4.html` | **aktualna** podstrona „O nas", karty postaci na czarnym, social media, posty z LinkedIna |
+| `o-nas-v4.html` | podstrona „O nas", dwie karty (archiwum) |
+| `o-nas-v5.html` | **aktualna** podstrona „O nas": Magda, Kuba i agenci AI, social media, posty z LinkedIna |
 | `case-ourmoney-v1.html` | case study OurMoney, wersja z ilustracjami (archiwum) |
 | `case-ourmoney-v2.html` | **aktualny** case OurMoney, tylko realne ekrany |
 | `case-aion-mind-v1.html` | case study AION MIND |
