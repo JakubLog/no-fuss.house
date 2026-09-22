@@ -7,7 +7,7 @@
 <meta name="description" content="no-fuss — Magda Nestorowicz (design i produkt) i Kuba Fedoszczak (kod). Produkty cyfrowe bez zbędnego zamieszania.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=TikTok+Sans:opsz,wght@12..36,300..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@400;500;600&family=TikTok+Sans:opsz,wght@12..36,300..900&display=swap" rel="stylesheet">
 <style>
   /* Tokeny: DESIGN.md */
   :root {
@@ -450,6 +450,36 @@
   .path div { padding: 24px; min-height: 240px; display: flex; flex-direction: column; justify-content: space-between; background: var(--tile); color: var(--tile-ink); }
   .path div + div { background: var(--accent); color: #101318; }
   .path strong { font: var(--t-h2); text-transform: uppercase; letter-spacing: -.02em; }
+
+  /* Dziennik AION MIND: klikalna rekonstrukcja ekranu z aionmind.com */
+  .jr { background: #F6F6F4; color: #1B1B1F; font-family: Inter, -apple-system, "Segoe UI", sans-serif; border-radius: 10.5% / 5%; padding: 56px 14px 24px; aspect-ratio: 9 / 18.6; display: flex; flex-direction: column; gap: 12px; overflow: hidden; user-select: none; }
+  .jr__bar { display: flex; align-items: center; gap: 12px; font: 600 15px/1 Inter, sans-serif; }
+  .jr__bar span { flex: 1; text-align: center; }
+  .jr__bar i { width: 22px; height: 22px; display: grid; place-items: center; font-style: normal; font-size: 16px; }
+  .jr__m { text-align: center; font: 600 13px/1 Inter, sans-serif; margin-top: 4px; }
+  .jr__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px 2px; }
+  .jr__grid b { font: 500 10px/1 Inter, sans-serif; color: #8A8A90; text-align: center; padding: 6px 0 4px; }
+  .jr__d { appearance: none; border: 0; height: 32px; border-radius: 6px; font: 500 12px/1 Inter, sans-serif; color: #1B1B1F; background: transparent; cursor: pointer; }
+  .jr__d.out { color: #B9B9BE; }
+  .jr__d.has { background: #C9DBF6; }
+  .jr__d.has + .jr__d.has { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+  .jr__d.has:has(+ .jr__d.has) { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+  .jr__d.done { background: #F1DD9D; } .jr__d.done::before { content: "✓"; font-size: 12px; } .jr__d.done { font-size: 0; }
+  .jr__d.wait { box-shadow: inset 0 0 0 1.5px #F1DD9D; }
+  .jr__d[aria-pressed="true"] { background: #2C4A8C; color: #fff; }
+  .jr__d:focus-visible { outline: 2px solid #2C4A8C; outline-offset: 1px; }
+  .jr__card { border: 0; text-align: left; width: 100%; border-radius: 12px; padding: 12px 14px; cursor: pointer; font-family: inherit; color: inherit; transition: translate .3s var(--ease); }
+  .jr__card:active { translate: 0 1px; }
+  .jr__card--m { background: #BFD5F6; } .jr__card--w { background: #F3DE9A; }
+  .jr__card strong { display: block; font: 600 13px/1.2 Inter, sans-serif; margin-bottom: 4px; }
+  .jr__card strong::before { content: "◎ "; }
+  .jr__card p { font: 400 11px/1.35 Inter, sans-serif; margin: 0 0 10px; }
+  .jr__card span { display: block; text-align: center; font: 500 11px/1 Inter, sans-serif; padding: 9px; border-radius: 999px; background: rgba(255,255,255,.55); }
+  .jr__card[aria-expanded="true"] p { font-weight: 500; }
+  .jr__wk { background: #fff; border-radius: 12px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; font: 600 13px/1 Inter, sans-serif; }
+  .jr__wk small { font: 400 11px/1 Inter, sans-serif; color: #6E6E74; }
+  .jr__toast { position: absolute; left: 50%; bottom: 8%; translate: -50% 0; background: #1B1B1F; color: #fff; font: 500 11px/1 Inter, sans-serif; padding: 10px 14px; border-radius: 999px; opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; }
+  .jr__toast.is-on { opacity: 1; }
 </style>
 </head>
 <body class="is-loading">
@@ -512,7 +542,17 @@
   <section class="section cs-block" data-reveal>
     <span class="cs-no mono fade">03.1 / Dziennik</span>
     <div class="cs-txt"><h2 class="cs-h"><span class="line"><span>Dziennik,</span></span><span class="line" style="--i:1"><span>który podsumowuje</span></span></h2><p class="cs-p fade" style="--i:2; margin-top: 24px">Kalendarz pokazuje ciągłość wpisów. Tydzień i&nbsp;miesiąc zamykają się podsumowaniem: co było ważne, co wracało, co warto zmienić.</p></div>
-    <figure class="cs-vis"><div class="one fade" style="--i:1"><img src="assets/aion-mind/journal-phone.png" alt="Ekran Dziennik: kalendarz maja 2026, podsumowanie miesiąca i tygodnia" loading="lazy" style="display:block;width:100%;height:auto"></div><figcaption class="cs-cap mono-sm">Ekran Dziennika z&nbsp;podsumowaniem miesiąca i&nbsp;tygodnia.</figcaption></figure>
+    <figure class="cs-vis"><div class="one fade iph" style="--i:1; position: relative">
+      <div class="jr" id="jr" aria-label="Dziennik, maj 2026">
+        <div class="jr__bar"><i aria-hidden="true">‹</i><span>Dziennik</span><i aria-hidden="true">⌕</i><i aria-hidden="true">✎</i></div>
+        <div class="jr__m" id="jrMonth">Maj 2026</div>
+        <div class="jr__grid" id="jrGrid" role="grid"><b>PN</b><b>WT</b><b>ŚR</b><b>CZ</b><b>PT</b><b>SB</b><b>ND</b></div>
+        <button type="button" class="jr__card jr__card--m" aria-expanded="false" data-msg="Podsumowanie miesiąca: wzorce, wnioski i momenty przełomu"><strong>Podsumowanie miesiąca</strong><p>Zobacz jakie były wzorce, wnioski albo momenty przełomu w tym miesiącu</p><span>Przejrzyj podsumowanie</span></button>
+        <div class="jr__wk"><span id="jrWeek">Tydzień 22</span><small id="jrRange">25.05–31.05.2026</small></div>
+        <button type="button" class="jr__card jr__card--w" aria-expanded="false" data-msg="Podsumowanie tygodnia: jak Ci minął ten tydzień"><strong>Podsumowanie tygodnia</strong><p>Zobacz jak Ci minął ten tydzień.</p><span>Przejrzyj podsumowanie</span></button>
+        <div class="jr__toast" id="jrToast" role="status"></div>
+      </div>
+    </div><figcaption class="cs-cap mono-sm">Ekran Dziennika odtworzony w&nbsp;HTML na podstawie ekranu z&nbsp;aionmind.com. Klikaj dni i&nbsp;karty.</figcaption></figure>
   </section>
 
   <section class="section cs-block flip tone-dark" style="background: var(--bg)" data-reveal>
@@ -695,6 +735,28 @@
 
 <script>
 (() => { const io = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; io.unobserve(e.target); if (matchMedia('(prefers-reduced-motion: reduce)').matches) return; const end = +e.target.dataset.count, t0 = performance.now(); (function tick(now) { const p = Math.min(1, (now - t0) / 1200), v = 1 - Math.pow(1 - p, 4); e.target.textContent = Math.round(end * v); if (p < 1) requestAnimationFrame(tick); })(t0); }), { threshold: .6 }); document.querySelectorAll('[data-count]').forEach(n => io.observe(n)); })();
+</script>
+<script>
+/* Dziennik: kalendarz maja 2026, wybór dnia ustawia tydzień, karty reagują na klik */
+(() => {
+  const grid = document.getElementById('jrGrid'); if (!grid) return;
+  const has = new Set(['4-29','5-1','5-2','5-4','5-5','5-6','5-7','5-13','5-14','5-15','5-19','5-20','5-21','5-23','5-27','5-28','5-29','5-30']);
+  const done = new Set(['5-3','5-10','5-17']), wait = new Set(['5-24','5-31']);
+  const start = new Date(2026, 3, 27); let sel = null;
+  const pad = n => String(n).padStart(2, '0'), fmt = d => `${pad(d.getDate())}.${pad(d.getMonth() + 1)}`;
+  const isoWeek = d => { const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day); const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1)); return Math.ceil(((t - y0) / 864e5 + 1) / 7); };
+  const setWeek = d => { const mon = new Date(d); mon.setDate(d.getDate() - ((d.getDay() + 6) % 7)); const sun = new Date(mon); sun.setDate(mon.getDate() + 6); document.getElementById('jrWeek').textContent = 'Tydzień ' + isoWeek(d); document.getElementById('jrRange').textContent = `${fmt(mon)}–${fmt(sun)}.${sun.getFullYear()}`; };
+  for (let i = 0; i < 35; i++) {
+    const d = new Date(start); d.setDate(start.getDate() + i); const k = `${d.getMonth() + 1}-${d.getDate()}`;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'jr__d' + (d.getMonth() !== 4 ? ' out' : '') + (has.has(k) ? ' has' : '') + (done.has(k) ? ' done' : '') + (wait.has(k) ? ' wait' : '');
+    b.textContent = d.getDate(); b.setAttribute('aria-label', d.toLocaleDateString('pl-PL', { day: 'numeric', month: 'long' })); b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', () => { sel?.setAttribute('aria-pressed', 'false'); sel = b; b.setAttribute('aria-pressed', 'true'); setWeek(d); });
+    if (k === '5-30') { sel = b; b.setAttribute('aria-pressed', 'true'); setWeek(d); }
+    grid.appendChild(b);
+  }
+  const toast = document.getElementById('jrToast'); let t;
+  document.querySelectorAll('.jr__card').forEach(c => c.addEventListener('click', () => { const on = c.getAttribute('aria-expanded') !== 'true'; c.setAttribute('aria-expanded', on); toast.textContent = c.dataset.msg; toast.classList.add('is-on'); clearTimeout(t); t = setTimeout(() => toast.classList.remove('is-on'), 1600); }));
+})();
 </script>
 </body>
 </html>
