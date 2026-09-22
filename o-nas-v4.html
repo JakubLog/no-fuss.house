@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OURMONEY — CASE STUDY — NO-FUSS©2026</title><!-- case-ourmoney v2: tylko realne ekrany -->
+<title>O NAS — NO-FUSS©2026</title><!-- o-nas v4: v3, karty postaci na czarnym tle -->
 <meta name="description" content="no-fuss — Magda Nestorowicz (design i produkt) i Kuba Fedoszczak (kod). Produkty cyfrowe bez zbędnego zamieszania.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -351,104 +351,53 @@
     .row__track b { left: var(--v, 50%); } .meter i::after { transform: scaleX(var(--v, 0)); }
   }
 
-  /* ================= CASE STUDY ================= */
-  .cs-hero { position: relative; min-height: 100svh; overflow: hidden; color: #fff; padding: calc(var(--section-y) + 24px) var(--gutter) var(--section-y); display: grid; grid-template-columns: repeat(12, 1fr); gap: 32px 8px; align-content: end; }
-  .cs-hero > * { grid-column: 1 / -1; }
-  .cs-hero > .hero__bg, .cs-hero > .stickers { grid-column: auto; }
-  .cs-hero__title { font: var(--t-mega); letter-spacing: -.04em; text-transform: uppercase; }
-  .cs-hero__lead { font: var(--t-statement); max-width: 22ch; }
-  .cs-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 0 8px; }
-  .cs-meta div { padding: 8px 0; border-top: 1px solid rgba(255,255,255,.24); }
-  .cs-meta dt { color: rgba(255,255,255,.64); margin-bottom: 4px; }
-  .cs-meta a { text-decoration: underline; text-underline-offset: 3px; }
-  @media (min-width: 1024px) { .cs-hero__lead { grid-column: 1 / span 5; align-self: end; } .cs-meta { grid-column: 7 / span 6; grid-template-columns: repeat(3, 1fr); } }
-
-  .cs-shot { padding: 0 var(--gutter); margin-top: -1px; background: linear-gradient(#101318 50%, var(--light) 50%); }
-  .cs-shot .ph { aspect-ratio: 16 / 9; position: relative; z-index: 2; }
-
-  .cs-block { display: grid; grid-template-columns: repeat(12, 1fr); gap: 32px 8px; align-items: start; }
-  .cs-block > * { grid-column: 1 / -1; }
   .cs-no { color: var(--muted); }
-  .cs-h { font: var(--t-h2); letter-spacing: -.025em; text-transform: uppercase; }
+  .cs-h { font: var(--t-h2); text-transform: uppercase; letter-spacing: -.02em; }
   .cs-p { font: var(--t-lead); max-width: 44ch; }
-  .cs-p + .cs-p { margin-top: 16px; }
-  .cs-cap { color: var(--muted); margin-top: 8px; }
-  .cs-quote { font: var(--t-display); letter-spacing: -.02em; }
-  .cs-quote mark { background: var(--accent); color: #101318; padding: 0 8px; }
-  @media (min-width: 1024px) {
-    .cs-block > .cs-no { grid-column: 1 / span 2; }
-    .cs-block > .cs-txt { grid-column: 3 / span 4; position: sticky; top: 120px; }
-    .cs-block > .cs-vis { grid-column: 8 / span 5; }
-    .cs-block > .cs-wide { grid-column: 3 / span 10; }
-    .cs-block.flip > .cs-txt { grid-column: 9 / span 4; order: 3; }
-    .cs-block.flip > .cs-vis { grid-column: 3 / span 5; order: 2; }
-  }
+  /* ================= O NAS v2 ================= */
+  .team-hero { padding: calc(var(--section-y) + 40px) var(--gutter) var(--section-y); display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); row-gap: 32px; background: var(--bg); }
+  .team-hero > * { grid-column: 1 / -1; }
+  .team-hero .display { max-width: 12ch; }
+  .team-hero__lead { font: var(--t-statement); color: var(--muted); max-width: 26ch; }
+  @media (min-width: 1024px) { .team-hero .display { grid-column: 1 / span 8; } .team-hero__lead { grid-column: 9 / span 4; align-self: end; } }
 
 
-  /* kalkulator podziału */
-  .calc { background: var(--tile); color: var(--tile-ink); padding: 24px; display: grid; gap: 20px; }
-  .calc__models { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .calc__models button { padding: 12px 8px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.3); text-align: left; min-height: 44px; }
-  .calc__models button[aria-pressed="true"] { background: var(--accent); color: #101318; box-shadow: none; }
-  .calc label { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; align-items: center; }
-  .calc input[type=range] { grid-column: 1 / -1; -webkit-appearance: none; appearance: none; height: 24px; background: transparent; width: 100%; }
-  .calc input::-webkit-slider-runnable-track { height: 2px; background: rgba(255,255,255,.4); }
-  .calc input::-moz-range-track { height: 2px; background: rgba(255,255,255,.4); }
-  .calc input::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; margin-top: -7px; background: var(--accent); border: 2px solid #101318; outline: 1px solid var(--accent); rotate: 45deg; }
-  .calc input::-moz-range-thumb { width: 12px; height: 12px; background: var(--accent); border: 2px solid #101318; outline: 1px solid var(--accent); border-radius: 0; rotate: 45deg; }
-  .calc__bar { display: flex; height: 72px; }
-  .calc__bar div { display: flex; flex-direction: column; justify-content: space-between; padding: 8px; transition: flex-basis .6s var(--ease); overflow: hidden; white-space: nowrap; min-width: 0; }
-  .calc__bar .a { background: var(--accent); color: #101318; } .calc__bar .b { background: #FCFCFB; color: #101318; }
-  .calc__bar strong { font: var(--t-title); font-variant-numeric: tabular-nums; }
-  .calc output { font-variant-numeric: tabular-nums; }
+  /* karty postaci (styl v1) ze zdjęciem i social mediami */
+  .sheets { display: grid; gap: var(--gap); grid-template-columns: 1fr; padding: var(--section-y) var(--gutter); background: var(--dark); color: #fff; --bg: var(--shade-900); --ink: #fff; --muted: #A9ABAD; }
+  @media (min-width: 900px) { .sheets { grid-template-columns: 1fr 1fr; } }
+  .sheet { background: var(--bg); color: var(--ink); padding: 24px 24px 32px; position: relative; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent); display: grid; grid-template-columns: repeat(6, 1fr); gap: 24px var(--gap); }
+  .sheet > * { grid-column: 1 / -1; }
+  .sheet__head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .sheet__head h2 { font: var(--t-h2); text-transform: uppercase; letter-spacing: -.02em; }
+  .sheet__photo { position: relative; }
+  .sheet__photo .ph { aspect-ratio: 3 / 4; }
+  .sheet__roles { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sheet__bio { font: var(--t-lead); max-width: 34ch; }
+  .sheet dl { display: grid; grid-template-columns: minmax(96px, 30%) 1fr; }
+  .sheet dt, .sheet dd { padding: 12px 0; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+  .sheet dt { color: var(--muted); }
+  .sheet dd a { text-decoration: underline; text-underline-offset: 3px; }
+  .sheet dd a:hover { background: var(--accent); color: var(--on-accent); }
+  .meter { display: flex; align-items: center; gap: 16px; }
+  .meter i { flex: 1; height: 10px; box-shadow: inset 0 0 0 1px currentColor; position: relative; }
+  .meter i::after { content: ""; position: absolute; inset: 0; background: var(--accent); transform-origin: left; transform: scaleX(0); transition: transform 1.2s var(--ease) .3s; }
+  .is-in .meter i::after { transform: scaleX(var(--v, 0)); }
+  .sheet__social { display: flex; flex-wrap: wrap; gap: 8px; }
+  .sheet__social a { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; box-shadow: inset 0 0 0 1px currentColor; min-height: 40px; transition: background-color .2s, color .2s; }
+  .sheet__social a::after { content: "↗"; }
+  .sheet__social a:hover { background: var(--accent); color: #101318; box-shadow: none; }
+  .sheets .ph { background: var(--shade-700); }
+  @media (min-width: 900px) { .sheet__photo { grid-column: 1 / span 2; grid-row: 2 / span 3; } .sheet__roles, .sheet__bio, .sheet dl { grid-column: 3 / span 4; } }
 
-  /* jedna subskrypcja */
-  .sub { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; background: var(--accent); color: #101318; padding: 32px 24px; }
-  .sub__card { background: #101318; color: #fff; padding: 16px; aspect-ratio: 1.6; display: flex; flex-direction: column; justify-content: space-between; max-width: 220px; }
-  .sub__card strong { font: var(--t-title); }
-  .sub__arrow { font: var(--t-title); }
-  .sub__ppl { display: flex; justify-content: flex-end; }
-  .sub__ppl span { width: clamp(56px, 8vw, 88px); aspect-ratio: 1; border-radius: 50%; background: #FCFCFB; border: 2px solid #101318; display: grid; place-items: center; font: var(--t-title); }
-  .sub__ppl span + span { margin-left: -18px; background: #101318; color: var(--accent); }
-
-  /* dwa języki */
-
-  /* liczby */
-  .nums { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  @media (min-width: 900px) { .nums { grid-template-columns: repeat(4, 1fr); } }
-  .num { background: var(--tile); color: var(--tile-ink); padding: 20px; min-height: 200px; display: flex; flex-direction: column; justify-content: space-between; }
-  .num strong { font: var(--t-display); letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
-  .num--lime { background: var(--accent); color: #101318; }
-
-  .stack { display: flex; flex-wrap: wrap; gap: 8px; } .stack span { padding: 8px 12px; box-shadow: inset 0 0 0 1px currentColor; }
-  .next { display: block; padding: var(--section-y) var(--gutter); background: var(--accent); color: #101318; position: relative; }
-  .next .cs-hero__title { margin-top: 16px; }
-  .next:hover .arrow { transform: translate(8px, -8px); } .next .arrow { display: inline-block; transition: transform .5s var(--ease); }
-
-  /* realne ekrany */
-  /* iPhone mockup: korpus, ramka, dynamic island */
-  .iph { display: block; background: #101318; padding: 10px; border-radius: 12.5% / 6.2%; box-shadow: inset 0 0 0 2px #3a3f47, 0 40px 60px -24px rgba(16,19,24,.6); position: relative; }
-  .iph::before { content: ""; position: absolute; z-index: 2; top: 20px; left: 50%; width: 26%; height: 3.2%; translate: -50% 0; background: #101318; border-radius: 999px; }
-  .iph::after { content: ""; position: absolute; right: -3px; top: 22%; width: 3px; height: 9%; background: #3a3f47; border-radius: 0 2px 2px 0; }
-  .iph img { display: block; width: 100%; height: auto; border-radius: 10.5% / 5%; }
-  .device { display: block; width: 100%; }
-  .raw img { display: block; width: 100%; height: auto; }
-  .stage { background: var(--accent); padding: 48px var(--gutter) 0; display: flex; gap: 8px; justify-content: center; align-items: flex-end; overflow: hidden; position: relative; z-index: 2; }
-  .stage figure { flex: 0 1 300px; margin-bottom: -12%; } .stage figure:nth-child(2) { margin-bottom: -4%; }
-  .stage--dark { background: #15181D; }
-  .stage--img { padding: 0; display: block; } .stage--img img { display: block; width: 100%; height: auto; }
-  .screens { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px 8px; } @media (min-width: 900px) { .screens { grid-template-columns: repeat(4, 1fr); } }
-  .screens figcaption { margin-top: 16px; }
-  .one { max-width: 320px; margin: 0 auto; }
-  .raw { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent); background: #fff; margin-top: 8px; }
-  .bigline { font: var(--t-display); letter-spacing: -.02em; }
-  .guides { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 8px; } @media (min-width: 900px) { .guides { grid-template-columns: repeat(5, 1fr); } }
-  .guides img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; display: block; }
-  .guides strong { display: block; font: var(--t-title); margin: 16px 0 4px; }
-  .path { display: grid; gap: 8px; grid-template-columns: 1fr; } @media (min-width: 800px) { .path { grid-template-columns: 1fr 1fr; } }
-  .path div { padding: 24px; min-height: 240px; display: flex; flex-direction: column; justify-content: space-between; background: var(--tile); color: var(--tile-ink); }
-  .path div + div { background: var(--accent); color: #101318; }
-  .path strong { font: var(--t-h2); text-transform: uppercase; letter-spacing: -.02em; }
+  .find { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px var(--gap); align-items: start; }
+  .find > * { grid-column: 1 / -1; }
+  .find__list { display: grid; grid-template-columns: 1fr; }
+  .find__list a { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); font: var(--t-title); }
+  .find__list a:last-child { border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+  .find__list a:hover { background: var(--accent); color: #101318; padding-inline: 12px; }
+  .find__list a span { transition: transform .4s var(--ease); display: inline-block; }
+  .find__list a:hover span { transform: translate(4px, -4px); }
+  @media (min-width: 1024px) { .find > .find__head { grid-column: 1 / span 4; position: sticky; top: 120px; } .find > .find__list { grid-column: 5 / span 8; } }
 </style>
 </head>
 <body class="is-loading">
@@ -461,8 +410,8 @@
   <div class="hud__row">
     <a class="logo" href="no-fuss-v5.html" aria-label="no-fuss, strona główna">no<i></i>fuss</a>
     <nav class="nav" aria-label="Główna">
-      <a href="no-fuss-v5.html#realizacje" data-scramble aria-current="page">Realizacje</a>
-      <a href="o-nas-v4.html" data-scramble>O nas</a>
+      <a href="no-fuss-v5.html#realizacje" data-scramble>Realizacje</a>
+      <a href="o-nas-v1.html" data-scramble aria-current="page">O nas</a>
       <a href="#kontakt" data-scramble>Kontakt</a>
     </nav>
   </div>
@@ -475,123 +424,76 @@
 </header>
 
 <main id="top">
-  <!-- ===== HERO ===== -->
-  <section class="cs-hero" id="hero" data-stickers>
-    <div class="hero__bg" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-    <div class="stickers" aria-hidden="true"></div>
-    <p class="mono fade" style="--i:0"><span class="chip">Case study</span> &nbsp;Własny produkt · 2026</p>
-    <h1 class="cs-hero__title"><span class="line" style="--i:1"><span>OurMoney</span></span></h1>
-    <p class="cs-hero__lead fade" style="--i:3">Aplikacja, która odpowiada parze na jedno pytanie: czy to jest fair?</p>
-    <dl class="cs-meta mono-sm fade" style="--i:4">
-      <div><dt>Magda</dt><dd>Design i produkt</dd></div>
-      <div><dt>Kuba</dt><dd>Kod, infrastruktura, bezpieczeństwo</dd></div>
-      <div><dt>Status</dt><dd>W budowie, przed premierą w sklepach</dd></div>
-      <div><dt>Platformy</dt><dd>PWA · iOS i Android w przygotowaniu</dd></div>
-      <div><dt>Dla kogo</dt><dd>Pary 25–40, Polska i UE</dd></div>
-      <div><dt>Zobacz</dt><dd><a href="https://ourmoney.pl" target="_blank" rel="noopener">ourmoney.pl ↗</a></dd></div>
-    </dl>
+  <!-- ===== HERO: nagłówek + dwie karty osób ===== -->
+  <section class="team-hero" id="hero" data-reveal>
+    <h1 class="display"><span class="line" style="--i:0"><span>Dwie osoby,</span></span><span class="line" style="--i:1"><span>jeden podział,</span></span><span class="line" style="--i:2"><span>zero zamieszania</span></span></h1>
+    <p class="team-hero__lead fade" style="--i:3">Magda projektuje i&nbsp;prowadzi produkt. Kuba pisze kod i&nbsp;pilnuje, żeby działał. Nikt nie robi zamieszania.</p>
   </section>
-  <div class="stage" data-reveal><figure class="fade" style="--i:0"><span class="device iph"><img src="assets/ourmoney/koperty.png" alt="Ekran Koperty: planowane wydatki i budżet miesięczny" loading="lazy"></span></figure><figure class="fade" style="--i:1"><span class="device iph"><img src="assets/ourmoney/ekran-glowny-rownowaga.webp" alt="Ekran główny: czyja kolej na płacenie i ostatnie transakcje" loading="lazy"></span></figure><figure class="fade" style="--i:2"><span class="device iph"><img src="assets/ourmoney/strona-glowna.png" alt="Ekran główny: budżet miesiąca, transakcje i koperty" loading="lazy"></span></figure></div>
+  <div class="sheets">
+    <article class="sheet" data-reveal>
+      <div class="sheet__head"><h2><span class="line"><span>Magda Nestorowicz</span></span></h2><span class="mono-sm chip">P1</span></div>
+      <div class="sheet__photo fade"><div class="ph"><span>Zdjęcie Magdy 3:4</span></div></div>
+      <p class="sheet__roles fade" style="--i:1"><span class="chip mono-sm">Design</span><span class="chip mono-sm">Produkt</span></p>
+      <p class="sheet__bio fade" style="--i:2">Product Designerka. Buduje OurMoney razem z&nbsp;Kubą i&nbsp;AION MIND, gdzie od pierwszego ekranu doszła do prowadzenia całego produktu.</p>
+      <dl class="mono fade" style="--i:3"><dt>Buduje</dt><dd><a href="case-ourmoney-v2.html">OurMoney</a>, <a href="case-aion-mind-v1.html">AION MIND</a></dd><dt>Supermoc</dt><dd>[placeholder: jedno zdanie]</dd><dt>Narzędzia</dt><dd>[placeholder]</dd><dt>Po godzinach</dt><dd>[placeholder]</dd><dt>Zamieszanie</dt><dd><span class="meter"><i style="--v:.02"></i>0%</span></dd></dl>
+      <nav class="sheet__social mono-sm fade" style="--i:4" aria-label="Social media: Magda Nestorowicz"><a href="#" target="_blank" rel="noopener">LinkedIn</a><a href="#" target="_blank" rel="noopener">Instagram</a><a href="#" target="_blank" rel="noopener">Dribbble</a><a href="#" target="_blank" rel="noopener">X</a></nav>
+    </article>
+    <article class="sheet" data-reveal>
+      <div class="sheet__head"><h2><span class="line"><span>Kuba Fedoszczak</span></span></h2><span class="mono-sm chip">P2</span></div>
+      <div class="sheet__photo fade"><div class="ph"><span>Zdjęcie Kuby 3:4</span></div></div>
+      <p class="sheet__roles fade" style="--i:1"><span class="chip mono-sm">Kod</span></p>
+      <p class="sheet__bio fade" style="--i:2">Developer. Odpowiada za produkcję aplikacji, jej bezpieczeństwo i&nbsp;całą stronę technologiczną OurMoney.</p>
+      <dl class="mono fade" style="--i:3"><dt>Buduje</dt><dd><a href="case-ourmoney-v2.html">OurMoney</a></dd><dt>Supermoc</dt><dd>[placeholder: jedno zdanie]</dd><dt>Stack</dt><dd>[placeholder]</dd><dt>Po godzinach</dt><dd>[placeholder]</dd><dt>Zamieszanie</dt><dd><span class="meter"><i style="--v:.02"></i>0%</span></dd></dl>
+      <nav class="sheet__social mono-sm fade" style="--i:4" aria-label="Social media: Kuba Fedoszczak"><a href="#" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/JakubLog" target="_blank" rel="noopener">GitHub</a><a href="#" target="_blank" rel="noopener">X</a></nav>
+    </article>
+  </div>
+  <div class="marquee" aria-hidden="true"><div class="marquee__t">
+    <span>Dwie osoby ✦</span><span>Zero zamieszania ✦</span><span>Design × Kod ✦</span><span>No fuss ✦</span>
+    <span>Dwie osoby ✦</span><span>Zero zamieszania ✦</span><span>Design × Kod ✦</span><span>No fuss ✦</span>
+    <span>Dwie osoby ✦</span><span>Zero zamieszania ✦</span><span>Design × Kod ✦</span><span>No fuss ✦</span>
+    <span>Dwie osoby ✦</span><span>Zero zamieszania ✦</span><span>Design × Kod ✦</span><span>No fuss ✦</span>
+  </div></div>
 
-  <!-- ===== 01 PROBLEM ===== -->
-  <section class="section cs-block" data-reveal>
-    <span class="cs-no mono fade">01 / Problem</span>
-    <div class="cs-wide">
-      <p class="cs-quote"><span class="line" style="--i:0"><span>„Czy ja nie</span></span><span class="line" style="--i:1"><span>płacę <mark>więcej</mark>?”</span></span></p>
-      <p class="cs-p fade" style="--i:3; margin-top: 32px">Pary z różnymi dochodami liczą wspólne wydatki w Excelu i w głowie. Splitwise jest dla grup znajomych, banki pokazują saldo. Nikt nie pokazuje, czy podział jest sprawiedliwy.</p>
-    </div>
-  </section>
-
-  <!-- ===== 02 DECYZJA ===== -->
-  <section class="section cs-block tone-dark" style="background: var(--bg)" data-reveal>
-    <span class="cs-no mono fade">02 / Kierunek</span>
-    <div class="cs-wide">
-      <h2 class="cs-h"><span class="line" style="--i:0"><span>Skalpel,</span></span><span class="line" style="--i:1"><span>nie scyzoryk</span></span></h2>
-      <p class="cs-p fade" style="--i:3; margin-top: 24px">Nie budujemy kolejnej aplikacji do finansów. Budujemy bezstronnego mediatora: jeden problem, poczucie niesprawiedliwości w codziennych wydatkach, rozwiązany precyzyjnie. Każda funkcja, która temu nie służy, wypada.</p>
-    </div>
-  </section>
-
-  <!-- ===== 03 DECYZJE PROJEKTOWE ===== -->
-  <section class="section cs-block" data-reveal>
-    <span class="cs-no mono fade">03.1 / Ekran główny</span>
-    <div class="cs-txt"><h2 class="cs-h"><span class="line"><span>Bez salda</span></span></h2><p class="cs-p fade" style="--i:2; margin-top: 24px">Pierwszy ekran nie zaczyna się od stanu konta. Zaczyna się od równowagi: czyja kolej na płacenie i o jaką kwotę, według zasad, które para sama ustaliła.</p></div>
-    <figure class="cs-vis"><div class="one fade" style="--i:1"><span class="device iph"><img src="assets/ourmoney/ekran-glowny-rownowaga.webp" alt="Ekran główny OurMoney: kolej Wiktorii na płacenie, 223 zł" loading="lazy"></span></div><figcaption class="cs-cap mono-sm">Ekran główny aplikacji. Na górze nie saldo, tylko czyja kolej i ile.</figcaption></figure>
+  <!-- ================= KTO CO ROBI ================= -->
+  <section class="section">
+    <div class="work__head mono" data-reveal><span class="fade">Kto co robi</span><span class="fade" style="--i:1">[02]</span></div>
+    <div class="split__legend mono-sm"><span>← Magda</span><span>Kuba →</span></div>
+    <div class="row" data-reveal style="--v:4%"><h3><span class="line"><span>Design</span></span></h3><div class="row__track"><b></b></div></div>
+    <div class="row" data-reveal style="--v:10%"><h3><span class="line"><span>Produkt</span></span></h3><div class="row__track"><b></b></div></div>
+    <div class="row" data-reveal style="--v:50%"><h3><span class="line"><span>Strategia i&nbsp;pomysły</span></span></h3><div class="row__track"><b></b></div></div>
+    <div class="row" data-reveal style="--v:92%"><h3><span class="line"><span>Kod</span></span></h3><div class="row__track"><b></b></div></div>
+    <div class="row" data-reveal style="--v:96%"><h3><span class="line"><span>Infrastruktura i&nbsp;bezpieczeństwo</span></span></h3><div class="row__track"><b></b></div></div>
   </section>
 
-  <section class="section cs-block flip tone-dark" style="background: var(--bg)" data-reveal>
-    <span class="cs-no mono fade">03.2 / Onboarding</span>
-    <div class="cs-txt"><h2 class="cs-h"><span class="line"><span>Zasady</span></span><span class="line" style="--i:1"><span>na starcie</span></span></h2><p class="cs-p fade" style="--i:2; margin-top: 24px">Model podziału para wybiera w onboardingu, nie w ustawieniach. To serce produktu, nie opcja. Trzy modele: proporcjonalnie do dochodów, po równo albo tylko śledzenie.</p><p class="cs-p fade" style="--i:3">Przesuń suwaki. Liczymy tak samo jak aplikacja: najpierw zaokrąglony procent, potem kwota.</p></div>
-    <figure class="cs-vis"><div class="calc mono-sm fade" style="--i:1" id="calc">
-      <div class="calc__models" role="group" aria-label="Model podziału"><button type="button" data-m="prop" aria-pressed="true">Proporcjonalnie</button><button type="button" data-m="half" aria-pressed="false">50 / 50</button><button type="button" data-m="none" aria-pressed="false">Tylko śledzenie</button></div>
-      <label>Dochód Anny <output id="oA">6 500 zł</output><input type="range" id="iA" min="2000" max="20000" step="100" value="6500"></label>
-      <label>Dochód Michała <output id="oB">4 500 zł</output><input type="range" id="iB" min="2000" max="20000" step="100" value="4500"></label>
-      <label>Wspólne wydatki <output id="oT">4 000 zł</output><input type="range" id="iT" min="500" max="12000" step="100" value="4000"></label>
-      <div class="calc__bar" aria-live="polite"><div class="a" id="bA"><span>Anna · <span id="pA">59%</span></span><strong id="sA">2 360 zł</strong></div><div class="b" id="bB"><span>Michał · <span id="pB">41%</span></span><strong id="sB">1 640 zł</strong></div></div>
-    </div><div class="raw fade" style="--i:2"><img src="assets/ourmoney/zasady-podzialu.png" alt="Fragment ustawień OurMoney: Nasze zasady, po równo, proporcjonalnie, tylko śledzenie" loading="lazy"></div><figcaption class="cs-cap mono-sm">U góry działający kalkulator, niżej „Nasze zasady” w aplikacji. Przy 6 500 i 4 500 zł dochodu oraz 4 000 zł wydatków: 59% i 2 360 zł.</figcaption></figure>
+  <!-- ================= ZNAJDŹ NAS ================= -->
+  <section class="section find" id="social" data-reveal>
+    <div class="find__head"><span class="mono cs-no fade">Znajdź nas / 03</span><h2 class="cs-h fade" style="--i:1; margin-top: 16px"><span class="line"><span>no-fuss w&nbsp;sieci</span></span></h2><p class="cs-p fade" style="--i:2; margin-top: 16px">Wspólne konta studia. Profile osobiste są przy kartach wyżej.</p></div>
+    <nav class="find__list fade" style="--i:2" aria-label="Social media no-fuss">
+      <a href="#" target="_blank" rel="noopener">Instagram <span>↗</span></a>
+      <a href="#" target="_blank" rel="noopener">LinkedIn <span>↗</span></a>
+      <a href="#" target="_blank" rel="noopener">Behance <span>↗</span></a>
+      <a href="#" target="_blank" rel="noopener">GitHub <span>↗</span></a>
+      <a href="mailto:[email@no-fuss]" data-copy="[email@no-fuss]">[email@no-fuss] <span>⧉</span></a>
+    </nav>
   </section>
 
-  <section class="section cs-block" data-reveal>
-    <span class="cs-no mono fade">03.3 / Koniec miesiąca</span>
-    <div class="cs-txt"><h2 class="cs-h"><span class="line"><span>Rytuał</span></span><span class="line" style="--i:1"><span>rozliczenia</span></span></h2><p class="cs-p fade" style="--i:2; margin-top: 24px">Jeden przycisk, jedno zdanie, potwierdzenie zeruje saldo. Chodzi o zamknięcie miesiąca z czystą kartą, nie o księgowość.</p></div>
-    <div class="cs-vis"><p class="bigline fade" style="--i:1">„Anna przelewa Michałowi 340&nbsp;zł.”</p><p class="cs-cap mono-sm">Jedno zdanie zamiast tabeli. [Miejsce na zrzut ekranu rozliczenia, gdy będzie gotowy.]</p></div>
+  <!-- ================= Z LINKEDINA ================= -->
+  <section class="section find tone-dark" id="posty" style="background: var(--bg)" data-reveal>
+    <div class="find__head"><span class="mono cs-no fade">Z LinkedIna / 04</span><h2 class="cs-h fade" style="--i:1; margin-top: 16px"><span class="line"><span>Co piszemy</span></span></h2><p class="cs-p fade" style="--i:2; margin-top: 16px">Teksty Magdy o&nbsp;designie, produkcie i&nbsp;pracy we dwoje. Każdy wpis prowadzi do LinkedIna.</p><p class="mono-sm cs-no fade" style="--i:3; margin-top: 24px">[Lista do podmiany: tytuł, data, link do posta]</p></div>
+    <nav class="find__list posts fade" style="--i:2" aria-label="Posty Magdy na LinkedInie">
+      <a href="#" target="_blank" rel="noopener"><span class="posts__t">[Tytuł posta 01 — jedno zdanie, które mówi, o&nbsp;czym jest]</span><span class="posts__m mono-sm">[data] · LinkedIn ↗</span></a>
+      <a href="#" target="_blank" rel="noopener"><span class="posts__t">[Tytuł posta 02]</span><span class="posts__m mono-sm">[data] · LinkedIn ↗</span></a>
+      <a href="#" target="_blank" rel="noopener"><span class="posts__t">[Tytuł posta 03]</span><span class="posts__m mono-sm">[data] · LinkedIn ↗</span></a>
+      <a href="#" target="_blank" rel="noopener"><span class="posts__t">[Tytuł posta 04]</span><span class="posts__m mono-sm">[data] · LinkedIn ↗</span></a>
+      <a href="#" target="_blank" rel="noopener" class="posts__all"><span class="posts__t">Wszystkie posty Magdy</span><span class="posts__m mono-sm">LinkedIn ↗</span></a>
+    </nav>
   </section>
 
-  <section class="section cs-block flip tone-dark" style="background: var(--bg)" data-reveal>
-    <span class="cs-no mono fade">03.4 / Cennik</span>
-    <div class="cs-txt"><h2 class="cs-h"><span class="line"><span>Jedna opłata</span></span><span class="line" style="--i:1"><span>na parę</span></span></h2><p class="cs-p fade" style="--i:2; margin-top: 24px">Większość aplikacji liczy za użytkownika. Tu jedna osoba podpina kartę, druga dostaje dostęp automatycznie. Aplikacja nie dokłada pytania „kto płaci za aplikację”.</p><p class="cs-p fade" style="--i:3">Trial trwa 30 dni, bo cykl finansowy pary jest miesięczny: trzeba dojść do rozliczenia, żeby poczuć efekt.</p></div>
-    <figure class="cs-vis"><div class="sub fade" style="--i:1"><div class="sub__card mono-sm"><span>1 subskrypcja</span><strong>24,99 zł<br><span class="mono-sm">/ mies. za parę</span></strong></div><span class="sub__arrow" aria-hidden="true">→</span><div class="sub__ppl" aria-label="Dwie osoby"><span>A</span><span>M</span></div></div><figcaption class="cs-cap mono-sm">24,99 zł miesięcznie albo 249,99 zł rocznie. Jedna subskrypcja obejmuje oboje.</figcaption></figure>
+  <!-- ================= OKLEJ NAS ================= -->
+  <section class="section play tone-dark" id="play" style="background: var(--bg)">
+    <div class="play__head" data-reveal><h2><span class="line"><span>Oklej nas</span></span></h2><span class="mono fade" style="--i:2">Przeciągnij naklejki ↓</span></div>
+    <div class="play__photos"><div class="ph"><span>Magda</span></div><div class="ph ph--lime"><span>Kuba</span></div></div>
   </section>
-
-  <section class="section tone-dark" style="background: var(--bg)">
-    <div class="work__head mono" data-reveal><span class="fade">03.5 / Codzienność</span><span class="fade" style="--i:1">Zrzuty z aplikacji</span></div>
-    <div class="screens" data-reveal>
-      <figure class="fade"><span class="device iph"><img src="assets/ourmoney/dodawaj-prosto-wydatki.png" alt="Dodawanie wydatku: kwota, koperta, kto zapłacił, skan paragonu" loading="lazy"></span><figcaption class="mono-sm">Wydatek w kilka sekund, także ze skanu paragonu</figcaption></figure>
-      <figure class="fade" style="--i:1"><span class="device iph"><img src="assets/ourmoney/koperty.png" alt="Koperty: planowane i nieplanowane wydatki" loading="lazy"></span><figcaption class="mono-sm">Koperty: plan kontra rzeczywistość</figcaption></figure>
-      <figure class="fade" style="--i:2"><span class="device iph"><img src="assets/ourmoney/wspolne-cele.png" alt="Lista wspólnych celów: Wakacje w Palermo" loading="lazy"></span><figcaption class="mono-sm">Wspólne cele oszczędnościowe</figcaption></figure>
-      <figure class="fade" style="--i:3"><span class="device iph"><img src="assets/ourmoney/wspolne-cele-finansowe.webp" alt="Cel Wakacje: wkład każdej osoby przy podziale 50/50" loading="lazy"></span><figcaption class="mono-sm">Cel z widocznym wkładem obojga</figcaption></figure>
-    </div>
-  </section>
-
-  <!-- ===== 04 DWA JĘZYKI ===== -->
-  <section class="section cs-block" data-reveal>
-    <span class="cs-no mono fade">04 / System wizualny</span>
-    <div class="cs-wide">
-      <h2 class="cs-h"><span class="line"><span>Jeden akcent</span></span></h2>
-      <p class="cs-p fade" style="--i:2; margin: 24px 0 32px">Aplikacja jest jasna i spokojna, bo rozmawia o czułym temacie. Landing jest głośniejszy, bo ma sprzedać. Łączy je limonka <span class="chip mono-sm">#BBFF00</span>.</p>
-      <div class="stage stage--img fade" style="--i:3"><img src="assets/ourmoney/og-image.png" alt="Grafika ourmoney.pl: Razem ogarnijcie finanse" loading="lazy"></div>
-      <p class="cs-cap mono-sm">Grafika z ourmoney.pl.</p>
-    </div>
-  </section>
-
-  <!-- ===== 05 LICZBY ===== -->
-  <section class="section tone-dark" style="background: var(--bg)">
-    <div class="work__head mono" data-reveal><span class="fade">05 / W liczbach</span><span class="fade" style="--i:1">Stan: wrzesień 2026</span></div>
-    <div class="nums" data-reveal>
-      <div class="num num--lime fade"><strong data-count="13">13</strong><span class="mono-sm">kroków onboardingu, tryb solo albo we dwoje</span></div>
-      <div class="num fade" style="--i:1"><strong data-count="3">3</strong><span class="mono-sm">modele podziału zamiast jednego „po połowie”</span></div>
-      <div class="num fade" style="--i:2"><strong data-count="30">30</strong><span class="mono-sm">dni pełnego triala, czyli jeden cykl rozliczenia</span></div>
-      <div class="num fade" style="--i:3"><strong data-count="152">152</strong><span class="mono-sm">polityki bezpieczeństwa na poziomie bazy danych</span></div>
-    </div>
-  </section>
-
-  <!-- ===== 06 POD MASKĄ ===== -->
-  <section class="section cs-block" data-reveal>
-    <span class="cs-no mono fade">06 / Pod maską</span>
-    <div class="cs-txt"><h2 class="cs-h"><span class="line"><span>Kod Kuby</span></span></h2><p class="cs-p fade" style="--i:2; margin-top: 24px">Dane pary są szyfrowane, odizolowane na poziomie bazy i widoczne tylko dla nich dwojga. Operacje finansowe są atomowe, więc salda nie mogą się rozjechać. Bez reklam i bez sprzedaży danych.</p></div>
-    <div class="cs-vis fade" style="--i:3"><p class="mono-sm cs-no" style="margin-bottom:8px">Aplikacja</p><div class="stack mono-sm"><span>React</span><span>TypeScript</span><span>Vite</span><span>Tailwind</span><span>Supabase</span><span>TanStack Query</span><span>Capacitor</span><span>Vercel</span></div><p class="mono-sm cs-no" style="margin:24px 0 8px">Landing</p><div class="stack mono-sm"><span>Next.js 15</span><span>next-intl</span><span>Sanity</span><span>Tailwind 4</span></div><p class="mono-sm cs-no" style="margin:24px 0 8px">Płatności i analityka</p><div class="stack mono-sm"><span>RevenueCat</span><span>Stripe</span><span>PostHog</span></div></div>
-  </section>
-
-  <!-- ===== 07 STAN ===== -->
-  <section class="section cs-block tone-dark" style="background: var(--bg)" data-reveal>
-    <span class="cs-no mono fade">07 / Gdzie jesteśmy</span>
-    <div class="cs-wide">
-      <h2 class="cs-h"><span class="line"><span>Przed premierą</span></span></h2>
-      <p class="cs-p fade" style="--i:2; margin-top: 24px">Aplikacja działa jako PWA i przeszła testy z pierwszymi parami. Testy pokazały dwie rzeczy do poprawy: zaproszenie partnera nie może być wymuszone na starcie, a druga osoba musi mieć głos przy ustalaniu zasad. Teraz domykamy wydanie do App Store i Google Play.</p>
-      <p class="cs-p fade" style="--i:3"><a href="https://ourmoney.pl" target="_blank" rel="noopener" style="text-decoration: underline; text-underline-offset: 4px">Zobacz ourmoney.pl ↗</a></p>
-    </div>
-  </section>
-
-  <a class="next" href="case-aion-mind-v1.html" data-reveal><span class="mono fade">Następny projekt</span><span class="cs-hero__title" style="display:block"><span class="line"><span>AION MIND <span class="arrow">↗</span></span></span></span></a>
 </main>
 
 <!-- ================= STOPKA ================= -->
@@ -735,25 +637,22 @@
 </script>
 
 <script>
-/* kalkulator podziału: najpierw zaokrąglony procent, potem kwota (jak w aplikacji) */
+/* przeciągane naklejki */
 (() => {
-  const g = id => document.getElementById(id), zl = n => n.toLocaleString('pl-PL').replace(/\u00a0/g, ' ') + ' zł'; let model = 'prop';
-  const upd = () => {
-    const a = +g('iA').value, b = +g('iB').value, t = +g('iT').value;
-    g('oA').textContent = zl(a); g('oB').textContent = zl(b); g('oT').textContent = zl(t);
-    const pA = model === 'prop' ? Math.round(a / (a + b) * 100) : 50, sA = t * pA / 100;
-    if (model === 'none') { g('pA').textContent = g('pB').textContent = '—'; g('sA').textContent = 'każde swoje'; g('sB').textContent = 'każde swoje'; g('bA').style.flexBasis = g('bB').style.flexBasis = '50%'; return; }
-    g('pA').textContent = pA + '%'; g('pB').textContent = (100 - pA) + '%'; g('sA').textContent = zl(sA); g('sB').textContent = zl(t - sA);
-    g('bA').style.flexBasis = Math.max(28, Math.min(72, pA)) + '%'; g('bB').style.flexBasis = (100 - Math.max(28, Math.min(72, pA))) + '%';
-  };
-  ['iA', 'iB', 'iT'].forEach(id => g(id).addEventListener('input', upd));
-  document.querySelectorAll('#calc [data-m]').forEach(btn => btn.addEventListener('click', () => { model = btn.dataset.m; document.querySelectorAll('#calc [data-m]').forEach(x => x.setAttribute('aria-pressed', x === btn)); upd(); }));
-  upd();
-  /* liczniki */
-  const io = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; io.unobserve(e.target);
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const end = +e.target.dataset.count, t0 = performance.now(); (function tick(now) { const p = Math.min(1, (now - t0) / 1200), v = 1 - Math.pow(1 - p, 4); e.target.textContent = Math.round(end * v); if (p < 1) requestAnimationFrame(tick); })(t0); }), { threshold: .6 });
-  document.querySelectorAll('[data-count]').forEach(n => io.observe(n));
+  const play = document.getElementById('play'), list = window.NF_STICKERS; if (!play || !list) return;
+  const spots = [[8, 30], [78, 22], [16, 68], [84, 62], [46, 80], [60, 14]];
+  spots.forEach(([x, y], i) => {
+    const el = document.createElement('div'); el.className = 'drag'; el.tabIndex = 0; el.setAttribute('role', 'img'); el.setAttribute('aria-label', 'Naklejka, przesuwaj strzałkami');
+    el.innerHTML = list[i % list.length];
+    el.style.cssText = `left:${x}%;top:${y}%;--s:${96 + (i * 17) % 40}px;--r:${(i % 2 ? 1 : -1) * (8 + i * 3)}deg`;
+    play.appendChild(el);
+    let ox = 0, oy = 0, held = false;
+    el.addEventListener('pointerdown', e => { held = true; el.setPointerCapture(e.pointerId); el.classList.add('is-held'); const r = el.getBoundingClientRect(); ox = e.clientX - r.left; oy = e.clientY - r.top; e.preventDefault(); });
+    el.addEventListener('pointermove', e => { if (!held) return; const p = play.getBoundingClientRect(); el.style.left = Math.max(0, Math.min(p.width - el.offsetWidth, e.clientX - p.left - ox)) + 'px'; el.style.top = Math.max(0, Math.min(p.height - el.offsetHeight, e.clientY - p.top - oy)) + 'px'; });
+    const drop = () => { held = false; el.classList.remove('is-held'); };
+    el.addEventListener('pointerup', drop); el.addEventListener('pointercancel', drop);
+    el.addEventListener('keydown', e => { const d = { ArrowLeft: [-16, 0], ArrowRight: [16, 0], ArrowUp: [0, -16], ArrowDown: [0, 16] }[e.key]; if (!d) return; e.preventDefault(); el.style.left = el.offsetLeft + d[0] + 'px'; el.style.top = el.offsetTop + d[1] + 'px'; });
+  });
 })();
 </script>
 </body>
