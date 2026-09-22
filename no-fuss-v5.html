@@ -199,6 +199,16 @@
   }
   .ph span { position: relative; font: var(--t-mono-sm); text-transform: uppercase; padding: 4px 8px; border: 1px dashed currentColor; }
   .ph--img::before { display: none; } .ph--img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: scale .9s var(--ease); } .tile:hover .ph--img img { scale: 1.03; }
+  /* okładka OurMoney: trzy realne ekrany na limonce */
+  .cover::before { display: none; }
+  .cover__s { position: absolute; width: 27%; border: 5px solid #101318; border-radius: 22px; background: #fff; box-shadow: 0 30px 50px -20px rgba(16,19,24,.55); transition: translate .9s var(--ease), rotate .9s var(--ease); }
+  .cover__s1 { left: 9%; bottom: -36%; rotate: -8deg; }
+  .cover__s2 { left: 36%; bottom: -20%; rotate: 0deg; z-index: 1; width: 28%; }
+  .cover__s3 { right: 9%; bottom: -40%; rotate: 8deg; }
+  .tile:hover .cover__s1 { translate: -3% -4%; rotate: -11deg; }
+  .tile:hover .cover__s2 { translate: 0 -6%; }
+  .tile:hover .cover__s3 { translate: 3% -4%; rotate: 11deg; }
+  .tile { container-type: inline-size; }
   .ph--sky { background: var(--shade-700); color: #fff; }
   .ph--lime { background: var(--accent); color: #101318; }
 
@@ -365,8 +375,12 @@
   <section class="section work tone-dark" id="realizacje">
     <div class="work__head mono" data-reveal><span class="fade">Produkty i realizacje</span><span class="fade" style="--i:1">[01]–[08]</span></div>
     <div class="work__grid">
-      <a class="tile tile--xl" href="case-ourmoney-v2.html" data-reveal><span class="tile__tag mono-sm">Własny produkt</span><div class="ph ph--img fade"><img src="assets/ourmoney/og-image.png" alt="OurMoney: Razem ogarnijcie finanse" loading="lazy"></div><div class="tile__meta mono"><span>OurMoney — wspólny budżet dla par · case study</span><span>2026 <span class="arrow">→</span></span></div></a>
-      <a class="tile tile--l" href="case-aion-mind-v1.html" data-reveal><span class="tile__tag mono-sm">Własny produkt</span><div class="ph ph--img fade"><img src="assets/aion-mind/og-image.png" alt="AION MIND: przewodnicy i ekrany aplikacji" loading="lazy"></div><div class="tile__meta mono"><span>AION MIND — journaling z AI · case study</span><span>2026 <span class="arrow">→</span></span></div></a>
+      <a class="tile tile--xl" href="case-ourmoney-v2.html" data-reveal><span class="tile__tag mono-sm">Aplikacja mobilna</span><div class="ph ph--lime cover fade" role="img" aria-label="OurMoney: trzy ekrany aplikacji">
+        <img class="cover__s cover__s1" src="assets/ourmoney/koperty.png" alt="" loading="lazy">
+        <img class="cover__s cover__s2" src="assets/ourmoney/ekran-glowny-rownowaga.webp" alt="" loading="lazy">
+        <img class="cover__s cover__s3" src="assets/ourmoney/wspolne-cele-finansowe.webp" alt="" loading="lazy">
+      </div><div class="tile__meta mono"><span>OurMoney — wspólny budżet dla par · case study</span><span>2026 <span class="arrow">→</span></span></div></a>
+      <a class="tile tile--l" href="case-aion-mind-v1.html" data-reveal><span class="tile__tag mono-sm">Aplikacja mobilna</span><div class="ph ph--img fade"><img src="assets/aion-mind/og-image.png" alt="AION MIND: przewodnicy i ekrany aplikacji" loading="lazy"></div><div class="tile__meta mono"><span>AION MIND — journaling z AI · case study</span><span>2026 <span class="arrow">→</span></span></div></a>
       <a class="tile tile--l" href="#" data-reveal><span class="tile__tag mono-sm">Produkt cyfrowy</span><div class="ph fade" style="--i:1"><span>Projekt 03</span></div><div class="tile__meta mono"><span>[Nazwa projektu 03]</span><span>[rok]</span></div></a>
       <a class="tile tile--m" href="#" data-reveal><span class="tile__tag mono-sm">Strona WWW</span><div class="ph ph--sky fade"><span>Projekt 04</span></div><div class="tile__meta mono"><span>[Projekt 04]</span><span>[rok] <span class="arrow">↗</span></span></div></a>
       <a class="tile tile--m" href="#" data-reveal><span class="tile__tag mono-sm">Strona WWW</span><div class="ph fade" style="--i:1"><span>Projekt 05</span></div><div class="tile__meta mono"><span>[Projekt 05]</span><span>[rok] <span class="arrow">↗</span></span></div></a>
