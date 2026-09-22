@@ -427,9 +427,13 @@
   .next:hover .arrow { transform: translate(8px, -8px); } .next .arrow { display: inline-block; transition: transform .5s var(--ease); }
 
   /* realne ekrany */
-  .device { display: block; width: 100%; border: 8px solid #101318; border-radius: 36px; overflow: hidden; background: #fff; box-shadow: 0 30px 60px -24px rgba(0,0,0,.5); }
-  .tone-dark .device, .stage--dark .device { border-color: #33373D; }
-  .device img, .raw img { display: block; width: 100%; height: auto; }
+  /* iPhone mockup: korpus, ramka, dynamic island */
+  .iph { display: block; background: #101318; padding: 10px; border-radius: 12.5% / 6.2%; box-shadow: inset 0 0 0 2px #3a3f47, 0 40px 60px -24px rgba(16,19,24,.6); position: relative; }
+  .iph::before { content: ""; position: absolute; z-index: 2; top: 20px; left: 50%; width: 26%; height: 3.2%; translate: -50% 0; background: #101318; border-radius: 999px; }
+  .iph::after { content: ""; position: absolute; right: -3px; top: 22%; width: 3px; height: 9%; background: #3a3f47; border-radius: 0 2px 2px 0; }
+  .iph img { display: block; width: 100%; height: auto; border-radius: 10.5% / 5%; }
+  .device { display: block; width: 100%; }
+  .raw img { display: block; width: 100%; height: auto; }
   .stage { background: var(--accent); padding: 48px var(--gutter) 0; display: flex; gap: 8px; justify-content: center; align-items: flex-end; overflow: hidden; position: relative; z-index: 2; }
   .stage figure { flex: 0 1 300px; margin-bottom: -12%; } .stage figure:nth-child(2) { margin-bottom: -4%; }
   .stage--dark { background: #15181D; }
@@ -488,7 +492,7 @@
       <div><dt>Zobacz</dt><dd><a href="https://ourmoney.pl" target="_blank" rel="noopener">ourmoney.pl ↗</a></dd></div>
     </dl>
   </section>
-  <div class="stage" data-reveal><figure class="fade" style="--i:0"><span class="device"><img src="assets/ourmoney/koperty.png" alt="Ekran Koperty: planowane wydatki i budżet miesięczny" loading="lazy"></span></figure><figure class="fade" style="--i:1"><span class="device"><img src="assets/ourmoney/ekran-glowny-rownowaga.webp" alt="Ekran główny: czyja kolej na płacenie i ostatnie transakcje" loading="lazy"></span></figure><figure class="fade" style="--i:2"><span class="device"><img src="assets/ourmoney/strona-glowna.png" alt="Ekran główny: budżet miesiąca, transakcje i koperty" loading="lazy"></span></figure></div>
+  <div class="stage" data-reveal><figure class="fade" style="--i:0"><span class="device iph"><img src="assets/ourmoney/koperty.png" alt="Ekran Koperty: planowane wydatki i budżet miesięczny" loading="lazy"></span></figure><figure class="fade" style="--i:1"><span class="device iph"><img src="assets/ourmoney/ekran-glowny-rownowaga.webp" alt="Ekran główny: czyja kolej na płacenie i ostatnie transakcje" loading="lazy"></span></figure><figure class="fade" style="--i:2"><span class="device iph"><img src="assets/ourmoney/strona-glowna.png" alt="Ekran główny: budżet miesiąca, transakcje i koperty" loading="lazy"></span></figure></div>
 
   <!-- ===== 01 PROBLEM ===== -->
   <section class="section cs-block" data-reveal>
@@ -512,7 +516,7 @@
   <section class="section cs-block" data-reveal>
     <span class="cs-no mono fade">03.1 / Ekran główny</span>
     <div class="cs-txt"><h2 class="cs-h"><span class="line"><span>Bez salda</span></span></h2><p class="cs-p fade" style="--i:2; margin-top: 24px">Pierwszy ekran nie zaczyna się od stanu konta. Zaczyna się od równowagi: czyja kolej na płacenie i o jaką kwotę, według zasad, które para sama ustaliła.</p></div>
-    <figure class="cs-vis"><div class="one fade" style="--i:1"><span class="device"><img src="assets/ourmoney/ekran-glowny-rownowaga.webp" alt="Ekran główny OurMoney: kolej Wiktorii na płacenie, 223 zł" loading="lazy"></span></div><figcaption class="cs-cap mono-sm">Ekran główny aplikacji. Na górze nie saldo, tylko czyja kolej i ile.</figcaption></figure>
+    <figure class="cs-vis"><div class="one fade" style="--i:1"><span class="device iph"><img src="assets/ourmoney/ekran-glowny-rownowaga.webp" alt="Ekran główny OurMoney: kolej Wiktorii na płacenie, 223 zł" loading="lazy"></span></div><figcaption class="cs-cap mono-sm">Ekran główny aplikacji. Na górze nie saldo, tylko czyja kolej i ile.</figcaption></figure>
   </section>
 
   <section class="section cs-block flip tone-dark" style="background: var(--bg)" data-reveal>
@@ -542,10 +546,10 @@
   <section class="section tone-dark" style="background: var(--bg)">
     <div class="work__head mono" data-reveal><span class="fade">03.5 / Codzienność</span><span class="fade" style="--i:1">Zrzuty z aplikacji</span></div>
     <div class="screens" data-reveal>
-      <figure class="fade"><span class="device"><img src="assets/ourmoney/dodawaj-prosto-wydatki.png" alt="Dodawanie wydatku: kwota, koperta, kto zapłacił, skan paragonu" loading="lazy"></span><figcaption class="mono-sm">Wydatek w kilka sekund, także ze skanu paragonu</figcaption></figure>
-      <figure class="fade" style="--i:1"><span class="device"><img src="assets/ourmoney/koperty.png" alt="Koperty: planowane i nieplanowane wydatki" loading="lazy"></span><figcaption class="mono-sm">Koperty: plan kontra rzeczywistość</figcaption></figure>
-      <figure class="fade" style="--i:2"><span class="device"><img src="assets/ourmoney/wspolne-cele.png" alt="Lista wspólnych celów: Wakacje w Palermo" loading="lazy"></span><figcaption class="mono-sm">Wspólne cele oszczędnościowe</figcaption></figure>
-      <figure class="fade" style="--i:3"><span class="device"><img src="assets/ourmoney/wspolne-cele-finansowe.webp" alt="Cel Wakacje: wkład każdej osoby przy podziale 50/50" loading="lazy"></span><figcaption class="mono-sm">Cel z widocznym wkładem obojga</figcaption></figure>
+      <figure class="fade"><span class="device iph"><img src="assets/ourmoney/dodawaj-prosto-wydatki.png" alt="Dodawanie wydatku: kwota, koperta, kto zapłacił, skan paragonu" loading="lazy"></span><figcaption class="mono-sm">Wydatek w kilka sekund, także ze skanu paragonu</figcaption></figure>
+      <figure class="fade" style="--i:1"><span class="device iph"><img src="assets/ourmoney/koperty.png" alt="Koperty: planowane i nieplanowane wydatki" loading="lazy"></span><figcaption class="mono-sm">Koperty: plan kontra rzeczywistość</figcaption></figure>
+      <figure class="fade" style="--i:2"><span class="device iph"><img src="assets/ourmoney/wspolne-cele.png" alt="Lista wspólnych celów: Wakacje w Palermo" loading="lazy"></span><figcaption class="mono-sm">Wspólne cele oszczędnościowe</figcaption></figure>
+      <figure class="fade" style="--i:3"><span class="device iph"><img src="assets/ourmoney/wspolne-cele-finansowe.webp" alt="Cel Wakacje: wkład każdej osoby przy podziale 50/50" loading="lazy"></span><figcaption class="mono-sm">Cel z widocznym wkładem obojga</figcaption></figure>
     </div>
   </section>
 

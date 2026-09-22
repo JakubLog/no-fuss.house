@@ -427,9 +427,13 @@
   .next:hover .arrow { transform: translate(8px, -8px); } .next .arrow { display: inline-block; transition: transform .5s var(--ease); }
 
   /* realne ekrany */
-  .device { display: block; width: 100%; border: 8px solid #101318; border-radius: 36px; overflow: hidden; background: #fff; box-shadow: 0 30px 60px -24px rgba(0,0,0,.5); }
-  .tone-dark .device, .stage--dark .device { border-color: #33373D; }
-  .device img, .raw img { display: block; width: 100%; height: auto; }
+  /* iPhone mockup: korpus, ramka, dynamic island */
+  .iph { display: block; background: #101318; padding: 10px; border-radius: 12.5% / 6.2%; box-shadow: inset 0 0 0 2px #3a3f47, 0 40px 60px -24px rgba(16,19,24,.6); position: relative; }
+  .iph::before { content: ""; position: absolute; z-index: 2; top: 20px; left: 50%; width: 26%; height: 3.2%; translate: -50% 0; background: #101318; border-radius: 999px; }
+  .iph::after { content: ""; position: absolute; right: -3px; top: 22%; width: 3px; height: 9%; background: #3a3f47; border-radius: 0 2px 2px 0; }
+  .iph img { display: block; width: 100%; height: auto; border-radius: 10.5% / 5%; }
+  .device { display: block; width: 100%; }
+  .raw img { display: block; width: 100%; height: auto; }
   .stage { background: var(--accent); padding: 48px var(--gutter) 0; display: flex; gap: 8px; justify-content: center; align-items: flex-end; overflow: hidden; position: relative; z-index: 2; }
   .stage figure { flex: 0 1 300px; margin-bottom: -12%; } .stage figure:nth-child(2) { margin-bottom: -4%; }
   .stage--dark { background: #15181D; }

@@ -201,7 +201,7 @@
   .ph--img::before { display: none; } .ph--img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: scale .9s var(--ease); } .tile:hover .ph--img img { scale: 1.03; }
   /* okładka OurMoney: trzy realne ekrany na limonce */
   .cover::before { display: none; }
-  .cover__s { position: absolute; width: 27%; border: 5px solid #101318; border-radius: 22px; background: #fff; box-shadow: 0 30px 50px -20px rgba(16,19,24,.55); transition: translate .9s var(--ease), rotate .9s var(--ease); }
+  .cover__s.iph { position: absolute; width: 27%; transition: translate .9s var(--ease), rotate .9s var(--ease); }
   .cover__s1 { left: 9%; bottom: -36%; rotate: -8deg; }
   .cover__s2 { left: 36%; bottom: -20%; rotate: 0deg; z-index: 1; width: 28%; }
   .cover__s3 { right: 9%; bottom: -40%; rotate: 8deg; }
@@ -209,6 +209,11 @@
   .tile:hover .cover__s2 { translate: 0 -6%; }
   .tile:hover .cover__s3 { translate: 3% -4%; rotate: 11deg; }
   .tile { container-type: inline-size; }
+  /* iPhone mockup: korpus, ramka, dynamic island */
+  .iph { display: block; background: #101318; padding: 10px; border-radius: 12.5% / 6.2%; box-shadow: inset 0 0 0 2px #3a3f47, 0 40px 60px -24px rgba(16,19,24,.6); position: relative; }
+  .iph::before { content: ""; position: absolute; z-index: 2; top: 20px; left: 50%; width: 26%; height: 3.2%; translate: -50% 0; background: #101318; border-radius: 999px; }
+  .iph::after { content: ""; position: absolute; right: -3px; top: 22%; width: 3px; height: 9%; background: #3a3f47; border-radius: 0 2px 2px 0; }
+  .iph img { display: block; width: 100%; height: auto; border-radius: 10.5% / 5%; }
   .ph--sky { background: var(--shade-700); color: #fff; }
   .ph--lime { background: var(--accent); color: #101318; }
 
@@ -376,9 +381,9 @@
     <div class="work__head mono" data-reveal><span class="fade">Produkty i realizacje</span><span class="fade" style="--i:1">[01]–[08]</span></div>
     <div class="work__grid">
       <a class="tile tile--xl" href="case-ourmoney-v2.html" data-reveal><span class="tile__tag mono-sm">Aplikacja mobilna</span><div class="ph ph--lime cover fade" role="img" aria-label="OurMoney: trzy ekrany aplikacji">
-        <img class="cover__s cover__s1" src="assets/ourmoney/koperty.png" alt="" loading="lazy">
-        <img class="cover__s cover__s2" src="assets/ourmoney/ekran-glowny-rownowaga.webp" alt="" loading="lazy">
-        <img class="cover__s cover__s3" src="assets/ourmoney/wspolne-cele-finansowe.webp" alt="" loading="lazy">
+        <span class="cover__s cover__s1 iph"><img src="assets/ourmoney/koperty.png" alt="" loading="lazy"></span>
+        <span class="cover__s cover__s2 iph"><img src="assets/ourmoney/ekran-glowny-rownowaga.webp" alt="" loading="lazy"></span>
+        <span class="cover__s cover__s3 iph"><img src="assets/ourmoney/wspolne-cele-finansowe.webp" alt="" loading="lazy"></span>
       </div><div class="tile__meta mono"><span>OurMoney — wspólny budżet dla par · case study</span><span>2026 <span class="arrow">→</span></span></div></a>
       <a class="tile tile--l" href="case-aion-mind-v1.html" data-reveal><span class="tile__tag mono-sm">Aplikacja mobilna</span><div class="ph ph--img fade"><img src="assets/aion-mind/og-image.png" alt="AION MIND: przewodnicy i ekrany aplikacji" loading="lazy"></div><div class="tile__meta mono"><span>AION MIND — journaling z AI · case study</span><span>2026 <span class="arrow">→</span></span></div></a>
       <a class="tile tile--l" href="#" data-reveal><span class="tile__tag mono-sm">Produkt cyfrowy</span><div class="ph fade" style="--i:1"><span>Projekt 03</span></div><div class="tile__meta mono"><span>[Nazwa projektu 03]</span><span>[rok]</span></div></a>
