@@ -27,6 +27,9 @@ Każda iteracja to osobny plik, poprzednich nie nadpisujemy.
 | `case-ourmoney-v1.html` | case study OurMoney, wersja z ilustracjami (archiwum) |
 | `case-ourmoney-v2.html` | **aktualny** case OurMoney, tylko realne ekrany |
 | `case-aion-mind-v1.html` | case study AION MIND |
+| `case-busybee-v1.html` | case study Busy Bee Film |
+| `case-otb-v1.html` | case study OTB Ventures |
+| `case-sassy-v1.html` | case study Sassy |
 | `assets/` | realne ekrany z ourmoney.pl i aionmind.com |
 | `.ux/audits/` | audyty UX |
 
