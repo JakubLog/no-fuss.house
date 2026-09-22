@@ -1,0 +1,13 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/no-fuss-v5.html" },
+    { "source": "/o-nas", "destination": "/o-nas-v5.html" },
+    { "source": "/ourmoney", "destination": "/case-ourmoney-v2.html" },
+    { "source": "/aion-mind", "destination": "/case-aion-mind-v1.html" },
+    { "source": "/busy-bee", "destination": "/case-busybee-v3.html" },
+    { "source": "/automation-house", "destination": "/case-automation-house-v1.html" },
+    { "source": "/otb", "destination": "/case-otb-v2.html" },
+    { "source": "/sassy", "destination": "/case-sassy-v2.html" }
+  ]
+}
