@@ -223,6 +223,10 @@
   .iph::before { content: ""; position: absolute; z-index: 2; top: 20px; left: 50%; width: 26%; height: 3.2%; translate: -50% 0; background: #101318; border-radius: 999px; }
   .iph::after { content: ""; position: absolute; right: -3px; top: 22%; width: 3px; height: 9%; background: #3a3f47; border-radius: 0 2px 2px 0; }
   .iph img { display: block; width: 100%; height: auto; border-radius: 10.5% / 5%; }
+  /* okładka strony: na hover przewija się cała strona */
+  .ph--scroll img { object-fit: cover; object-position: top; height: auto; min-height: 100%; transition: translate 7s linear, scale .9s var(--ease); }
+  .tile:hover .ph--scroll img { translate: 0 calc(-1 * var(--scroll, 0px)); scale: 1; }
+  .tile:not(:hover) .ph--scroll img { transition: translate 1.2s var(--ease), scale .9s var(--ease); }
   .ph--sky { background: var(--shade-700); color: #fff; }
   .ph--lime { background: var(--accent); color: #101318; }
 
@@ -407,12 +411,12 @@
         <span class="cover__s cover__s1 iph"><img src="assets/ourmoney/koperty.png" alt="" loading="lazy"></span>
         <span class="cover__s cover__s2 iph"><img src="assets/ourmoney/ekran-glowny-rownowaga.webp" alt="" loading="lazy"></span>
         <span class="cover__s cover__s3 iph"><img src="assets/ourmoney/wspolne-cele-finansowe.webp" alt="" loading="lazy"></span>
-      </div><div class="tile__meta mono"><span>OurMoney — wspólny budżet dla par · case study</span><span>2025–2026 <span class="arrow">→</span></span></div></a>
-      <a class="tile tile--l" href="case-aion-mind-v1.html" data-reveal><span class="tile__tag mono-sm">Aplikacja mobilna</span><div class="ph ph--img fade"><img src="assets/aion-mind/og-image.png" alt="AION MIND: przewodnicy i ekrany aplikacji" loading="lazy"></div><div class="tile__meta mono"><span>AION MIND — journaling z AI · case study</span><span>2025–2026 <span class="arrow">→</span></span></div></a>
-      <a class="tile tile--l" href="case-busybee-v3.html" data-reveal><span class="tile__tag mono-sm">Strona WWW</span><div class="ph ph--img fade" style="--i:1"><img src="assets/busybee/d-00.webp" alt="Busy Bee Film: strona główna" loading="lazy"></div><div class="tile__meta mono"><span>Busy Bee Film — dom produkcyjny · case study</span><span>2024 <span class="arrow">→</span></span></div></a>
-      <a class="tile tile--m" href="case-otb-v2.html" data-reveal><span class="tile__tag mono-sm">Strona WWW</span><div class="ph ph--img fade"><img src="assets/otb/d-00.webp" alt="OTB Ventures: strona główna" loading="lazy"></div><div class="tile__meta mono"><span>OTB Ventures · case study</span><span>2025 <span class="arrow">→</span></span></div></a>
-      <a class="tile tile--m" href="case-sassy-v2.html" data-reveal><span class="tile__tag mono-sm">Eksperyment</span><div class="ph ph--img fade" style="--i:1"><img src="assets/sassy/d-00.webp" alt="Sassy: strona bez celu" loading="lazy"></div><div class="tile__meta mono"><span>Sassy — strona bez celu · case study</span><span>2026 <span class="arrow">→</span></span></div></a>
-      <a class="tile tile--l" href="case-automation-house-v1.html" data-reveal><span class="tile__tag mono-sm">Strona WWW</span><div class="ph ph--img fade"><img src="assets/automation-house/d-00.webp" alt="Automation House: strona główna" loading="lazy"></div><div class="tile__meta mono"><span>Automation House — z Kubą · case study</span><span>2026 <span class="arrow">→</span></span></div></a>
+      </div><div class="tile__meta mono"><span>OurMoney — wspólny budżet dla par</span><span>2025–2026 <span class="arrow">→</span></span></div></a>
+      <a class="tile tile--l" href="case-aion-mind-v1.html" data-reveal><span class="tile__tag mono-sm">Aplikacja mobilna</span><div class="ph ph--img fade"><img src="assets/aion-mind/og-image.png" alt="AION MIND: przewodnicy i ekrany aplikacji" loading="lazy"></div><div class="tile__meta mono"><span>AION MIND — journaling z AI</span><span>2025–2026 <span class="arrow">→</span></span></div></a>
+      <a class="tile tile--l" href="case-busybee-v3.html" data-reveal><span class="tile__tag mono-sm">Strona WWW</span><div class="ph ph--img ph--scroll fade" style="--i:1"><img src="assets/busybee/d-full.webp" alt="Busy Bee Film: strona główna" loading="lazy"></div><div class="tile__meta mono"><span>Busy Bee Film — dom produkcyjny</span><span>2024 <span class="arrow">→</span></span></div></a>
+      <a class="tile tile--m" href="case-otb-v2.html" data-reveal><span class="tile__tag mono-sm">Strona WWW</span><div class="ph ph--img ph--scroll fade"><img src="assets/otb/d-full.webp" alt="OTB Ventures: strona główna" loading="lazy"></div><div class="tile__meta mono"><span>OTB Ventures</span><span>2025 <span class="arrow">→</span></span></div></a>
+      <a class="tile tile--m" href="case-sassy-v2.html" data-reveal><span class="tile__tag mono-sm">Eksperyment</span><div class="ph ph--img ph--scroll fade" style="--i:1"><img src="assets/sassy/d-full.webp" alt="Sassy: strona bez celu" loading="lazy"></div><div class="tile__meta mono"><span>Sassy — strona bez celu</span><span>2026 <span class="arrow">→</span></span></div></a>
+      <a class="tile tile--l" href="case-automation-house-v1.html" data-reveal><span class="tile__tag mono-sm">Strona WWW</span><div class="ph ph--img ph--scroll fade"><img src="assets/automation-house/d-full.webp" alt="Automation House: strona główna" loading="lazy"></div><div class="tile__meta mono"><span>Automation House</span><span>2026 <span class="arrow">→</span></span></div></a>
     </div>
   </section>
 
@@ -482,6 +486,10 @@
     })(t0);
   }
   $$('[data-scramble]').forEach(el => { el.addEventListener('mouseenter', () => scramble(el)); el.addEventListener('focus', () => scramble(el)); });
+
+  /* okładki: policz, o ile przewinąć na hover */
+  const scrollCovers = () => document.querySelectorAll('.ph--scroll img').forEach(im => { const ph = im.parentElement; im.style.setProperty('--scroll', Math.max(0, im.offsetHeight - ph.offsetHeight) + 'px'); });
+  addEventListener('load', scrollCovers); addEventListener('resize', scrollCovers); document.querySelectorAll('.ph--scroll img').forEach(im => { im.addEventListener('load', scrollCovers); im.closest('.tile').addEventListener('mouseenter', scrollCovers); });
 
   /* ---- suwak zamieszania ---- */
   const fr = $('#fussRange');
@@ -658,10 +666,10 @@
         if (!reduced) { const dx = u.p.x - mouseLocal.x, dy = u.p.y - mouseLocal.y, d = Math.hypot(dx, dy), R = u.r + 1.2; if (d < R && d > 1e-4) { const k = (R - d) / R * 60 * dt; u.v.x += dx / d * k; u.v.y += dy / d * k; } }
       });
       for (let i = 0; i < letters.length; i++) for (let j = i + 1; j < letters.length; j++) {
-        const A = letters[i].userData, B = letters[j].userData, dx = B.p.x - A.p.x, dy = B.p.y - A.p.y, dz = (B.p.z - A.p.z) * .6, d = Math.hypot(dx, dy, dz) || 1e-4, min = A.r + B.r;
+        const A = letters[i].userData, B = letters[j].userData, dx = B.p.x - A.p.x, dy = B.p.y - A.p.y, dz = (B.p.z - A.p.z) * .6, d = Math.hypot(dx, dy, dz) || 1e-4, min = (A.r + B.r) * Math.min(1, f * 3);
         if (d < min) { const push = (min - d) * 30 * dt, nx = dx / d, ny = dy / d, nz = dz / d; A.v.x -= nx * push; A.v.y -= ny * push; A.v.z -= nz * push * .5; B.v.x += nx * push; B.v.y += ny * push; B.v.z += nz * push * .5; }
       }
-      letters.forEach(m => { const u = m.userData; u.v.multiplyScalar(Math.pow(.02, dt)); u.p.addScaledVector(u.v, dt); m.position.copy(u.p);
+      letters.forEach(m => { const u = m.userData; u.v.multiplyScalar(Math.pow(.02, dt)); u.p.addScaledVector(u.v, dt); if (f < .01 && u.v.length() < .05) { u.p.set(u.x, u.y, 0); u.v.set(0, 0, 0); } m.position.copy(u.p);
         m.rotation.set(rnd(u.i, 4) * 1.2 * f + Math.sin(t * 1.3 + u.i) * .25 * w + u.v.y * .02, rnd(u.i, 5) * 1.4 * f - u.v.x * .02, rnd(u.i, 6) * 1.9 * f + Math.cos(t * 1.9 + u.i) * .2 * w);
         m.scale.setScalar(1 + rnd(u.i, 7) * .35 * f);
       });
