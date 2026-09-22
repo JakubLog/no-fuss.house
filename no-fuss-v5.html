@@ -341,7 +341,7 @@
   <section class="hero" id="hero" data-stickers>
     <div class="hero__bg" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
-    <div class="hero__fallback" aria-hidden="true">no fuss</div>
+    <div class="hero__fallback" aria-hidden="true">no–fuss</div>
     <div class="stickers" aria-hidden="true"></div>
 
     <div class="hero__top">
@@ -354,7 +354,7 @@
       <label for="fussRange">Zamieszanie</label>
       <input type="range" id="fussRange" min="0" max="100" value="0" step="1" aria-describedby="fussHint">
       <output id="fussOut" for="fussRange">000%</output>
-      <span class="sr-only" id="fussHint">Suwak miesza litery napisu no fuss w tle. Zero oznacza porządek.</span>
+      <span class="sr-only" id="fussHint">Suwak miesza litery napisu no–fuss w tle. Zero oznacza porządek.</span>
     </div>
 
     <h1 class="hero__headline display" aria-label="Robimy digital bez zbędnego zamieszania">
@@ -592,7 +592,7 @@
     const rnd = (i, k) => { const x = Math.sin(i * 127.1 + k * 311.7) * 43758.5453; return (x - Math.floor(x)) * 2 - 1; };
     new FontLoader().load('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/fonts/helvetiker_bold.typeface.json', font => {
       const size = 2, k = size / font.data.resolution; let x = 0;
-      [...'no fuss'].forEach((ch, i) => {
+      [...'no–fuss'].forEach((ch, i) => {
         const adv = (font.data.glyphs[ch] || font.data.glyphs['o']).ha * k;
         if (ch !== ' ') {
           const geo = new TextGeometry(ch, { font, size, height: .5, curveSegments: 16, bevelEnabled: true, bevelThickness: .34, bevelSize: .2, bevelSegments: 14 });
