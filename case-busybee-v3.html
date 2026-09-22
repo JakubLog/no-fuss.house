@@ -534,8 +534,8 @@
   .frame::before { content: ""; position: absolute; top: 10px; left: 12px; width: 8px; height: 8px; border-radius: 50%; background: #3a3f47; box-shadow: 14px 0 0 #3a3f47, 28px 0 0 #3a3f47; }
   .frame iframe { display: block; width: 100%; aspect-ratio: 16 / 10; border: 0; border-radius: 6px; background: #000; }
   .frame__url { position: absolute; top: 8px; left: 60px; right: 60px; height: 14px; background: #1c2027; border-radius: 4px; color: #8a8f98; font: 400 9px/14px var(--mono); text-align: center; }
-  .stage--site { display: block; padding: 48px var(--gutter) 0; }
-  .stage--site .frame { max-width: 1100px; margin: 0 auto; border-radius: 12px 12px 0 0; }
+  .stage--site { display: block; padding: 48px var(--gutter); }
+  .stage--site .frame { max-width: 1100px; margin: 0 auto; }
   .lite { padding: var(--section-y) var(--gutter); display: grid; gap: 24px; min-width: 0; }
   .lite > * { min-width: 0; }
   .film { min-width: 0; overflow: hidden; }
@@ -610,8 +610,7 @@
 
   <!-- taśma: klik = duży kadr, przeciągnij = przewiń -->
   <section class="lite" style="padding-inline: 0" data-reveal>
-    <div class="lite__head mono" style="padding-inline: var(--gutter)"><span class="fade">01 / Stories</span><span class="fade" style="--i:1">Przeciągnij taśmę · kliknij kadr</span></div>
-    <figure class="film__big fade" style="--i:1; margin-inline: var(--gutter)" id="filmBig"><img src="assets/busybee/story-mercedesbenz.webp" alt="" class="is-on"><img src="assets/busybee/story-nescafe.webp" alt="" class=""><img src="assets/busybee/story-samsung.webp" alt="" class=""><img src="assets/busybee/story-syoss.webp" alt="" class=""><img src="assets/busybee/story-mcdonald.webp" alt="" class=""><img src="assets/busybee/story-kikkoman.webp" alt="" class=""><img src="assets/busybee/story-sudocrem.webp" alt="" class=""><img src="assets/busybee/story-kfc.webp" alt="" class=""><figcaption class="mono-sm"><b id="filmName">Mercedes-Benz</b><span id="filmDir">Dir: Augusto De Fraga</span></figcaption></figure>
+    <div class="lite__head mono" style="padding-inline: var(--gutter)"><span class="fade">01 / Stories</span><span class="fade" style="--i:1">Przeciągnij taśmę</span></div>
     <div class="film fade" style="--i:2"><div class="film__strip" id="filmStrip"><button type="button" class="film__f" aria-pressed="true" data-i="0"><img src="assets/busybee/story-mercedesbenz.webp" alt="Mercedes-Benz, reż. Augusto De Fraga"><span class="mono-sm"><b>Mercedes-Benz</b><i>Augusto De Fraga</i></span></button><button type="button" class="film__f" aria-pressed="false" data-i="1"><img src="assets/busybee/story-nescafe.webp" alt="Nescafé, reż. Jake Mavity"><span class="mono-sm"><b>Nescafé</b><i>Jake Mavity</i></span></button><button type="button" class="film__f" aria-pressed="false" data-i="2"><img src="assets/busybee/story-samsung.webp" alt="Samsung, reż. Karol Kołodziński"><span class="mono-sm"><b>Samsung</b><i>Karol Kołodziński</i></span></button><button type="button" class="film__f" aria-pressed="false" data-i="3"><img src="assets/busybee/story-syoss.webp" alt="Syoss, reż. J.A.C.K"><span class="mono-sm"><b>Syoss</b><i>J.A.C.K</i></span></button><button type="button" class="film__f" aria-pressed="false" data-i="4"><img src="assets/busybee/story-mcdonald.webp" alt="McDonald’s, reż. Joakim Reveman"><span class="mono-sm"><b>McDonald’s</b><i>Joakim Reveman</i></span></button><button type="button" class="film__f" aria-pressed="false" data-i="5"><img src="assets/busybee/story-kikkoman.webp" alt="Kikkoman, reż. Johnsen & Mona"><span class="mono-sm"><b>Kikkoman</b><i>Johnsen & Mona</i></span></button><button type="button" class="film__f" aria-pressed="false" data-i="6"><img src="assets/busybee/story-sudocrem.webp" alt="Sudocrem, reż. Julia Rogowska"><span class="mono-sm"><b>Sudocrem</b><i>Julia Rogowska</i></span></button><button type="button" class="film__f" aria-pressed="false" data-i="7"><img src="assets/busybee/story-kfc.webp" alt="KFC, reż. Jan & Raf Roosens"><span class="mono-sm"><b>KFC</b><i>Jan & Raf Roosens</i></span></button></div></div>
   </section>
 
@@ -771,9 +770,8 @@
 
 <script>
 (() => {
-  const strip = document.getElementById('filmStrip'), frames = [...strip.querySelectorAll('.film__f')], bigs = [...document.querySelectorAll('#filmBig img')];
-  const name = document.getElementById('filmName'), dir = document.getElementById('filmDir'); let cur = 0, timer;
-  const show = i => { cur = i; frames.forEach((f, j) => f.setAttribute('aria-pressed', i === j)); bigs.forEach((b, j) => b.classList.toggle('is-on', i === j)); const n = frames[i].querySelector('b').textContent, d = frames[i].querySelector('i').textContent; name.textContent = n; dir.textContent = 'Dir: ' + d; };
+  const strip = document.getElementById('filmStrip'), frames = [...strip.querySelectorAll('.film__f')]; let cur = 0, timer;
+  const show = i => { cur = i; frames.forEach((f, j) => f.setAttribute('aria-pressed', i === j)); };
   const auto = () => { clearInterval(timer); timer = setInterval(() => { const n = (cur + 1) % frames.length; show(n); frames[n].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }, 3200); };
   /* przeciąganie taśmy */
   let down = false, sx = 0, sl = 0, moved = 0;
