@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AION MIND — CASE STUDY — NO-FUSS©2026</title><!-- case-aion-mind v1 -->
+<title>O NAS — NO-FUSS©2026</title><!-- o-nas v2: hero jako karty osób z linkami do social mediów -->
 <meta name="description" content="no-fuss — Magda Nestorowicz (design i produkt) i Kuba Fedoszczak (kod). Produkty cyfrowe bez zbędnego zamieszania.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@400;500;600&family=TikTok+Sans:opsz,wght@12..36,300..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=TikTok+Sans:opsz,wght@12..36,300..900&display=swap" rel="stylesheet">
 <style>
   /* Tokeny: DESIGN.md */
   :root {
@@ -351,135 +351,56 @@
     .row__track b { left: var(--v, 50%); } .meter i::after { transform: scaleX(var(--v, 0)); }
   }
 
-  /* ================= CASE STUDY ================= */
-  .cs-hero { position: relative; min-height: 100svh; overflow: hidden; color: #fff; padding: calc(var(--section-y) + 24px) var(--gutter) var(--section-y); display: grid; grid-template-columns: repeat(12, 1fr); gap: 32px 8px; align-content: end; }
-  .cs-hero > * { grid-column: 1 / -1; }
-  .cs-hero > .hero__bg, .cs-hero > .stickers { grid-column: auto; }
-  .cs-hero__title { font: var(--t-mega); letter-spacing: -.04em; text-transform: uppercase; }
-  .cs-hero__lead { font: var(--t-statement); max-width: 22ch; }
-  .cs-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 0 8px; }
-  .cs-meta div { padding: 8px 0; border-top: 1px solid rgba(255,255,255,.24); }
-  .cs-meta dt { color: rgba(255,255,255,.64); margin-bottom: 4px; }
-  .cs-meta a { text-decoration: underline; text-underline-offset: 3px; }
-  @media (min-width: 1024px) { .cs-hero__lead { grid-column: 1 / span 5; align-self: end; } .cs-meta { grid-column: 7 / span 6; grid-template-columns: repeat(3, 1fr); } }
-
-  .cs-shot { padding: 0 var(--gutter); margin-top: -1px; background: linear-gradient(#101318 50%, var(--light) 50%); }
-  .cs-shot .ph { aspect-ratio: 16 / 9; position: relative; z-index: 2; }
-
-  .cs-block { display: grid; grid-template-columns: repeat(12, 1fr); gap: 32px 8px; align-items: start; }
-  .cs-block > * { grid-column: 1 / -1; }
   .cs-no { color: var(--muted); }
-  .cs-h { font: var(--t-h2); letter-spacing: -.025em; text-transform: uppercase; }
+  .cs-h { font: var(--t-h2); text-transform: uppercase; letter-spacing: -.02em; }
   .cs-p { font: var(--t-lead); max-width: 44ch; }
-  .cs-p + .cs-p { margin-top: 16px; }
-  .cs-cap { color: var(--muted); margin-top: 8px; }
-  .cs-quote { font: var(--t-display); letter-spacing: -.02em; }
-  .cs-quote mark { background: var(--accent); color: #101318; padding: 0 8px; }
-  @media (min-width: 1024px) {
-    .cs-block > .cs-no { grid-column: 1 / span 2; }
-    .cs-block > .cs-txt { grid-column: 3 / span 4; position: sticky; top: 120px; }
-    .cs-block > .cs-vis { grid-column: 8 / span 5; }
-    .cs-block > .cs-wide { grid-column: 3 / span 10; }
-    .cs-block.flip > .cs-txt { grid-column: 9 / span 4; order: 3; }
-    .cs-block.flip > .cs-vis { grid-column: 3 / span 5; order: 2; }
+  /* ================= O NAS v2 ================= */
+  .team-hero { padding: calc(var(--section-y) + 40px) var(--gutter) var(--section-y); display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); row-gap: 32px; background: var(--bg); }
+  .team-hero > * { grid-column: 1 / -1; }
+  .team-hero .display { max-width: 12ch; }
+  .team-hero__lead { font: var(--t-statement); color: var(--muted); max-width: 26ch; }
+  @media (min-width: 1024px) { .team-hero .display { grid-column: 1 / span 8; } .team-hero__lead { grid-column: 9 / span 4; align-self: end; } }
+
+  .people { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--gap); padding: 0 var(--gutter) var(--section-y); }
+  .person { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(6, 1fr); gap: 24px var(--gap); padding: 24px; position: relative; }
+  .person--m { background: var(--dark); color: #fff; --muted: #A9ABAD; }
+  .person--k { background: var(--accent); color: #101318; --muted: #3F4A12; }
+  .person__photo { grid-column: 1 / -1; position: relative; }
+  .person__photo .ph { aspect-ratio: 3 / 4; }
+  .person--m .person__photo .ph { background: #272A2F; color: #fff; } .person--k .person__photo .ph { background: #101318; color: #fff; }
+  .person__no { position: absolute; top: 16px; left: 16px; z-index: 1; background: #fff; color: #101318; padding: 4px 8px; }
+  .person__body { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 16px; }
+  .person__name { font: var(--t-h2); text-transform: uppercase; letter-spacing: -.02em; }
+  .person__roles { display: flex; gap: 8px; flex-wrap: wrap; }
+  .person--m .chip { background: var(--accent); color: #101318; } .person--k .chip { background: #101318; color: #fff; }
+  .person__bio { font: var(--t-lead); max-width: 34ch; }
+  .person dl { display: grid; grid-template-columns: minmax(96px, 32%) 1fr; margin-top: 8px; }
+  .person dt, .person dd { padding: 12px 0; border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent); }
+  .person dt { color: var(--muted); }
+  .person__social { margin-top: auto; padding-top: 24px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .person__social a { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; box-shadow: inset 0 0 0 1px currentColor; min-height: 40px; transition: background-color .2s, color .2s; }
+  .person--m .person__social a:hover { background: #fff; color: #101318; } .person--k .person__social a:hover { background: #101318; color: var(--accent); }
+  .person__social a::after { content: "↗"; }
+  @media (min-width: 900px) {
+    .person--m { grid-column: 1 / span 6; } .person--k { grid-column: 7 / span 6; }
+    .person__photo { grid-column: 1 / span 2; } .person__body { grid-column: 3 / span 4; }
   }
+  @media (min-width: 1280px) { .person { padding: 32px; } }
 
-  /* telefon w systemie OurMoney (krem + Instrument Serif + Inter) */
-
-  /* kalkulator podziału */
-  .calc { background: var(--tile); color: var(--tile-ink); padding: 24px; display: grid; gap: 20px; }
-  .calc__models { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .calc__models button { padding: 12px 8px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.3); text-align: left; min-height: 44px; }
-  .calc__models button[aria-pressed="true"] { background: var(--accent); color: #101318; box-shadow: none; }
-  .calc label { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; align-items: center; }
-  .calc input[type=range] { grid-column: 1 / -1; -webkit-appearance: none; appearance: none; height: 24px; background: transparent; width: 100%; }
-  .calc input::-webkit-slider-runnable-track { height: 2px; background: rgba(255,255,255,.4); }
-  .calc input::-moz-range-track { height: 2px; background: rgba(255,255,255,.4); }
-  .calc input::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; margin-top: -7px; background: var(--accent); border: 2px solid #101318; outline: 1px solid var(--accent); rotate: 45deg; }
-  .calc input::-moz-range-thumb { width: 12px; height: 12px; background: var(--accent); border: 2px solid #101318; outline: 1px solid var(--accent); border-radius: 0; rotate: 45deg; }
-  .calc__bar { display: flex; height: 72px; }
-  .calc__bar div { display: flex; flex-direction: column; justify-content: space-between; padding: 8px; transition: flex-basis .6s var(--ease); overflow: hidden; white-space: nowrap; min-width: 0; }
-  .calc__bar .a { background: var(--accent); color: #101318; } .calc__bar .b { background: #FCFCFB; color: #101318; }
-  .calc__bar strong { font: var(--t-title); font-variant-numeric: tabular-nums; }
-  .calc output { font-variant-numeric: tabular-nums; }
-
-  /* jedna subskrypcja */
-  .sub { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; background: var(--accent); color: #101318; padding: 32px 24px; }
-  .sub__card { background: #101318; color: #fff; padding: 16px; aspect-ratio: 1.6; display: flex; flex-direction: column; justify-content: space-between; max-width: 220px; }
-  .sub__card strong { font: var(--t-title); }
-  .sub__arrow { font: var(--t-title); }
-  .sub__ppl { display: flex; justify-content: flex-end; }
-  .sub__ppl span { width: clamp(56px, 8vw, 88px); aspect-ratio: 1; border-radius: 50%; background: #FCFCFB; border: 2px solid #101318; display: grid; place-items: center; font: var(--t-title); }
-  .sub__ppl span + span { margin-left: -18px; background: #101318; color: var(--accent); }
-
-  /* dwa języki */
-
-  /* liczby */
-  .nums { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  @media (min-width: 900px) { .nums { grid-template-columns: repeat(4, 1fr); } }
-  .num { background: var(--tile); color: var(--tile-ink); padding: 20px; min-height: 200px; display: flex; flex-direction: column; justify-content: space-between; }
-  .num strong { font: var(--t-display); letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
-  .num--lime { background: var(--accent); color: #101318; }
-
-  .stack { display: flex; flex-wrap: wrap; gap: 8px; } .stack span { padding: 8px 12px; box-shadow: inset 0 0 0 1px currentColor; }
-  .next { display: block; padding: var(--section-y) var(--gutter); background: var(--accent); color: #101318; position: relative; }
-  .next .cs-hero__title { margin-top: 16px; }
-  .next:hover .arrow { transform: translate(8px, -8px); } .next .arrow { display: inline-block; transition: transform .5s var(--ease); }
-
-  /* realne ekrany */
-  /* iPhone mockup: korpus, ramka, dynamic island */
-  .iph { display: block; background: #101318; padding: 10px; border-radius: 12.5% / 6.2%; box-shadow: inset 0 0 0 2px #3a3f47, 0 40px 60px -24px rgba(16,19,24,.6); position: relative; }
-  .iph::before { content: ""; position: absolute; z-index: 2; top: 20px; left: 50%; width: 26%; height: 3.2%; translate: -50% 0; background: #101318; border-radius: 999px; }
-  .iph::after { content: ""; position: absolute; right: -3px; top: 22%; width: 3px; height: 9%; background: #3a3f47; border-radius: 0 2px 2px 0; }
-  .iph img { display: block; width: 100%; height: auto; border-radius: 10.5% / 5%; }
-  .device { display: block; width: 100%; }
-  .raw img { display: block; width: 100%; height: auto; }
-  .stage { background: var(--accent); padding: 48px var(--gutter) 0; display: flex; gap: 8px; justify-content: center; align-items: flex-end; overflow: hidden; position: relative; z-index: 2; }
-  .stage figure { flex: 0 1 300px; margin-bottom: -12%; } .stage figure:nth-child(2) { margin-bottom: -4%; }
-  .stage--dark { background: #15181D; }
-  .stage--img { padding: 0; display: block; } .stage--img img { display: block; width: 100%; height: auto; }
-  .screens { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px 8px; } @media (min-width: 900px) { .screens { grid-template-columns: repeat(4, 1fr); } }
-  .screens figcaption { margin-top: 16px; }
-  .one { max-width: 320px; margin: 0 auto; }
-  .raw { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent); background: #fff; margin-top: 8px; }
-  .bigline { font: var(--t-display); letter-spacing: -.02em; }
-  .guides { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 8px; } @media (min-width: 900px) { .guides { grid-template-columns: repeat(5, 1fr); } }
-  .guides img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; display: block; }
-  .guides strong { display: block; font: var(--t-title); margin: 16px 0 4px; }
-  .path { display: grid; gap: 8px; grid-template-columns: 1fr; } @media (min-width: 800px) { .path { grid-template-columns: 1fr 1fr; } }
-  .path div { padding: 24px; min-height: 240px; display: flex; flex-direction: column; justify-content: space-between; background: var(--tile); color: var(--tile-ink); }
-  .path div + div { background: var(--accent); color: #101318; }
-  .path strong { font: var(--t-h2); text-transform: uppercase; letter-spacing: -.02em; }
-
-  /* Dziennik AION MIND: klikalna rekonstrukcja ekranu z aionmind.com */
-  .jr { background: #F6F6F4; color: #1B1B1F; font-family: Inter, -apple-system, "Segoe UI", sans-serif; border-radius: 10.5% / 5%; padding: 56px 14px 24px; aspect-ratio: 9 / 18.6; display: flex; flex-direction: column; gap: 12px; overflow: hidden; user-select: none; }
-  .jr__bar { display: flex; align-items: center; gap: 12px; font: 600 15px/1 Inter, sans-serif; }
-  .jr__bar span { flex: 1; text-align: center; }
-  .jr__bar i { width: 22px; height: 22px; display: grid; place-items: center; font-style: normal; font-size: 16px; }
-  .jr__m { text-align: center; font: 600 13px/1 Inter, sans-serif; margin-top: 4px; }
-  .jr__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px 2px; }
-  .jr__grid b { font: 500 10px/1 Inter, sans-serif; color: #8A8A90; text-align: center; padding: 6px 0 4px; }
-  .jr__d { appearance: none; border: 0; height: 32px; border-radius: 6px; font: 500 12px/1 Inter, sans-serif; color: #1B1B1F; background: transparent; cursor: pointer; }
-  .jr__d.out { color: #B9B9BE; }
-  .jr__d.has { background: #C9DBF6; }
-  .jr__d.has + .jr__d.has { border-top-left-radius: 0; border-bottom-left-radius: 0; }
-  .jr__d.has:has(+ .jr__d.has) { border-top-right-radius: 0; border-bottom-right-radius: 0; }
-  .jr__d.done { background: #F1DD9D; } .jr__d.done::before { content: "✓"; font-size: 12px; } .jr__d.done { font-size: 0; }
-  .jr__d.wait { box-shadow: inset 0 0 0 1.5px #F1DD9D; }
-  .jr__d[aria-pressed="true"] { background: #2C4A8C; color: #fff; }
-  .jr__d:focus-visible { outline: 2px solid #2C4A8C; outline-offset: 1px; }
-  .jr__card { border: 0; text-align: left; width: 100%; border-radius: 12px; padding: 12px 14px; cursor: pointer; font-family: inherit; color: inherit; transition: translate .3s var(--ease); }
-  .jr__card:active { translate: 0 1px; }
-  .jr__card--m { background: #BFD5F6; } .jr__card--w { background: #F3DE9A; }
-  .jr__card strong { display: block; font: 600 13px/1.2 Inter, sans-serif; margin-bottom: 4px; }
-  .jr__card strong::before { content: "◎ "; }
-  .jr__card p { font: 400 11px/1.35 Inter, sans-serif; margin: 0 0 10px; }
-  .jr__card span { display: block; text-align: center; font: 500 11px/1 Inter, sans-serif; padding: 9px; border-radius: 999px; background: rgba(255,255,255,.55); }
-  .jr__card[aria-expanded="true"] p { font-weight: 500; }
-  .jr__wk { background: #fff; border-radius: 12px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; font: 600 13px/1 Inter, sans-serif; }
-  .jr__wk small { font: 400 11px/1 Inter, sans-serif; color: #6E6E74; }
-  .jr__toast { position: absolute; left: 50%; bottom: 8%; translate: -50% 0; background: #1B1B1F; color: #fff; font: 500 11px/1 Inter, sans-serif; padding: 10px 14px; border-radius: 999px; opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; }
-  .jr__toast.is-on { opacity: 1; }
+  .posts a { gap: 24px; align-items: baseline; }
+  .posts .posts__t { font: var(--t-title); max-width: 40ch; transition: none; transform: none !important; }
+  .posts .posts__m { white-space: nowrap; color: var(--muted); }
+  .posts a:hover .posts__m { color: inherit; }
+  .posts .posts__all .posts__t { font-weight: 700; }
+  .find { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px var(--gap); align-items: start; }
+  .find > * { grid-column: 1 / -1; }
+  .find__list { display: grid; grid-template-columns: 1fr; }
+  .find__list a { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); font: var(--t-title); }
+  .find__list a:last-child { border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+  .find__list a:hover { background: var(--accent); color: #101318; padding-inline: 12px; }
+  .find__list a span { transition: transform .4s var(--ease); display: inline-block; }
+  .find__list a:hover span { transform: translate(4px, -4px); }
+  @media (min-width: 1024px) { .find > .find__head { grid-column: 1 / span 4; position: sticky; top: 120px; } .find > .find__list { grid-column: 5 / span 8; } }
 </style>
 </head>
 <body class="is-loading">
@@ -492,8 +413,8 @@
   <div class="hud__row">
     <a class="logo" href="no-fuss-v5.html" aria-label="no-fuss, strona główna">no<i></i>fuss</a>
     <nav class="nav" aria-label="Główna">
-      <a href="no-fuss-v5.html#realizacje" data-scramble aria-current="page">Realizacje</a>
-      <a href="o-nas-v2.html" data-scramble>O nas</a>
+      <a href="no-fuss-v5.html#realizacje" data-scramble>Realizacje</a>
+      <a href="o-nas-v1.html" data-scramble aria-current="page">O nas</a>
       <a href="#kontakt" data-scramble>Kontakt</a>
     </nav>
   </div>
@@ -506,91 +427,80 @@
 </header>
 
 <main id="top">
-  <section class="cs-hero" id="hero" data-stickers>
-    <div class="hero__bg" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-    <div class="stickers" aria-hidden="true"></div>
-    <p class="mono fade" style="--i:0"><span class="chip">Case study</span> &nbsp;Produkt · 2026</p>
-    <h1 class="cs-hero__title"><span class="line" style="--i:1"><span>AION MIND</span></span></h1>
-    <p class="cs-hero__lead fade" style="--i:3">Aplikacja do journalingu z&nbsp;AI, która pamięta Twój kontekst.</p>
-    <dl class="cs-meta mono-sm fade" style="--i:4">
-      <div><dt>Magda</dt><dd>Product Designer od pierwszego ekranu, potem Head of Operations</dd></div>
-      <div><dt>Zakres</dt><dd>Design produktu, potem cały produkt i zespół</dd></div>
-      <div><dt>Platformy</dt><dd>iOS · Android · web</dd></div>
-      <div><dt>App Store</dt><dd><a href="https://apps.apple.com/pl/app/aion-mind/id6753288406" target="_blank" rel="noopener">Pobierz ↗</a></dd></div>
-      <div><dt>Google Play</dt><dd><a href="https://play.google.com/store/apps/details?id=com.aion.aionmind" target="_blank" rel="noopener">Pobierz ↗</a></dd></div>
-      <div><dt>Zobacz</dt><dd><a href="https://aionmind.com" target="_blank" rel="noopener">aionmind.com ↗</a></dd></div>
-    </dl>
+  <!-- ===== HERO: nagłówek + dwie karty osób ===== -->
+  <section class="team-hero" id="hero" data-reveal>
+    <h1 class="display"><span class="line" style="--i:0"><span>Dwie osoby,</span></span><span class="line" style="--i:1"><span>jeden podział,</span></span><span class="line" style="--i:2"><span>zero zamieszania</span></span></h1>
+    <p class="team-hero__lead fade" style="--i:3">Magda projektuje i&nbsp;prowadzi produkt. Kuba pisze kod i&nbsp;pilnuje, żeby działał. Nikt nie robi zamieszania.</p>
   </section>
-  <div class="stage stage--img" data-reveal><img class="fade" src="assets/aion-mind/og-image.png" alt="AION MIND: przewodnicy i ekrany aplikacji"></div>
-
-  <section class="section cs-block" data-reveal>
-    <span class="cs-no mono fade">01 / Problem</span>
-    <div class="cs-wide">
-      <p class="cs-quote"><span class="line" style="--i:0"><span>„Mam mętlik i&nbsp;nie wiem,</span></span><span class="line" style="--i:1"><span>od czego <mark>zacząć</mark>.”</span></span></p>
-      <p class="cs-p fade" style="--i:3; margin-top: 32px">Czat z&nbsp;AI zaczyna każdą rozmowę od zera i&nbsp;wymaga, żebyś sam wiedział, jak go poprowadzić. W&nbsp;pracy nad sobą to nie działa: liczy się historia, wzorce i&nbsp;ciągłość.</p>
-    </div>
-  </section>
-
-  <section class="section cs-block tone-dark" style="background: var(--bg)" data-reveal>
-    <span class="cs-no mono fade">02 / Kierunek</span>
-    <div class="cs-wide">
-      <h2 class="cs-h"><span class="line" style="--i:0"><span>Kontekst,</span></span><span class="line" style="--i:1"><span>nie czat</span></span></h2>
-      <p class="cs-p fade" style="--i:3; margin-top: 24px">Każdy wpis i&nbsp;każda rozmowa budują kontekst, do którego aplikacja wraca w&nbsp;kolejnych sesjach. Wartość rośnie z&nbsp;czasem, zamiast znikać po pierwszym entuzjazmie. Użytkownik nic nie podpina ręcznie.</p>
-    </div>
-  </section>
-
-  <section class="section cs-block" data-reveal>
-    <span class="cs-no mono fade">03.1 / Dziennik</span>
-    <div class="cs-txt"><h2 class="cs-h"><span class="line"><span>Dziennik,</span></span><span class="line" style="--i:1"><span>który podsumowuje</span></span></h2><p class="cs-p fade" style="--i:2; margin-top: 24px">Kalendarz pokazuje ciągłość wpisów. Tydzień i&nbsp;miesiąc zamykają się podsumowaniem: co było ważne, co wracało, co warto zmienić.</p></div>
-    <figure class="cs-vis"><div class="one fade iph" style="--i:1; position: relative">
-      <div class="jr" id="jr" aria-label="Dziennik, maj 2026">
-        <div class="jr__bar"><i aria-hidden="true">‹</i><span>Dziennik</span><i aria-hidden="true">⌕</i><i aria-hidden="true">✎</i></div>
-        <div class="jr__m" id="jrMonth">Maj 2026</div>
-        <div class="jr__grid" id="jrGrid" role="grid"><b>PN</b><b>WT</b><b>ŚR</b><b>CZ</b><b>PT</b><b>SB</b><b>ND</b></div>
-        <button type="button" class="jr__card jr__card--m" aria-expanded="false" data-msg="Podsumowanie miesiąca: wzorce, wnioski i momenty przełomu"><strong>Podsumowanie miesiąca</strong><p>Zobacz jakie były wzorce, wnioski albo momenty przełomu w tym miesiącu</p><span>Przejrzyj podsumowanie</span></button>
-        <div class="jr__wk"><span id="jrWeek">Tydzień 22</span><small id="jrRange">25.05–31.05.2026</small></div>
-        <button type="button" class="jr__card jr__card--w" aria-expanded="false" data-msg="Podsumowanie tygodnia: jak Ci minął ten tydzień"><strong>Podsumowanie tygodnia</strong><p>Zobacz jak Ci minął ten tydzień.</p><span>Przejrzyj podsumowanie</span></button>
-        <div class="jr__toast" id="jrToast" role="status"></div>
+  <div class="people">
+    <article class="person person--m" data-reveal>
+      <div class="person__photo fade"><span class="person__no mono-sm">P1 / Magda</span><div class="ph"><span>Zdjęcie Magdy 3:4</span></div></div>
+      <div class="person__body">
+        <h2 class="person__name"><span class="line"><span>Magda Nestorowicz</span></span></h2>
+        <p class="person__roles fade" style="--i:1"><span class="chip mono-sm">Design</span><span class="chip mono-sm">Produkt</span></p>
+        <p class="person__bio fade" style="--i:2">Product Designerka. Buduje OurMoney razem z&nbsp;Kubą i&nbsp;AION MIND, gdzie od pierwszego ekranu doszła do prowadzenia całego produktu.</p>
+        <dl class="mono-sm fade" style="--i:3"><dt>Buduje</dt><dd><a href="case-ourmoney-v2.html">OurMoney</a>, <a href="case-aion-mind-v1.html">AION MIND</a></dd><dt>Supermoc</dt><dd>[placeholder: jedno zdanie]</dd><dt>Narzędzia</dt><dd>[placeholder]</dd><dt>Po godzinach</dt><dd>[placeholder]</dd></dl>
+        <nav class="person__social mono-sm fade" style="--i:4" aria-label="Social media: Magda Nestorowicz"><a href="#" target="_blank" rel="noopener">LinkedIn</a><a href="#" target="_blank" rel="noopener">Instagram</a><a href="#" target="_blank" rel="noopener">Dribbble</a><a href="#" target="_blank" rel="noopener">X</a></nav>
       </div>
-    </div><figcaption class="cs-cap mono-sm">Ekran Dziennika odtworzony w&nbsp;HTML na podstawie ekranu z&nbsp;aionmind.com. Klikaj dni i&nbsp;karty.</figcaption></figure>
-  </section>
+    </article>
+    <article class="person person--k" data-reveal>
+      <div class="person__photo fade"><span class="person__no mono-sm">P2 / Kuba</span><div class="ph"><span>Zdjęcie Kuby 3:4</span></div></div>
+      <div class="person__body">
+        <h2 class="person__name"><span class="line"><span>Kuba Fedoszczak</span></span></h2>
+        <p class="person__roles fade" style="--i:1"><span class="chip mono-sm">Kod</span></p>
+        <p class="person__bio fade" style="--i:2">Developer. Odpowiada za produkcję aplikacji, jej bezpieczeństwo i&nbsp;całą stronę technologiczną OurMoney.</p>
+        <dl class="mono-sm fade" style="--i:3"><dt>Buduje</dt><dd><a href="case-ourmoney-v2.html">OurMoney</a></dd><dt>Supermoc</dt><dd>[placeholder: jedno zdanie]</dd><dt>Stack</dt><dd>[placeholder]</dd><dt>Po godzinach</dt><dd>[placeholder]</dd></dl>
+        <nav class="person__social mono-sm fade" style="--i:4" aria-label="Social media: Kuba Fedoszczak"><a href="#" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/JakubLog" target="_blank" rel="noopener">GitHub</a><a href="#" target="_blank" rel="noopener">X</a></nav>
+      </div>
+    </article>
+  </div>
+  <div class="marquee" aria-hidden="true"><div class="marquee__t">
+    <span>Dwie osoby ✦</span><span>Zero zamieszania ✦</span><span>Design × Kod ✦</span><span>No fuss ✦</span>
+    <span>Dwie osoby ✦</span><span>Zero zamieszania ✦</span><span>Design × Kod ✦</span><span>No fuss ✦</span>
+    <span>Dwie osoby ✦</span><span>Zero zamieszania ✦</span><span>Design × Kod ✦</span><span>No fuss ✦</span>
+    <span>Dwie osoby ✦</span><span>Zero zamieszania ✦</span><span>Design × Kod ✦</span><span>No fuss ✦</span>
+  </div></div>
 
-  <section class="section cs-block flip tone-dark" style="background: var(--bg)" data-reveal>
-    <span class="cs-no mono fade">03.2 / Amfiteatr Wiedzy</span>
-    <div class="cs-txt"><h2 class="cs-h"><span class="line"><span>Kontekst</span></span><span class="line" style="--i:1"><span>ma miejsce</span></span></h2><p class="cs-p fade" style="--i:2; margin-top: 24px">Zebrana wiedza o&nbsp;użytkowniku nie jest ukryta w&nbsp;modelu. Ma swoje miejsce, postęp i&nbsp;podział: tożsamość, wizja i&nbsp;cel, wewnętrzne zasoby i&nbsp;blokady. Do każdej części można wrócić i&nbsp;ją poprawić.</p></div>
-    <figure class="cs-vis"><div class="one fade" style="--i:1"><img src="assets/aion-mind/context-phone.png" alt="Ekran Amfiteatr Wiedzy: zebrany kontekst, 100 procent" loading="lazy" style="display:block;width:100%;height:auto"></div><figcaption class="cs-cap mono-sm">Ekran Amfiteatru Wiedzy z&nbsp;zebranym kontekstem.</figcaption></figure>
-  </section>
-
+  <!-- ================= KTO CO ROBI ================= -->
   <section class="section">
-    <div class="work__head mono" data-reveal><span class="fade">03.3 / Przewodnicy</span><span class="fade" style="--i:1">5 ról zamiast jednego bota</span></div>
-    <div class="guides" data-reveal><figure class="fade" style="--i:0"><img src="assets/aion-mind/herodot.png" alt="Przewodnik Herodot" loading="lazy"><figcaption><strong>Herodot</strong><span class="mono-sm">Zbiera i strukturyzuje wiedzę o Tobie</span></figcaption></figure><figure class="fade" style="--i:1"><img src="assets/aion-mind/strateg.png" alt="Przewodnik Strateg" loading="lazy"><figcaption><strong>Strateg</strong><span class="mono-sm">Pomaga odkryć praprzyczynę problemu</span></figcaption></figure><figure class="fade" style="--i:2"><img src="assets/aion-mind/empatia.png" alt="Przewodnik Empatia" loading="lazy"><figcaption><strong>Empatia</strong><span class="mono-sm">Łagodnie wspiera w trudnych sytuacjach</span></figcaption></figure><figure class="fade" style="--i:3"><img src="assets/aion-mind/kowal.png" alt="Przewodnik Kowal" loading="lazy"><figcaption><strong>Kowal</strong><span class="mono-sm">Buduje nawyki i pilnuje produktywności</span></figcaption></figure><figure class="fade" style="--i:4"><img src="assets/aion-mind/trenerka.png" alt="Przewodnik Trenerka mentalna" loading="lazy"><figcaption><strong>Trenerka mentalna</strong><span class="mono-sm">Wzmacnia odporność psychiczną i motywację</span></figcaption></figure></div>
+    <div class="work__head mono" data-reveal><span class="fade">Kto co robi</span><span class="fade" style="--i:1">[02]</span></div>
+    <div class="split__legend mono-sm"><span>← Magda</span><span>Kuba →</span></div>
+    <div class="row" data-reveal style="--v:4%"><h3><span class="line"><span>Design</span></span></h3><div class="row__track"><b></b></div></div>
+    <div class="row" data-reveal style="--v:10%"><h3><span class="line"><span>Produkt</span></span></h3><div class="row__track"><b></b></div></div>
+    <div class="row" data-reveal style="--v:50%"><h3><span class="line"><span>Strategia i&nbsp;pomysły</span></span></h3><div class="row__track"><b></b></div></div>
+    <div class="row" data-reveal style="--v:92%"><h3><span class="line"><span>Kod</span></span></h3><div class="row__track"><b></b></div></div>
+    <div class="row" data-reveal style="--v:96%"><h3><span class="line"><span>Infrastruktura i&nbsp;bezpieczeństwo</span></span></h3><div class="row__track"><b></b></div></div>
   </section>
 
-  <section class="section cs-block tone-dark" style="background: var(--bg)" data-reveal>
-    <span class="cs-no mono fade">04 / Rola</span>
-    <div class="cs-wide">
-      <h2 class="cs-h"><span class="line"><span>Od ekranu do całości</span></span></h2>
-      <p class="cs-p fade" style="--i:2; margin: 24px 0 32px">Magda zaprojektowała AION MIND od pierwszego ekranu. Potem przejęła operacje: dziś odpowiada za produkt i&nbsp;zespół, nie tylko za to, jak wygląda.</p>
-      <div class="path fade" style="--i:3"><div><span class="mono-sm">[od kiedy] · Etap 1</span><strong>Product Designer</strong><span class="mono-sm">Koncepcja, flow, system wizualny, ekrany</span></div><div><span class="mono-sm">[od kiedy] · Etap 2</span><strong>Head of Operations</strong><span class="mono-sm">Produkt, priorytety, praca z&nbsp;zespołem dev</span></div></div>
-    </div>
+  <!-- ================= ZNAJDŹ NAS ================= -->
+  <section class="section find" id="social" data-reveal>
+    <div class="find__head"><span class="mono cs-no fade">Znajdź nas / 03</span><h2 class="cs-h fade" style="--i:1; margin-top: 16px"><span class="line"><span>no-fuss w&nbsp;sieci</span></span></h2><p class="cs-p fade" style="--i:2; margin-top: 16px">Wspólne konta studia. Profile osobiste są przy kartach wyżej.</p></div>
+    <nav class="find__list fade" style="--i:2" aria-label="Social media no-fuss">
+      <a href="#" target="_blank" rel="noopener">Instagram <span>↗</span></a>
+      <a href="#" target="_blank" rel="noopener">LinkedIn <span>↗</span></a>
+      <a href="#" target="_blank" rel="noopener">Behance <span>↗</span></a>
+      <a href="#" target="_blank" rel="noopener">GitHub <span>↗</span></a>
+      <a href="mailto:[email@no-fuss]" data-copy="[email@no-fuss]">[email@no-fuss] <span>⧉</span></a>
+    </nav>
   </section>
 
-  <section class="section">
-    <div class="work__head mono" data-reveal><span class="fade">05 / W liczbach</span><span class="fade" style="--i:1">Stan: wrzesień 2026</span></div>
-    <div class="nums" data-reveal>
-      <div class="num num--lime fade"><strong data-count="5">5</strong><span class="mono-sm">przewodników o&nbsp;różnych rolach</span></div>
-      <div class="num fade" style="--i:1"><strong data-count="3">3</strong><span class="mono-sm">platformy: iOS, Android, web</span></div>
-      <div class="num fade" style="--i:2"><strong data-count="2">2</strong><span class="mono-sm">rytmy podsumowań: tydzień i&nbsp;miesiąc</span></div>
-      <div class="num fade" style="--i:3"><strong>[?]</strong><span class="mono-sm">[Liczba do wyboru przez Magdę, np. ocena w&nbsp;sklepach]</span></div>
-    </div>
+  <!-- ================= Z LINKEDINA ================= -->
+  <section class="section find tone-dark" id="posty" style="background: var(--bg)" data-reveal>
+    <div class="find__head"><span class="mono cs-no fade">Z LinkedIna / 04</span><h2 class="cs-h fade" style="--i:1; margin-top: 16px"><span class="line"><span>Co piszemy</span></span></h2><p class="cs-p fade" style="--i:2; margin-top: 16px">Teksty Magdy o&nbsp;designie, produkcie i&nbsp;pracy we dwoje. Każdy wpis prowadzi do LinkedIna.</p><p class="mono-sm cs-no fade" style="--i:3; margin-top: 24px">[Lista do podmiany: tytuł, data, link do posta]</p></div>
+    <nav class="find__list posts fade" style="--i:2" aria-label="Posty Magdy na LinkedInie">
+      <a href="#" target="_blank" rel="noopener"><span class="posts__t">[Tytuł posta 01 — jedno zdanie, które mówi, o&nbsp;czym jest]</span><span class="posts__m mono-sm">[data] · LinkedIn ↗</span></a>
+      <a href="#" target="_blank" rel="noopener"><span class="posts__t">[Tytuł posta 02]</span><span class="posts__m mono-sm">[data] · LinkedIn ↗</span></a>
+      <a href="#" target="_blank" rel="noopener"><span class="posts__t">[Tytuł posta 03]</span><span class="posts__m mono-sm">[data] · LinkedIn ↗</span></a>
+      <a href="#" target="_blank" rel="noopener"><span class="posts__t">[Tytuł posta 04]</span><span class="posts__m mono-sm">[data] · LinkedIn ↗</span></a>
+      <a href="#" target="_blank" rel="noopener" class="posts__all"><span class="posts__t">Wszystkie posty Magdy</span><span class="posts__m mono-sm">LinkedIn ↗</span></a>
+    </nav>
   </section>
 
-  <section class="section cs-block tone-dark" style="background: var(--bg)" data-reveal>
-    <span class="cs-no mono fade">06 / Głos użytkownika</span>
-    <div class="cs-wide"><p class="bigline"><span class="line"><span>„Apka robi to sama.”</span></span></p><p class="cs-cap mono fade" style="--i:2; margin-top: 24px">Marcin Świder, użytkownik · opinia z&nbsp;aionmind.com</p></div>
+  <!-- ================= OKLEJ NAS ================= -->
+  <section class="section play tone-dark" id="play" style="background: var(--bg)">
+    <div class="play__head" data-reveal><h2><span class="line"><span>Oklej nas</span></span></h2><span class="mono fade" style="--i:2">Przeciągnij naklejki ↓</span></div>
+    <div class="play__photos"><div class="ph"><span>Magda</span></div><div class="ph ph--lime"><span>Kuba</span></div></div>
   </section>
-
-  <a class="next" href="case-ourmoney-v2.html" data-reveal><span class="mono fade">Następny projekt</span><span class="cs-hero__title" style="display:block"><span class="line"><span>OurMoney <span class="arrow">→</span></span></span></span></a>
 </main>
 
 <!-- ================= STOPKA ================= -->
@@ -734,28 +644,22 @@
 </script>
 
 <script>
-(() => { const io = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; io.unobserve(e.target); if (matchMedia('(prefers-reduced-motion: reduce)').matches) return; const end = +e.target.dataset.count, t0 = performance.now(); (function tick(now) { const p = Math.min(1, (now - t0) / 1200), v = 1 - Math.pow(1 - p, 4); e.target.textContent = Math.round(end * v); if (p < 1) requestAnimationFrame(tick); })(t0); }), { threshold: .6 }); document.querySelectorAll('[data-count]').forEach(n => io.observe(n)); })();
-</script>
-<script>
-/* Dziennik: kalendarz maja 2026, wybór dnia ustawia tydzień, karty reagują na klik */
+/* przeciągane naklejki */
 (() => {
-  const grid = document.getElementById('jrGrid'); if (!grid) return;
-  const has = new Set(['4-29','5-1','5-2','5-4','5-5','5-6','5-7','5-13','5-14','5-15','5-19','5-20','5-21','5-23','5-27','5-28','5-29','5-30']);
-  const done = new Set(['5-3','5-10','5-17']), wait = new Set(['5-24','5-31']);
-  const start = new Date(2026, 3, 27); let sel = null;
-  const pad = n => String(n).padStart(2, '0'), fmt = d => `${pad(d.getDate())}.${pad(d.getMonth() + 1)}`;
-  const isoWeek = d => { const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day); const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1)); return Math.ceil(((t - y0) / 864e5 + 1) / 7); };
-  const setWeek = d => { const mon = new Date(d); mon.setDate(d.getDate() - ((d.getDay() + 6) % 7)); const sun = new Date(mon); sun.setDate(mon.getDate() + 6); document.getElementById('jrWeek').textContent = 'Tydzień ' + isoWeek(d); document.getElementById('jrRange').textContent = `${fmt(mon)}–${fmt(sun)}.${sun.getFullYear()}`; };
-  for (let i = 0; i < 35; i++) {
-    const d = new Date(start); d.setDate(start.getDate() + i); const k = `${d.getMonth() + 1}-${d.getDate()}`;
-    const b = document.createElement('button'); b.type = 'button'; b.className = 'jr__d' + (d.getMonth() !== 4 ? ' out' : '') + (has.has(k) ? ' has' : '') + (done.has(k) ? ' done' : '') + (wait.has(k) ? ' wait' : '');
-    b.textContent = d.getDate(); b.setAttribute('aria-label', d.toLocaleDateString('pl-PL', { day: 'numeric', month: 'long' })); b.setAttribute('aria-pressed', 'false');
-    b.addEventListener('click', () => { sel?.setAttribute('aria-pressed', 'false'); sel = b; b.setAttribute('aria-pressed', 'true'); setWeek(d); });
-    if (k === '5-30') { sel = b; b.setAttribute('aria-pressed', 'true'); setWeek(d); }
-    grid.appendChild(b);
-  }
-  const toast = document.getElementById('jrToast'); let t;
-  document.querySelectorAll('.jr__card').forEach(c => c.addEventListener('click', () => { const on = c.getAttribute('aria-expanded') !== 'true'; c.setAttribute('aria-expanded', on); toast.textContent = c.dataset.msg; toast.classList.add('is-on'); clearTimeout(t); t = setTimeout(() => toast.classList.remove('is-on'), 1600); }));
+  const play = document.getElementById('play'), list = window.NF_STICKERS; if (!play || !list) return;
+  const spots = [[8, 30], [78, 22], [16, 68], [84, 62], [46, 80], [60, 14]];
+  spots.forEach(([x, y], i) => {
+    const el = document.createElement('div'); el.className = 'drag'; el.tabIndex = 0; el.setAttribute('role', 'img'); el.setAttribute('aria-label', 'Naklejka, przesuwaj strzałkami');
+    el.innerHTML = list[i % list.length];
+    el.style.cssText = `left:${x}%;top:${y}%;--s:${96 + (i * 17) % 40}px;--r:${(i % 2 ? 1 : -1) * (8 + i * 3)}deg`;
+    play.appendChild(el);
+    let ox = 0, oy = 0, held = false;
+    el.addEventListener('pointerdown', e => { held = true; el.setPointerCapture(e.pointerId); el.classList.add('is-held'); const r = el.getBoundingClientRect(); ox = e.clientX - r.left; oy = e.clientY - r.top; e.preventDefault(); });
+    el.addEventListener('pointermove', e => { if (!held) return; const p = play.getBoundingClientRect(); el.style.left = Math.max(0, Math.min(p.width - el.offsetWidth, e.clientX - p.left - ox)) + 'px'; el.style.top = Math.max(0, Math.min(p.height - el.offsetHeight, e.clientY - p.top - oy)) + 'px'; });
+    const drop = () => { held = false; el.classList.remove('is-held'); };
+    el.addEventListener('pointerup', drop); el.addEventListener('pointercancel', drop);
+    el.addEventListener('keydown', e => { const d = { ArrowLeft: [-16, 0], ArrowRight: [16, 0], ArrowUp: [0, -16], ArrowDown: [0, 16] }[e.key]; if (!d) return; e.preventDefault(); el.style.left = el.offsetLeft + d[0] + 'px'; el.style.top = el.offsetTop + d[1] + 'px'; });
+  });
 })();
 </script>
 </body>

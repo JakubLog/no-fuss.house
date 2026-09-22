@@ -20,7 +20,8 @@ Każda iteracja to osobny plik, poprzednich nie nadpisujemy.
 | `no-fuss-v3.html` | OurMoney i AION MIND jako produkty własne |
 | `no-fuss-v4.html` | narracja duetu, liczba mnoga |
 | `no-fuss-v5.html` | **aktualna strona główna**, v4 + link do „O nas" |
-| `o-nas-v1.html` | podstrona „O nas" |
+| `o-nas-v1.html` | podstrona „O nas", hero z dwoma panelami (archiwum) |
+| `o-nas-v2.html` | **aktualna** podstrona „O nas", karty osób i social media |
 | `case-ourmoney-v1.html` | case study OurMoney, wersja z ilustracjami (archiwum) |
 | `case-ourmoney-v2.html` | **aktualny** case OurMoney, tylko realne ekrany |
 | `case-aion-mind-v1.html` | case study AION MIND |
