@@ -34,6 +34,7 @@ Każda iteracja to osobny plik, poprzednich nie nadpisujemy.
 | `case-otb-v2.html` | **aktualny** case OTB: przeciągana kula, przełącznik sekcji |
 | `case-sassy-v1.html` | case Sassy, wersja tekstowa (archiwum) |
 | `case-sassy-v2.html` | **aktualny** case Sassy: żywa strona w ramce, przełącznik zabawek |
+| `case-automation-house-v1.html` | case study Automation House (z Kubą) |
 | `assets/` | realne ekrany z ourmoney.pl i aionmind.com |
 | `.ux/audits/` | audyty UX |
 
