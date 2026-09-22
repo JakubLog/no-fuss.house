@@ -567,6 +567,27 @@
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .chips span, .chips a { padding: 8px 12px; box-shadow: inset 0 0 0 1px currentColor; }
   .chips a:hover { background: var(--accent); color: #101318; box-shadow: none; }
+
+  /* proces: kroki jak taśma, hover rozwija */
+  .steps { display: grid; grid-template-columns: 1fr; gap: 8px; counter-reset: st; }
+  @media (min-width: 900px) { .steps { grid-template-columns: repeat(5, 1fr); } }
+  .step { position: relative; padding: 24px 20px 20px; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; background: var(--tile); color: var(--tile-ink); overflow: hidden; transition: background-color .3s, color .3s; cursor: default; }
+  .step::before { counter-increment: st; content: "0" counter(st); font: var(--t-display); letter-spacing: -.03em; line-height: .9; }
+  .step strong { font: var(--t-title); font-weight: 700; margin-top: 24px; display: block; }
+  .step small { display: block; margin-top: 8px; color: var(--muted); max-height: 0; opacity: 0; overflow: hidden; transition: max-height .5s var(--ease), opacity .4s; }
+  .step:hover, .step:focus-within { background: var(--accent); color: #101318; --muted: #3F4A12; }
+  .step:hover small, .step:focus-within small { max-height: 120px; opacity: 1; }
+  .step:hover::before { color: #101318; }
+  /* fakty: wielkie wiersze */
+  .spec { display: grid; }
+  .spec div { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; align-items: baseline; padding: 20px 0; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+  .spec div:last-child { border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+  .spec dt { color: var(--muted); }
+  .spec dd { font: var(--t-h2); letter-spacing: -.02em; text-transform: uppercase; margin: 0; }
+  .spec dd a { text-decoration: none; display: inline-block; transition: transform .4s var(--ease); }
+  .spec dd a:hover { transform: translate(6px, -6px); }
+  .spec dd .chip { font: var(--t-mono-sm); text-transform: uppercase; letter-spacing: 0; vertical-align: middle; margin-left: 12px; }
+  @media (min-width: 1024px) { .spec div { grid-template-columns: 4fr 8fr; } }
 </style>
 </head>
 <body class="is-loading">
@@ -622,8 +643,9 @@
 
   <section class="lite" data-reveal>
     <div class="lite__head mono"><span class="fade">03 / Fakty</span></div>
-    <div class="chips mono fade" style="--i:1"><span>Design: Magda</span><span>Kod: Michał Gabryelewicz</span><span>Webflow</span><span>2024</span><a href="https://www.busybeefilm.pl" target="_blank" rel="noopener">busybeefilm.pl ↗</a></div>
+    <dl class="spec"><div class="fade" style="--i:0"><dt class="mono">Klient</dt><dd>Busy Bee Film</dd></div><div class="fade" style="--i:1"><dt class="mono">Zakres</dt><dd>Strona domu produkcyjnego</dd></div><div class="fade" style="--i:2"><dt class="mono">Design</dt><dd>Magda</dd></div><div class="fade" style="--i:3"><dt class="mono">Kod</dt><dd>Michał Gabryelewicz <span class="chip">Webflow</span></dd></div><div class="fade" style="--i:4"><dt class="mono">Kiedy</dt><dd>2024</dd></div><div class="fade" style="--i:5"><dt class="mono">Strona</dt><dd><a href="https://www.busybeefilm.pl" target="_blank" rel="noopener">busybeefilm.pl ↗</a></dd></div></dl>
   </section>
+
 
   <a class="next" href="case-automation-house-v1.html" data-reveal><span class="mono fade">Następny projekt</span><span class="cs-hero__title" style="display:block"><span class="line"><span>Automation House <span class="arrow">→</span></span></span></span></a>
 </main>

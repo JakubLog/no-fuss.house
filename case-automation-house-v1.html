@@ -567,6 +567,27 @@
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .chips span, .chips a { padding: 8px 12px; box-shadow: inset 0 0 0 1px currentColor; }
   .chips a:hover { background: var(--accent); color: #101318; box-shadow: none; }
+
+  /* proces: kroki jak taśma, hover rozwija */
+  .steps { display: grid; grid-template-columns: 1fr; gap: 8px; counter-reset: st; }
+  @media (min-width: 900px) { .steps { grid-template-columns: repeat(5, 1fr); } }
+  .step { position: relative; padding: 24px 20px 20px; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; background: var(--tile); color: var(--tile-ink); overflow: hidden; transition: background-color .3s, color .3s; cursor: default; }
+  .step::before { counter-increment: st; content: "0" counter(st); font: var(--t-display); letter-spacing: -.03em; line-height: .9; }
+  .step strong { font: var(--t-title); font-weight: 700; margin-top: 24px; display: block; }
+  .step small { display: block; margin-top: 8px; color: var(--muted); max-height: 0; opacity: 0; overflow: hidden; transition: max-height .5s var(--ease), opacity .4s; }
+  .step:hover, .step:focus-within { background: var(--accent); color: #101318; --muted: #3F4A12; }
+  .step:hover small, .step:focus-within small { max-height: 120px; opacity: 1; }
+  .step:hover::before { color: #101318; }
+  /* fakty: wielkie wiersze */
+  .spec { display: grid; }
+  .spec div { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; align-items: baseline; padding: 20px 0; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+  .spec div:last-child { border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+  .spec dt { color: var(--muted); }
+  .spec dd { font: var(--t-h2); letter-spacing: -.02em; text-transform: uppercase; margin: 0; }
+  .spec dd a { text-decoration: none; display: inline-block; transition: transform .4s var(--ease); }
+  .spec dd a:hover { transform: translate(6px, -6px); }
+  .spec dd .chip { font: var(--t-mono-sm); text-transform: uppercase; letter-spacing: 0; vertical-align: middle; margin-left: 12px; }
+  @media (min-width: 1024px) { .spec div { grid-template-columns: 4fr 8fr; } }
 </style>
 </head>
 <body class="is-loading">
@@ -608,16 +629,22 @@
   <!-- żywa strona od razu -->
   <div class="stage stage--site" data-reveal><div class="frame fade"><span class="frame__url">www.automation.house · przewijaj i klikaj</span><iframe src="https://www.automation.house" title="Automation House, żywa strona" loading="eager" referrerpolicy="no-referrer"></iframe></div></div>
 
+  <section class="lite" data-reveal>
+    <div class="lite__head mono"><span class="fade">01 / Proces</span><span class="fade" style="--i:1">Rebranding · najedź na krok</span></div>
+    <div class="steps"><div class="step fade" style="--i:0" tabindex="0"><div><strong>Discovery</strong><small class="mono-sm">Warsztaty i rozmowy z zespołem: co firma robi naprawdę i komu to sprzedaje.</small></div></div><div class="step fade" style="--i:1" tabindex="0"><div><strong>Potrzeby</strong><small class="mono-sm">Kto wchodzi na stronę, czego szuka i co ma zrobić dalej.</small></div></div><div class="step fade" style="--i:2" tabindex="0"><div><strong>Projekt</strong><small class="mono-sm">Nowa architektura treści, system wizualny, ekrany.</small></div></div><div class="step fade" style="--i:3" tabindex="0"><div><strong>Kod</strong><small class="mono-sm">Next.js, szybkie, dostępne. Kuba.</small></div></div><div class="step fade" style="--i:4" tabindex="0"><div><strong>AI-ready</strong><small class="mono-sm">Struktura i treść czytelne dla AI scraperów, nie tylko dla Google.</small></div></div></div>
+  </section>
+
   <!-- telefon do przewijania -->
   <section class="lite tone-dark" style="background: var(--bg)" data-reveal>
-    <div class="lite__head mono"><span class="fade">01 / Mobile</span><span class="fade" style="--i:1">Przewiń ekran telefonu</span></div>
+    <div class="lite__head mono"><span class="fade">02 / Mobile</span><span class="fade" style="--i:1">Przewiń ekran telefonu</span></div>
     <div class="scrollphone fade" style="--i:2"><span class="iph"><div class="scrollphone__screen" data-lenis-prevent tabindex="0" aria-label="Cała strona Automation House na telefonie, przewijana"><img src="assets/automation-house/m-full.webp" alt="Automation House na telefonie, cała strona" loading="lazy"></div></span></div>
   </section>
 
   <section class="lite" data-reveal>
-    <div class="lite__head mono"><span class="fade">02 / Fakty</span></div>
-    <div class="chips mono fade" style="--i:1"><span>Design: Magda</span><span>Kod: Kuba</span><span>Next.js</span><span>Czerwiec 2026</span><a href="https://www.automation.house" target="_blank" rel="noopener">automation.house ↗</a></div>
+    <div class="lite__head mono"><span class="fade">03 / Fakty</span></div>
+    <dl class="spec"><div class="fade" style="--i:0"><dt class="mono">Klient</dt><dd>Automation House by Tigers</dd></div><div class="fade" style="--i:1"><dt class="mono">Zakres</dt><dd>Rebranding strony</dd></div><div class="fade" style="--i:2"><dt class="mono">Design</dt><dd>Magda</dd></div><div class="fade" style="--i:3"><dt class="mono">Kod</dt><dd>Kuba <span class="chip">Next.js</span></dd></div><div class="fade" style="--i:4"><dt class="mono">Dla AI</dt><dd>Czytelna dla scraperów AI</dd></div><div class="fade" style="--i:5"><dt class="mono">Kiedy</dt><dd>Czerwiec 2026</dd></div><div class="fade" style="--i:6"><dt class="mono">Strona</dt><dd><a href="https://www.automation.house" target="_blank" rel="noopener">automation.house ↗</a></dd></div></dl>
   </section>
+
 
   <a class="next" href="case-otb-v2.html" data-reveal><span class="mono fade">Następny projekt</span><span class="cs-hero__title" style="display:block"><span class="line"><span>OTB Ventures <span class="arrow">→</span></span></span></span></a>
 </main>
