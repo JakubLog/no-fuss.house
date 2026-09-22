@@ -223,10 +223,6 @@
   .iph::before { content: ""; position: absolute; z-index: 2; top: 20px; left: 50%; width: 26%; height: 3.2%; translate: -50% 0; background: #101318; border-radius: 999px; }
   .iph::after { content: ""; position: absolute; right: -3px; top: 22%; width: 3px; height: 9%; background: #3a3f47; border-radius: 0 2px 2px 0; }
   .iph img { display: block; width: 100%; height: auto; border-radius: 10.5% / 5%; }
-  /* okładka strony: na hover przewija się cała strona */
-  .ph--scroll img { object-fit: cover; object-position: top; height: auto; min-height: 100%; transition: translate 7s linear, scale .9s var(--ease); }
-  .tile:hover .ph--scroll img { translate: 0 calc(-1 * var(--scroll, 0px)); scale: 1; }
-  .tile:not(:hover) .ph--scroll img { transition: translate 1.2s var(--ease), scale .9s var(--ease); }
   .ph--sky { background: var(--shade-700); color: #fff; }
   .ph--lime { background: var(--accent); color: #101318; }
 
@@ -413,10 +409,10 @@
         <span class="cover__s cover__s3 iph"><img src="assets/ourmoney/wspolne-cele-finansowe.webp" alt="" loading="lazy"></span>
       </div><div class="tile__meta mono"><span>OurMoney — wspólny budżet dla par</span><span>2025–2026 <span class="arrow">→</span></span></div></a>
       <a class="tile tile--l" href="case-aion-mind-v1.html" data-reveal><span class="tile__tag mono-sm">Aplikacja mobilna</span><div class="ph ph--img fade"><img src="assets/aion-mind/og-image.png" alt="AION MIND: przewodnicy i ekrany aplikacji" loading="lazy"></div><div class="tile__meta mono"><span>AION MIND — journaling z AI</span><span>2025–2026 <span class="arrow">→</span></span></div></a>
-      <a class="tile tile--l" href="case-busybee-v3.html" data-reveal><span class="tile__tag mono-sm">Strona WWW</span><div class="ph ph--img ph--scroll fade" style="--i:1"><img src="assets/busybee/d-full.webp" alt="Busy Bee Film: strona główna" loading="lazy"></div><div class="tile__meta mono"><span>Busy Bee Film — dom produkcyjny</span><span>2024 <span class="arrow">→</span></span></div></a>
-      <a class="tile tile--m" href="case-otb-v2.html" data-reveal><span class="tile__tag mono-sm">Strona WWW</span><div class="ph ph--img ph--scroll fade"><img src="assets/otb/d-full.webp" alt="OTB Ventures: strona główna" loading="lazy"></div><div class="tile__meta mono"><span>OTB Ventures</span><span>2025 <span class="arrow">→</span></span></div></a>
-      <a class="tile tile--m" href="case-sassy-v2.html" data-reveal><span class="tile__tag mono-sm">Eksperyment</span><div class="ph ph--img ph--scroll fade" style="--i:1"><img src="assets/sassy/d-full.webp" alt="Sassy: strona bez celu" loading="lazy"></div><div class="tile__meta mono"><span>Sassy — strona bez celu</span><span>2026 <span class="arrow">→</span></span></div></a>
-      <a class="tile tile--l" href="case-automation-house-v1.html" data-reveal><span class="tile__tag mono-sm">Strona WWW</span><div class="ph ph--img ph--scroll fade"><img src="assets/automation-house/d-full.webp" alt="Automation House: strona główna" loading="lazy"></div><div class="tile__meta mono"><span>Automation House</span><span>2026 <span class="arrow">→</span></span></div></a>
+      <a class="tile tile--l" href="case-busybee-v3.html" data-reveal><span class="tile__tag mono-sm">Strona WWW</span><div class="ph ph--img fade" style="--i:1"><img src="assets/busybee/d-00.webp" alt="Busy Bee Film: strona główna" loading="lazy"></div><div class="tile__meta mono"><span>Busy Bee Film — dom produkcyjny</span><span>2024 <span class="arrow">→</span></span></div></a>
+      <a class="tile tile--m" href="case-otb-v2.html" data-reveal><span class="tile__tag mono-sm">Strona WWW</span><div class="ph ph--img fade"><img src="assets/otb/d-00.webp" alt="OTB Ventures: strona główna" loading="lazy"></div><div class="tile__meta mono"><span>OTB Ventures</span><span>2025 <span class="arrow">→</span></span></div></a>
+      <a class="tile tile--m" href="case-sassy-v2.html" data-reveal><span class="tile__tag mono-sm">Eksperyment</span><div class="ph ph--img fade" style="--i:1"><img src="assets/sassy/d-00.webp" alt="Sassy: strona bez celu" loading="lazy"></div><div class="tile__meta mono"><span>Sassy — strona bez celu</span><span>2026 <span class="arrow">→</span></span></div></a>
+      <a class="tile tile--l" href="case-automation-house-v1.html" data-reveal><span class="tile__tag mono-sm">Strona WWW</span><div class="ph ph--img fade"><img src="assets/automation-house/d-00.webp" alt="Automation House: strona główna" loading="lazy"></div><div class="tile__meta mono"><span>Automation House</span><span>2026 <span class="arrow">→</span></span></div></a>
     </div>
   </section>
 
@@ -486,10 +482,6 @@
     })(t0);
   }
   $$('[data-scramble]').forEach(el => { el.addEventListener('mouseenter', () => scramble(el)); el.addEventListener('focus', () => scramble(el)); });
-
-  /* okładki: policz, o ile przewinąć na hover */
-  const scrollCovers = () => document.querySelectorAll('.ph--scroll img').forEach(im => { const ph = im.parentElement; im.style.setProperty('--scroll', Math.max(0, im.offsetHeight - ph.offsetHeight) + 'px'); });
-  addEventListener('load', scrollCovers); addEventListener('resize', scrollCovers); document.querySelectorAll('.ph--scroll img').forEach(im => { im.addEventListener('load', scrollCovers); im.closest('.tile').addEventListener('mouseenter', scrollCovers); });
 
   /* ---- suwak zamieszania ---- */
   const fr = $('#fussRange');
