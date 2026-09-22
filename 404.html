@@ -569,8 +569,8 @@
     function fit() {
       const w = hero.clientWidth, h = hero.clientHeight;
       renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
-      const s = Math.min((visW() * (w < 768 ? .86 : .62)) / baseW, 1.4); group.scale.setScalar(s);
-      group.position.y = w < 768 ? visH() * .12 : visH() * .02;
+      const s = Math.min((visW() * (w < 768 ? .7 : .5)) / baseW, 1.0); group.scale.setScalar(s);
+      group.position.y = w < 768 ? visH() * .16 : visH() * .1;
     }
     addEventListener('resize', fit); fit();
 
