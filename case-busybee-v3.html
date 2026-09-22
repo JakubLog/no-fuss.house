@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AION MIND — CASE STUDY — NO-FUSS©2026</title><!-- case-aion-mind v1 -->
+<title>BUSY BEE — CASE STUDY — NO-FUSS©2026</title><!-- case-busybee-v3: żywa strona od razu, taśma filmowa, przewijany telefon -->
 <meta name="description" content="no-fuss — Magda Nestorowicz (design i produkt) i Kuba Fedoszczak (kod). Produkty cyfrowe bez zbędnego zamieszania.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@400;500;600&family=TikTok+Sans:opsz,wght@12..36,300..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=TikTok+Sans:opsz,wght@12..36,300..900&display=swap" rel="stylesheet">
 <style>
   /* Tokeny: DESIGN.md */
   :root {
@@ -480,6 +480,93 @@
   .jr__wk small { font: 400 11px/1 Inter, sans-serif; color: #6E6E74; }
   .jr__toast { position: absolute; left: 50%; bottom: 8%; translate: -50% 0; background: #1B1B1F; color: #fff; font: 500 11px/1 Inter, sans-serif; padding: 10px 14px; border-radius: 999px; opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; }
   .jr__toast.is-on { opacity: 1; }
+
+  /* ===== case study: mało tekstu, klikalne elementy ===== */
+  .browser { display: block; background: #101318; padding: 28px 6px 6px; border-radius: 12px; position: relative; box-shadow: 0 30px 60px -24px rgba(16,19,24,.5); }
+  .browser::before { content: ""; position: absolute; top: 10px; left: 12px; width: 8px; height: 8px; border-radius: 50%; background: #3a3f47; box-shadow: 14px 0 0 #3a3f47, 28px 0 0 #3a3f47; }
+  .browser img, .browser iframe { display: block; width: 100%; height: auto; border-radius: 6px; border: 0; background: #fff; }
+  .browser iframe { aspect-ratio: 16 / 10; }
+  .browser__url { position: absolute; top: 8px; left: 60px; right: 60px; height: 14px; background: #1c2027; border-radius: 4px; color: #8a8f98; font: 400 9px/14px var(--mono); text-align: center; overflow: hidden; }
+  .cs-lite { padding: var(--section-y) var(--gutter); display: grid; grid-template-columns: repeat(12, 1fr); gap: 32px var(--gap); }
+  .cs-lite > * { grid-column: 1 / -1; }
+  .cs-lite__head { display: flex; justify-content: space-between; gap: 16px; }
+  .cs-lite__title { font: var(--t-h2); text-transform: uppercase; letter-spacing: -.02em; }
+  /* live: przycisk ładuje żywą stronę do ramki */
+  .live { position: relative; width: 100%; }
+  .stage--site { display: block; padding: 48px var(--gutter) 0; }
+  .live__btn { position: absolute; inset: 34px 6px 6px; display: grid; place-items: center; background: rgba(16,19,24,.35); color: #fff; border-radius: 6px; cursor: pointer; transition: background .3s; }
+  .live__btn:hover { background: rgba(16,19,24,.55); }
+  .live__btn span { background: var(--accent); color: #101318; padding: 12px 20px; font: var(--t-mono); text-transform: uppercase; }
+  .live.is-on .live__btn, .live.is-on img { display: none; } .live iframe { display: none; } .live.is-on iframe { display: block; }
+  .live__hint { position: absolute; bottom: 12px; left: 12px; color: #fff; background: rgba(16,19,24,.7); padding: 4px 8px; pointer-events: none; }
+  /* switcher: lista po lewej, obraz po prawej */
+  .sw2 { display: grid; grid-template-columns: 1fr; gap: 24px var(--gap); align-items: start; }
+  @media (min-width: 1024px) { .sw2 { grid-template-columns: repeat(12, 1fr); } .sw2__list { grid-column: 1 / span 4; position: sticky; top: 120px; } .sw2__view { grid-column: 5 / span 8; } }
+  .sw2__list { display: flex; flex-direction: column; }
+  .sw2__list button { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; text-align: left; padding: 16px 0; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); font: var(--t-title); color: var(--muted); transition: color .2s, padding .3s var(--ease); }
+  .sw2__list button:last-child { border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+  .sw2__list button small { font: var(--t-mono-sm); text-transform: uppercase; white-space: nowrap; }
+  .sw2__list button[aria-selected="true"] { color: var(--ink); padding-left: 12px; }
+  .sw2__list button[aria-selected="true"]::before { content: "→ "; }
+  .sw2__list button:hover { color: var(--ink); }
+  .sw2__view { position: relative; }
+  .sw2__view img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .5s var(--ease); }
+  .sw2__view img.is-on { opacity: 1; position: relative; }
+  .sw2__frame { aspect-ratio: 16 / 10; overflow: hidden; background: #101318; position: relative; }
+  .duo-m { display: flex; gap: 8px; justify-content: center; align-items: flex-start; } .duo-m .iph { width: min(46%, 300px); } .duo-m .iph:nth-child(2) { margin-top: 48px; }
+  .facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--gap); } @media (min-width: 900px) { .facts { grid-template-columns: repeat(4, 1fr); } }
+  .facts div { padding: 24px; background: var(--tile); color: var(--tile-ink); min-height: 140px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; }
+  .facts strong { font: var(--t-title); font-weight: 700; }
+  .facts a { text-decoration: underline; text-underline-offset: 3px; }
+  /* OTB: przeciągana kula na gradiencie */
+  .otb { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 6px; background: radial-gradient(60% 80% at var(--gx, 30%) var(--gy, 60%), #E24A2C 0%, rgba(226,74,44,0) 70%), radial-gradient(70% 90% at calc(100% - var(--gx, 30%)) calc(100% - var(--gy, 60%)), #2A3BD8 0%, rgba(42,59,216,0) 75%), #cfd6ff; color: #fff; cursor: crosshair; user-select: none; touch-action: none; }
+  .otb h3 { position: absolute; font: 400 clamp(2rem, 6.5cqw, 6rem)/1 "TWKEverett", var(--sans); letter-spacing: -.03em; margin: 0; }
+  .otb .a { left: 6%; top: 24%; } .otb .b { right: 8%; bottom: 26%; }
+  .otb__ball { position: absolute; width: 22%; aspect-ratio: 1; border-radius: 50%; left: var(--bx, 40%); top: var(--by, 26%); background: linear-gradient(160deg, #E24A2C, #2A3BD8); box-shadow: 0 40px 60px -30px rgba(16,19,24,.5); cursor: grab; }
+  .otb__ball.is-held { cursor: grabbing; }
+  .otb__hint { position: absolute; left: 16px; bottom: 16px; color: #fff; }
+  .otb { container-type: inline-size; }
+  /* Busy Bee: taśma z reżyserem */
+  .reel__meta { display: flex; justify-content: space-between; gap: 16px; margin-top: 12px; }
+
+  /* ===== Busy Bee v3 ===== */
+  .frame { display: block; background: #101318; padding: 28px 6px 6px; border-radius: 12px; position: relative; box-shadow: 0 30px 60px -24px rgba(16,19,24,.5); width: 100%; }
+  .frame::before { content: ""; position: absolute; top: 10px; left: 12px; width: 8px; height: 8px; border-radius: 50%; background: #3a3f47; box-shadow: 14px 0 0 #3a3f47, 28px 0 0 #3a3f47; }
+  .frame iframe { display: block; width: 100%; aspect-ratio: 16 / 10; border: 0; border-radius: 6px; background: #000; }
+  .frame__url { position: absolute; top: 8px; left: 60px; right: 60px; height: 14px; background: #1c2027; border-radius: 4px; color: #8a8f98; font: 400 9px/14px var(--mono); text-align: center; }
+  .stage--site { display: block; padding: 48px var(--gutter) 0; }
+  .stage--site .frame { max-width: 1100px; margin: 0 auto; border-radius: 12px 12px 0 0; }
+  .lite { padding: var(--section-y) var(--gutter); display: grid; gap: 24px; min-width: 0; }
+  .lite > * { min-width: 0; }
+  .film { min-width: 0; overflow: hidden; }
+  .lite__head { display: flex; justify-content: space-between; gap: 16px; }
+  /* taśma filmowa */
+  .film { background: #101318; color: #fff; padding: 20px 0; position: relative; }
+  .film::before, .film::after { content: ""; position: absolute; left: 0; right: 0; height: 12px; background: repeating-linear-gradient(90deg, #101318 0 14px, #FCFCFB 14px 26px, #101318 26px 40px); opacity: .6; }
+  .film::before { top: 4px; } .film::after { bottom: 4px; }
+  .film__strip { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0 var(--gutter); scrollbar-width: none; cursor: grab; user-select: none; }
+  .film__strip::-webkit-scrollbar { display: none; }
+  .film__strip.is-drag { cursor: grabbing; scroll-snap-type: none; }
+  .film__f { flex: 0 0 auto; width: min(72vw, 560px); aspect-ratio: 16 / 10; scroll-snap-align: center; position: relative; overflow: hidden; background: #000; border: 0; padding: 0; cursor: pointer; }
+  .film__f img { width: 100%; height: 100%; object-fit: cover; display: block; transition: scale .8s var(--ease), filter .4s; filter: grayscale(.4) brightness(.85); pointer-events: none; }
+  .film__f:hover img, .film__f[aria-pressed="true"] img { scale: 1.04; filter: none; }
+  .film__f span { position: absolute; left: 12px; bottom: 12px; right: 12px; display: flex; justify-content: space-between; gap: 8px; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,.6); opacity: 0; transform: translateY(6px); transition: opacity .3s, transform .4s var(--ease); }
+  .film__f:hover span, .film__f[aria-pressed="true"] span { opacity: 1; transform: none; }
+  .film__f:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .film__big { position: relative; aspect-ratio: 16 / 9; background: #000; overflow: hidden; }
+  .film__big img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .6s var(--ease); }
+  .film__big img.is-on { opacity: 1; }
+  .film__big figcaption { position: absolute; left: 24px; bottom: 20px; right: 24px; display: flex; justify-content: space-between; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,.6); }
+  .film__big figcaption b { font: var(--t-title); font-weight: 700; }
+  /* przewijany telefon */
+  .scrollphone { width: min(100%, 340px); margin: 0 auto; }
+  .scrollphone .iph { display: block; }
+  .scrollphone__screen { height: 640px; overflow-y: auto; border-radius: 10.5% / 5%; scrollbar-width: none; background: #fff; cursor: ns-resize; }
+  .scrollphone__screen::-webkit-scrollbar { display: none; }
+  .scrollphone__screen img { display: block; width: 100%; height: auto; border-radius: 0 !important; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips span, .chips a { padding: 8px 12px; box-shadow: inset 0 0 0 1px currentColor; }
+  .chips a:hover { background: var(--accent); color: #101318; box-shadow: none; }
 </style>
 </head>
 <body class="is-loading">
@@ -509,88 +596,37 @@
   <section class="cs-hero" id="hero" data-stickers>
     <div class="hero__bg" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     <div class="stickers" aria-hidden="true"></div>
-    <p class="mono fade" style="--i:0"><span class="chip">Case study</span> &nbsp;Produkt · 2026</p>
-    <h1 class="cs-hero__title"><span class="line" style="--i:1"><span>AION MIND</span></span></h1>
-    <p class="cs-hero__lead fade" style="--i:3">Aplikacja do journalingu z&nbsp;AI, która pamięta Twój kontekst.</p>
+    <p class="mono fade" style="--i:0"><span class="chip">Case study</span> &nbsp;Strona WWW · 2024</p>
+    <h1 class="cs-hero__title"><span class="line" style="--i:1"><span>Busy Bee</span></span></h1>
     <dl class="cs-meta mono-sm fade" style="--i:4">
-      <div><dt>Magda</dt><dd>Product Designer od pierwszego ekranu, potem Head of Operations</dd></div>
-      <div><dt>Zakres</dt><dd>Design produktu, potem cały produkt i zespół</dd></div>
-      <div><dt>Platformy</dt><dd>iOS · Android · web</dd></div>
-      <div><dt>App Store</dt><dd><a href="https://apps.apple.com/pl/app/aion-mind/id6753288406" target="_blank" rel="noopener">Pobierz ↗</a></dd></div>
-      <div><dt>Google Play</dt><dd><a href="https://play.google.com/store/apps/details?id=com.aion.aionmind" target="_blank" rel="noopener">Pobierz ↗</a></dd></div>
-      <div><dt>Zobacz</dt><dd><a href="https://aionmind.com" target="_blank" rel="noopener">aionmind.com ↗</a></dd></div>
+      <div><dt>Klient</dt><dd>Busy Bee Film, Warszawa</dd></div>
+      <div><dt>Magda</dt><dd>Design</dd></div>
+      <div><dt>Kod</dt><dd>Michał Gabryelewicz · Webflow</dd></div>
     </dl>
   </section>
-  <div class="stage stage--img" data-reveal><img class="fade" src="assets/aion-mind/og-image.png" alt="AION MIND: przewodnicy i ekrany aplikacji"></div>
 
-  <section class="section cs-block" data-reveal>
-    <span class="cs-no mono fade">01 / Problem</span>
-    <div class="cs-wide">
-      <p class="cs-quote"><span class="line" style="--i:0"><span>„Mam mętlik i&nbsp;nie wiem,</span></span><span class="line" style="--i:1"><span>od czego <mark>zacząć</mark>.”</span></span></p>
-      <p class="cs-p fade" style="--i:3; margin-top: 32px">Czat z&nbsp;AI zaczyna każdą rozmowę od zera i&nbsp;wymaga, żebyś sam wiedział, jak go poprowadzić. W&nbsp;pracy nad sobą to nie działa: liczy się historia, wzorce i&nbsp;ciągłość.</p>
-    </div>
+  <!-- żywa strona od razu -->
+  <div class="stage stage--site" data-reveal><div class="frame fade"><span class="frame__url">www.busybeefilm.pl · przewijaj i klikaj</span><iframe src="https://www.busybeefilm.pl" title="Busy Bee Film, żywa strona" loading="eager" referrerpolicy="no-referrer"></iframe></div></div>
+
+  <!-- taśma: klik = duży kadr, przeciągnij = przewiń -->
+  <section class="lite" style="padding-inline: 0" data-reveal>
+    <div class="lite__head mono" style="padding-inline: var(--gutter)"><span class="fade">01 / Stories</span><span class="fade" style="--i:1">Przeciągnij taśmę · kliknij kadr</span></div>
+    <figure class="film__big fade" style="--i:1; margin-inline: var(--gutter)" id="filmBig"><img src="assets/busybee/story-mercedesbenz.webp" alt="" class="is-on"><img src="assets/busybee/story-nescafe.webp" alt="" class=""><img src="assets/busybee/story-samsung.webp" alt="" class=""><img src="assets/busybee/story-syoss.webp" alt="" class=""><img src="assets/busybee/story-mcdonald.webp" alt="" class=""><img src="assets/busybee/story-kikkoman.webp" alt="" class=""><img src="assets/busybee/story-sudocrem.webp" alt="" class=""><img src="assets/busybee/story-kfc.webp" alt="" class=""><figcaption class="mono-sm"><b id="filmName">Mercedes-Benz</b><span id="filmDir">Dir: Augusto De Fraga</span></figcaption></figure>
+    <div class="film fade" style="--i:2"><div class="film__strip" id="filmStrip"><button type="button" class="film__f" aria-pressed="true" data-i="0"><img src="assets/busybee/story-mercedesbenz.webp" alt="Mercedes-Benz, reż. Augusto De Fraga"><span class="mono-sm"><b>Mercedes-Benz</b><i>Augusto De Fraga</i></span></button><button type="button" class="film__f" aria-pressed="false" data-i="1"><img src="assets/busybee/story-nescafe.webp" alt="Nescafé, reż. Jake Mavity"><span class="mono-sm"><b>Nescafé</b><i>Jake Mavity</i></span></button><button type="button" class="film__f" aria-pressed="false" data-i="2"><img src="assets/busybee/story-samsung.webp" alt="Samsung, reż. Karol Kołodziński"><span class="mono-sm"><b>Samsung</b><i>Karol Kołodziński</i></span></button><button type="button" class="film__f" aria-pressed="false" data-i="3"><img src="assets/busybee/story-syoss.webp" alt="Syoss, reż. J.A.C.K"><span class="mono-sm"><b>Syoss</b><i>J.A.C.K</i></span></button><button type="button" class="film__f" aria-pressed="false" data-i="4"><img src="assets/busybee/story-mcdonald.webp" alt="McDonald’s, reż. Joakim Reveman"><span class="mono-sm"><b>McDonald’s</b><i>Joakim Reveman</i></span></button><button type="button" class="film__f" aria-pressed="false" data-i="5"><img src="assets/busybee/story-kikkoman.webp" alt="Kikkoman, reż. Johnsen & Mona"><span class="mono-sm"><b>Kikkoman</b><i>Johnsen & Mona</i></span></button><button type="button" class="film__f" aria-pressed="false" data-i="6"><img src="assets/busybee/story-sudocrem.webp" alt="Sudocrem, reż. Julia Rogowska"><span class="mono-sm"><b>Sudocrem</b><i>Julia Rogowska</i></span></button><button type="button" class="film__f" aria-pressed="false" data-i="7"><img src="assets/busybee/story-kfc.webp" alt="KFC, reż. Jan & Raf Roosens"><span class="mono-sm"><b>KFC</b><i>Jan & Raf Roosens</i></span></button></div></div>
   </section>
 
-  <section class="section cs-block tone-dark" style="background: var(--bg)" data-reveal>
-    <span class="cs-no mono fade">02 / Kierunek</span>
-    <div class="cs-wide">
-      <h2 class="cs-h"><span class="line" style="--i:0"><span>Kontekst,</span></span><span class="line" style="--i:1"><span>nie czat</span></span></h2>
-      <p class="cs-p fade" style="--i:3; margin-top: 24px">Każdy wpis i&nbsp;każda rozmowa budują kontekst, do którego aplikacja wraca w&nbsp;kolejnych sesjach. Wartość rośnie z&nbsp;czasem, zamiast znikać po pierwszym entuzjazmie. Użytkownik nic nie podpina ręcznie.</p>
-    </div>
+  <!-- telefon do przewijania -->
+  <section class="lite tone-dark" style="background: var(--bg)" data-reveal>
+    <div class="lite__head mono"><span class="fade">02 / Mobile</span><span class="fade" style="--i:1">Przewiń ekran telefonu</span></div>
+    <div class="scrollphone fade" style="--i:2"><span class="iph"><div class="scrollphone__screen" tabindex="0" aria-label="Cała strona Busy Bee na telefonie, przewijana"><img src="assets/busybee/m-full.webp" alt="Busy Bee Film na telefonie, cała strona" loading="lazy"></div></span></div>
   </section>
 
-  <section class="section cs-block" data-reveal>
-    <span class="cs-no mono fade">03.1 / Dziennik</span>
-    <div class="cs-txt"><h2 class="cs-h"><span class="line"><span>Dziennik,</span></span><span class="line" style="--i:1"><span>który podsumowuje</span></span></h2><p class="cs-p fade" style="--i:2; margin-top: 24px">Kalendarz pokazuje ciągłość wpisów. Tydzień i&nbsp;miesiąc zamykają się podsumowaniem: co było ważne, co wracało, co warto zmienić.</p></div>
-    <figure class="cs-vis"><div class="one fade iph" style="--i:1; position: relative">
-      <div class="jr" id="jr" aria-label="Dziennik, maj 2026">
-        <div class="jr__bar"><i aria-hidden="true">‹</i><span>Dziennik</span><i aria-hidden="true">⌕</i><i aria-hidden="true">✎</i></div>
-        <div class="jr__m" id="jrMonth">Maj 2026</div>
-        <div class="jr__grid" id="jrGrid" role="grid"><b>PN</b><b>WT</b><b>ŚR</b><b>CZ</b><b>PT</b><b>SB</b><b>ND</b></div>
-        <button type="button" class="jr__card jr__card--m" aria-expanded="false" data-msg="Podsumowanie miesiąca: wzorce, wnioski i momenty przełomu"><strong>Podsumowanie miesiąca</strong><p>Zobacz jakie były wzorce, wnioski albo momenty przełomu w tym miesiącu</p><span>Przejrzyj podsumowanie</span></button>
-        <div class="jr__wk"><span id="jrWeek">Tydzień 22</span><small id="jrRange">25.05–31.05.2026</small></div>
-        <button type="button" class="jr__card jr__card--w" aria-expanded="false" data-msg="Podsumowanie tygodnia: jak Ci minął ten tydzień"><strong>Podsumowanie tygodnia</strong><p>Zobacz jak Ci minął ten tydzień.</p><span>Przejrzyj podsumowanie</span></button>
-        <div class="jr__toast" id="jrToast" role="status"></div>
-      </div>
-    </div><figcaption class="cs-cap mono-sm">Ekran Dziennika odtworzony w&nbsp;HTML na podstawie ekranu z&nbsp;aionmind.com. Klikaj dni i&nbsp;karty.</figcaption></figure>
+  <section class="lite" data-reveal>
+    <div class="lite__head mono"><span class="fade">03 / Fakty</span></div>
+    <div class="chips mono fade" style="--i:1"><span>Design: Magda</span><span>Kod: Michał Gabryelewicz</span><span>Webflow</span><span>2024</span><a href="https://www.busybeefilm.pl" target="_blank" rel="noopener">busybeefilm.pl ↗</a></div>
   </section>
 
-  <section class="section cs-block flip tone-dark" style="background: var(--bg)" data-reveal>
-    <span class="cs-no mono fade">03.2 / Amfiteatr Wiedzy</span>
-    <div class="cs-txt"><h2 class="cs-h"><span class="line"><span>Kontekst</span></span><span class="line" style="--i:1"><span>ma miejsce</span></span></h2><p class="cs-p fade" style="--i:2; margin-top: 24px">Zebrana wiedza o&nbsp;użytkowniku nie jest ukryta w&nbsp;modelu. Ma swoje miejsce, postęp i&nbsp;podział: tożsamość, wizja i&nbsp;cel, wewnętrzne zasoby i&nbsp;blokady. Do każdej części można wrócić i&nbsp;ją poprawić.</p></div>
-    <figure class="cs-vis"><div class="one fade" style="--i:1"><img src="assets/aion-mind/context-phone.png" alt="Ekran Amfiteatr Wiedzy: zebrany kontekst, 100 procent" loading="lazy" style="display:block;width:100%;height:auto"></div><figcaption class="cs-cap mono-sm">Ekran Amfiteatru Wiedzy z&nbsp;zebranym kontekstem.</figcaption></figure>
-  </section>
-
-  <section class="section">
-    <div class="work__head mono" data-reveal><span class="fade">03.3 / Przewodnicy</span><span class="fade" style="--i:1">5 ról zamiast jednego bota</span></div>
-    <div class="guides" data-reveal><figure class="fade" style="--i:0"><img src="assets/aion-mind/herodot.png" alt="Przewodnik Herodot" loading="lazy"><figcaption><strong>Herodot</strong><span class="mono-sm">Zbiera i strukturyzuje wiedzę o Tobie</span></figcaption></figure><figure class="fade" style="--i:1"><img src="assets/aion-mind/strateg.png" alt="Przewodnik Strateg" loading="lazy"><figcaption><strong>Strateg</strong><span class="mono-sm">Pomaga odkryć praprzyczynę problemu</span></figcaption></figure><figure class="fade" style="--i:2"><img src="assets/aion-mind/empatia.png" alt="Przewodnik Empatia" loading="lazy"><figcaption><strong>Empatia</strong><span class="mono-sm">Łagodnie wspiera w trudnych sytuacjach</span></figcaption></figure><figure class="fade" style="--i:3"><img src="assets/aion-mind/kowal.png" alt="Przewodnik Kowal" loading="lazy"><figcaption><strong>Kowal</strong><span class="mono-sm">Buduje nawyki i pilnuje produktywności</span></figcaption></figure><figure class="fade" style="--i:4"><img src="assets/aion-mind/trenerka.png" alt="Przewodnik Trenerka mentalna" loading="lazy"><figcaption><strong>Trenerka mentalna</strong><span class="mono-sm">Wzmacnia odporność psychiczną i motywację</span></figcaption></figure></div>
-  </section>
-
-  <section class="section cs-block tone-dark" style="background: var(--bg)" data-reveal>
-    <span class="cs-no mono fade">04 / Rola</span>
-    <div class="cs-wide">
-      <h2 class="cs-h"><span class="line"><span>Od ekranu do całości</span></span></h2>
-      <p class="cs-p fade" style="--i:2; margin: 24px 0 32px">Magda zaprojektowała AION MIND od pierwszego ekranu. Potem przejęła operacje: dziś odpowiada za produkt i&nbsp;zespół, nie tylko za to, jak wygląda.</p>
-      <div class="path fade" style="--i:3"><div><span class="mono-sm">[od kiedy] · Etap 1</span><strong>Product Designer</strong><span class="mono-sm">Koncepcja, flow, system wizualny, ekrany</span></div><div><span class="mono-sm">[od kiedy] · Etap 2</span><strong>Head of Operations</strong><span class="mono-sm">Produkt, priorytety, praca z&nbsp;zespołem dev</span></div></div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="work__head mono" data-reveal><span class="fade">05 / W liczbach</span><span class="fade" style="--i:1">Stan: wrzesień 2026</span></div>
-    <div class="nums" data-reveal>
-      <div class="num num--lime fade"><strong data-count="5">5</strong><span class="mono-sm">przewodników o&nbsp;różnych rolach</span></div>
-      <div class="num fade" style="--i:1"><strong data-count="3">3</strong><span class="mono-sm">platformy: iOS, Android, web</span></div>
-      <div class="num fade" style="--i:2"><strong data-count="2">2</strong><span class="mono-sm">rytmy podsumowań: tydzień i&nbsp;miesiąc</span></div>
-      <div class="num fade" style="--i:3"><strong>[?]</strong><span class="mono-sm">[Liczba do wyboru przez Magdę, np. ocena w&nbsp;sklepach]</span></div>
-    </div>
-  </section>
-
-  <section class="section cs-block tone-dark" style="background: var(--bg)" data-reveal>
-    <span class="cs-no mono fade">06 / Głos użytkownika</span>
-    <div class="cs-wide"><p class="bigline"><span class="line"><span>„Apka robi to sama.”</span></span></p><p class="cs-cap mono fade" style="--i:2; margin-top: 24px">Marcin Świder, użytkownik · opinia z&nbsp;aionmind.com</p></div>
-  </section>
-
-  <a class="next" href="case-busybee-v3.html" data-reveal><span class="mono fade">Następny projekt</span><span class="cs-hero__title" style="display:block"><span class="line"><span>Busy Bee <span class="arrow">→</span></span></span></span></a>
+  <a class="next" href="case-otb-v2.html" data-reveal><span class="mono fade">Następny projekt</span><span class="cs-hero__title" style="display:block"><span class="line"><span>OTB Ventures <span class="arrow">→</span></span></span></span></a>
 </main>
 
 <!-- ================= STOPKA ================= -->
@@ -734,28 +770,21 @@
 </script>
 
 <script>
-(() => { const io = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; io.unobserve(e.target); if (matchMedia('(prefers-reduced-motion: reduce)').matches) return; const end = +e.target.dataset.count, t0 = performance.now(); (function tick(now) { const p = Math.min(1, (now - t0) / 1200), v = 1 - Math.pow(1 - p, 4); e.target.textContent = Math.round(end * v); if (p < 1) requestAnimationFrame(tick); })(t0); }), { threshold: .6 }); document.querySelectorAll('[data-count]').forEach(n => io.observe(n)); })();
-</script>
-<script>
-/* Dziennik: kalendarz maja 2026, wybór dnia ustawia tydzień, karty reagują na klik */
 (() => {
-  const grid = document.getElementById('jrGrid'); if (!grid) return;
-  const has = new Set(['4-29','5-1','5-2','5-4','5-5','5-6','5-7','5-13','5-14','5-15','5-19','5-20','5-21','5-23','5-27','5-28','5-29','5-30']);
-  const done = new Set(['5-3','5-10','5-17']), wait = new Set(['5-24','5-31']);
-  const start = new Date(2026, 3, 27); let sel = null;
-  const pad = n => String(n).padStart(2, '0'), fmt = d => `${pad(d.getDate())}.${pad(d.getMonth() + 1)}`;
-  const isoWeek = d => { const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day); const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1)); return Math.ceil(((t - y0) / 864e5 + 1) / 7); };
-  const setWeek = d => { const mon = new Date(d); mon.setDate(d.getDate() - ((d.getDay() + 6) % 7)); const sun = new Date(mon); sun.setDate(mon.getDate() + 6); document.getElementById('jrWeek').textContent = 'Tydzień ' + isoWeek(d); document.getElementById('jrRange').textContent = `${fmt(mon)}–${fmt(sun)}.${sun.getFullYear()}`; };
-  for (let i = 0; i < 35; i++) {
-    const d = new Date(start); d.setDate(start.getDate() + i); const k = `${d.getMonth() + 1}-${d.getDate()}`;
-    const b = document.createElement('button'); b.type = 'button'; b.className = 'jr__d' + (d.getMonth() !== 4 ? ' out' : '') + (has.has(k) ? ' has' : '') + (done.has(k) ? ' done' : '') + (wait.has(k) ? ' wait' : '');
-    b.textContent = d.getDate(); b.setAttribute('aria-label', d.toLocaleDateString('pl-PL', { day: 'numeric', month: 'long' })); b.setAttribute('aria-pressed', 'false');
-    b.addEventListener('click', () => { sel?.setAttribute('aria-pressed', 'false'); sel = b; b.setAttribute('aria-pressed', 'true'); setWeek(d); });
-    if (k === '5-30') { sel = b; b.setAttribute('aria-pressed', 'true'); setWeek(d); }
-    grid.appendChild(b);
-  }
-  const toast = document.getElementById('jrToast'); let t;
-  document.querySelectorAll('.jr__card').forEach(c => c.addEventListener('click', () => { const on = c.getAttribute('aria-expanded') !== 'true'; c.setAttribute('aria-expanded', on); toast.textContent = c.dataset.msg; toast.classList.add('is-on'); clearTimeout(t); t = setTimeout(() => toast.classList.remove('is-on'), 1600); }));
+  const strip = document.getElementById('filmStrip'), frames = [...strip.querySelectorAll('.film__f')], bigs = [...document.querySelectorAll('#filmBig img')];
+  const name = document.getElementById('filmName'), dir = document.getElementById('filmDir'); let cur = 0, timer;
+  const show = i => { cur = i; frames.forEach((f, j) => f.setAttribute('aria-pressed', i === j)); bigs.forEach((b, j) => b.classList.toggle('is-on', i === j)); const n = frames[i].querySelector('b').textContent, d = frames[i].querySelector('i').textContent; name.textContent = n; dir.textContent = 'Dir: ' + d; };
+  const auto = () => { clearInterval(timer); timer = setInterval(() => { const n = (cur + 1) % frames.length; show(n); frames[n].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }, 3200); };
+  /* przeciąganie taśmy */
+  let down = false, sx = 0, sl = 0, moved = 0;
+  strip.addEventListener('pointerdown', e => { down = true; moved = 0; sx = e.clientX; sl = strip.scrollLeft; strip.classList.add('is-drag'); strip.setPointerCapture(e.pointerId); clearInterval(timer); });
+  strip.addEventListener('pointermove', e => { if (!down) return; const dx = e.clientX - sx; moved = Math.max(moved, Math.abs(dx)); strip.scrollLeft = sl - dx; });
+  const up = () => { down = false; strip.classList.remove('is-drag'); };
+  strip.addEventListener('pointerup', up); strip.addEventListener('pointercancel', up);
+  frames.forEach((f, i) => f.addEventListener('click', () => { if (moved > 6) return; show(i); clearInterval(timer); f.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }));
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) new IntersectionObserver(([e]) => e.isIntersecting ? auto() : clearInterval(timer), { threshold: .4 }).observe(strip);
+  /* telefon: strzałki */
+  const ph = document.querySelector('.scrollphone__screen'); ph.addEventListener('keydown', e => { if (e.key === 'ArrowDown') { e.preventDefault(); ph.scrollBy(0, 120); } if (e.key === 'ArrowUp') { e.preventDefault(); ph.scrollBy(0, -120); } });
 })();
 </script>
 </body>

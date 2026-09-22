@@ -28,7 +28,8 @@ Każda iteracja to osobny plik, poprzednich nie nadpisujemy.
 | `case-ourmoney-v2.html` | **aktualny** case OurMoney, tylko realne ekrany |
 | `case-aion-mind-v1.html` | case study AION MIND |
 | `case-busybee-v1.html` | case Busy Bee, wersja tekstowa (archiwum) |
-| `case-busybee-v2.html` | **aktualny** case Busy Bee: żywa strona, przełącznik historii |
+| `case-busybee-v2.html` | case Busy Bee z przełącznikami (archiwum) |
+| `case-busybee-v3.html` | **aktualny** case Busy Bee: żywa strona od razu, taśma filmowa, przewijany telefon |
 | `case-otb-v1.html` | case OTB, wersja tekstowa (archiwum) |
 | `case-otb-v2.html` | **aktualny** case OTB: przeciągana kula, przełącznik sekcji |
 | `case-sassy-v1.html` | case Sassy, wersja tekstowa (archiwum) |
