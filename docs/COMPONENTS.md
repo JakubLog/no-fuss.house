@@ -604,14 +604,17 @@ Pytania z placeholderem `[…]` odfiltrowuje `publishedFaq()` (i w UI, i w JSON-
   `sizes="(min-width: 1200px) 33vw, (min-width: 900px) 17vw, 100vw"`, bez `priority`); inaczej `PhotoPlaceholder` z `photoLabel`.
 - `RolesSplit` („Kto co robi”): każdy wiersz to `Reveal` ze `style={{ "--v": "92%" }}`; romb (18 px, obrót 45°) jedzie od 50% do `--v`
   po `is-in`. Legenda z `people[].givenName`. Nagłówek to `<h2>` w mono.
-- `StickerBoard` (`#play`): 6 naklejek z `STICKERS` na pozycjach z legacy, każda to `DragSticker`. Zdjęcia: Magda placeholder,
-  Kuba `next/image` z `personCards.kuba.photo` (3:4 `cover`, `draggable={false}`, `pointer-events: none`; naklejki `z-index: 3` nad nim).
+- `StickerBoard` (`#play`): cała sekcja to `Reveal as="section"`. 6 naklejek z `STICKERS` na pozycjach z legacy, każda to `DragSticker`
+  z `index` (0–4, przycięty modulo) dla fade-in stagger. Zdjęcia: Magda placeholder,
+  Kuba `next/image` z `personCards.kuba.photo` (3:4 `cover`, `draggable={false}`, `pointer-events: none`; naklejki `z-index: 3` nad nim);
+  blok zdjęć ma `.fade`.
 
-#### `Marquee` — server (CSS)
+#### `Marquee` — server (Reveal + CSS)
 ```ts
 interface MarqueeProps { items: readonly string[]; copies?: number /* 4 */; className?: string }
 ```
 Pętla 22 s (`translate -50%`). Pierwsza kopia czytelna, kolejne `aria-hidden`, „✦” zawsze `aria-hidden`. Stoi przy reduced motion.
+Cały pasek jest w `Reveal` z `.fade` (fade-in on-scroll); pętla używa `translate`, reveal używa `transform`, więc się nie gryzą.
 ```tsx
 <Marquee items={marqueeItems} />
 ```
@@ -633,7 +636,11 @@ Legacy `.find`: nagłówek (sticky ≥ 1024 px) + lista wierszy z hoverem limonk
 
 #### `DragSticker` — client
 ```ts
-interface DragStickerProps { svg: string; left: number; top: number; size: number; rotate: number; label: string; describedBy?: string }
+interface DragStickerProps {
+  svg: string; left: number; top: number; size: number; rotate: number; label: string;
+  describedBy?: string;
+  index?: number; // stagger fade-in reveal (`.fade` + `--i`); wołający przycina (np. modulo 5)
+}
 ```
 - Pointer Events z `setPointerCapture` (mysz, dotyk, pióro); `touch-action: none` na naklejce, `pan-y` na sekcji.
 - Klawiatura: `tabIndex=0`, strzałki o 16 px (przycięte do planszy), `role="img"`, `aria-label` 1:1 z legacy, `aria-describedby` → ukryta instrukcja.

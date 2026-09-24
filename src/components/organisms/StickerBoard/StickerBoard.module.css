@@ -1,0 +1,102 @@
+/* Legacy „Oklej nas” (o-nas-v5: .play, .play__photos, .drag). */
+.play {
+  position: relative;
+  min-height: 86svh;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+.head .title {
+  letter-spacing: -0.02em;
+}
+
+.photos {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 48px;
+}
+
+.photos .photo {
+  width: min(40vw, 300px);
+  aspect-ratio: 3 / 4;
+}
+
+/* Zdjęcie 1:1 przycięte do 3:4; nie łapie wskaźnika ani natywnego drag,
+   żeby przeciąganie naklejek po nim działało. Naklejki mają z-index 3. */
+.photos .img {
+  display: block;
+  height: auto;
+  object-fit: cover;
+  object-position: 50% 50%;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.photos .photo:nth-child(1) {
+  rotate: -3deg;
+}
+
+.photos .photo:nth-child(2) {
+  rotate: 3deg;
+  margin-top: 32px;
+}
+
+/* Warstwa zabawy: naklejki mogą być okrągłe (DESIGN.md → Shapes). */
+.play .drag {
+  position: absolute;
+  z-index: 3;
+  width: var(--s, 110px);
+  height: var(--s, 110px);
+  rotate: var(--r, 0deg);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.35));
+  transition:
+    scale 0.25s var(--ease),
+    rotate 0.25s var(--ease),
+    opacity var(--reveal-duration) var(--ease),
+    transform var(--reveal-duration) var(--ease);
+  transition-delay: 0s, 0s, calc(var(--i, 0) * var(--reveal-stagger)), calc(var(--i, 0) * var(--reveal-stagger));
+}
+
+.drag svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.play .held {
+  scale: 1.12;
+  rotate: 0deg;
+  z-index: 4;
+}
+
+.drag:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .drag {
+    cursor: grab;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .play .drag {
+    transition: none;
+  }
+}

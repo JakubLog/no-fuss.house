@@ -172,9 +172,12 @@ naklejki i kursor, czyli warstwa zabawy, nie warstwa interfejsu.
 ## Motion
 
 Jedna orkiestracja wejścia (preloader → kurtyna → reveal linii nagłówka ze staggerem),
-potem reveal sekcji przy wejściu w viewport. Smooth scroll przez Lenis. Przy
-`prefers-reduced-motion: reduce` wyłączone: Lenis, scramble, naklejki, obrót obiektu 3D,
-animacja smug; reveal zamienia się w natychmiastowe pokazanie.
+potem reveal sekcji przy wejściu w viewport. Wszystkie sekcje treści (nagłówki, akapity,
+wiersze list, kafle, CTA, stopka) mają fade-in on-scroll (`Reveal` + `.fade`/`Fade`, opacity +
+translateY(16px), 900 ms, stagger 80 ms na `--i`); jedyne wyjątki to elementy z własną animacją
+(marquee, taśma filmowa, scena 3D) i warstwy stałe (Hud, kursor, siatka, preloader). Smooth
+scroll przez Lenis. Przy `prefers-reduced-motion: reduce` wyłączone: Lenis, scramble, naklejki,
+obrót obiektu 3D, animacja smug; reveal zamienia się w natychmiastowe pokazanie.
 
 ## Do's and Don'ts
 
@@ -213,12 +216,14 @@ Nie wymyślamy liczb, wyników ani cytatów: efekt to fakt (np. działająca str
   Poniżej 900 px jedna kolumna, od 900 px dwie kolumny (w karcie zdjęcie z lewej), od 1200 px trzy karty
   pionowe obok siebie ze zdjęciem 4:3.
 - **Marquee**: limonkowy pasek, rola `h2` wersalikami, separator „✦”, pętla 22 s; stoi przy reduced motion.
+  Cały pasek ma fade-in on-scroll (`Reveal`); pętla jedzie na `translate`, więc nie koliduje z reveal `transform`.
 - **Kto co robi**: nagłówek mono, wiersze z torem 2 px i rombem 18 px w akcencie; pozycja rombu (`--v`, 0% = Magda,
   100% = Kuba) jedzie od środka po wejściu w viewport. Legenda nad torami: Magda z lewej, Kuba z prawej.
 - **Social i posty** (`#social`, `#posty`): nagłówek przyklejony po lewej (od 1024 px), lista wierszy po prawej
   z obrysem 1 px między wierszami; hover i fokus dają wierszowi limonkowe tło. Posty w ciemnej tonacji,
   metadane w mono 12 px. Linki-placeholdery wyglądają jak linki, ale są oznaczone jako niedostępne.
 - **Oklej nas** (`#play`): plansza z sześcioma naklejkami przeciąganymi wskaźnikiem, dotykiem i strzałkami z klawiatury.
+  Zdjęcia i naklejki mają fade-in on-scroll ze staggerem przyciętym do 5 kroków (naklejki pozycjonowane `left`/`top`, bez konfliktu z `transform` reveal).
 - Okrągłe kształty dozwolone tylko w warstwie zabawy (naklejki), nie w UI.
 
 ## Komponenty case study
