@@ -1,0 +1,21 @@
+/* Drobne układy z legacy `case-aion-mind-v1.html`, które nie są osobnymi komponentami. */
+
+/* `.one`: pojedynczy telefon w wizualizacji split (zrzut ma już ramkę) */
+.one {
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* `.cs-cap.mono` pod cytatem użytkownika */
+.cite {
+  margin-top: 24px;
+  font: var(--t-mono);
+  text-transform: uppercase;
+  color: var(--muted);
+}

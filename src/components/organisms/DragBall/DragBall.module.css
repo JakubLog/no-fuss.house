@@ -1,0 +1,71 @@
+/* Legacy `.otb` / `.otb__ball` (case-otb-v2). Kolory #E24A2C, #2A3BD8, #CFD6FF to paleta
+   otb.vc (rekonstrukcja strony klienta, stałe z legacy). Kula to jedyna krągłość na stronie
+   (warstwa zabawy). Pole bez border-radius (legacy 6px). */
+
+.field {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  container-type: inline-size;
+  background:
+    radial-gradient(60% 80% at var(--gx, 30%) var(--gy, 60%), #E24A2C 0%, rgb(226 74 44 / 0) 70%),
+    radial-gradient(
+      70% 90% at calc(100% - var(--gx, 30%)) calc(100% - var(--gy, 60%)),
+      #2A3BD8 0%,
+      rgb(42 59 216 / 0) 75%
+    ),
+    #CFD6FF;
+  color: #FFFFFF;
+  cursor: crosshair;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* legacy: 400 clamp(2rem, 6.5cqw, 6rem) TWKEverett; tu rola display w wadze 400 */
+.word {
+  position: absolute;
+  margin: 0;
+  font: var(--t-display);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  pointer-events: none;
+}
+
+.a {
+  left: 6%;
+  top: 24%;
+}
+
+.b {
+  right: 8%;
+  bottom: 26%;
+}
+
+.ball {
+  position: absolute;
+  left: var(--bx, 40%);
+  top: var(--by, 26%);
+  width: 22%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: linear-gradient(160deg, #E24A2C, #2A3BD8);
+  box-shadow: 0 40px 60px -30px rgb(16 19 24 / 0.5);
+  cursor: grab;
+  touch-action: none;
+}
+
+.held {
+  cursor: grabbing;
+}
+
+.ball:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.caption {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  pointer-events: none;
+}

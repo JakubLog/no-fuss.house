@@ -1,0 +1,73 @@
+/* Kafel opinii: 1:1 z legacy `.quote` (no-fuss-v5.html). */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+  min-height: 280px;
+  padding: 24px;
+  background: var(--tile);
+  color: var(--tile-ink);
+}
+
+/* Cudzysłów w akcencie (legacy `.quote::before`, krój display). */
+.mark {
+  position: absolute;
+  top: 4px;
+  right: 20px;
+  font: var(--t-display);
+  color: var(--accent);
+}
+
+.quote {
+  font: var(--t-title);
+  letter-spacing: -0.01em;
+  max-width: 30ch;
+  padding-right: 48px;
+}
+
+.caption {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Kwadratowy awatar 44 px: placeholder w paski (legacy `.ph` w figcaption). */
+.avatar {
+  position: relative;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  background: var(--accent);
+  color: #101318;
+}
+
+.avatar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.25;
+  background: repeating-linear-gradient(135deg, currentColor 0 1px, transparent 1px 14px);
+}
+
+.role {
+  display: block;
+  opacity: 0.64;
+  font: inherit;
+}
+
+/* Wariant limonkowy (legacy `.quote--lime`). */
+.accent {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.accent .mark {
+  color: #101318;
+}
+
+.accent .avatar {
+  background: #101318;
+}

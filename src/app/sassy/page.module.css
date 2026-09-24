@@ -1,0 +1,21 @@
+/* Legacy `.cs-lite`: odstęp 32 px zamiast 24 px sekcji `.lite` (element + klasa > klasa szablonu). */
+section.csLite {
+  gap: 32px;
+}
+
+/* Legacy `.duo-m`: dwa telefony, drugi niżej o 48 px. */
+.duo {
+  display: flex;
+  gap: var(--gap);
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.phone {
+  width: min(46%, 300px);
+  margin: 0;
+}
+
+.phone + .phone {
+  margin-top: 48px;
+}

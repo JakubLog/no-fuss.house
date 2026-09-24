@@ -1,0 +1,50 @@
+/* Legacy `.sub`. Osoby jako kwadraty (legacy: koła) — zero zaokrągleń w UI (DESIGN.md). */
+.sub {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  padding: 32px 24px;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: 220px;
+  aspect-ratio: 1.6;
+  padding: 16px;
+  background: var(--dark);
+  color: #FFFFFF;
+}
+
+.card strong {
+  font: var(--t-title);
+}
+
+.arrow {
+  font: var(--t-title);
+}
+
+.people {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.people span {
+  display: grid;
+  place-items: center;
+  width: clamp(56px, 8vw, 88px);
+  aspect-ratio: 1;
+  font: var(--t-title);
+  background: var(--light);
+  border: 2px solid var(--dark);
+}
+
+.people span + span {
+  margin-left: -18px;
+  background: var(--dark);
+  color: var(--accent);
+}

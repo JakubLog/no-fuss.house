@@ -1,0 +1,63 @@
+/* Suwak „Zamieszanie” 1:1 z legacy `.fuss` (DESIGN.md → Komponenty dodane 2026-09-21). */
+.fuss {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--ink);
+}
+
+.out {
+  font-variant-numeric: tabular-nums;
+  min-width: 4ch;
+  text-align: right;
+}
+
+.range {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  max-width: 220px;
+  height: 24px;
+  background: transparent;
+  margin: 0;
+}
+
+/* tor 2 px: legacy rgba(255,255,255,.4) = --ink (biały w hero) na 40% */
+.range::-webkit-slider-runnable-track {
+  height: 2px;
+  background: color-mix(in srgb, var(--ink) 40%, transparent);
+}
+
+.range::-moz-range-track {
+  height: 2px;
+  background: color-mix(in srgb, var(--ink) 40%, transparent);
+}
+
+/* uchwyt: romb (kwadrat obrócony o 45°), bez zaokrągleń */
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -7px;
+  background: var(--accent);
+  border: 2px solid var(--dark);
+  border-radius: var(--radius);
+  outline: 1px solid var(--accent);
+  rotate: 45deg;
+}
+
+.range::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  border: 2px solid var(--dark);
+  border-radius: var(--radius);
+  outline: 1px solid var(--accent);
+  rotate: 45deg;
+}
+
+.range:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}

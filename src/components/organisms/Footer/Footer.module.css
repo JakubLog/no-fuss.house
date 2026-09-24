@@ -1,0 +1,79 @@
+.footer {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--section-y) var(--gutter);
+  color: #FFFFFF;
+  /* Zawsze ciemna: tokeny tonacji jak w tone-dark (np. focus ring = --ink). */
+  --ink: #FFFFFF;
+  --muted: #A9ABAD;
+}
+
+/* Nagłówek display (DESIGN.md: nagłówki hero i stopki). */
+.cta {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gap);
+  font: var(--t-display);
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+.l1,
+.l2,
+.l3 {
+  grid-column: 1 / -1;
+}
+
+/* Kalendarz + notka pod nagłówkiem, w kolumnie pierwszej linii. */
+.contact {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+  margin-top: 48px;
+  color: var(--muted);
+}
+
+.bottom {
+  position: absolute;
+  z-index: 2;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: var(--section-y);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  justify-content: space-between;
+}
+
+.link {
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.link:hover {
+  border-color: currentColor;
+}
+
+@media (min-width: 768px) {
+  .contact {
+    margin-left: calc((100% - 11 * var(--gap)) / 12 * 2 + 2 * var(--gap));
+  }
+
+  .l1,
+  .l2 {
+    grid-column: 3 / -1;
+  }
+
+  .l3 {
+    grid-column: 4 / -1;
+  }
+}

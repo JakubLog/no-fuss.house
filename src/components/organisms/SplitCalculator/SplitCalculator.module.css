@@ -1,0 +1,125 @@
+/* Legacy `.calc` (kalkulator podziału). #101318 na limonce/jasnym 1:1 z legacy (--on-accent). */
+.calc {
+  display: grid;
+  gap: 20px;
+  padding: 24px;
+  background: var(--tile);
+  color: var(--tile-ink);
+}
+
+.models {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap);
+}
+
+.models button {
+  min-height: 44px;
+  padding: 12px 8px;
+  text-align: left;
+  box-shadow: inset 0 0 0 1px var(--alpha-400);
+}
+
+.models button[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: none;
+}
+
+.models button:focus-visible {
+  outline-color: var(--tile-ink);
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 16px;
+  align-items: center;
+}
+
+.out {
+  font-variant-numeric: tabular-nums;
+}
+
+/* suwak: tor 2 px, uchwyt-romb w akcencie (DESIGN.md) */
+.field input[type="range"] {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 24px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+}
+
+.field input[type="range"]:focus-visible {
+  outline: 2px solid var(--tile-ink);
+  outline-offset: 2px;
+}
+
+.field input::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--alpha-400);
+}
+
+.field input::-moz-range-track {
+  height: 2px;
+  background: var(--alpha-400);
+}
+
+.field input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -7px;
+  background: var(--accent);
+  border: 2px solid var(--on-accent);
+  outline: 1px solid var(--accent);
+  rotate: 45deg;
+}
+
+.field input::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  border: 2px solid var(--on-accent);
+  outline: 1px solid var(--accent);
+  border-radius: 0;
+  rotate: 45deg;
+}
+
+.bar {
+  display: flex;
+  height: 72px;
+}
+
+.bar > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  padding: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: flex-basis 0.6s var(--ease);
+}
+
+.a {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.b {
+  background: var(--light);
+  color: var(--on-accent);
+}
+
+.bar strong {
+  font: var(--t-title);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar > div {
+    transition: none;
+  }
+}

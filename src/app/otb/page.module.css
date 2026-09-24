@@ -1,0 +1,4 @@
+/* Legacy `.cs-lite`: odstęp 32 px zamiast 24 px sekcji `.lite` (element + klasa > klasa szablonu). */
+section.csLite {
+  gap: 32px;
+}

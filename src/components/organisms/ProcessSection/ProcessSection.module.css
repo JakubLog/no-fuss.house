@@ -1,0 +1,62 @@
+/* Proces współpracy (strona główna, `#proces`). Kafle jak legacy `.steps` (ProcessSteps), ale opisy zawsze widoczne. */
+.head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 48px;
+}
+
+.label {
+  font: inherit;
+}
+
+.steps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap);
+}
+
+/* Kafel ma `.tone-dark` (tokeny ciemne w poddrzewie): tło `--bg` = #101318, tekst biały, `--muted` czytelny. */
+.step {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 48px;
+  min-height: 280px;
+  padding: 24px 20px 24px;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.no {
+  font: var(--t-display);
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+}
+
+.title {
+  font: var(--t-title);
+  font-weight: 700;
+}
+
+.text {
+  margin-top: 8px;
+  color: var(--muted);
+  max-width: 44ch;
+}
+
+@media (min-width: 640px) {
+  .steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .steps {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .step {
+    min-height: 360px;
+  }
+}

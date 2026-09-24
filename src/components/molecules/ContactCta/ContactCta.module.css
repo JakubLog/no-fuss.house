@@ -1,0 +1,16 @@
+/* CTA kontaktu: dwa przyciski w wierszu (zawijają się na wąskich ekranach) + notka mono. */
+.cta {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.note {
+  color: var(--muted);
+}

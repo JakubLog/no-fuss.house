@@ -1,0 +1,8 @@
+.caption {
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.caption.ink {
+  color: var(--ink);
+}

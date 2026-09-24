@@ -1,0 +1,23 @@
+.list {
+  display: flex;
+  gap: clamp(16px, 4vw, 56px);
+  list-style: none;
+}
+
+.link {
+  display: inline-block;
+  font: var(--t-mono);
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 4px 0;
+}
+
+.hideSmall {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .hideSmall {
+    display: list-item;
+  }
+}

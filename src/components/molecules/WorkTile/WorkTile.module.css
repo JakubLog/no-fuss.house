@@ -1,0 +1,138 @@
+/* Kafel realizacji: 1:1 z legacy `.tile`, `.ph--img`, `.cover`, `.iph` (no-fuss-v5.html). */
+.tile {
+  display: block;
+  position: relative;
+}
+
+/* Tag przyklejony do prawego górnego rogu okładki (legacy `.tile__tag`). */
+.tag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}
+
+/* Maska okładki: 16:10, bez ramki. */
+.media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--tile);
+}
+
+.square {
+  aspect-ratio: 1;
+}
+
+.img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale 0.9s var(--ease);
+}
+
+.tile:hover .img,
+.tile:focus-visible .img {
+  scale: 1.03;
+}
+
+/* ---------- okładka z trzema ekranami na limonce (OurMoney) ---------- */
+.screens {
+  background: var(--accent);
+}
+
+.phone {
+  position: absolute;
+  display: block;
+  width: 27%;
+  padding: 10px;
+  background: #101318;
+  /* Mockup urządzenia (ilustracja telefonu, nie UI): zaokrąglenia 1:1 z legacy `.iph`. */
+  border-radius: 12.5% / 6.2%;
+  box-shadow:
+    inset 0 0 0 2px #3a3f47,
+    0 40px 60px -24px rgba(16, 19, 24, 0.6);
+  transition:
+    translate 0.9s var(--ease),
+    rotate 0.9s var(--ease);
+}
+
+/* Dynamic Island. */
+.phone::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 20px;
+  left: 50%;
+  width: 26%;
+  height: 3.2%;
+  translate: -50% 0;
+  background: #101318;
+  border-radius: 999px;
+}
+
+/* Przycisk boczny. */
+.phone::after {
+  content: "";
+  position: absolute;
+  right: -3px;
+  top: 22%;
+  width: 3px;
+  height: 9%;
+  background: #3a3f47;
+  border-radius: 0 2px 2px 0;
+}
+
+.phoneImg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10.5% / 5%;
+}
+
+.phone1 {
+  left: 9%;
+  bottom: -36%;
+  rotate: -8deg;
+}
+
+.phone2 {
+  left: 36%;
+  bottom: -20%;
+  rotate: 0deg;
+  z-index: 1;
+  width: 28%;
+}
+
+.phone3 {
+  right: 9%;
+  bottom: -40%;
+  rotate: 8deg;
+}
+
+.tile:hover .phone1,
+.tile:focus-visible .phone1 {
+  translate: -3% -4%;
+  rotate: -11deg;
+}
+
+.tile:hover .phone2,
+.tile:focus-visible .phone2 {
+  translate: 0 -6%;
+}
+
+.tile:hover .phone3,
+.tile:focus-visible .phone3 {
+  translate: 3% -4%;
+  rotate: 11deg;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .img,
+  .phone {
+    transition: none;
+  }
+}

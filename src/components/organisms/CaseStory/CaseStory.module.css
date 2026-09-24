@@ -1,0 +1,18 @@
+/* Trzy wiersze FactRow: termin mono (z klasy `mono` na `<dl>`), wartość w roli `lead`.
+   Nadpisuje wygląd FactRow selektorem potomka (klasa + element > pojedyncza klasa molekuły). */
+.story {
+  display: grid;
+  gap: 0 var(--gap);
+}
+
+.story dd {
+  font: var(--t-lead);
+  text-transform: none;
+  max-width: 44ch;
+}
+
+@media (min-width: 1024px) {
+  .story {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

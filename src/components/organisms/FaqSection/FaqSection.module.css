@@ -1,0 +1,129 @@
+/* FAQ (strona główna, `#faq`): siatka jak `ServicesList`, wiersze `<details>` z obrysem 1 px. */
+.head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 48px;
+}
+
+.label {
+  font: inherit;
+}
+
+.list {
+  border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.row {
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gap);
+  align-items: baseline;
+  padding: 24px 0;
+  list-style: none;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    padding-inline 0.3s var(--ease);
+}
+
+/* Bez natywnego trójkąta (Safari ma własny pseudo-element). */
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Hover jak w `FindSection`: limonkowe tło; #3F4A12 = stała z legacy (przygaszony tekst na limonce). */
+.summary:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+  padding-inline: 12px;
+  --muted: #3F4A12;
+}
+
+.summary:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.no {
+  grid-column: span 2;
+  color: var(--muted);
+}
+
+.question {
+  grid-column: span 9;
+  font: var(--t-title);
+}
+
+.icon {
+  grid-column: span 1;
+  justify-self: end;
+  font: var(--t-title);
+  transition: transform 0.4s var(--ease);
+}
+
+.item[open] .icon {
+  transform: rotate(45deg);
+}
+
+.answer {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gap);
+  padding-bottom: 32px;
+}
+
+.answer > p {
+  grid-column: 3 / -1;
+  max-width: 60ch;
+}
+
+/* CTA pod listą: w kolumnie pytań od 1024 px. */
+.cta {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gap);
+  margin-top: 48px;
+}
+
+.cta > * {
+  grid-column: 1 / -1;
+}
+
+.more {
+  margin-bottom: 16px;
+  color: var(--muted);
+}
+
+@media (min-width: 1024px) {
+  .no {
+    grid-column: span 1;
+  }
+
+  .question {
+    grid-column: 4 / span 8;
+  }
+
+  .icon {
+    grid-column: 12 / span 1;
+  }
+
+  .answer > p {
+    grid-column: 4 / span 7;
+  }
+
+  .cta > * {
+    grid-column: 4 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .summary,
+  .icon {
+    transition: none;
+  }
+}

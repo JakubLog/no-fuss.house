@@ -1,0 +1,11 @@
+.body {
+  font: var(--t-body);
+}
+
+.lead {
+  font: var(--t-lead);
+}
+
+.muted {
+  color: var(--muted);
+}

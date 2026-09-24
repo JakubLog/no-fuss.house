@@ -1,0 +1,212 @@
+/*
+ * Style globalne no-fuss: tylko to, co było wspólne dla wszystkich stron legacy
+ * (no-fuss-v5, o-nas-v5, case-busybee-v3, case-ourmoney-v2).
+ * Wszystko inne żyje w CSS Modules komponentów.
+ *
+ * NIE edytuj bez uzgodnienia. Klasy globalne tutaj to kontrakt:
+ *   .section .tone-dark .tone-light .grid-12 .mono .mono-sm .sr-only .line .fade .is-in .above-grid
+ */
+
+/* ---------- reset ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: var(--t-body);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color var(--theme-duration) ease-out, color var(--theme-duration) ease-out;
+  overflow-x: hidden;
+}
+
+/* Preloader aktywny: blokada scrolla (zastępuje body.is-loading z legacy). */
+body:has([data-preloader="active"]) {
+  overflow: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* ---------- Lenis (lenis/dist/lenis.css + reguła z legacy) ---------- */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch],
+.lenis [data-lenis-prevent-vertical],
+.lenis [data-lenis-prevent-horizontal] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* ---------- kursor własny (ustawia organizm Cursor) ---------- */
+/* Systemowy kursor ukryty nad każdym elementem (także I-beam tekstu, grab, pointer z modułów),
+   poza poddrzewem `[data-native-cursor]`, które samo ustawia `cursor` (LiveFrame, PhoneScroller). */
+@media (pointer: fine) {
+  html[data-cursor="on"],
+  html[data-cursor="on"] :not([data-native-cursor], [data-native-cursor] *) {
+    cursor: none !important;
+  }
+}
+
+/* ---------- typografia pomocnicza ---------- */
+.mono {
+  font: var(--t-mono);
+  text-transform: uppercase;
+}
+
+.mono-sm {
+  font: var(--t-mono-sm);
+  text-transform: uppercase;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- skip link ---------- */
+.skip-link {
+  position: fixed;
+  left: var(--gutter);
+  top: 16px;
+  z-index: 200;
+  padding: 8px 16px;
+  font: var(--t-mono);
+  text-transform: uppercase;
+  background: var(--accent);
+  color: var(--on-accent);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+  outline-color: var(--on-accent);
+}
+
+/* ---------- sekcje i tonacja ---------- */
+.section {
+  padding: var(--section-y) var(--gutter);
+  position: relative;
+  background: var(--bg);
+  transition: background-color var(--theme-duration) ease-out;
+}
+
+.tone-dark,
+.tone-light {
+  color: var(--ink);
+}
+
+/* Siatka overlay (z-index 1) leży nad tłami sekcji, ale pod całą treścią. */
+:where(.section, .above-grid) > :where(*) {
+  z-index: 2;
+}
+
+:where(.section) > :where(*) {
+  position: relative;
+}
+
+/* Jedna siatka wszędzie: 12 kolumn, odstęp 8 px. */
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gap);
+}
+
+/* ---------- reveal (sterowany przez organizm Reveal / Preloader) ---------- */
+.line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+
+.line > span {
+  display: block;
+  transform: translateY(105%);
+  transition: transform var(--reveal-duration) var(--ease);
+  transition-delay: calc(var(--i, 0) * var(--reveal-stagger));
+}
+
+.is-in .line > span,
+.line.is-in > span {
+  transform: none;
+}
+
+.fade {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--reveal-duration) var(--ease),
+    transform var(--reveal-duration) var(--ease);
+  transition-delay: calc(var(--i, 0) * var(--reveal-stagger));
+}
+
+.fade.is-in,
+.is-in .fade {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- ograniczony ruch ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .line > span,
+  .fade {
+    transition: none;
+    transform: none;
+    opacity: 1;
+  }
+
+  body {
+    transition: none;
+  }
+}

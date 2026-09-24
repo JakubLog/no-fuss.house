@@ -1,0 +1,36 @@
+/* Legacy `.stage`, `.stage--img`. */
+.stage {
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  background: var(--accent);
+}
+
+.phones {
+  display: flex;
+  gap: var(--gap);
+  justify-content: center;
+  align-items: flex-end;
+  padding: 48px var(--gutter) 0;
+}
+
+.phone {
+  flex: 0 1 300px;
+  min-width: 0;
+  margin-bottom: -12%;
+}
+
+.phone:nth-child(2) {
+  margin-bottom: -4%;
+}
+
+.image {
+  display: block;
+  padding: 0;
+}
+
+.img {
+  display: block;
+  width: 100%;
+  height: auto;
+}

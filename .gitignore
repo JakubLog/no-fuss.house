@@ -1,2 +1,28 @@
+# system / narzędzia
 .DS_Store
 .claude/settings.local.json
+
+# zależności
+/node_modules
+/.pnp
+.pnp.*
+
+# next.js
+/.next/
+/out/
+/build
+next-env.d.ts
+*.tsbuildinfo
+
+# env (commitujemy tylko .env.example)
+.env*.local
+.env
+!.env.example
+
+# debug
+npm-debug.log*
+pnpm-debug.log*
+*.pem
+
+# vercel
+.vercel

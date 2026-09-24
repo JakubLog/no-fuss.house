@@ -1,0 +1,113 @@
+/* Legacy `.spec` (wielkie wiersze) i `.facts` (kafle). Nadpisuje wygląd FactRow
+   selektorami potomków (klasa + element > pojedyncza klasa molekuły). */
+
+.row:nth-child(2) { --i: 1; }
+.row:nth-child(3) { --i: 2; }
+.row:nth-child(4) { --i: 3; }
+.row:nth-child(5) { --i: 4; }
+.row:nth-child(6) { --i: 5; }
+.row:nth-child(7) { --i: 6; }
+.row:nth-child(8) { --i: 7; }
+
+/* ---------- rows (legacy .spec) ---------- */
+.rows {
+  display: grid;
+}
+
+.rows > .row {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 16px;
+  align-items: baseline;
+  padding: 20px 0;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.rows > .row:last-child {
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.rows > .row > dt {
+  font: var(--t-mono);
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+
+.rows > .row > dd {
+  font: var(--t-h2);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.rows .link {
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.4s var(--ease);
+}
+
+.rows .link:hover,
+.rows .link:focus-visible {
+  transform: translate(6px, -6px);
+}
+
+.chip {
+  letter-spacing: 0;
+  vertical-align: middle;
+  margin-left: 12px;
+}
+
+@media (min-width: 1024px) {
+  .rows > .row {
+    grid-template-columns: 4fr 8fr;
+  }
+}
+
+/* ---------- tiles (legacy .facts) ---------- */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--gap);
+}
+
+.tiles > .row {
+  padding: 24px;
+  border: 0;
+  background: var(--tile);
+  color: var(--tile-ink);
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.tiles > .row > dt {
+  font: var(--t-mono-sm);
+  text-transform: uppercase;
+  color: inherit;
+  margin: 0;
+}
+
+.tiles > .row > dd {
+  font: var(--t-title);
+  font-weight: 700;
+}
+
+.tiles .link {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (min-width: 900px) {
+  .tiles {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rows .link {
+    transition: none;
+  }
+}

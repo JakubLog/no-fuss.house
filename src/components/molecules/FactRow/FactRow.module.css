@@ -1,0 +1,14 @@
+.row {
+  padding: 8px 0;
+  border-top: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+}
+
+.term {
+  color: color-mix(in srgb, currentColor 64%, transparent);
+  margin-bottom: 4px;
+}
+
+.value a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

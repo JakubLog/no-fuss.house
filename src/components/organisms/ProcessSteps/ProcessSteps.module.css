@@ -1,0 +1,94 @@
+/* Legacy `.steps` / `.step` (case-automation-house-v1). */
+.steps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap);
+  counter-reset: st;
+}
+
+.step {
+  position: relative;
+  padding: 24px 20px 20px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--tile);
+  color: var(--tile-ink);
+  overflow: hidden;
+  cursor: default;
+  /* Kolory jak w legacy + reveal z `.fade` (shorthand kasuje globalne opóźnienie, więc je powtarzamy). */
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    opacity var(--reveal-duration) var(--ease) calc(var(--i, 0) * var(--reveal-stagger)),
+    transform var(--reveal-duration) var(--ease) calc(var(--i, 0) * var(--reveal-stagger));
+}
+
+.step::before {
+  counter-increment: st;
+  content: "0" counter(st);
+  font: var(--t-display);
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+}
+
+.title {
+  display: block;
+  margin-top: 24px;
+  font: var(--t-title);
+  font-weight: 700;
+}
+
+.text {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition:
+    max-height 0.5s var(--ease),
+    opacity 0.4s;
+}
+
+/* #3F4A12: stała z legacy (przygaszony tekst na limonce). */
+.step:hover,
+.step:focus-within {
+  background: var(--accent);
+  color: var(--on-accent);
+  --muted: #3F4A12;
+}
+
+.step:focus-visible {
+  outline-color: var(--on-accent);
+  outline-offset: -4px;
+}
+
+.step:hover .text,
+.step:focus-within .text {
+  max-height: 120px;
+  opacity: 1;
+}
+
+/* Bez hovera (dotyk): opisy widoczne od razu, żeby nie ukrywać treści za tapnięciem. */
+@media (hover: none) {
+  .text {
+    max-height: none;
+    opacity: 1;
+  }
+}
+
+@media (min-width: 900px) {
+  .steps {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step,
+  .text {
+    transition: none;
+  }
+}

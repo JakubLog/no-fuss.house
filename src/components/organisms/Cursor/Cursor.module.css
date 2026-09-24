@@ -1,0 +1,97 @@
+/* Warstwa zabawy: gradient, krągłości i poświata kursora dozwolone (DESIGN.md → Components). */
+.cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 90;
+  /* Punkt wskaźnika = środek SVG (44, 44); przesunięcie liczy `Cursor.tsx`. */
+  width: 88px;
+  height: 88px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  will-change: translate;
+  filter: drop-shadow(0 8px 10px rgba(187, 255, 0, 0.25));
+}
+
+.cursor[data-on="true"] {
+  opacity: 1;
+}
+
+/* Strzałka ↔ pierścień (link) ↔ kropka (grab): jeden SVG, stan w `data-state`. */
+.arrow,
+.ring,
+.dot,
+.help,
+.calendar {
+  transform-box: fill-box;
+  transition:
+    scale 0.28s var(--ease),
+    opacity 0.2s;
+}
+
+.arrow {
+  transform-origin: 0 0;
+}
+
+.ring,
+.dot,
+.help,
+.calendar {
+  transform-origin: center;
+  scale: 0;
+  opacity: 0;
+}
+
+.cursor[data-state="link"] .arrow,
+.cursor[data-state="grab"] .arrow,
+.cursor[data-state="help"] .arrow,
+.cursor[data-state="calendar"] .arrow {
+  scale: 0;
+  opacity: 0;
+}
+
+.cursor[data-state="link"] .ring,
+.cursor[data-state="grab"] .dot,
+.cursor[data-state="help"] .help,
+.cursor[data-state="calendar"] .calendar {
+  scale: 1;
+  opacity: 1;
+}
+
+/* Wciśnięcie: pierścień lekko się ściska, kropka mocniej („grabbing”). */
+.cursor[data-state="link"][data-pressed="true"] .ring,
+.cursor[data-state="help"][data-pressed="true"] .help,
+.cursor[data-state="calendar"][data-pressed="true"] .calendar {
+  scale: 0.8;
+}
+
+.cursor[data-state="grab"][data-pressed="true"] .dot {
+  scale: 0.7;
+}
+
+/* Znak w krążku FAQ: „?” albo „−” przy otwartym pytaniu. */
+.glyph {
+  font-family: var(--sans);
+  font-size: 20px;
+  font-weight: 600;
+  fill: #101318;
+  text-anchor: middle;
+  dominant-baseline: central;
+  transition: opacity 0.2s;
+}
+
+.glyphClose,
+.cursor[data-open="true"] .glyphQ {
+  opacity: 0;
+}
+
+.cursor[data-open="true"] .glyphClose {
+  opacity: 1;
+}
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor {
+    display: none;
+  }
+}

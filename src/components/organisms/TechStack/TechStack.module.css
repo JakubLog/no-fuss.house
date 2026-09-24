@@ -1,0 +1,21 @@
+/* Legacy `.stack` + etykiety `.cs-no`. */
+.label {
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.stack + .label {
+  margin-top: 24px;
+}
+
+.stack {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+}
+
+.stack li {
+  padding: 8px 12px;
+  box-shadow: inset 0 0 0 1px currentColor;
+}

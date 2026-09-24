@@ -1,0 +1,34 @@
+/* Legacy `.path`. */
+.path {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap);
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 240px;
+  padding: 24px;
+  background: var(--tile);
+  color: var(--tile-ink);
+}
+
+.stage + .stage {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.title {
+  font: var(--t-h2);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 800px) {
+  .path {
+    grid-template-columns: 1fr 1fr;
+  }
+}

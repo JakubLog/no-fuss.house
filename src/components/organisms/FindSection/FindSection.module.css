@@ -1,0 +1,112 @@
+/* Legacy `.find` (o-nas-v5): #social i #posty. */
+.find {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 24px var(--gap);
+  align-items: start;
+}
+
+.find > * {
+  grid-column: 1 / -1;
+}
+
+.title {
+  margin-top: 16px;
+}
+
+.lead {
+  font: var(--t-lead);
+  max-width: 44ch;
+  margin-top: 16px;
+}
+
+.note {
+  margin-top: 24px;
+  color: var(--muted);
+}
+
+.list {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 0;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  font: var(--t-title);
+}
+
+.item:last-of-type {
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.item:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+  padding-inline: 12px;
+}
+
+.item > span,
+.copy::after {
+  display: inline-block;
+  transition: transform 0.4s var(--ease);
+}
+
+.item:hover > span,
+.copy:hover::after {
+  transform: translate(4px, -4px);
+}
+
+.itemTitle {
+  min-width: 0;
+}
+
+/* E-mail (CopyEmail): tekst linku podmienia komponent, „⧉” (kopiuj) dokleja CSS tylko przy myszy;
+   na dotyku CopyEmail otwiera `mailto:`, więc strzałka. */
+.copy::after {
+  content: "↗";
+}
+
+@media (pointer: fine) {
+  .copy::after {
+    content: "⧉";
+  }
+}
+
+/* Link-placeholder (`href: null`): wiersz bez linku i bez hovera, przygaszony. */
+.soon {
+  opacity: 0.5;
+}
+
+.soon:hover {
+  background: none;
+  color: inherit;
+  padding-inline: 0;
+}
+
+.soon:hover > span {
+  transform: none;
+}
+
+@media (min-width: 1024px) {
+  .find > .head {
+    grid-column: 1 / span 4;
+    position: sticky;
+    top: 120px;
+  }
+
+  .find > .list {
+    grid-column: 5 / span 8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item > span,
+  .copy::after {
+    transition: none;
+  }
+}

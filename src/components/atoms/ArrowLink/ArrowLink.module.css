@@ -1,0 +1,29 @@
+.arrow {
+  display: inline-block;
+  transition: transform 0.4s var(--ease);
+}
+
+.link:hover .arrow,
+.link:focus-visible .arrow {
+  transform: translate(3px, -3px);
+}
+
+/* Link w tekście: podkreślenie 1 px, na hover tło limonkowe (nigdy limonkowy tekst). */
+.underline {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.12em;
+  transition: background-color 0.2s;
+}
+
+.underline:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrow {
+    transition: none;
+  }
+}

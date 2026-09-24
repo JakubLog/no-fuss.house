@@ -1,0 +1,32 @@
+/* Role 1:1 z DESIGN.md / legacy. Letter-spacing jak w legacy dla danej roli. */
+.mega {
+  font: var(--t-mega);
+  letter-spacing: -0.04em;
+}
+
+.display {
+  font: var(--t-display);
+  letter-spacing: -0.01em;
+}
+
+.h2 {
+  font: var(--t-h2);
+  letter-spacing: -0.02em;
+}
+
+.statement {
+  font: var(--t-statement);
+  letter-spacing: -0.01em;
+}
+
+.title {
+  font: var(--t-title);
+}
+
+.lead {
+  font: var(--t-lead);
+}
+
+.upper {
+  text-transform: uppercase;
+}

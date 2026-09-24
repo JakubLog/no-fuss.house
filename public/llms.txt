@@ -1,0 +1,57 @@
+# no-fuss
+
+> no-fuss to studio produktowe: Magda Nestorowicz (design i produkt) i Kuba Fedoszczak (kod). Projektujemy i kodujemy aplikacje mobilne, strony i produkty z AI dla firm. Rozwijamy też własne produkty, m.in. OurMoney.
+
+Projektujemy i kodujemy produkty, które załatwiają sprawę bez zbędnego zamieszania. Strona po polsku.
+
+## Dla kogo
+
+- Firmy i zespoły, które chcą wydać produkt cyfrowy (aplikację mobilną, stronę, produkt z AI) albo uporządkować istniejący, bez budowania własnego działu i bez zarządzania agencją.
+- Pracujemy we dwoje (design + kod) z agentami AI: jeden zespół od pierwszego ekranu do wydania i dalszego rozwoju.
+
+## Kontakt i wycena
+
+- E-mail: [email@no-fuss]
+- Rozmowa: link do kalendarza wkrótce na https://no-fuss.pl/#kontakt
+- Wycena indywidualna, po krótkiej rozmowie o zakresie. Nie publikujemy cennika.
+
+## FAQ
+
+- Koszt: do każdego zlecenia podchodzimy indywidualnie, bez cennika; wycena po rozmowie i briefie, zależy od zakresu. Czas realizacji podajemy razem z wyceną.
+- Start: rozmowa → brief → wycena → discovery i prototyp → budowa w iteracjach → wdrożenie i wsparcie.
+- Zespół: Magda (design i produkt) i Kuba (kod) z agentami AI; nad pracą AI zawsze czuwa człowiek. Bierzemy też sam design albo sam kod, także audyt istniejącego produktu.
+- Stack: strony w Next.js z CMS, aplikacje w React i TypeScript (mobilne przez Capacitor), Supabase.
+
+## Osoby
+
+- Magda Nestorowicz: design i produkt. Product Designerka. Buduje OurMoney razem z Kubą. Na etacie w AION MIND (nie jest to produkt no-fuss) od pierwszego ekranu doszła do prowadzenia całego produktu: od czerwca 2026 jest Head of Operations.
+- Kuba Fedoszczak: kod. Developer. Odpowiada za produkcję aplikacji, jej bezpieczeństwo i całą stronę technologiczną OurMoney. GitHub: https://github.com/JakubLog
+
+## Produkty własne
+
+- [OurMoney](https://ourmoney.pl): wspólny budżet dla par. Aplikacja, która odpowiada parze na jedno pytanie: czy to jest fair?
+
+AION MIND (https://aionmind.com, journaling z AI) nie jest produktem no-fuss: to etat Magdy (Product Designer od 01.2025, od czerwca 2026 Head of Operations).
+
+## Co robimy
+
+- Aplikacje mobilne: od pierwszego ekranu do sklepów. Projekt, kod, wydanie i to, co po nim: metryki, retencja, kolejne wersje.
+- Produkty z AI: agenci AI, automatyzacje. Projektujemy tak, żeby LLM pracował w tle, a użytkownik czuł tylko efekt.
+- Strony i landingi: szybkie, dostępne i zgodne z WCAG. Next.js, CMS do samodzielnej edycji, integracje z tym, co już macie.
+- Design produktu: research, flow, prototyp, system wizualny. Decyzje z danych, nie z głowy. Bez slajdów, za to z działającym prototypem.
+- Audyt i porządki: przeglądamy istniejący produkt: UX, dostępność, konwersja, kod. Wychodzicie z listą priorytetów, nie z raportem na 80 stron.
+
+## Strony
+
+- [Strona główna](https://no-fuss.pl/): usługi, jak pracujemy, realizacje, o nas, FAQ, kontakt.
+- [O nas](https://no-fuss.pl/o-nas): Dwie osoby, agenci AI, zero zamieszania. Magda projektuje i prowadzi produkt. Kuba pisze kod i pilnuje, żeby działał. Agenci AI pracują z nami ramię w ramię. Jesteśmy AI native.
+- [OurMoney — case study](https://no-fuss.pl/ourmoney): produkt własny no-fuss, 12.2025 → teraz. Rola no-fuss: design i produkt (Magda), kod, infrastruktura i bezpieczeństwo (Kuba). Przed premierą w sklepach.
+- [AION MIND — case study](https://no-fuss.pl/aion-mind): etat Magdy, 01.2025 → teraz, nie projekt no-fuss. Magda: Product Designer 01.2025–05.2026, od czerwca 2026 Head of Operations.
+- [Busy Bee — case study](https://no-fuss.pl/busy-bee): strona WWW domu produkcyjnego Busy Bee Film, Warszawa, 2024. Rola no-fuss: design (Magda); kod spoza no-fuss: Michał Gabryelewicz (Webflow).
+- [Automation House — case study](https://no-fuss.pl/automation-house): rebranding strony Automation House by Tigers, Warszawa, 06.2026. Rola no-fuss: design i development, od discovery do wdrożenia (Magda: design, Kuba: kod w Next.js).
+- [OTB Ventures — case study](https://no-fuss.pl/otb): strona funduszu VC OTB Ventures, Amsterdam / Warszawa, 06.2025. Rola no-fuss: design (Magda razem z Piotrem Chuchłą). Strona na WordPressie.
+- [Sassy — case study](https://no-fuss.pl/sassy): eksperyment Magdy, 07.2026: strona bez celu w jednym pliku HTML. Projekt własny, nie zlecenie.
+
+## Optional
+
+- [Sitemap](https://no-fuss.pl/sitemap.xml)

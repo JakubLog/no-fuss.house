@@ -1,0 +1,7 @@
+/* Legacy `.work__head`. */
+.head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 48px;
+}

@@ -1,0 +1,133 @@
+/* Sekcja „O nas” na stronie głównej: 1:1 z legacy `.about` (no-fuss-v5.html). */
+.about {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 32px var(--gap);
+}
+
+.photo {
+  grid-column: 1 / -1;
+  position: relative;
+  max-width: 340px;
+}
+
+/* Placeholder obrazu (legacy `.ph`): kafel w ukośne paski z podpisem w ramce. */
+.ph {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--tile);
+  color: var(--tile-ink);
+}
+
+.ph::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.14;
+  background: repeating-linear-gradient(135deg, currentColor 0 1px, transparent 1px 14px);
+}
+
+.ph span {
+  position: relative;
+  padding: 4px 8px;
+  border: 1px dashed currentColor;
+}
+
+/* Podpis odręczny w akcencie (na ciemnym kaflu). */
+.sign {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  z-index: 1;
+  width: 58%;
+  rotate: -8deg;
+  color: var(--accent);
+}
+
+.text {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.statement {
+  font: var(--t-statement);
+  letter-spacing: -0.01em;
+  max-width: 22ch;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* ---------- logotypy partnerów (legacy `.clients`) ---------- */
+.clients {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.clientsLabel {
+  color: var(--muted);
+}
+
+.clientsList {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 32px;
+}
+
+.clientsList li {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.logo {
+  color: var(--ink);
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+
+.clientsList li:hover .logo {
+  opacity: 1;
+}
+
+@media (min-width: 640px) {
+  .photo {
+    grid-column: 1 / span 4;
+    max-width: none;
+  }
+
+  .text {
+    grid-column: 6 / span 7;
+  }
+
+  .clientsList {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .photo {
+    grid-column: 1 / span 3;
+  }
+
+  .text {
+    grid-column: 5 / span 8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo {
+    transition: none;
+  }
+}

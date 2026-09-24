@@ -1,0 +1,17 @@
+/* Legacy `.screens`. */
+.screens {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px var(--gap);
+}
+
+/* Legacy: 16 px pod telefonem zamiast 8 px (specyficzność > TileCaption). Kolor: `tone="ink"`. */
+.screens .caption {
+  margin-top: 16px;
+}
+
+@media (min-width: 900px) {
+  .screens {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

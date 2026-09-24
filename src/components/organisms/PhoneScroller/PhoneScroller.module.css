@@ -1,0 +1,70 @@
+/* Legacy `.scrollphone`. Zaokrąglenie ekranu jak w PhoneFrame: ilustracja sprzętu, nie UI. */
+.scrollphone {
+  width: min(100%, 340px);
+  margin: 0 auto;
+}
+
+.screen {
+  height: 640px;
+  overflow-y: auto;
+  border-radius: 10.5% / 5%;
+  scrollbar-width: none;
+  background: #FFFFFF;
+  cursor: ns-resize;
+}
+
+.screen::-webkit-scrollbar {
+  display: none;
+}
+
+.screen:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* globals.css (lenis.css) daje `[data-lenis-prevent]` `overscroll-behavior: contain`.
+   Tu przywracamy łańcuchowanie jak w legacy: po dojechaniu do końca ekranu telefonu
+   gest przewija dalej stronę. */
+.scrollphone .screen.screen {
+  overscroll-behavior: auto;
+}
+
+/* Dotyk: telefon mieści się w ekranie (ok. 56svh wysokości, proporcje makiety),
+   więc zawsze widać nad nim i pod nim kawałek strony do przewinięcia. */
+@media (pointer: coarse) {
+  .scrollphone {
+    width: min(100%, 340px, 30svh + 20px);
+  }
+
+  .screen {
+    height: min(640px, 56svh);
+  }
+}
+
+/* Nieaktywny (dotyk, przed tapnięciem): ekran nie łapie gestu, przewija się strona.
+   Klawiatura dalej działa (`scrollBy` działa przy `overflow: hidden`). */
+.screen[data-locked] {
+  overflow-y: hidden;
+  touch-action: pan-y;
+}
+
+.hint {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 32px;
+  translate: -50% 0;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 8px 16px;
+  text-align: center;
+  background: var(--dark);
+  color: #FFFFFF;
+  pointer-events: none;
+}

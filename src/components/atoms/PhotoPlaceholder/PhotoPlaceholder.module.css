@@ -1,0 +1,43 @@
+/* Legacy `.ph` (o-nas-v5). */
+.ph {
+  position: relative;
+  width: 100%;
+  background: var(--tile);
+  color: var(--tile-ink);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.ph::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.14;
+  background: repeating-linear-gradient(135deg, currentColor 0 1px, transparent 1px 14px);
+  transition: transform 0.9s var(--ease);
+}
+
+.label {
+  position: relative;
+  font: var(--t-mono-sm);
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border: 1px dashed currentColor;
+}
+
+.sky {
+  background: var(--shade-700);
+  color: #fff;
+}
+
+.lime {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ph::before {
+    transition: none;
+  }
+}

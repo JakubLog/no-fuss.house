@@ -1,0 +1,101 @@
+/* Hero 404 1:1 z legacy `.hero.hero--404` (404.html). */
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 560px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gap);
+  grid-template-rows: 1fr auto;
+  align-content: end;
+  row-gap: 16px;
+  padding: var(--section-y) var(--gutter);
+  color: var(--ink);
+}
+
+.bottom {
+  position: relative;
+  z-index: 2;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: grid;
+  gap: 16px;
+  align-self: end;
+}
+
+/* Miernik: tor 2 px, romb jedzie z 100% do 0% (--p: 1 → 0). */
+.meter {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.meter i {
+  flex: 1;
+  max-width: 220px;
+  height: 2px;
+  background: color-mix(in srgb, var(--ink) 40%, transparent);
+  position: relative;
+}
+
+.meter i::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -7px;
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  border: 2px solid var(--dark);
+  outline: 1px solid var(--accent);
+  rotate: 45deg;
+  translate: calc(var(--p, 1) * 204px) 0;
+  transition: translate 1.2s var(--ease);
+}
+
+.meter output {
+  font-variant-numeric: tabular-nums;
+  min-width: 4ch;
+  text-align: right;
+}
+
+.txt {
+  font: var(--t-statement);
+  max-width: 22ch;
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Brak WebGL / fontu: napis CSS (legacy `.hero__fallback`). */
+.fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  font: var(--t-mega);
+  letter-spacing: -0.03em;
+  color: transparent;
+  background: linear-gradient(160deg, #fff 5%, var(--object) 45%, #6e9900 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+  .bottom {
+    grid-column: 1 / span 7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meter i::after {
+    transition: none;
+  }
+}

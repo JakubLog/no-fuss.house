@@ -1,0 +1,53 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Warstwa zabawy: krągłości dozwolone (DESIGN.md → Shapes). */
+.sticker {
+  position: absolute;
+  width: var(--s, 96px);
+  height: var(--s, 96px);
+  margin: calc(var(--s, 96px) / -2) 0 0 calc(var(--s, 96px) / -2);
+  rotate: var(--r, 0deg);
+  animation: pop 2.4s var(--ease) forwards;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.18));
+}
+
+.sticker svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+@keyframes pop {
+  0% {
+    scale: 0;
+    opacity: 0;
+  }
+  12% {
+    scale: 1.12;
+    opacity: 1;
+  }
+  20% {
+    scale: 1;
+  }
+  80% {
+    scale: 1;
+    opacity: 1;
+  }
+  100% {
+    scale: 0.6;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layer {
+    display: none;
+  }
+}

@@ -1,0 +1,26 @@
+/* Legacy `.guides`. Portrety w plikach są już okrągłe, więc bez border-radius. */
+.guides {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px var(--gap);
+}
+
+.img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.name {
+  display: block;
+  margin: 16px 0 4px;
+  font: var(--t-title);
+}
+
+@media (min-width: 900px) {
+  .guides {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}

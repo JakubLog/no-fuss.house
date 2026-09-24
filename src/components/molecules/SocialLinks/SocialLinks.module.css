@@ -1,0 +1,13 @@
+.list {
+  display: flex;
+  gap: 24px;
+}
+
+.link {
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.link:hover {
+  border-color: currentColor;
+}

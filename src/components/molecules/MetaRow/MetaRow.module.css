@@ -1,0 +1,22 @@
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.arrow {
+  display: inline-block;
+  transition: transform 0.4s var(--ease);
+}
+
+:global(a):hover .arrow,
+:global(a):focus-visible .arrow {
+  transform: translate(3px, -3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrow {
+    transition: none;
+  }
+}

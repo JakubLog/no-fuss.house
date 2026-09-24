@@ -1,0 +1,62 @@
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--hero-sky);
+  overflow: hidden;
+  transition: background-color var(--theme-duration) ease-out;
+}
+
+.backdrop i {
+  position: absolute;
+  left: -30%;
+  width: 160%;
+  height: 22%;
+  background: linear-gradient(90deg, transparent, var(--hero-glow) 35%, var(--hero-glow) 60%, transparent);
+  filter: blur(64px);
+  opacity: 0.22;
+  transform: rotate(-32deg);
+  animation: drift 18s ease-in-out infinite alternate;
+}
+
+.backdrop i:nth-child(1) {
+  top: -5%;
+}
+
+.backdrop i:nth-child(2) {
+  top: 32%;
+  height: 14%;
+  animation-duration: 24s;
+  animation-delay: -6s;
+  opacity: 0.14;
+}
+
+.backdrop i:nth-child(3) {
+  top: 62%;
+  height: 26%;
+  animation-duration: 21s;
+  animation-delay: -11s;
+}
+
+.backdrop i:nth-child(4) {
+  top: 98%;
+  height: 12%;
+  animation-duration: 27s;
+  animation-delay: -3s;
+  opacity: 0.12;
+}
+
+@keyframes drift {
+  from {
+    translate: -6% -4%;
+  }
+  to {
+    translate: 6% 5%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop i {
+    animation: none;
+  }
+}

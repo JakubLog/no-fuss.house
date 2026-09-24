@@ -1,0 +1,34 @@
+/* Legacy `.nums`, `.num`, `.num--lime`. */
+.nums {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--gap);
+}
+
+.num {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 200px;
+  padding: 20px;
+  background: var(--tile);
+  color: var(--tile-ink);
+}
+
+.accent {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.value {
+  font: var(--t-display);
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 900px) {
+  .nums {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

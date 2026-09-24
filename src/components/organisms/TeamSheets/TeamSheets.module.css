@@ -1,0 +1,37 @@
+/* Legacy `.sheets` (o-nas-v5): ciemny pas, karty w tonacji --shade-900. */
+.sheets {
+  position: relative;
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: 1fr;
+  padding: var(--section-y) var(--gutter);
+  background: var(--dark);
+}
+
+.cell {
+  position: relative;
+  z-index: 2;
+  --bg: var(--shade-900);
+}
+
+/* Zdjęcie 1:1 w kadrze karty (3:4, od 1200 px 4:3; proporcje ustawia PersonCard).
+   Przy 4:3 ucina się pion: 10% trzyma czubek głowy i brodę w kadrze. */
+.photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: 50% 10%;
+}
+
+@media (min-width: 900px) {
+  .sheets {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1200px) {
+  .sheets {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}

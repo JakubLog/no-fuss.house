@@ -1,0 +1,34 @@
+/* Legacy `.cs-h`, `.cs-quote`, `.cs-p`, `.bigline`. */
+.h {
+  letter-spacing: -0.025em;
+}
+
+.quote {
+  letter-spacing: -0.02em;
+}
+
+.p {
+  font: var(--t-lead);
+  max-width: 44ch;
+}
+
+.p + .p {
+  margin-top: 16px;
+}
+
+.afterHeading {
+  margin-top: 24px;
+}
+
+.afterQuote {
+  margin-top: 32px;
+}
+
+.spaced {
+  margin-bottom: 32px;
+}
+
+.bigline {
+  font: var(--t-display);
+  letter-spacing: -0.02em;
+}

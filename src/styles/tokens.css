@@ -1,0 +1,96 @@
+/*
+ * Tokeny no-fuss. Źródło: frontmatter DESIGN.md (v0.1.0).
+ * Nazwy 1:1 z `:root` w legacy/no-fuss-v5.html + tokeny z DESIGN.md, których tam brakowało.
+ *
+ * NIE edytuj bez uzgodnienia (kontrakt dla wszystkich komponentów).
+ * Żadnych rozmiarów fontu spoza skali --t-*, zero border-radius, jeden akcent.
+ */
+
+:root {
+  /* ---------- kolory bazowe ---------- */
+  --light: #FCFCFB;
+  --dark: #101318;
+  --shade-900: #15181D;
+  --shade-700: #272A2F;
+  --accent: #BBFF00;
+  --on-accent: #101318;
+
+  /* ---------- tonacja domyślna: tone-light ---------- */
+  --bg: var(--light);
+  --ink: #101318;
+  --muted: #5F6369;
+  --tile: #15181D;
+  --tile-ink: #FFFFFF;
+
+  /* ---------- hero / stopka (zawsze ciemne) ---------- */
+  --hero-sky: #101318;
+  --hero-glow: #BBFF00;
+  --object: #BBFF00;
+
+  /* ---------- alpha-on-dark (skala Light - Dark z Figmy) ---------- */
+  --alpha-25: #FFFFFF05;
+  --alpha-100: #FFFFFF0A;
+  --alpha-200: #FFFFFF14;
+  --alpha-400: #FFFFFF52;
+  --alpha-600: #FFFFFFA3;
+  --alpha-700: #FFFFFFCC;
+
+  /* ---------- siatka (rysowana w mix-blend-mode: difference) ---------- */
+  --grid-line: rgba(255, 255, 255, 0.05);
+  --grid-cross: rgba(255, 255, 255, 0.18);
+
+  /* ---------- kroje (zmienne --font-* ustawia next/font w layout.tsx) ---------- */
+  --sans: var(--font-tiktok-sans), "TikTok Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: var(--font-geist-mono), "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* ---------- skala typografii: 7 ról sans + 2 mono ---------- */
+  --t-mega: 700 clamp(3.5rem, 11.5vw, 11rem)/.9 var(--sans);
+  --t-display: 700 clamp(2.5rem, 6svw, 5.5rem)/1 var(--sans);
+  --t-h2: 700 clamp(2rem, 3.3svw, 3rem)/1 var(--sans);
+  --t-statement: 400 clamp(1.75rem, 3svw, 2.75rem)/1.1 var(--sans);
+  --t-title: 500 clamp(1.5rem, 2.2svw, 2rem)/1.15 var(--sans);
+  --t-lead: 400 clamp(1.125rem, 1.4svw, 1.375rem)/1.35 var(--sans);
+  --t-body: 400 16px/24px var(--sans);
+  --t-mono: 400 14px/20px var(--mono);
+  --t-mono-sm: 400 12px/16px var(--mono);
+
+  /* ---------- przestrzeń i siatka ---------- */
+  --unit: 8px;
+  --gap: 8px;           /* column-gap i tile-gap: jedna siatka wszędzie */
+  --gutter: 16px;       /* desktop: 56px */
+  --section-y: 72px;    /* desktop: 96px */
+  --grid-columns: 12;
+  --radius: 0;          /* cały system jest ostry */
+
+  /* ---------- motion ---------- */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --reveal-duration: 900ms;
+  --reveal-stagger: 80ms;
+  --theme-duration: 300ms;
+  --scramble-duration: 420ms;
+}
+
+/* Sekcja ciemna (tone-dark): przepina tokeny tonacji dla całego poddrzewa. */
+.tone-dark {
+  --bg: var(--dark);
+  --ink: #FFFFFF;
+  --muted: #A9ABAD;
+  --tile: #272A2F;
+  --tile-ink: #FFFFFF;
+}
+
+/* Sekcja jasna (tone-light): jawny powrót do tonacji jasnej wewnątrz ciemnego rodzica. */
+.tone-light {
+  --bg: var(--light);
+  --ink: #101318;
+  --muted: #5F6369;
+  --tile: #15181D;
+  --tile-ink: #FFFFFF;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --gutter: 56px;
+    --section-y: 96px;
+  }
+}

@@ -1,0 +1,145 @@
+/* Legacy `.stage.stage--site` + `.frame` / `.browser` + `.frame__vp` + `.live__btn`.
+   Zmiany względem legacy (DESIGN.md): zero border-radius (ramka, kropki, pasek adresu),
+   bez cienia, kolory chrome ramki z tokenów zamiast #3a3f47 / #1c2027 / #8a8f98.
+   Pasek adresu: mono 12 px (legacy 9 px) i link na całą wysokość paska 48 px (audyt UX). */
+
+.stage {
+  position: relative;
+  z-index: 2;
+  display: block;
+  overflow: hidden;
+  background: var(--accent);
+  /* margines u dołu jak w legacy (commit 6153609) */
+  padding: 48px var(--gutter);
+}
+
+.frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  /* górny pasek 48 px: cały jest linkiem (obszar dotyku ≥ 44 px) */
+  padding: 48px 6px 6px;
+  background: var(--dark);
+}
+
+/* trzy „kropki” okna, kwadratowe */
+.frame::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 12px;
+  width: 8px;
+  height: 8px;
+  background: var(--shade-700);
+  box-shadow:
+    14px 0 0 var(--shade-700),
+    28px 0 0 var(--shade-700);
+}
+
+/* Link na całą wysokość paska (48 px), widoczne „pole adresu” w środku. */
+.url {
+  position: absolute;
+  top: 0;
+  left: 56px;
+  right: 8px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  color: var(--alpha-700);
+  transition: color 0.2s;
+}
+
+.urlText {
+  display: block;
+  width: 100%;
+  padding: 4px 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  background: var(--shade-900);
+  /* mono 12 px (--t-mono-sm), bez wersalików: to adres strony */
+  font: var(--t-mono-sm);
+  text-align: center;
+}
+
+.url:hover,
+.url:focus-visible {
+  color: var(--accent);
+}
+
+.url:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+@media (min-width: 768px) {
+  .url {
+    right: 56px;
+  }
+}
+
+.viewport {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--light);
+}
+
+/* Żywa ramka: systemowy kursor (własny chowa `Cursor`, patrz `data-native-cursor`). */
+.viewport[data-native-cursor] {
+  cursor: auto;
+}
+
+.poster {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.iframe {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1440px;
+  height: 900px;
+  border: 0;
+  background: var(--light);
+  transform-origin: 0 0;
+  transform: scale(var(--s, 0.75));
+}
+
+.load {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--dark) 35%, transparent);
+  color: var(--light);
+  transition: background-color 0.3s;
+}
+
+.load:hover,
+.load:focus-visible {
+  background: color-mix(in srgb, var(--dark) 55%, transparent);
+}
+
+.load span {
+  padding: 12px 20px;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.load:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .url,
+  .load {
+    transition: none;
+  }
+}

@@ -1,0 +1,169 @@
+/* ---------- hero (legacy .cs-hero) ---------- */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  color: #FFFFFF;
+  --ink: #FFFFFF;
+  --muted: #A9ABAD;
+  padding: calc(var(--section-y) + 24px) var(--gutter) var(--section-y);
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 32px var(--gap);
+  align-content: end;
+}
+
+/* Warstwy absolutne (tło, naklejki) bez grid-column: inaczej ich containing block
+   zawęziłby się do obszaru siatki (bez paddingu). */
+.hero > :not([data-glow], [data-sticker-layer]) {
+  grid-column: 1 / -1;
+}
+
+.lead {
+  font: var(--t-statement);
+  letter-spacing: -0.01em;
+  max-width: 22ch;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 var(--gap);
+}
+
+/* ---------- sekcje (legacy .cs-block) ---------- */
+.block {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 32px var(--gap);
+  align-items: start;
+}
+
+.block > * {
+  grid-column: 1 / -1;
+}
+
+/* ---------- sekcja lite (legacy .lite / .cs-lite, case studies stron) ---------- */
+.lite {
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+}
+
+.lite > * {
+  min-width: 0;
+}
+
+.liteHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.liteLabel {
+  font-weight: 400;
+}
+
+.lite.bleed {
+  padding-inline: 0;
+}
+
+.lite.bleed > .liteHead {
+  padding-inline: var(--gutter);
+}
+
+/* ---------- CTA kontaktu przed „Następny projekt” (nowe, spoza legacy) ---------- */
+.cta {
+  display: grid;
+  gap: 24px;
+  justify-items: start;
+}
+
+.ctaText {
+  font: var(--t-lead);
+  color: var(--muted);
+  max-width: 40ch;
+}
+
+/* ---------- następny projekt (legacy .next) ---------- */
+.nextWrap {
+  position: relative;
+  z-index: 2;
+}
+
+.next {
+  display: block;
+  padding: var(--section-y) var(--gutter);
+  background: var(--accent);
+  color: var(--on-accent);
+  position: relative;
+}
+
+.nextTitle {
+  display: block;
+  margin-top: 16px;
+  font: var(--t-mega);
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.arrow {
+  display: inline-block;
+  transition: transform 0.5s var(--ease);
+}
+
+.next:hover .arrow,
+.next:focus-visible .arrow {
+  transform: translate(8px, -8px);
+}
+
+.next:focus-visible {
+  outline-color: var(--on-accent);
+  outline-offset: -6px;
+}
+
+@media (min-width: 1024px) {
+  .hero > .lead {
+    grid-column: 1 / span 5;
+    align-self: end;
+  }
+
+  .hero > .facts {
+    grid-column: 7 / span 6;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .block > .no {
+    grid-column: 1 / span 2;
+  }
+
+  .block > .txt {
+    grid-column: 3 / span 4;
+    position: sticky;
+    top: 120px;
+  }
+
+  .block > .vis {
+    grid-column: 8 / span 5;
+  }
+
+  .block > .wide {
+    grid-column: 3 / span 10;
+  }
+
+  .flip > .txt {
+    grid-column: 9 / span 4;
+    order: 3;
+  }
+
+  .flip > .vis {
+    grid-column: 3 / span 5;
+    order: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrow {
+    transition: none;
+  }
+}

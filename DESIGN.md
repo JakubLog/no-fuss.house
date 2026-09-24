@@ -122,8 +122,8 @@ Stała warstwa `position: fixed` (siatka ma najniższy z-index: nad tłami sekcj
 - **siatka**: 3 piony (lewy gutter, środek, prawy gutter) i 2 poziomy (⅓ i ⅔ wysokości),
   z przerwą 12 px wokół przecięć i krzyżykiem 12 px w każdym przecięciu; rysowana na biało
   w `mix-blend-mode: difference`, więc sama odwraca się na każdym tle,
-- **HUD**: logo i nawigacja u góry, czas lokalny, współrzędne kursora i ikona globu u dołu,
-  pasek postępu scrolla przy prawej krawędzi.
+- **HUD**: logo i nawigacja u góry, pasek postępu scrolla przy prawej krawędzi
+  (nav w mono 12 px poniżej 480 px). Fokus w HUD: biały obrys 2 px, odwracany razem z HUD.
 
 ## Elevation & Depth
 
@@ -144,12 +144,30 @@ naklejki i kursor, czyli warstwa zabawy, nie warstwa interfejsu.
 - **Link nawigacji**: mono 14 px; hover uruchamia scramble znaków; przełączniki mają
   skrót w nawiasie kwadratowym, np. `MOTYW[A]`.
 - **Link w tekście**: podkreślenie 1 px, na hover tło limonkowe.
+- **CTA kontaktu** (`ContactCta`): przycisk accent „Porozmawiajmy →” (do stopki `#kontakt`) + ghost
+  „Umów rozmowę ↗” (kalendarz); przyciski prostokątne, min. 48 px, odstęp 8 px, zawijają się na wąskich
+  ekranach. Link bez adresu = nieklikalny, opacity .5. Pod h1 w hero, pod listą usług i pod FAQ.
+- **Jak pracujemy** (`ProcessSection`, strona główna po usługach): nagłówek mono z licznikiem, cztery ciemne kafle
+  `#101318` na jasnym tle (1 → 2 → 4 kolumny): numer w roli display, tytuł w roli title, opis `--muted` zawsze widoczny.
+  Statyczne, bez hovera.
+- **FAQ** (`FaqSection`, strona główna przed stopką): wiersze z obrysem 1 px jak lista usług, natywne `details` /
+  `summary` bez JS. Numer mono, pytanie w roli title, „+” w mono obracany o 45° po otwarciu; hover daje wierszowi
+  limonkowe tło i wcięcie 12 px, fokus obrys 2 px. Odpowiedź w kolumnie pytania, maks. 60 znaków w wierszu.
 - **Preloader**: pasek 110×4 px na środku, limonkowy na 25% bieli, tło `#101318`, po wypełnieniu kurtyna
-  odjeżdża w górę.
+  odjeżdża w górę (1 s). Pasek czeka na fonty (`document.fonts.ready`) i trwa od 600 ms do 1200 ms.
+  Tylko przy pierwszym wejściu, nie przy nawigacji między stronami.
 - **Naklejka**: SVG 72–120 px z białym obrysem 4 px, pojawia się pod kursorem w hero
   (pop scale 0→1, losowa rotacja ±25°), znika po 2.4 s.
 - **Kursor**: limonkowa strzałka z gradientem, podąża z opóźnieniem (lerp 0.18); tylko
-  na urządzeniach ze wskaźnikiem `fine`.
+  na urządzeniach ze wskaźnikiem `fine`. Nad elementem interaktywnym (link, przycisk, pole, `summary`,
+  element z `tabindex`) strzałka płynnie (0.28 s, `--ease`) zmienia się w limonkowy pierścień ~40 px
+  (półprzezroczyste wypełnienie, obrys z gradientu, ta sama poświata); nad elementem przeciąganym
+  (`data-cursor="grab"`) w małą pełną kropkę, która przy wciśnięciu się ściska. Element fokusowalny, ale nieklikalny (kafle kroków procesu),
+  dostaje `data-cursor="arrow"` i zostaje strzałką. Dwa stany dedykowane, ten sam krążek ~40 px z obrysem
+  z gradientu, ale pełny limonkowy: nad pytaniem FAQ (`data-cursor="help"`) z „?” (`#101318`, sans 600),
+  a przy otwartym pytaniu z „−”; nad „Umów rozmowę ↗” (`data-cursor="calendar"`) z ikoną kalendarza
+  (obrys `#101318` 2 px, dwa uszka, kropka). Systemowy kursor jest
+  ukryty wszędzie (także I-beam przy tekście). Nad żywą ramką strony klienta i przewijanym telefonem zostaje kursor systemowy.
 
 ## Motion
 
@@ -169,19 +187,80 @@ animacja smug; reveal zamienia się w natychmiastowe pokazanie.
 ## Kontekst marki
 
 no-fuss to duet: Magda Nestorowicz (design i produkt) i Kuba Fedoszczak (kod). Strona mówi
-w liczbie mnogiej. Produkty własne pokazywane jako pierwsze kafle: OurMoney (wspólny budżet
-dla par, budowany razem) i AION MIND (aplikacja do journalingu z AI, budowana przez Magdę).
+w liczbie mnogiej i ma pozyskiwać klientów usługowych: case'y klientów to narzędzie sprzedaży
+(zadanie → co zrobiliśmy → efekt) z uczciwie oznaczoną rolą no-fuss.
 
-## Podstrona „O nas" (komponenty dodatkowe)
+- **OurMoney**: jedyny produkt własny duetu (wspólny budżet dla par, budowany razem).
+- **AION MIND**: etat Magdy (Product Designer od 01.2025, od czerwca 2026 Head of Operations),
+  **nie** produkt no-fuss. Komunikujemy „produkt, w którym Magda pracuje / który współtworzy”,
+  nigdy „produkt własny”. Rola no-fuss w faktach: „—”.
+- **Busy Bee**: design Magdy, kod Michał Gabryelewicz (Webflow, spoza no-fuss). Marki na taśmie
+  to klienci Busy Bee Film, nie no-fuss, i podpis to mówi.
+- **OTB Ventures**: design Magdy razem z Piotrem Chuchłą; kto kodował, brak danych (wiersz pominięty).
+- **Automation House**: design (Magda) i kod (Kuba), od discovery do wdrożenia.
+- **Sassy**: eksperyment i warsztat Magdy, nie zlecenie.
 
-- **Duet**: dwa panele na pełną wysokość; Magda zawsze `tone-light`, Kuba zawsze `tone-dark`
-  (design = jasny papier, kod = ciemny terminal), niezależnie od motywu. Hover rozszerza panel
-  (flex-grow 1 → 1.45), okrągła limonkowa odznaka „×" z obracającym się napisem jedzie po szwie.
-- **Marquee**: limonkowy pasek, display 800, pętla 22 s.
-- **Karta postaci**: lista `dl` w mono, obrys 1 px, wskaźnik „Zamieszanie 0%".
-- **Kto co robi**: tor 2 px z rombem w kolorze akcentu; pozycja rombu (`--v`) animuje się od środka.
-- **Oklej nas**: naklejki przeciągane wskaźnikiem, dotykiem i strzałkami z klawiatury.
-- Okrągłe kształty dozwolone tylko w warstwie zabawy (odznaka, naklejki), nie w UI.
+Nie wymyślamy liczb, wyników ani cytatów: efekt to fakt (np. działająca strona, zakres).
+
+## Podstrona „O nas" (v5)
+
+- **Hero**: jasne tło, nagłówek display w trzech liniach („Dwie osoby, / agenci AI, / zero zamieszania”)
+  i lead w kroju statement. Bez sceny 3D i bez duetu paneli (odznaka „×” z v4 usunięta).
+- **Trzy karty**: ciemny pas `#101318`, karty `#15181D` z obrysem 1 px: Magda (P1), Kuba (P2), agenci AI (P3,
+  limonkowe tło zdjęcia). Nagłówek h2 z chipem, zdjęcie (Kuba: prawdziwe, 1:1 przycięte do kadru; Magda: placeholder
+  w ukośne kreski), role jako tagi, bio,
+  lista `dl` w mono (termin | wartość w jednym wierszu) ze wskaźnikiem „Zamieszanie 0%”, linki social pod spodem.
+  Poniżej 900 px jedna kolumna, od 900 px dwie kolumny (w karcie zdjęcie z lewej), od 1200 px trzy karty
+  pionowe obok siebie ze zdjęciem 4:3.
+- **Marquee**: limonkowy pasek, rola `h2` wersalikami, separator „✦”, pętla 22 s; stoi przy reduced motion.
+- **Kto co robi**: nagłówek mono, wiersze z torem 2 px i rombem 18 px w akcencie; pozycja rombu (`--v`, 0% = Magda,
+  100% = Kuba) jedzie od środka po wejściu w viewport. Legenda nad torami: Magda z lewej, Kuba z prawej.
+- **Social i posty** (`#social`, `#posty`): nagłówek przyklejony po lewej (od 1024 px), lista wierszy po prawej
+  z obrysem 1 px między wierszami; hover i fokus dają wierszowi limonkowe tło. Posty w ciemnej tonacji,
+  metadane w mono 12 px. Linki-placeholdery wyglądają jak linki, ale są oznaczone jako niedostępne.
+- **Oklej nas** (`#play`): plansza z sześcioma naklejkami przeciąganymi wskaźnikiem, dotykiem i strzałkami z klawiatury.
+- Okrągłe kształty dozwolone tylko w warstwie zabawy (naklejki), nie w UI.
+
+## Komponenty case study
+
+Wspólny szkielet: ciemne hero (chip „Case study” + kicker mono, tytuł mega, lead statement, fakty w `dl` mono),
+sekcje naprzemiennie jasne i ciemne, blok CTA kontaktu, limonkowy blok „Następny projekt” na końcu.
+Fakty w hero zaczynają się zawsze od standardowych, w tej kolejności: „Rola no-fuss”, „Zakres”, „Czas”,
+„Klient” (jeśli jest), „Wynik” (tylko fakt, np. działająca strona z linkiem „↗”); potem fakty specyficzne
+(platformy, sklepy, stack). Ten sam `dl` mono-sm z `FactRow`, bez nowych rozmiarów. Produkty (OurMoney, AION MIND)
+mają sekcje z etykietą mono po lewej i tekstem lub układem tekst + wizualizacja; strony WWW mają sekcje „lite”
+(wiersz mono: etykieta po lewej, podpowiedź po prawej, pod spodem treść na pełną szerokość).
+
+- **CaseStage**: limonkowa scena zaraz pod hero, na pełną szerokość. Wariant z telefonami: trzy makiety obok siebie,
+  wystające poza dolną krawędź (środkowa wyżej). Wariant z obrazem: jedna grafika bez marginesów.
+- **LiveFrame**: limonkowa scena z ramką przeglądarki `#101318` (trzy kwadratowe kropki, pasek adresu mono 12 px
+  w pasku 48 px, bez zaokrągleń i cieni), 48 px oddechu dookoła. W środku żywa strona klienta w skali 1440×900 albo poster
+  z przyciskiem „Otwórz na żywo ↗” (OTB, Sassy, reduced motion, telefon i dotyk; na telefonie otwiera nową kartę).
+- **FilmStrip**: taśma filmowa na `#101318` z perforacją u góry i u dołu (paski 12 px w `#FCFCFB` na 60%),
+  klatki z podpisem mono pojawiającym się na hover, fokus i przy aktywnej klatce. Przeciąganie myszą,
+  natywny scroll ze snapem, autoprzewijanie co 3,2 s z przyciskiem „Pauza” / „Wznów” (mono) w prawym górnym rogu.
+- **PhoneScroller**: makieta telefonu (szerokość do 340 px) z ekranem 640 px i własnym scrollem; w środku cała strona
+  mobilna klienta. Fokus: obrys 2 px w akcencie z odstępem 4 px. Na dotyku ekran ma max ~56svh i przewija się
+  dopiero po tapnięciu (komunikat mono „Dotknij, aby przewijać”).
+- **DragBall**: rekonstrukcja hero otb.vc w polu 16:9 z paletą klienta (czerwień, granat, jasny błękit jako stałe
+  z legacy), dwa napisy w roli display 400, kula 22% szerokości z gradientem, za którą idą smugi tła.
+  Kula to jedyna krągłość w sekcji (warstwa zabawy), pole jest ostre.
+- **ToySwitcher**: lista zabawek po lewej (rola title, wiersze z obrysem 1 px, aktywna w kolorze tekstu ze strzałką
+  „→” i wcięciem 12 px, nieaktywne `--muted`, tag w mono), obraz 16:10 po prawej z przenikaniem 0,5 s i podpisem mono.
+- **SplitCalculator**: kafel `--tile`, trzy przyciski modeli z obrysem 1 px (aktywny na limonce), trzy suwaki
+  z torem 2 px i uchwytem-rombem w akcencie, pasek wyniku 72 px dzielony limonka / jasny z kwotami w roli title.
+- **JournalScreen**: ekran Dziennika AION MIND w makiecie telefonu. To rekonstrukcja cudzej aplikacji, więc ma
+  własną jasną paletę (`--jr-*`), zaokrąglenia i drobne rozmiary pikselowe ekranu; krój `var(--sans)`.
+- **Makiety telefonów**: ciemny korpus z obrysem `#3a3f47`, dynamic island i przyciskiem bocznym. Zaokrąglenia
+  korpusu i ekranu to ilustracja sprzętu, nie UI.
+- **W skrócie** (`CaseStory`, strony WWW): pierwsza sekcja „lite” po `LiveFrame`, `dl` z trzema wierszami
+  „Zadanie” (albo „Problem”, gdy wynika z danych) / „Co zrobiliśmy” / „Efekt”: termin mono, wartość w roli lead,
+  kreska 1 px nad wierszem (`FactRow`), od 1024 px trzy kolumny.
+- **Blok CTA** (każdy case, przed „Następny projekt”): sekcja w tonacji przeciwnej do ostatniej sekcji,
+  nagłówek w roli h2 („Chcesz podobny projekt?”), jedno zdanie w roli lead (`--muted`, do 40 znaków szerokości)
+  i `ContactCta` („Porozmawiajmy →” do `#kontakt`, „Umów rozmowę ↗”). Odsłania się jak sekcja (stagger 0–2).
+- **Fakty (strony WWW)**: wielkie wiersze `dl` (termin mono, wartość w roli h2, limonkowy chip technologii, link ze
+  strzałką „↗”) albo kafle 2 / 4 kolumny (Sassy).
 
 ## Komponenty dodane 2026-09-21
 
@@ -189,5 +268,5 @@ dla par, budowany razem) i AION MIND (aplikacja do journalingu z AI, budowana pr
   0% = litery napisu 3D w porządku, 100% = litery rozrzucone, obrócone i drgające. Domyślnie 0.
 - **Testimonial**: kafel `tile` lub limonkowy, cytat w kroju statement, cudzysłów 96 px w akcencie,
   podpis mono z kwadratowym awatarem 44 px. Układ 7 + 5, trzeci kafel z offsetem.
-- **E-mail**: klik kopiuje adres do schowka i na 1,8 s zamienia etykietę na „Skopiowano ✓";
-  bez Clipboard API działa jak zwykły `mailto:`.
+- **E-mail**: przy myszy (`pointer: fine`) klik kopiuje adres do schowka i na 1,8 s zamienia etykietę
+  na „Skopiowano ✓"; na dotyku i bez Clipboard API to zwykły `mailto:`.
