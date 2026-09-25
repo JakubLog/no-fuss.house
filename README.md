@@ -38,18 +38,20 @@ src/
   app/                 layout, not-found, sitemap, robots, manifest, OG, ikony
     page.tsx           /  (strona główna)
     o-nas/             /o-nas
+    wiedza/            /wiedza, zakładka „Wiedza” (warsztaty, prelekcje, meetupy: nadchodzące i minione)
     ourmoney/ aion-mind/ busy-bee/ automation-house/ otb/ sassy/   case studies (page.tsx [+ page.module.css])
   components/          barrel na warstwę: @/components/atoms | molecules | organisms | templates
     atoms/             Heading, Text, MonoLabel, Tag, Mark, Line, Fade, ScrambleLink, ArrowLink, Button, Logo, Icons,
                        GlowBackdrop, StickerLayer, PhotoPlaceholder, PartnerLogos, VisuallyHidden
-    molecules/         NavList, MetaRow, TileCaption, FactRow, CopyEmail, SocialLinks, FussSlider, PhoneFrame,
-                       CaseProse, PersonCard, WorkTile, TestimonialCard, ContactCta
+    molecules/         NavList, MetaRow, TileCaption, FactRow, CopyEmail, SocialLinks, PhoneFrame,
+                       CaseProse, PersonCard, WorkTile, TestimonialCard, ContactCta, EventTile
     organisms/         chrome (Preloader, Hud, GridOverlay, Cursor, SmoothScroll, Footer, Reveal),
-                       hero i 3D (HomeHero, HeroScene, NotFoundHero), strona główna, /o-nas, bloki case study
+                       hero i 3D (HomeHero, HeroScene, NotFoundHero, PageHero), strona główna (+ KnowledgeTeaser),
+                       /o-nas, /wiedza (EventsSection), bloki case study
     templates/         CaseStudyLayout (fakty standardowe, blok CTA; + CaseStudySection: wide / split / lite)
   content/             site.ts (firma, osoby, produkty), routes.ts (lista stron), navigation.ts, types.ts,
                        home.ts + home-jsonld.ts, process.ts („Jak pracujemy”), faq.ts (FAQ strony głównej),
-                       about.ts, cases/ (index.ts + jeden plik na case study)
+                       about.ts, events.ts + events-jsonld.ts (/wiedza i zajawka na /), cases/ (index.ts + jeden plik na case study)
   lib/
     seo/               buildMetadata, JSON-LD, adres strony, znak do ikon
     hooks/             useReducedMotion, usePointerFine, useReveal, useScramble, …
@@ -80,6 +82,7 @@ Jedno źródło prawdy: `src/content/routes.ts`. Stare adresy (`/no-fuss-v5`, `/
 | `/automation-house` | `case-automation-house-v1.html` |
 | `/otb` | `case-otb-v2.html` |
 | `/sassy` | `case-sassy-v2.html` |
+| `/wiedza` | — (nowa strona; wydarzenia w `src/content/events.ts`) |
 | 404 | `404.html` |
 
 ## legacy/

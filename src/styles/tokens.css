@@ -57,6 +57,7 @@
   /* ---------- przestrzeń i siatka ---------- */
   --unit: 8px;
   --gap: 8px;           /* column-gap i tile-gap: jedna siatka wszędzie */
+  --event-gap: 16px;    /* kafle wydarzeń (/wiedza, zajawka na /): luźniej niż --gap, 2 × --unit */
   --gutter: 16px;       /* desktop: 56px */
   --section-y: 72px;    /* desktop: 96px */
   --grid-columns: 12;

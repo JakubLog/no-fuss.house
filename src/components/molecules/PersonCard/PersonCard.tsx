@@ -27,7 +27,7 @@ export interface PersonCardProps {
   internalLinks?: readonly AboutInternalLink[];
   /** `aria-label` nawigacji z linkami, np. „Social media: Magda Nestorowicz”. */
   linksLabel: string;
-  /** `ai`: limonkowe tło zdjęcia (legacy `.sheet--ai`). */
+  /** `ai`: ciemny kadr bez kresek placeholdera, ilustracja w akcencie (`currentColor`). */
   variant?: "person" | "ai";
   className?: string;
 }
@@ -54,7 +54,7 @@ function FactValue({ value }: { value: AboutFactValue }) {
 }
 
 /**
- * Karta postaci (legacy `.sheet`): nagłówek z chipem, zdjęcie, role, bio,
+ * Karta postaci (legacy `.sheet`): nagłówek, chip („P1”…) w prawym górnym rogu karty, zdjęcie, role, bio,
  * lista `dl` w mono ze wskaźnikiem „Zamieszanie 0%”, linki. Obrys 1 px.
  * Linie i fade odsłania przodek z `is-in` (Reveal w organizmie). Server Component.
  */
@@ -74,9 +74,10 @@ export function PersonCard({
 }: PersonCardProps) {
   return (
     <article id={id} className={cx(styles.card, variant === "ai" && styles.ai, className)}>
-      <div className={styles.head}>
+      {/* Wiersz nagłówka; chip jest absolutny względem karty (nie wrappera), więc stoi w jej rogu. */}
+      <div>
         <Heading as="h2" variant="h2" lines={[name]} />
-        <Tag>{code}</Tag>
+        <Tag className={styles.code}>{code}</Tag>
       </div>
       <Fade className={styles.photo}>{photo}</Fade>
       <Fade as="p" index={1} className={styles.roles}>

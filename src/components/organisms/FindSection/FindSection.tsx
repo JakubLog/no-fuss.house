@@ -1,10 +1,11 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { Heading } from "@/components/atoms/Heading";
 import { MonoLabel } from "@/components/atoms/MonoLabel";
 import { Reveal } from "@/components/organisms/Reveal";
 import type { FindItem } from "@/content/about";
 import { cx } from "@/lib/cx";
-import { externalLinkProps } from "@/lib/href";
+import { externalLinkProps, isInternalHref } from "@/lib/href";
 import styles from "./FindSection.module.css";
 
 export interface FindSectionProps {
@@ -28,8 +29,11 @@ export const findCopyClassName: string = cx(styles.item, styles.copy);
 
 /**
  * Sekcja „nagłówek przyklejony po lewej + lista linków po prawej” (legacy `.find`):
- * `#social` i `#posty` na `/o-nas`. Wiersz na hover dostaje limonkowe tło.
- * Linki zewnętrzne `target=_blank rel=noopener` (`externalLinkProps` z `@/lib/href`).
+ * `#social`, `#posty` i `#wydarzenia` na `/o-nas`. Wiersz: tytuł (opcjonalnie z linią mono `kicker` nad nim)
+ * po lewej, `meta` po prawej bez łamania. Hover: limonkowe tło, przesuwa się tylko `meta`
+ * (zewnętrzne „↗” po skosie, wewnętrzne „→” w prawo).
+ * Linki zewnętrzne `target=_blank rel=noopener` (`externalLinkProps` z `@/lib/href`),
+ * wewnętrzne (`/…`) przez `next/link` w tej samej karcie.
  * Placeholdery (`href: null`) to nieklikalne wiersze (`<span>`, opacity .5, bez hovera)
  * z dopiskiem „wkrótce” dla czytników.
  * Server Component.
@@ -60,10 +64,20 @@ export function FindSection({ id, label, title, lead, note, ariaLabel, items, ex
         {items.map((item) => {
           const content = (
             <>
-              {item.metaMono ? <span className={styles.itemTitle}>{item.title}</span> : `${item.title} `}
-              <span className={item.metaMono ? "mono-sm" : undefined}>{item.meta}</span>
+              <span className={styles.itemTitle}>
+                {item.kicker ? <span className={cx("mono-sm", styles.kicker)}>{item.kicker}</span> : null}
+                {item.title}
+              </span>
+              <span className={cx(styles.meta, item.metaMono && "mono-sm")}>{item.meta}</span>
             </>
           );
+          if (item.href && isInternalHref(item.href)) {
+            return (
+              <Link key={item.href} href={item.href} className={cx(styles.item, styles.internal)}>
+                {content}
+              </Link>
+            );
+          }
           return item.href ? (
             <a key={item.title} className={styles.item} {...externalLinkProps(item.href)}>
               {content}

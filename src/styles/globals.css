@@ -30,9 +30,13 @@ body {
   overflow-x: hidden;
 }
 
-/* Preloader aktywny: blokada scrolla (zastępuje body.is-loading z legacy). */
-body:has([data-preloader="active"]) {
-  overflow: hidden;
+/* Preloader aktywny: blokada scrolla (zastępuje body.is-loading z legacy).
+   Tylko gdy ruch nie jest ograniczony — przy prefers-reduced-motion preloader ma
+   display: none (Preloader.module.css), więc nie trzeba blokować scrolla. */
+@media (prefers-reduced-motion: no-preference) {
+  body:has([data-preloader="active"]) {
+    overflow: hidden;
+  }
 }
 
 a {

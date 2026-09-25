@@ -1,62 +1,74 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
-import { StickerLayer } from "@/components/atoms/StickerLayer";
-import { FussSlider } from "@/components/molecules/FussSlider";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createFussStore, LazyHeroScene } from "@/components/organisms/HeroScene";
-import { cx } from "@/lib/cx";
+import { INTRO_REVEAL_DELAY_MS, useIntroDone } from "@/lib/hooks";
 import styles from "./HomeHero.module.css";
 
 export interface HomeHeroStageProps {
-  /** Blok roli i akapitów (serwerowy). */
-  top: ReactNode;
   /** Nagłówek h1 z leadem i CTA (serwerowy). */
   headline: ReactNode;
   /** Tekstowy odpowiednik kanwy (serwerowy, ukryty wizualnie). */
   sceneLabel?: ReactNode;
-  /** Klasa kanwy i fallbacku (np. ograniczenie do pierwszego ekranu na telefonie). */
-  sceneClassName?: string;
 }
 
 const TEXT = "no–fuss";
-const HINT = "Suwak miesza litery napisu no–fuss w tle. Zero oznacza porządek.";
+/** Czas układania napisu: zamieszanie 1 → 0 (scena dodatkowo wygładza i dociąga sprężynami). */
+const ASSEMBLE_MS = 1600;
+
+/** Ease-in-out (kubiczne): chwila chaosu, szybkie zejście liter, łagodne dosiadanie na miejsce. */
+const easeInOut = (p: number) => (p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2);
 
 /**
- * Część kliencka hero: scena 3D + fallback CSS + suwak, spięte sklepem zamieszania
- * (bez re-renderów w pętli). Kolejność DOM: kanwa, naklejki (pod siatką), potem treść
- * nad siatką: h1 z leadem i CTA, rola z akapitami, suwak na końcu (fokus i czytnik
- * dostają treść przed zabawką). Warstwy ustawia `z-index`, nie kolejność. Client Component.
+ * Część kliencka hero: kanwa 3D na całe hero, pusta ramka `.band` (od 768 px pas między h1
+ * a leadem z CTA, w który scena wpisuje napis; na telefonie tylko miejsce na fallback CSS),
+ * potem treść nad siatką. Warstwy ustawia `z-index`, nie kolejność.
+ *
+ * Wejście: litery startują rozrzucone (zamieszanie 1) i razem z reveal hero (intro +
+ * `INTRO_REVEAL_DELAY_MS`) układają się w napis. Przy nawigacji klienckiej to samo, gdy scena
+ * jest gotowa. Reduced motion: napis od początku ułożony. Client Component.
  */
-export function HomeHeroStage({ top, headline, sceneLabel, sceneClassName }: HomeHeroStageProps) {
-  const [fuss] = useState(() => createFussStore(0));
+export function HomeHeroStage({ headline, sceneLabel }: HomeHeroStageProps) {
   const [unsupported, setUnsupported] = useState(false);
+  const [sceneReady, setSceneReady] = useState(false);
+  const introDone = useIntroDone();
+  const band = useRef<HTMLDivElement>(null);
+  /* Sklep żyje tylko w przeglądarce (scena bez SSR), więc `window` w inicjalizatorze nie zmienia markupu. */
+  const [fuss] = useState(() =>
+    createFussStore(typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 1),
+  );
+
+  useEffect(() => {
+    if (!sceneReady || !introDone) return;
+    const from = fuss.get();
+    if (from === 0) return;
+    const start = performance.now() + INTRO_REVEAL_DELAY_MS;
+    let raf = 0;
+    const step = (now: number) => {
+      const p = Math.min(1, Math.max(0, (now - start) / ASSEMBLE_MS));
+      fuss.set(from * (1 - easeInOut(p)));
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [sceneReady, introDone, fuss]);
 
   return (
     <>
-      {unsupported ? (
-        <div className={cx(styles.fallback, sceneClassName)} aria-hidden="true">
-          {TEXT}
-        </div>
-      ) : (
+      {unsupported ? null : (
         <LazyHeroScene
           text={TEXT}
           fuss={fuss}
-          className={sceneClassName}
+          frame={band}
+          onReady={() => setSceneReady(true)}
           onUnsupported={() => setUnsupported(true)}
         />
       )}
+      <div ref={band} className={styles.band} aria-hidden="true">
+        {unsupported ? <div className={styles.fallback}>{TEXT}</div> : null}
+      </div>
       {sceneLabel}
-      <StickerLayer />
       {headline}
-      {top}
-      {unsupported ? null : (
-        <FussSlider
-          className={cx(styles.fuss, "fade")}
-          style={{ "--i": 8 }}
-          onValueChange={fuss.set}
-          hint={HINT}
-        />
-      )}
     </>
   );
 }

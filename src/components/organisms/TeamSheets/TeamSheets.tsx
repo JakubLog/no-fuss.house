@@ -12,13 +12,13 @@ import styles from "./TeamSheets.module.css";
  */
 const PHOTO_SIZES = "(min-width: 1200px) 33vw, (min-width: 900px) 17vw, 100vw";
 
-/** Ilustracja robota z karty agentów AI, 1:1 z legacy. */
+/** Ilustracja robota z karty agentów AI (kształt 1:1 z legacy), kolor z `currentColor` kadru. */
 function AgentIllustration() {
   return (
     <svg
       viewBox="0 0 120 120"
       fill="none"
-      stroke="#101318"
+      stroke="currentColor"
       strokeWidth="4"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -26,8 +26,8 @@ function AgentIllustration() {
     >
       <rect x="18" y="34" width="84" height="62" rx="14" />
       <path d="M60 34V18M48 18h24" />
-      <circle cx="44" cy="62" r="5" fill="#101318" stroke="none" />
-      <circle cx="76" cy="62" r="5" fill="#101318" stroke="none" />
+      <circle cx="44" cy="62" r="5" fill="currentColor" stroke="none" />
+      <circle cx="76" cy="62" r="5" fill="currentColor" stroke="none" />
       <path d="M44 80h32M8 56v18M112 56v18" />
     </svg>
   );
@@ -35,8 +35,10 @@ function AgentIllustration() {
 
 /**
  * Karty postaci (legacy `.sheets`): Magda, Kuba (dane z `site.ts` + `about.ts`)
- * i agenci AI. Kuba ma zdjęcie (`card.photo`), reszta placeholder. Ciemne tło, karty `--shade-900`. Każda karta odsłania się osobno.
- * Server Component.
+ * i agenci AI. Osoby mają zdjęcia (`card.photo`; bez niego placeholder), agenci ilustrację.
+ * Ciemne tło, karty `--shade-900`. Od 900 px karty w rzędzie dzielą wiersze przez subgrid, więc
+ * zdjęcia, role, bio i linki stoją równo mimo różnej liczby linii w nazwie. Każda karta odsłania
+ * się osobno. Server Component.
  */
 export function TeamSheets() {
   return (
@@ -58,6 +60,7 @@ export function TeamSheets() {
                     alt={card.photo.alt}
                     sizes={PHOTO_SIZES}
                     className={styles.photo}
+                    style={{ objectPosition: card.photo.focus }}
                   />
                 ) : (
                   <PhotoPlaceholder label={card.photoLabel} />
@@ -68,6 +71,7 @@ export function TeamSheets() {
               facts={publishedFacts(card.facts)}
               social={person.social}
               linksLabel={`Social media: ${person.name}`}
+              className={styles.card}
             />
           </Reveal>
         );
@@ -79,7 +83,7 @@ export function TeamSheets() {
           code={aiCard.code}
           variant="ai"
           photo={
-            <PhotoPlaceholder tone="lime" ariaLabel={aiCard.photoLabel}>
+            <PhotoPlaceholder ariaLabel={aiCard.photoLabel}>
               <AgentIllustration />
             </PhotoPlaceholder>
           }
@@ -88,6 +92,7 @@ export function TeamSheets() {
           facts={publishedFacts(aiCard.facts)}
           internalLinks={aiCard.links}
           linksLabel={aiCard.linksLabel}
+          className={styles.card}
         />
       </Reveal>
     </div>

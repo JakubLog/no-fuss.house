@@ -11,15 +11,10 @@ import type { CaseStudyImage, Service, Testimonial } from "./types";
 
 /* ---------- #hero ---------- */
 
-/**
- * Treść hero poza h1 i rolą (reszta copy w `HomeHero`). Zmiany wobec legacy pod klientów
- * usługowych (audyt B2B, decyzja Kuby).
- */
+/** Treść hero poza h1 (reszta copy w `HomeHero`). Zmiana wobec legacy pod klientów usługowych (audyt B2B, decyzja Kuby). */
 export const hero = {
   /** Nowe copy (spoza legacy): dla kogo i co, zdanie pod h1. */
-  lead: "Aplikacje mobilne, strony i produkty z AI dla firm, które chcą wydać produkt, a nie zarządzać agencją.",
-  /** Akapit o duecie: akcent na pracę dla klientów, OurMoney jako drugorzędna wzmianka. */
-  duo: "no-fuss to duo: Magda Nestorowicz i Kuba Fedoszczak. Magda odpowiada za design i produkt, Kuba za kod. Pracujemy dla klientów i rozwijamy własne produkty, m.in. OurMoney.",
+  lead: "Aplikacje mobilne, strony i produkty z AI dla firm, które chcą wydać produkt, a nie zarządzać agencją.",
 } as const;
 
 /* ---------- #o-nas ---------- */
@@ -27,14 +22,11 @@ export const hero = {
 export const about = {
   /** Etykieta sekcji dla czytników (legacy nie ma nagłówka w tej sekcji). */
   heading: "O nas",
-  /** Pierwszy statement, linia po linii (reveal ze staggerem). */
-  statementLines: [
-    "Projektujemy i kodujemy produkty,",
-    "które załatwiają sprawę",
-    "bez zbędnego zamieszania.",
-  ],
-  /** Placeholder zdjęcia 1:1 z legacy (zdjęcia jeszcze nie ma). */
-  photoPlaceholder: "Zdjęcie Magdy i Kuby 1:1",
+  /**
+   * Pierwszy statement, linia po linii (reveal ze staggerem). Podział pod `max-width: 22ch`: przy dwóch liniach
+   * „produkty,” spadało samo do nowej linii. „Zamieszanie” zostaje w h1 i stopce.
+   */
+  statementLines: ["Projektujemy i kodujemy", "produkty, które", "załatwiają sprawę."],
   aboutLink: { label: "Poznaj nas", href: "/o-nas" },
   ourMoneyLink: { label: "OurMoney", href: "https://ourmoney.pl" },
   clientsLabel: "Współpracujemy z",
@@ -134,8 +126,6 @@ export const work = {
 
 export const servicesSection = {
   label: "Co robimy",
-  /** Licznik = liczba usług (legacy miał „[01]–[06]” przy pięciu usługach). */
-  counter: "01–05",
   items: [
     {
       no: "01",

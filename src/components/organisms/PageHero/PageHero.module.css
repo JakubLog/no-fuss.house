@@ -1,4 +1,4 @@
-/* Legacy `.team-hero` (o-nas-v5). */
+/* Hero podstron: legacy `.team-hero` (o-nas-v5). */
 .hero {
   position: relative;
   padding: calc(var(--section-y) + 40px) var(--gutter) var(--section-y);
@@ -33,5 +33,10 @@
   .lead {
     grid-column: 9 / span 4;
     align-self: end;
+  }
+
+  /* CTA pod leadem, w jego kolumnie (odstęp = row-gap 32 px). */
+  .cta {
+    grid-column: 9 / span 4;
   }
 }

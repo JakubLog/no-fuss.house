@@ -53,11 +53,13 @@ export const automationHouse = {
 
 export const automationHouseNext = { href: automationHouse.next, title: "OTB Ventures" } as const;
 
+/** Żywa strona w ramce pod hero, ładowana po kliknięciu (poster + „Otwórz na żywo ↗”). */
 export const automationHouseLive = {
   src: AUTOMATION_HOUSE_URL,
   title: "Automation House, żywa strona",
-  urlLabel: "www.automation.house · przewijaj i klikaj",
+  urlLabel: "www.automation.house",
   poster: automationHouse.cover,
+  loadAriaLabel: "Załaduj żywą stronę automation.house",
 } as const;
 
 /** 01 / Proces: rebranding, discovery → AI-ready (1:1 z legacy). */

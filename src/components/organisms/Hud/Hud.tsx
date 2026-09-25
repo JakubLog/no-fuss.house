@@ -13,7 +13,7 @@ import styles from "./Hud.module.css";
  * Client Component (pathname).
  *
  * Poniżej 768 px nawigacja przechodzi na mono 12 px z odstępem 8 px (4 linki
- * mieszczą się od ~340 px, węższe zawijają).
+ * mieszczą się od ~340 px, węższe zawijają; „Wiedza” znika poniżej 640 px).
  */
 export function Hud() {
   const pathname = usePathname();

@@ -1,8 +1,12 @@
-/* Legacy `.clients__list svg`: wysokość 28 px, szerokość z proporcji viewBox. */
+/*
+ * Wysokość optyczna: `--logo-size` (domyślnie 28 px, legacy) × `--logo-optical` z proporcji viewBox
+ * (to samo pole powierzchni dla każdego znaku), szerokość z proporcji viewBox.
+ */
 .logo {
   display: block;
+  flex: none;
   max-width: 100%;
-  height: 28px;
+  height: calc(var(--logo-size, 28px) * var(--logo-optical, 1));
   width: auto;
 }
 

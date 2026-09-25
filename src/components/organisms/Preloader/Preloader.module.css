@@ -28,8 +28,9 @@
   transform-origin: left;
 }
 
+/* Bez kurtyny od pierwszej klatki (SSR, przed hydratacją); `markIntroDone()` idzie w efekcie. */
 @media (prefers-reduced-motion: reduce) {
   .preloader {
-    transition: none;
+    display: none;
   }
 }

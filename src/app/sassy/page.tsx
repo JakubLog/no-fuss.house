@@ -66,7 +66,7 @@ export default function SassyPage() {
         cta={{ tone: "light" }}
         next={sassyNext}
       >
-        <LiveFrame {...sassyLive} load="click" />
+        <LiveFrame {...sassyLive} />
 
         <CaseStudySection layout="lite" className={styles.csLite} label="01 / W skrócie" hint="Eksperyment">
           <CaseStory story={sassy.story} />

@@ -22,11 +22,20 @@
 }
 
 @media (min-width: 768px) {
+  /* Tablet (768–1023): pozostałe kafle w dwóch równych kolumnach (6 + 6), bo w siatce 3/12
+     miałyby ok. 174 px, a tag i wiersz mono by się nie mieściły. */
+  .grid > li {
+    grid-column: span 6;
+  }
+
   /* Duży kafel: 8 kolumn dosunięty do prawej. */
   .grid > .xl {
     grid-column: 5 / span 8;
   }
+}
 
+/* Asymetria par i trójek z legacy dopiero od 1024 px. */
+@media (min-width: 1024px) {
   /* Para 5 + 5: pierwszy od lewej, drugi od kolumny 7. */
   .grid > .l {
     grid-column: span 5;

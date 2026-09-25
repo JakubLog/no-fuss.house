@@ -36,6 +36,11 @@ export interface CaseStudySectionLiteProps extends CaseStudySectionBase {
   layout: "lite";
   /** Podpowiedź po prawej w wierszu nagłówka, np. „Przeciągnij taśmę”. */
   hint?: ReactNode;
+  /**
+   * Wersja `hint` dla urządzeń bez hovera (`@media (hover: none)`, sam CSS), np. gdy `hint`
+   * każe najechać kursorem. Bez niej `hint` jest wszędzie ten sam.
+   */
+  hintTouch?: ReactNode;
   /** Treść od krawędzi do krawędzi (bez bocznego paddingu sekcji), np. taśma filmowa. */
   bleed?: boolean;
   children: ReactNode;
@@ -65,7 +70,14 @@ export function CaseStudySection(props: CaseStudySectionProps) {
           <h2 className={cx("mono", "fade", styles.liteLabel)}>{label}</h2>
           {props.hint ? (
             <p className="fade" style={{ "--i": 1 }}>
-              {props.hint}
+              {props.hintTouch ? (
+                <>
+                  <span className={styles.hintHover}>{props.hint}</span>
+                  <span className={styles.hintTouch}>{props.hintTouch}</span>
+                </>
+              ) : (
+                props.hint
+              )}
             </p>
           ) : null}
         </div>

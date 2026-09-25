@@ -16,16 +16,10 @@ export interface LiveFrameProps {
   src: string;
   /** Opisowy `title` ramki, np. „Busy Bee Film, żywa strona”. */
   title: string;
-  /** Tekst w pasku adresu, np. „www.busybeefilm.pl · przewijaj i klikaj”. */
+  /** Tekst w pasku adresu, np. „www.busybeefilm.pl”. */
   urlLabel: string;
   /** Zrzut strony pod ramką: placeholder przed załadowaniem i fallback. */
   poster: Required<CaseStudyImage>;
-  /**
-   * `auto` (domyślnie): ramka ładuje się sama (legacy Busy Bee / AH, `loading="lazy"`).
-   * `click`: najpierw poster i przycisk (legacy `.live`, OTB / Sassy).
-   * Przy `prefers-reduced-motion`, poniżej 768 px i przy `pointer: coarse` zawsze `click`.
-   */
-  load?: "auto" | "click";
   /** Etykieta przycisku ładowania (legacy „Otwórz na żywo ↗”). */
   loadLabel?: string;
   /** `aria-label` przycisku, np. „Załaduj żywą stronę otb.vc”. */
@@ -42,10 +36,10 @@ export interface LiveFrameProps {
  *   formularzy i nawigacji `top`.
  * - Pasek adresu jest linkiem „Otwórz stronę” (nowa karta): fallback, gdy strona
  *   blokuje osadzanie albo ramka się nie ładuje.
- * - Reduced motion, poniżej 768 px i `pointer: coarse`: ramka nie ładuje się sama
- *   (poster + przycisk). Poniżej 768 px przycisk jest linkiem do strony w nowej karcie
- *   (desktopowy układ w skali ~0,25 jest nieczytelny).
- * - SSR renderuje poster z przyciskiem; tryb (`iframe` / link) ustala się po hydratacji.
+ * - Ramka nigdy nie ładuje się sama (żywa strona przechwytuje kółko i Tab): najpierw poster
+ *   i przycisk (legacy `.live`), `<iframe>` dopiero po kliknięciu. Poniżej 768 px przycisk
+ *   jest linkiem do strony w nowej karcie (desktopowy układ w skali ~0,25 jest nieczytelny).
+ * - SSR renderuje poster z przyciskiem; tryb (przycisk / link) ustala się po hydratacji.
  * - Żywa ramka ma `data-native-cursor`: nad nią systemowy kursor zamiast własnego.
  *
  * Client Component (własny `Reveal`, stawiany bezpośrednio pod hero).
@@ -55,19 +49,16 @@ export function LiveFrame({
   title,
   urlLabel,
   poster,
-  load = "auto",
   loadLabel = "Otwórz na żywo ↗",
   loadAriaLabel,
   className,
 }: LiveFrameProps) {
-  /* Serwer i hydratacja: `true` (bez iframe w HTML), potem prawdziwa wartość. */
-  const noAutoLoad = useMediaQuery("(prefers-reduced-motion: reduce), (max-width: 767px), (pointer: coarse)", true);
   /* Wąski ekran: zamiast ładować ramkę otwieramy stronę w nowej karcie. Serwer: `false` (przycisk). */
   const narrow = useMediaQuery("(max-width: 767px)");
-  const [clicked, setClicked] = useState(false);
+  /* Żywa ramka dopiero po kliknięciu przycisku. */
+  const [isLive, setIsLive] = useState(false);
   const viewportRef = useRef<HTMLDivElement>(null);
 
-  const isLive = clicked || (load === "auto" && !noAutoLoad);
   const host = new URL(src).host.replace(/^www\./, "");
 
   /* Skala: szerokość okna ramki / 1440 (legacy `fit()` na resize/load). */
@@ -122,7 +113,7 @@ export function LiveFrame({
               <span className="mono">{loadLabel}</span>
             </a>
           ) : (
-            <button type="button" className={styles.load} aria-label={loadAriaLabel} onClick={() => setClicked(true)}>
+            <button type="button" className={styles.load} aria-label={loadAriaLabel} onClick={() => setIsLive(true)}>
               <span className="mono">{loadLabel}</span>
             </button>
           )}

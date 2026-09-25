@@ -6,6 +6,7 @@
   flex-direction: column;
   justify-content: center;
   padding: var(--section-y) var(--gutter);
+  background: var(--hero-sky);
   color: #FFFFFF;
   /* Zawsze ciemna: tokeny tonacji jak w tone-dark (np. focus ring = --ink). */
   --ink: #FFFFFF;
@@ -28,6 +29,41 @@
 .l2,
 .l3 {
   grid-column: 1 / -1;
+}
+
+/*
+ * „zamieszania”: limonka wjeżdża od prawej do lewej na samym końcu. Słowo ma własny Reveal: `.line` je
+ * przycina, więc `is-in` przychodzi dopiero, gdy wysuwająca się linia jest w kadrze, a opóźnienie
+ * `--reveal-duration` czeka, aż linia dojedzie. Tło to `::before` (scaleX od prawej; z niego kursor czyta
+ * limonkę), kolor liter zmienia się na tej samej krawędzi: gradient `--ink` | `--on-accent` przycięty do
+ * tekstu, przesuwany w tym samym czasie i easingu. Nadpisuje tło i kolor `Mark` (wyższa specyficzność).
+ */
+.word .mark {
+  position: relative;
+  background: linear-gradient(to right, var(--ink) 50%, var(--on-accent) 50%) 0 0 / 200% 100% no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: background-position var(--reveal-duration) var(--ease) var(--reveal-duration);
+}
+
+.word .mark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--reveal-duration) var(--ease) var(--reveal-duration);
+}
+
+.word:global(.is-in) .mark {
+  background-position: 100% 0;
+}
+
+.word:global(.is-in) .mark::before {
+  transform: none;
 }
 
 /* Kalendarz + notka pod nagłówkiem, w kolumnie pierwszej linii. */
@@ -75,5 +111,17 @@
 
   .l3 {
     grid-column: 4 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word .mark {
+    background-position: 100% 0;
+    transition: none;
+  }
+
+  .word .mark::before {
+    transform: none;
+    transition: none;
   }
 }

@@ -5,6 +5,11 @@
   margin-top: 8px;
 }
 
+/* Rok ze strzałką zawsze w jednej linii; zawija się tylko nazwa. */
+.meta {
+  white-space: nowrap;
+}
+
 .arrow {
   display: inline-block;
   transition: transform 0.4s var(--ease);

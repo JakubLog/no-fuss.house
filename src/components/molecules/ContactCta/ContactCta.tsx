@@ -20,8 +20,7 @@ export const CONTACT_CTA_LABELS = {
 /**
  * CTA kontaktu: przycisk accent „Porozmawiajmy →” do stopki `#kontakt` i ghost
  * „Umów rozmowę ↗” do `site.contact.calendarUrl` (nowa karta). Bez adresu kalendarza
- * drugi przycisk jest linkiem-placeholderem (nieklikalny, opacity .5, „wkrótce” dla czytników).
- * Dane z `site.contact`. Server Component.
+ * drugiego przycisku nie ma (zamiast wyszarzonego placeholdera). Dane z `site.contact`. Server Component.
  */
 export function ContactCta({ index, note = false, className }: ContactCtaProps) {
   const { calendarUrl, responseNote } = site.contact;
@@ -34,9 +33,11 @@ export function ContactCta({ index, note = false, className }: ContactCtaProps) 
     >
       <div className={styles.actions}>
         <Button href="#kontakt">{CONTACT_CTA_LABELS.primary}</Button>
-        <Button href={calendarUrl} variant="ghost" external data-cursor="calendar">
-          {CONTACT_CTA_LABELS.calendar}
-        </Button>
+        {calendarUrl ? (
+          <Button href={calendarUrl} variant="ghost" external data-cursor="calendar">
+            {CONTACT_CTA_LABELS.calendar}
+          </Button>
+        ) : null}
       </div>
       {showNote ? <p className={cx("mono-sm", styles.note)}>{responseNote}</p> : null}
     </div>

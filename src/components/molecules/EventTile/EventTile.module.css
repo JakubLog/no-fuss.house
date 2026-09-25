@@ -1,0 +1,237 @@
+/* Kafel wydarzenia (/wiedza, zajawka na /). Nadchodzące: kafel `--tile` jak kroki `ProcessSection`. Minione: jak kafel realizacji. */
+
+/* ---------- nadchodzące ---------- */
+.upcoming {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  height: 100%;
+  padding: 24px 20px;
+  background: var(--tile);
+  color: var(--tile-ink);
+}
+
+/* Wiersz nad datą: tag formatu po lewej, logo wydarzenia (`logo`, przezroczyste tło) w prawym górnym rogu. */
+.top {
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.logo {
+  display: block;
+  width: auto;
+  height: 40px;
+}
+
+.when {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Dzień: `position` + `isolation` dla limonkowego `::before` pod tekstem (hover niżej);
+   `flex-start`, żeby tło obejmowało sam dzień, nie szerokość wiersza mono pod nim. */
+.day {
+  position: relative;
+  isolation: isolate;
+  align-self: flex-start;
+  font: var(--t-display);
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+  transition:
+    color 0.4s var(--ease),
+    transform 0.4s var(--ease);
+}
+
+/* Tło poza przepływem: 12 px z obu stron dnia, po wcięciu 12 px zaczyna się w linii treści kafla. */
+.day::before {
+  content: "";
+  position: absolute;
+  inset: 0 -12px;
+  z-index: -1;
+  transition: background-color 0.4s var(--ease);
+}
+
+.title {
+  font: var(--t-title);
+  font-weight: 700;
+}
+
+.text {
+  margin-top: 8px;
+  color: var(--muted);
+  max-width: 44ch;
+}
+
+.facts {
+  align-self: stretch;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--gap);
+}
+
+/* Przycisk na dole kafla, także gdy sąsiedni kafel w wierszu ma dłuższy opis. */
+.cta {
+  margin-top: auto;
+}
+
+/* ---------- minione ---------- */
+.past {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Maska zdjęcia: skala na hover zostaje w kadrze 16:10 (jak `.media` w kaflu realizacji). */
+.media {
+  position: relative;
+  align-self: stretch;
+  overflow: hidden;
+}
+
+/* Z logo: wewnętrzny cień od górnej krawędzi (nad zdjęciem, pod logo i tagiem), żeby jasne logo było czytelne
+   także na jasnym zdjęciu. Na `.media`, więc nie skaluje się razem ze zdjęciem. */
+.shade::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 48px 40px -24px rgb(0 0 0 / 0.6);
+  pointer-events: none;
+}
+
+/* Tag w prawym górnym rogu zdjęcia (jak `.tag` w kaflu realizacji). */
+.tag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}
+
+/* Logo (`logo`) w lewym górnym rogu zdjęcia, naprzeciw tagu, bez tła: jasne logo wprost na zdjęciu,
+   7 px od góry i 10 px od lewej. */
+.badge {
+  position: absolute;
+  top: 7px;
+  left: 10px;
+  z-index: 1;
+}
+
+.badgeLogo {
+  display: block;
+  width: auto;
+  height: 16px;
+}
+
+/* Hover: powolne powiększenie do 1.2 w masce 16:10 (2 s `ease-out`, łagodniej niż `--ease`, które większość ruchu
+   robi na starcie). */
+.photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  transition: scale 2s ease-out;
+}
+
+/* `PhotoPlaceholder` sam centruje podpis; tu tylko proporcje. */
+.placeholder {
+  aspect-ratio: 16 / 10;
+  transition: scale 2s ease-out;
+}
+
+.meta {
+  align-self: stretch;
+  margin-bottom: 16px;
+}
+
+.past .title {
+  max-width: 24ch;
+}
+
+.people {
+  margin-top: 16px;
+  color: var(--muted);
+}
+
+.link {
+  margin-top: 8px;
+  padding: 4px 0;
+}
+
+@media (min-width: 1024px) {
+  .upcoming {
+    padding: 32px 28px;
+  }
+
+  .logo {
+    height: 48px;
+  }
+}
+
+/*
+ * Hover kafla: kafel nie jest linkiem, więc bez strzałki i bez zmiany kursora (strzałki mają tylko
+ * `ArrowLink` / `Button` w środku, z własnym hoverem). Reaguje główny obraz kafla: nadchodzące — dzień
+ * dostaje limonkowe tło (`--on-accent`, 15,44:1) i wcięcie 12 px jak wiersze FAQ / usług; minione — zdjęcie
+ * powoli powiększa się do 1.2 w masce. Tylko przy prawdziwym hoverze (dotyk bez „przyklejenia”).
+ * Kafel ma `.fade` (reveal), więc animujemy dzieci, nie kafel.
+ */
+@media (hover: hover) {
+  .upcoming:hover .day {
+    color: var(--on-accent);
+    transform: translateX(12px);
+  }
+
+  .upcoming:hover .day::before {
+    background-color: var(--accent);
+  }
+
+  .past:hover :is(.photo, .placeholder) {
+    scale: 1.2;
+  }
+}
+
+/* Klawiatura: ten sam stan, gdy fokus z klawiatury stoi na linku / przycisku w kaflu (tap na dotyku go nie włącza). */
+.upcoming:has(:focus-visible) .day {
+  color: var(--on-accent);
+  transform: translateX(12px);
+}
+
+.upcoming:has(:focus-visible) .day::before {
+  background-color: var(--accent);
+}
+
+.past:has(:focus-visible) :is(.photo, .placeholder) {
+  scale: 1.2;
+}
+
+/* Bez ruchu: limonka pojawia się od razu, dzień bez wcięcia (tło i tak mieści się w paddingu kafla),
+   zdjęcie bez skali. Selektory z `:has()` osobno od `:hover`: w starszym Firefoksie niewspierany
+   `:has()` unieważniłby całą zgrupowaną regułę. */
+@media (prefers-reduced-motion: reduce) {
+  .day,
+  .day::before,
+  .photo,
+  .placeholder {
+    transition: none;
+  }
+
+  .upcoming:hover .day {
+    transform: none;
+  }
+
+  .upcoming:has(:focus-visible) .day {
+    transform: none;
+  }
+
+  .past:hover :is(.photo, .placeholder) {
+    scale: none;
+  }
+
+  .past:has(:focus-visible) :is(.photo, .placeholder) {
+    scale: none;
+  }
+}

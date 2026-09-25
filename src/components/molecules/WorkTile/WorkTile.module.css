@@ -34,7 +34,12 @@
   transition: scale 0.9s var(--ease);
 }
 
-.tile:hover .img,
+@media (hover: hover) {
+  .tile:hover .img {
+    scale: 1.03;
+  }
+}
+
 .tile:focus-visible .img {
   scale: 1.03;
 }
@@ -113,26 +118,46 @@
   rotate: 8deg;
 }
 
-.tile:hover .phone1,
-.tile:focus-visible .phone1 {
-  translate: -3% -4%;
-  rotate: -11deg;
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .tile:hover .phone1 {
+    translate: -3% -4%;
+    rotate: -11deg;
+  }
+
+  .tile:hover .phone2 {
+    translate: 0 -6%;
+  }
+
+  .tile:hover .phone3 {
+    translate: 3% -4%;
+    rotate: 11deg;
+  }
 }
 
-.tile:hover .phone2,
-.tile:focus-visible .phone2 {
-  translate: 0 -6%;
-}
+@media (prefers-reduced-motion: no-preference) {
+  .tile:focus-visible .phone1 {
+    translate: -3% -4%;
+    rotate: -11deg;
+  }
 
-.tile:hover .phone3,
-.tile:focus-visible .phone3 {
-  translate: 3% -4%;
-  rotate: 11deg;
+  .tile:focus-visible .phone2 {
+    translate: 0 -6%;
+  }
+
+  .tile:focus-visible .phone3 {
+    translate: 3% -4%;
+    rotate: 11deg;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .img,
   .phone {
     transition: none;
+  }
+
+  .tile:hover .img,
+  .tile:focus-visible .img {
+    scale: none;
   }
 }

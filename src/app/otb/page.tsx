@@ -53,7 +53,7 @@ export default function OtbPage() {
         cta={{ tone: "dark" }}
         next={otbNext}
       >
-        <LiveFrame {...otbLive} load="click" />
+        <LiveFrame {...otbLive} />
 
         <CaseStudySection layout="lite" className={styles.csLite} label="01 / W skrócie">
           <CaseStory story={otb.story} />

@@ -8,21 +8,21 @@ export interface ProcessSectionProps {
   id: string;
   /** Nagłówek `h2` w mono, np. „Jak pracujemy”. */
   label: string;
-  /** Licznik obok nagłówka, np. „01–04” (dla czytników ukryty). */
-  counter?: string;
   steps: readonly ProcessSectionStep[];
   tone?: "light" | "dark";
   className?: string;
 }
 
 /**
- * Sekcja procesu współpracy (strona główna, `#proces`): nagłówek mono z licznikiem i kroki
- * w `<ol>` jako ciemne kafle (numer w roli display, tytuł `h3` w roli title, opis zawsze
- * widoczny). Siatka 1 → 2 (640 px) → 4 kolumny (1024 px). W odróżnieniu od `ProcessSteps`
- * (case Automation House) opisy nie chowają się za hoverem i nic nie jest fokusowalne.
- * Server Component, dane z propsów.
+ * Sekcja procesu współpracy (strona główna, `#proces`): nagłówek mono (jedyny reveal w sekcji)
+ * i kroki w `<ol>` jako lekkie kolumny jak `FactRow`: kreska 1 px nad krokiem, numer mono
+ * (jedyna numeracja na stronie głównej, bo to faktyczna kolejność), tytuł `h3` w roli title,
+ * opis `--muted`. Siatka 1 → 2 (640 px) → 4 kolumny (1024 px); kroki dzielą wiersze przez subgrid,
+ * więc numery, tytuły i opisy stoją w rzędzie w jednej linii. Hover (tylko myszą): limonkowe tło kolumny
+ * i treść wcięta o 12 px, jak w `FaqSection`. W odróżnieniu od `ProcessSteps` (case Automation House)
+ * nic nie jest fokusowalne ani ukryte za hoverem. Server Component, dane z propsów.
  */
-export function ProcessSection({ id, label, counter, steps, tone = "light", className }: ProcessSectionProps) {
+export function ProcessSection({ id, label, steps, tone = "light", className }: ProcessSectionProps) {
   const headingId = `${id}-heading`;
 
   return (
@@ -35,25 +35,18 @@ export function ProcessSection({ id, label, counter, steps, tone = "light", clas
         <h2 id={headingId} className={cx("fade", styles.label)}>
           {label}
         </h2>
-        {counter ? (
-          <span className="fade" style={{ "--i": 1 }} aria-hidden="true">
-            {counter}
-          </span>
-        ) : null}
       </Reveal>
-      <Reveal as="ol" className={styles.steps}>
-        {steps.map((step, i) => (
-          <li key={step.no} className={cx("fade", "tone-dark", styles.step)} style={i ? { "--i": i } : undefined}>
-            <span className={styles.no} aria-hidden="true">
+      <ol className={styles.steps}>
+        {steps.map((step) => (
+          <li key={step.no} className={styles.step}>
+            <span className={cx("mono", styles.no)} aria-hidden="true">
               {step.no}
             </span>
-            <div>
-              <h3 className={styles.title}>{step.title}</h3>
-              <p className={styles.text}>{step.text}</p>
-            </div>
+            <h3 className={styles.title}>{step.title}</h3>
+            <p className={styles.text}>{step.text}</p>
           </li>
         ))}
-      </Reveal>
+      </ol>
     </section>
   );
 }

@@ -62,10 +62,3 @@
   outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
-
-.caption {
-  position: absolute;
-  left: 16px;
-  bottom: 16px;
-  pointer-events: none;
-}

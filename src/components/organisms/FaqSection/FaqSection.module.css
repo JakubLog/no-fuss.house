@@ -1,7 +1,5 @@
-/* FAQ (strona główna, `#faq`): siatka jak `ServicesList`, wiersze `<details>` z obrysem 1 px. */
+/* FAQ (strona główna, `#faq`): siatka jak `ServicesList`, wiersze `<details>` z obrysem 1 px, bez numerów. */
 .head {
-  display: flex;
-  justify-content: space-between;
   margin-bottom: 48px;
 }
 
@@ -13,7 +11,7 @@
   border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
 }
 
-.row {
+.item {
   border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
 }
 
@@ -26,9 +24,8 @@
   list-style: none;
   cursor: pointer;
   transition:
-    background-color 0.3s,
-    color 0.3s,
-    padding-inline 0.3s var(--ease);
+    background-color 0.4s var(--ease),
+    color 0.4s var(--ease);
 }
 
 /* Bez natywnego trójkąta (Safari ma własny pseudo-element). */
@@ -36,34 +33,27 @@
   display: none;
 }
 
-/* Hover jak w `FindSection`: limonkowe tło; #3F4A12 = stała z legacy (przygaszony tekst na limonce). */
-.summary:hover {
-  background: var(--accent);
-  color: var(--on-accent);
-  padding-inline: 12px;
-  --muted: #3F4A12;
-}
-
 .summary:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
 
-.no {
-  grid-column: span 2;
-  color: var(--muted);
-}
-
+/* `--indent` = przesunięcie pytania przy hoverze (od 1024 px mniejsze, patrz niżej). */
 .question {
-  grid-column: span 9;
+  --indent: 12px;
+  grid-column: 1 / span 11;
   font: var(--t-title);
+  transition: transform 0.4s var(--ease);
 }
 
+/* `transform` niesie obrót „+” przy `[open]`, przesunięcie przy hoverze idzie osobno przez `translate`. */
 .icon {
   grid-column: span 1;
   justify-self: end;
   font: var(--t-title);
-  transition: transform 0.4s var(--ease);
+  transition:
+    transform 0.4s var(--ease),
+    translate 0.4s var(--ease);
 }
 
 .item[open] .icon {
@@ -78,33 +68,28 @@
 }
 
 .answer > p {
-  grid-column: 3 / -1;
-  max-width: 60ch;
+  grid-column: 1 / -1;
+  /* ~60 znaków w wierszu (DESIGN.md): `ch` to szerokość „0”, szersza od średniej litery, więc 60ch dawało ~75. */
+  max-width: 46ch;
 }
 
-/* CTA pod listą: w kolumnie pytań od 1024 px. */
-.cta {
+/* Zdanie pod listą: w kolumnie pytań od 1024 px. */
+.more {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: var(--gap);
   margin-top: 48px;
-}
-
-.cta > * {
-  grid-column: 1 / -1;
-}
-
-.more {
-  margin-bottom: 16px;
   color: var(--muted);
 }
 
-@media (min-width: 1024px) {
-  .no {
-    grid-column: span 1;
-  }
+.more > p {
+  grid-column: 1 / -1;
+}
 
+@media (min-width: 1024px) {
+  /* 6 px: tyle dawało dawne `padding-inline: 12px` pytaniu w kolumnie 4 (kolumny węższe o 2 px). */
   .question {
+    --indent: 6px;
     grid-column: 4 / span 8;
   }
 
@@ -116,13 +101,41 @@
     grid-column: 4 / span 7;
   }
 
-  .cta > * {
+  .more > p {
     grid-column: 4 / -1;
   }
 }
 
+/*
+ * Hover wiersza (wzór dla `ServicesList` i `ProcessSection`): limonkowe tło, tekst `--on-accent`.
+ * Pytanie wcięte `translateX`, „+” cofnięty o 12 px od prawej krawędzi, bez reflow (wiersz i sąsiedzi
+ * nie zmieniają wymiarów); 24 px z prawej pytania to zapas na przesunięcie. Tylko przy prawdziwym
+ * hoverze (tap na dotyku nie przykleja limonki). Fokus z klawiatury: obrys 2 px jak wyżej, niezależnie
+ * od hovera.
+ */
+@media (hover: hover) {
+  .question {
+    padding-right: 24px;
+  }
+
+  .summary:hover {
+    background-color: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .summary:hover .question {
+    transform: translateX(var(--indent));
+  }
+
+  .summary:hover .icon {
+    translate: -12px 0;
+  }
+}
+
+/* Wcięcie zostaje, tylko bez animacji; „+” obraca się bez animacji. */
 @media (prefers-reduced-motion: reduce) {
   .summary,
+  .question,
   .icon {
     transition: none;
   }

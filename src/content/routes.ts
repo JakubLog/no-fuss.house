@@ -12,7 +12,7 @@ import type { InternalPath } from "./types";
 export type RouteKind = "home" | "page" | "case";
 
 /** Sekcja nawigacji, do której należy route (steruje `aria-current` w HUD). */
-export type NavSection = "home" | "about" | "work";
+export type NavSection = "home" | "about" | "work" | "events";
 
 type ChangeFrequency = NonNullable<MetadataRoute.Sitemap[number]["changeFrequency"]>;
 
@@ -27,8 +27,8 @@ export interface SiteRoute {
   section: NavSection;
   /** Pliki legacy (bez `.html`), z których przekierowujemy 301 na `path`. */
   legacy: readonly string[];
-  /** Plik legacy, który jest wzorcem treści tej strony. */
-  source: string;
+  /** Plik legacy, który jest wzorcem treści tej strony; `null` = nowa strona bez wzorca. */
+  source: string | null;
   /** Data ostatniej zmiany treści (ISO). */
   lastModified: string;
   changeFrequency: ChangeFrequency;
@@ -125,6 +125,17 @@ export const routes = [
     lastModified: UPDATED,
     changeFrequency: "yearly",
     priority: 0.5,
+  },
+  {
+    path: "/wiedza",
+    title: "WIEDZA",
+    kind: "page",
+    section: "events",
+    legacy: [],
+    source: null,
+    lastModified: "2026-09-25",
+    changeFrequency: "weekly",
+    priority: 0.6,
   },
 ] as const satisfies readonly SiteRoute[];
 

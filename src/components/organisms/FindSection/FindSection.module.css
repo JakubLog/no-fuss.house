@@ -44,25 +44,45 @@
   border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
 }
 
+/* Hover: `--muted` jak w innych limonkowych hoverach (#3F4A12, czytelny na limonce), więc linia `kicker` nie ginie. */
 .item:hover {
   background: var(--accent);
   color: var(--on-accent);
+  --muted: #3F4A12;
   padding-inline: 12px;
 }
 
-.item > span,
+.meta,
 .copy::after {
   display: inline-block;
   transition: transform 0.4s var(--ease);
 }
 
-.item:hover > span,
+/* Prawa kolumna się nie łamie i nie kurczy: data i strzałka zostają w jednej linii także obok długiego tytułu. */
+.meta {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.item:hover > .meta,
 .copy:hover::after {
   transform: translate(4px, -4px);
 }
 
+/* Link wewnętrzny („→”): strzałka jedzie w prawo, nie po skosie. */
+.internal:hover > .meta {
+  transform: translateX(4px);
+}
+
 .itemTitle {
   min-width: 0;
+}
+
+/* Linia mono nad tytułem (data · miasto wydarzenia). */
+.kicker {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
 }
 
 /* E-mail (CopyEmail): tekst linku podmienia komponent, „⧉” (kopiuj) dokleja CSS tylko przy myszy;
@@ -88,7 +108,7 @@
   padding-inline: 0;
 }
 
-.soon:hover > span {
+.soon:hover > .meta {
   transform: none;
 }
 
@@ -105,7 +125,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .item > span,
+  .meta,
   .copy::after {
     transition: none;
   }

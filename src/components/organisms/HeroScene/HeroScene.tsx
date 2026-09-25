@@ -10,9 +10,9 @@ import styles from "./HeroScene.module.css";
  * Kanwa WebGL z napisem 3D (legacy `.hero__canvas`). Ładuj przez `LazyHeroScene`
  * (next/dynamic, `ssr: false`), nigdy bezpośrednio: import ciągnie three.js.
  *
- * Jak legacy: scena powstaje od razu (pod preloaderem), bez dodatkowego wejścia opacity,
- * więc po zjeździe kurtyny litery już stoją i fizyka działa. Kanwa jest dekoracją
- * (`aria-hidden`), tekstowy odpowiednik daje rodzic. Client Component.
+ * Scena powstaje od razu (pod preloaderem), bez dodatkowego wejścia opacity. Litery startują
+ * w pozie startowego zamieszania (`fuss.get()`), fizyka działa od pierwszej klatki. Kanwa jest
+ * dekoracją (`aria-hidden`), tekstowy odpowiednik daje rodzic. Client Component.
  */
 export default function HeroScene({
   text,
@@ -20,14 +20,17 @@ export default function HeroScene({
   fit = DEFAULT_FIT,
   repel = DEFAULT_REPEL,
   className,
+  frame,
   onUnsupported,
+  onReady,
 }: HeroSceneProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [ready, setReady] = useState(false);
   const reportUnsupported = useEffectEvent(() => onUnsupported?.());
+  const reportReady = useEffectEvent(() => onReady?.());
 
   /* Prymitywy zamiast obiektów w zależnościach: inline `fit={{…}}` nie przebuduje sceny co render. */
-  const { widthDesktop, widthMobile, maxScale, offsetYDesktop, offsetYMobile } = fit;
+  const { widthDesktop, widthMobile, heightDesktop, maxScale, offsetYDesktop, offsetYMobile } = fit;
   const repelRadius = repel ? repel.radius : null;
   const repelStrength = repel ? repel.strength : null;
 
@@ -40,9 +43,13 @@ export default function HeroScene({
       handle = createHeroScene(canvas, {
         text,
         fuss,
-        fit: { widthDesktop, widthMobile, maxScale, offsetYDesktop, offsetYMobile },
+        fit: { widthDesktop, widthMobile, heightDesktop, maxScale, offsetYDesktop, offsetYMobile },
+        frame: frame?.current ?? null,
         repel: repelRadius !== null && repelStrength !== null ? { radius: repelRadius, strength: repelStrength } : false,
-        onReady: () => setReady(true),
+        onReady: () => {
+          setReady(true);
+          reportReady();
+        },
         onError: () => reportUnsupported(),
       });
     } catch {
@@ -53,7 +60,19 @@ export default function HeroScene({
       handle?.dispose();
       handle = null;
     };
-  }, [text, fuss, widthDesktop, widthMobile, maxScale, offsetYDesktop, offsetYMobile, repelRadius, repelStrength]);
+  }, [
+    text,
+    fuss,
+    widthDesktop,
+    widthMobile,
+    heightDesktop,
+    maxScale,
+    offsetYDesktop,
+    offsetYMobile,
+    repelRadius,
+    frame,
+    repelStrength,
+  ]);
 
   return (
     <canvas

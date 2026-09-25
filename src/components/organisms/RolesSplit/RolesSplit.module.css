@@ -43,6 +43,11 @@
   grid-column: 1 / -1;
 }
 
+/* CTA pod wierszami: od lewej krawędzi treści (jak nagłówek i nazwy wierszy). */
+.cta {
+  margin-top: 48px;
+}
+
 .track {
   grid-column: 1 / -1;
   height: 2px;

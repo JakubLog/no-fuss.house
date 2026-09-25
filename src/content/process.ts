@@ -7,7 +7,7 @@
 const NBSP = " ";
 
 export interface ProcessSectionStep {
-  /** Numer mono, np. „01”. */
+  /** Numer mono, np. „01” (jedyna numeracja na stronie głównej: faktyczna kolejność). */
   no: string;
   title: string;
   /** 1–2 zdania. */
@@ -16,7 +16,6 @@ export interface ProcessSectionStep {
 
 export const processSection = {
   label: "Jak pracujemy",
-  counter: "01–04",
   steps: [
     {
       no: "01",

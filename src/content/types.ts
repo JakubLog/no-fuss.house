@@ -48,7 +48,7 @@ export interface Product {
 }
 
 export interface Service {
-  /** Numer porządkowy jak w legacy: „01”, „02”… */
+  /** Id usługi „01”, „02”… (JSON-LD `/#usluga-01`, klucz listy); na stronie niewidoczny. */
   no: string;
   name: string;
   description: string;

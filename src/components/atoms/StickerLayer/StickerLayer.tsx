@@ -5,7 +5,7 @@ export interface StickerLayerProps {
   className?: string;
 }
 
-/** Atrybut strefy, w której kursor zostawia naklejki (hero, stopka). */
+/** Atrybut strefy, w której kursor zostawia naklejki (stopka, 404). */
 export const STICKER_ZONE_ATTR = "data-stickers";
 /** Atrybut warstwy, do której Cursor dokleja naklejki. */
 export const STICKER_LAYER_ATTR = "data-sticker-layer";

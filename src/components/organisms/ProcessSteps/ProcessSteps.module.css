@@ -16,6 +16,9 @@
   justify-content: space-between;
   background: var(--tile);
   color: var(--tile-ink);
+  /* Kafel jest ciemny także w jasnej sekcji: `--muted` tonacji jasnej (#5F6369) dawał tu ~3:1.
+     Biel 64% na kaflu ≈ #ABACAE (jak `--muted` tone-dark), ~8:1. Hover nadpisuje niżej. */
+  --muted: var(--alpha-600);
   overflow: hidden;
   cursor: default;
   /* Kolory jak w legacy + reveal z `.fade` (shorthand kasuje globalne opóźnienie, więc je powtarzamy). */
@@ -70,6 +73,16 @@
 .step:focus-within .text {
   max-height: 120px;
   opacity: 1;
+}
+
+/* Przebieg po wejściu w widok (`.active` z JS): limonka jak na hover, ale bez rozwijania opisu (dłuższy opis
+   podnosi rząd o ~20 px, a przesunięcie treści bez akcji użytkownika to skok układu). Ustępuje hoverowi
+   i fokusowi, więc nigdy nie świecą dwa kroki naraz. Osobna reguła: w starszym Firefoksie niewspierany
+   `:has()` unieważniłby regułę zgrupowaną z `:hover`. */
+.steps:not(:has(.step:hover, .step:focus-within)) .active {
+  background: var(--accent);
+  color: var(--on-accent);
+  --muted: #3F4A12;
 }
 
 /* Bez hovera (dotyk): opisy widoczne od razu, żeby nie ukrywać treści za tapnięciem. */

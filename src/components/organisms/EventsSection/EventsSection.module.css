@@ -1,0 +1,52 @@
+/* Wydarzenia (/wiedza): nagłówek jak `ProcessSection`, siatka kafli jak realizacje. */
+.head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 48px;
+}
+
+.label {
+  font: inherit;
+}
+
+.list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.upcoming {
+  gap: var(--event-gap);
+}
+
+.past {
+  gap: 56px var(--event-gap);
+}
+
+.empty {
+  font: var(--t-title);
+  max-width: 32ch;
+}
+
+.footer {
+  margin-top: 48px;
+  font: var(--t-lead);
+}
+
+@media (min-width: 640px) {
+  .past {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .upcoming {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .past {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

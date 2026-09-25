@@ -115,13 +115,12 @@ export function buildMetadata({
 }: BuildMetadataInput): Metadata {
   const route = getRoute(path);
   const pageTitle = title ?? route?.title ?? null;
-  /* Strona główna: pełny tytuł usługowy bez template'u (marka jest już na początku). */
-  const absoluteTitle = path === "/" && !title ? site.homeTitle : site.brandTitle;
-  const fullTitle = pageTitle ? TITLE_TEMPLATE.replace("%s", pageTitle) : absoluteTitle;
+  /* Strona główna: sam `brandTitle` (1:1 z legacy), bez template'u, żeby marka się nie dublowała. */
+  const fullTitle = pageTitle ? TITLE_TEMPLATE.replace("%s", pageTitle) : site.brandTitle;
   const desc = description ?? (path === "/" ? site.description : site.shortDescription);
 
   return {
-    title: pageTitle ? pageTitle : { absolute: absoluteTitle },
+    title: pageTitle ? pageTitle : { absolute: site.brandTitle },
     description: desc,
     alternates: { canonical: path },
     openGraph: {

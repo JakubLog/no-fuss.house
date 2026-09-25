@@ -27,7 +27,7 @@ Przed pisaniem CSS przeczytaj [`DESIGN.md`](../DESIGN.md). Wzorce treści i zach
 
 ## Czego NIE ruszać bez uzgodnienia
 
-- `src/app/layout.tsx` (chrome, fonty, kolejność warstw, JSON-LD globalne)
+- `src/app/layout.tsx` (chrome, fonty, kolejność warstw, JSON-LD globalne; nowe landmarki dopisz do `COVERED_SELECTOR` w `Preloader`)
 - `src/styles/tokens.css`, `src/styles/globals.css` (kontrakt tokenów i klas globalnych)
 - `src/lib/intro.ts`, `src/lib/hooks/*`, `src/lib/seo/*` (kontrakty współdzielone)
 - `src/content/routes.ts` — **tylko dopisujemy** nowe route'y, nie zmieniamy istniejących
@@ -66,7 +66,7 @@ Klasy globalne (`src/styles/globals.css`):
 | `.line` + `.fade` + `.is-in` | reveal (sterują `Reveal` i preloader); stagger przez `style={{ "--i": n }}` |
 
 Warstwy (`z-index`): siatka overlay 1, treść sekcji 2, HUD 50, kursor 90, preloader 100, skip link 200.
-Tło hero/stopki (`GlowBackdrop`) 0, naklejki 0.
+Tło hero (`GlowBackdrop`) 0, naklejki (stopka, 404) 0.
 
 Custom properties w `style` są typowane (`src/types/css.d.ts`): `style={{ "--i": 2 }}` bez rzutowania.
 
@@ -184,7 +184,7 @@ Legacy `.btn` z 404. Z `href` renderuje link (`/…` → `next/link`, reszta `<a
 </section>
 ```
 Eksporty: `STICKERS` (5 SVG 1:1 z legacy, np. dla przeciąganych naklejek na /o-nas), `stickerClassName`,
-`STICKER_ZONE_ATTR`, `STICKER_LAYER_ATTR`. Element z `data-no-stickers` wyłącza naklejki nad sobą (np. suwak).
+`STICKER_ZONE_ATTR`, `STICKER_LAYER_ATTR`.
 
 ### `PhotoPlaceholder` — server
 ```ts
@@ -197,9 +197,11 @@ Legacy `.ph`: tło kafla w ukośne kreski, podpis mono w ramce przerywanej. Prop
 ```
 
 ### `PartnerLogos` — server
-Eksporty: `TigersLogo`, `AutomationHouseLogo`, `BnaLogo`, `InPostLogo` (`PartnerLogoProps` = `SVGProps` bez `children/role/viewBox`),
-`PARTNERS: readonly Partner[]` (`{ name, Logo? }`, kolejność z legacy), `PartnerLogo({ partner, className })`.
-Każde SVG: `role="img"`, `aria-label` + `<title>`, `fill="currentColor"`, wysokość 28 px, szerokość z viewBox.
+Eksporty: `TigersLogo`, `AutomationHouseLogo`, `BnaLogo`, `InPostLogo`, `CoiLogo` (`PartnerLogoProps` = `SVGProps` bez `children/role/viewBox`),
+`PARTNERS: readonly Partner[]` (`{ name, Logo? }`, kolejność z legacy, nowe na końcu: Centralny Ośrodek Informatyki), `PartnerLogo({ partner, className })`.
+Każde SVG: `role="img"`, `aria-label` + `<title>`, `fill="currentColor"`, viewBox przycięty do znaku, szerokość z viewBox.
+Wysokość optyczna: `calc(var(--logo-size, 28px) * var(--logo-optical))`, gdzie `--logo-optical = (4 / proporcja viewBox)^0.4`
+(liczy `LogoSvg`): szeroki napis (Automation House ~9:1) niższy, zwarty znak (InPost ~2:1) wyższy, na oko równe. Rodzic ustawia `--logo-size`.
 Bez `Logo` renderuje się nazwa w roli `title` 700 (legacy `.clients__word`).
 Klasy `.cls-*` i `id` z oryginalnego InPost usunięte (inline `<style>` w SVG byłby globalny).
 ```tsx
@@ -211,7 +213,7 @@ Klasy `.cls-*` i `id` z oryginalnego InPost usunięte (inline `<style>` w SVG by
 
 ## Molekuły (`src/components/molecules`)
 
-Wszystkie są Server Components, poza `CopyEmail` i `FussSlider`.
+Wszystkie są Server Components, poza `CopyEmail`.
 
 ### `NavList` — server-compatible (bez hooków)
 ```ts
@@ -224,7 +226,8 @@ Eksport pomocniczy `getAriaCurrent(item, pathname)`. Dane: `src/content/navigati
 ```ts
 interface MetaRowProps { name: ReactNode; meta: ReactNode; arrow?: boolean; className?: string }
 ```
-Wiersz pod kaflem: nazwa | rok (+ strzałka reagująca na hover linku-przodka).
+Wiersz pod kaflem: nazwa | rok (+ strzałka reagująca na hover linku-przodka). Z `arrow` rok ze strzałką ma `nowrap`
+(zawija się tylko nazwa).
 ```tsx
 <Link href="/otb" className={styles.tile}>… <MetaRow name="OTB Ventures" meta="2025" arrow /></Link>
 ```
@@ -264,29 +267,16 @@ komponent zwraca `null` (stopka bez „Social”, karta Magdy bez linków). Patr
 interface ContactCtaProps { index?: number; note?: boolean; className?: string }
 const CONTACT_CTA_LABELS: { primary: "Porozmawiajmy →"; calendar: "Umów rozmowę ↗" };
 ```
-Dwa `Button`: accent „Porozmawiajmy →” → `#kontakt` (stopka) i ghost „Umów rozmowę ↗” → `site.contact.calendarUrl`
-(nowa karta; `null` → link-placeholder). `note` dokłada `site.contact.responseNote` (mono-sm, `--muted`), ale nie gdy to
-placeholder `[…]`. `index` = `.fade` + `--i` (reveal z rodzicem). Przyciski zawijają się (odstęp 8 px). Dane tylko z `site.contact`.
+Accent „Porozmawiajmy →” → `#kontakt` (stopka) i ghost „Umów rozmowę ↗” → `site.contact.calendarUrl` (nowa karta).
+Przy `calendarUrl: null` ghosta **nie ma** (sam „Porozmawiajmy →”), bez wyszarzonego placeholdera. `note` dokłada
+`site.contact.responseNote` (mono-sm, `--muted`), ale nie gdy to placeholder `[…]`. `index` = `.fade` + `--i` (reveal z rodzicem).
+Przyciski zawijają się (odstęp 8 px). Dane tylko z `site.contact`.
 ```tsx
 <ContactCta index={4} />            {/* hero, pod h1 i leadem */}
-<Reveal><ContactCta index={0} note /></Reveal>  {/* pod listą usług */}
+<ContactCta note />                 {/* pod listą usług, widoczne od razu (bez reveal) */}
 {/* case study: blok CTA w `CaseStudyLayout` (ContactCta index={2} note), strony go nie składają */}
-```
-
-### `FussSlider` — client
-```ts
-interface FussSliderProps {
-  onValueChange: (value: number) => void; // 0–1
-  defaultValue?: number;                  // 0–100, domyślnie 0
-  label?: string;                         // domyślnie "Zamieszanie"
-  hint?: string;                          // opis sr-only przez aria-describedby
-  className?: string; style?: CSSProperties;
-}
-```
-`<label for>` powiązany przez `useId`, `aria-valuetext="37%"`, odczyt `037%`, `data-no-stickers`.
-Tor 2 px (`--ink` na 40%), uchwyt-romb w akcencie z obrysem `--dark`.
-```tsx
-<FussSlider onValueChange={fuss.set} hint="…" />
+<PageHero lines={aboutHero.lines} lead={aboutHero.lead} cta />   {/* /o-nas: ContactCta index={lines.length + 1} pod leadem */}
+{/* RolesSplit: <Reveal className={styles.cta}><ContactCta index={0} /></Reveal> pod wierszami */}
 ```
 
 ### `PhoneFrame` — server
@@ -338,6 +328,7 @@ interface PersonCardProps {
 Legacy `.sheet`: obrys 1 px (`box-shadow inset`), `dl` mono z `FactRow` (układ dt | dd w jednym wierszu),
 wskaźnik „Zamieszanie” wypełnia się do `--v`, gdy przodek dostanie `is-in`. Siatka 6 kolumn: < 900 px wszystko w kolumnie,
 900–1199 px zdjęcie z lewej (2/6), ≥ 1200 px karta pionowa ze zdjęciem 4:3. Karta nie zawiera `Reveal` — owija ją `TeamSheets`.
+`variant="ai"`: ciemny kadr (`--dark`) bez kresek placeholdera, ilustracja w `--accent` (`currentColor`).
 
 ### `WorkTile` — server
 ```ts
@@ -362,6 +353,27 @@ awatar 44×44 w paski, rola w `<small>` z opacity .64). `accent: true` → kafel
 <Reveal as="figure" className={testimonialCardClassName(t)}><TestimonialCard testimonial={t} /></Reveal>
 ```
 
+### `EventTile` — server
+```ts
+interface EventTileProps { event: KnowledgeEvent; variant: "upcoming" | "past"; className?: string }
+```
+Kafel wydarzenia (`/wiedza`, zajawka `#wiedza` na `/`): `<article id={event.id}>` (kotwica `/wiedza#<id>`, `@id` w JSON-LD), tytuł `h3` (`--t-title` 700) nazywa kafel.
+`upcoming`: kafel `--tile`; wiersz nad datą: `Tag` z formatem po lewej, opcjonalne `logo` (przezroczyste tło, wysokość 40 px, od 1024 px 48 px)
+w prawym górnym rogu. Dalej data w `<time>` (dzień w roli display, mono „2026 · SOB · 10:00”; wielodniowe
+„17–18.11” i „2026 · WT–ŚR”), opis `--muted`, `dl` mono-sm z `FactRow` („Gdzie” | „Kto” w dwóch kolumnach; „Gdzie” = `host, venue, place`,
+bez miasta, gdy `host` już je zawiera), `Button` z `link` (nowa karta, dosunięty do dołu kafla).
+`past`: zdjęcie 16:10 (`next/image` albo `PhotoPlaceholder` „Zdjęcie z wydarzenia 16:10”) z tagiem w prawym górnym rogu jak `WorkTile`
+i opcjonalnym `logo` w lewym górnym rogu (bez tła, wprost na zdjęciu, 7 px od góry i 10 px od lewej, wysokość 16 px),
+`MetaRow` data | gdzie, tytuł, opis, osoby (mono-sm), `ArrowLink` do nagrania / relacji (tylko z prawdziwym `href`). Kafel nie jest linkiem.
+Reveal robi rodzic (`className="fade"` w `Reveal as="li"`). `sizes` stałe: zdjęcie minionego — siatka 1 → 2 (640 px) → 3 kolumny (1024 px);
+logo — `200px` (górna granica przy stałej wysokości; `.svg` idzie bez optymalizacji).
+Hover (`@media (hover: hover)`), bez strzałki i kursora-linku, bo kafel nie jest linkiem: `upcoming` — dzień dostaje limonkowe tło
+(`::before`, 12 px z obu stron) i `translateX(12px)`, 0.4 s `--ease`; `past` — zdjęcie / `PhotoPlaceholder` `scale: 1.2` w masce `.media`
+(`overflow: hidden`), 2 s `ease-out` (powoli; `--ease` robi większość ruchu na starcie). Z `logo` `.media` dostaje `.shade`: `::after` z cieniem
+`inset 0 48px 40px -24px` (czerń 60%) nad zdjęciem, pod logo i tagiem; nie skaluje się. Ten sam stan przy `:has(:focus-visible)` (fokus z klawiatury na `Button` / `ArrowLink` w kaflu;
+bez `:focus-within`, żeby tap na dotyku go nie przyklejał). Animowane są dzieci, nie `article` (ma `.fade`). Reduced motion: bez przejść
+i bez transformacji, limonka natychmiast.
+
 ### Linki-placeholdery
 
 Placeholdery nie są klikalnymi linkami (bez `href="#"`, bez skoku na górę, poza kolejnością Tab). `href: null` w danych →
@@ -370,7 +382,8 @@ Placeholdery nie są klikalnymi linkami (bez `href="#"`, bez skoku na górę, po
 |---|---|
 | `SocialLinks` (stopka, karty osób) | link **pomijany**; bez żadnego prawdziwego → brak `<nav>` (lista równorzędnych profili, brakujący nic nie wnosi) |
 | wiersze `FindSection` (`/o-nas#social`, `#posty`) | `<span>` z klasą wiersza, opacity .5, bez hovera, sr-only „(wkrótce)” (układ sekcji zostaje) |
-| `Button` / `ContactCta` („Umów rozmowę ↗” przy `calendarUrl: null`) | `<span>` z wyglądem przycisku, opacity .5, sr-only „(wkrótce)” |
+| `EventTile` (`/wiedza`, `/#wiedza`) | nadchodzące: `Button href={null}` (przygaszony, sr-only „(wkrótce)”); minione: link **pomijany** |
+| `ContactCta` / `Footer` („Umów rozmowę ↗” przy `calendarUrl: null`) | przycisk **pomijany** (w stopce bez notki znika cały blok pod nagłówkiem) |
 
 Tekstowe placeholdery `[…]` się nie renderują (dane zostają w plikach do podmiany). Helpery: `isPlaceholder()`
 (cały tekst w nawiasach / `#`) i `hasPlaceholder()` (`[…]` także w środku zdania) z `site.ts`; filtry danych:
@@ -383,8 +396,10 @@ Tekstowe placeholdery `[…]` się nie renderują (dane zostają w plikach do po
 | `publishedSpec(items)` | `cases/index.ts` | wiersze `SpecList` (OTB „Kod”) |
 | `publishedFacts(facts)` | `about.ts` | wiersze kart postaci (`[…]` wycinane, pusty wiersz znika) |
 | `publishedLinkedinPosts()` | `about.ts` | `#posty`; bez wiersza z prawdziwym linkiem → `null`, sekcji nie ma |
+| `isPublishedEvent(e)` | `events.ts` | wydarzenia w JSON-LD (`Event`) i w zajawce `/o-nas#wydarzenia` |
 
-Wyjątek: `site.contact.email` (do podmiany przed startem).
+Wyjątek: kafle wydarzeń (`/wiedza` i zajawka `#wiedza` na `/`): placeholdery `[…]` (dziś brak) są tam **widoczne**
+(decyzja: układ do przeglądu), ale nie trafiają do JSON-LD ani na `/o-nas`.
 Helper dla prawdziwych adresów: `externalLinkProps(href)` z `@/lib/href` (`target="_blank" rel="noopener"`).
 `ScrambleLink` i `SmoothScroll` nadal obsługują `aria-disabled="true"` (dla linków spoza danych).
 
@@ -398,12 +413,12 @@ Montowany w layoucie. Strony go nie renderują.
 
 | Komponent | Typ | Rola |
 |---|---|---|
-| `Preloader` | client | pasek 110×4 po `document.fonts.ready`, min. 600 ms / max. 1200 ms, kurtyna 1 s, `markIntroDone()`; tylko pierwsze wejście (root layout, przy nawigacji klienckiej się nie pokazuje; po `isIntroDone()` od razu znika); reduced motion → od razu; bez JS chowa go `<noscript>` w layoucie |
-| `Hud` | client | logo, nav (`<header>`, `<nav aria-label="Główna">`), postęp scrolla. Fokus: biały obrys 2 px (odwraca się w `difference`). Poniżej 480 px nav w `--t-mono-sm` z odstępem 8 px, na < ~340 px nav zawija się pod logo |
+| `Preloader` | client | pasek 110×4 po `document.fonts.ready`, min. 600 ms / max. 1200 ms, kurtyna 1 s, `markIntroDone()`; tylko pierwsze wejście (root layout, przy nawigacji klienckiej się nie pokazuje; po `isIntroDone()` od razu znika); bez JS chowa go `<noscript>` w layoucie. Na czas paska `.skip-link` oraz `body > header/main/footer` mają `inert`; zdejmowany w `finish()` (razem z `markIntroDone()`), bezpiecznikiem po `MAX_MS` i w cleanupie. Nowe landmarki root layoutu dopisz do `COVERED_SELECTOR`. Przy `prefers-reduced-motion` preloader ma `display: none` w CSS modułu, `markIntroDone()` idzie od razu w efekcie, a blokada scrolla `body:has([data-preloader="active"])` w globals.css działa tylko przy `prefers-reduced-motion: no-preference` |
+| `Hud` | client | logo, nav (`<header>`, `<nav aria-label="Główna">`), postęp scrolla. Fokus: biały obrys 2 px (odwraca się w `difference`). Poniżej 480 px nav w `--t-mono-sm` z odstępem 8 px, na < ~340 px nav zawija się pod logo. „Wiedza” (`hideOnSmall`) ukryta poniżej 640 px |
 | `GridOverlay` | client | 3 piony + 2 poziomy z krzyżykami, `mix-blend-mode: difference` |
-| `Cursor` | client | strzałka (lerp 0.18) + naklejki; tylko `pointer: fine`, off przy reduced motion. Jeden SVG 88 px (punkt wskaźnika w środku), stan w `data-state` bez re-renderów: `arrow`; `link` nad `a[href], button, [role="button"], label, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])` (bez `:disabled`) → limonkowy pierścień; `grab` nad `[data-cursor="grab"]` (ma pierwszeństwo; track `FilmStrip`, kula `DragBall`, naklejka `StickerBoard`) → mała kropka, `data-pressed` przy wciśnięciu ją ściska. Opt-out `[data-cursor="arrow"]` (kafle `ProcessSteps`: fokusowalne, nieklikalne) wymusza strzałkę. `help` nad `[data-cursor="help"]` (`summary` w `FaqSection`) → pełny limonkowy krążek z „?”, przy `details[open]` z „−” (`data-open`, odświeża się przy ruchu); `calendar` nad `[data-cursor="calendar"]` (`Button` „Umów rozmowę ↗” w `ContactCta` i `Footer`) → krążek z ikoną kalendarza; wciśnięcie ściska oba do 0.8 jak `link`. Wartości `data-cursor`: `arrow` \| `grab` \| `help` \| `calendar`; kolejność detekcji (`closest`): arrow → grab → help → calendar → link. Śledzi `pointermove` (działa też przy `preventDefault` na `pointerdown`). Nad `[data-native-cursor]` (żywa ramka `LiveFrame`, ekran `PhoneScroller`) i po wejściu do `iframe` / wyjściu z okna chowa się, zostaje kursor systemowy. Reguła w `globals.css`: `html[data-cursor="on"] :not([data-native-cursor], [data-native-cursor] *) { cursor: none !important }`, więc `cursor:` w modułach nie przebija się; element z `data-native-cursor` musi sam ustawić `cursor` (`auto` albo własny) |
+| `Cursor` | client | strzałka (lerp 0.18) + naklejki; tylko `pointer: fine`, off przy reduced motion. Jeden SVG 88 px (punkt wskaźnika w środku), stan w `data-state` bez re-renderów: `arrow`; `link` nad `a[href], button, [role="button"], label, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])` (bez `:disabled`) → limonkowy pierścień; `grab` nad `[data-cursor="grab"]` (ma pierwszeństwo; track `FilmStrip`, kula `DragBall`, naklejka `StickerBoard`) → mała kropka, `data-pressed` przy wciśnięciu ją ściska. Opt-out `[data-cursor="arrow"]` (kafle `ProcessSteps`: fokusowalne, nieklikalne) wymusza strzałkę. `help` nad `[data-cursor="help"]` (`summary` w `FaqSection`) → pełny limonkowy krążek z „?”, przy `details[open]` z „−” (`data-open`, odświeża się przy ruchu); `calendar` nad `[data-cursor="calendar"]` (`Button` „Umów rozmowę ↗” w `ContactCta` i `Footer`) → krążek z ikoną kalendarza; wciśnięcie ściska oba do 0.8 jak `link`. Wartości `data-cursor`: `arrow` \| `grab` \| `help` \| `calendar`; kolejność detekcji (`closest`): arrow → grab → help → calendar → link. Śledzi `pointermove` (działa też przy `preventDefault` na `pointerdown`). Nad `[data-native-cursor]` (żywa ramka `LiveFrame`, ekran `PhoneScroller`) i po wejściu do `iframe` / wyjściu z okna chowa się, zostaje kursor systemowy. Reguła w `globals.css`: `html[data-cursor="on"] :not([data-native-cursor], [data-native-cursor] *) { cursor: none !important }`, więc `cursor:` w modułach nie przebija się; element z `data-native-cursor` musi sam ustawić `cursor` (`auto` albo własny). Ton w `data-tone` (`base` / `accent`): hit-test `elementsFromPoint` przy zmianie celu (`pointermove` / `pointerover`), pierwsze nieprzezroczyste tło na stosie (i `::before` wierzchniego) równe `--accent` → ciemny wariant; `img` / `video` / `canvas` wyżej na stosie → `base`; przeliczany też na `transitionrun` / `transitionend` / `transitioncancel` `background-color` elementów ze stosu i raz po `pointerup` |
 | `SmoothScroll` | client | Lenis (lerp 0.1), stop do końca preloadera, kotwice, reset przy zmianie route |
-| `Footer` | server | `#kontakt` (cel „Porozmawiajmy →”), CTA display, „Umów rozmowę ↗” + `responseNote`, `CopyEmail`, `SocialLinks`, copyright |
+| `Footer` | server | `#kontakt` (cel „Porozmawiajmy →”), płaskie tło `--hero-sky` (bez smug), CTA display z revealem linii; na końcu limonka `Mark` „zamieszania” wjeżdża od prawej do lewej (własny `Reveal` słowa, opóźnienie `--reveal-duration` po jego `is-in`, tło w `::before`, kolor liter gradientem `background-clip: text` na tej samej krawędzi; reduced motion: od razu limonka), „Umów rozmowę ↗” (tylko z `calendarUrl`) + `responseNote` widoczne od razu, `CopyEmail`, `SocialLinks`, copyright; jedyna strefa naklejek (`data-stickers`) na stronach treści |
 | `Reveal` | client | wrapper `data-reveal` |
 
 ### `Reveal` — client
@@ -420,9 +435,9 @@ interface RevealProps extends Omit<HTMLAttributes<HTMLElement>, "children"> {
   <Heading variant="h2" lines={["Co robimy"]} startIndex={1} />
 </Reveal>
 
-{/* hero każdej strony */}
-<Reveal as="section" trigger="intro" id="hero" className="above-grid …" data-stickers="">
-  <GlowBackdrop /><StickerLayer />
+{/* hero strony głównej (naklejki tylko w stopce i na 404) */}
+<Reveal as="section" trigger="intro" id="hero" className="above-grid …">
+  <GlowBackdrop />
   <Heading as="h1" variant="display" lines={["Budujemy", "produkty bez", "zamieszania"]} />
 </Reveal>
 ```
@@ -430,6 +445,9 @@ interface RevealProps extends Omit<HTMLAttributes<HTMLElement>, "children"> {
 ### `SmoothScroll` / `useLenis`
 `useLenis(): Lenis | null` (client) i `getLenis()` (poza Reactem). Zawsze obsłuż `null` (reduced motion).
 Kontener z własnym scrollem (np. przewijany telefon) oznacz `data-lenis-prevent`.
+Kotwice na tej samej stronie (także bez Lenis przy reduced motion) ustawiają najpierw `#hash` przez `history.pushState`
+(żeby „Wstecz” wracało do pozycji sprzed kliknięcia), potem przewijają i przenoszą fokus na cel (bez `tabindex` dostaje
+`tabindex="-1"`). `popstate` ustawia flagę back/forward tylko przy zmianie ścieżki.
 
 ---
 
@@ -447,7 +465,7 @@ Kontener z własnym scrollem (np. przewijany telefon) oznacz `data-lenis-prevent
 | `HeroScene/fussStore.ts` | moduł | `createFussStore(initial)` — kanał zamieszania bez re-renderów |
 | `HeroScene/types.ts` | typy | `FussStore`, `SceneFit`, `SceneRepel`, `HeroSceneProps` |
 | `HomeHero/HomeHero.tsx` | server, default export, bez propsów | `<section id="hero">` strony głównej |
-| `HomeHero/HomeHeroStage.tsx` | client | scena + fallback + suwak, sloty na serwerową treść (`headline` = h1 + lead + `ContactCta`, `top`, `sceneLabel`, `sceneClassName`) |
+| `HomeHero/HomeHeroStage.tsx` | client | kanwa na całe hero + pusta ramka `.band` (`frame`: od 768 px pas między h1 a leadem z CTA; na telefonie miejsce na fallback CSS), sloty na serwerową treść (`headline` = h1 + lead + `ContactCta`, `sceneLabel`) |
 | `NotFoundHero/` | server + `NotFoundStage` (client) | hero 404, bez propsów |
 
 Barrel `organisms/HeroScene/index.ts` (i barrel warstwy) eksportuje tylko `LazyHeroScene`, `createFussStore` i typy:
@@ -461,33 +479,43 @@ interface HeroSceneProps {
   fit?: SceneFit;               // domyślnie hero strony głównej
   repel?: SceneRepel | false;   // domyślnie { radius: 1.2, strength: 60 } (legacy)
   className?: string;
+  frame?: RefObject<HTMLElement | null>; // od 768 px: napis na środku ramki, wysokość do fit.heightDesktop × ramka
+  onReady?: () => void;         // pierwsza klatka z literami narysowana (hero `/`: start układania)
   onUnsupported?: () => void;   // brak WebGL albo fontu → rodzic pokazuje fallback CSS
 }
-interface SceneFit { widthDesktop; widthMobile; maxScale; offsetYDesktop; offsetYMobile } // próg 768 px
+interface SceneFit { widthDesktop; widthMobile; heightDesktop?; maxScale; offsetYDesktop; offsetYMobile } // próg 768 px
 ```
 
-| | widthDesktop | widthMobile | maxScale | offsetYDesktop | offsetYMobile | start fuss |
-|---|---|---|---|---|---|---|
-| hero `/` | 0.62 | 0.86 | 1.4 | 0.02 | 0.12 | 0 |
-| 404 | 0.5 | 0.7 | 1.0 | 0.1 | 0.16 | 1 |
+| | widthDesktop | widthMobile | heightDesktop | maxScale | offsetYDesktop | offsetYMobile | start fuss |
+|---|---|---|---|---|---|---|---|
+| hero `/` | 0.62 | 0.86 | 1 (ramki) | 1.4 | 0 (bez ramki) | 0.12 | 1 → 0 po intro (reduced motion: 0) |
+| 404 | 0.5 | 0.7 | — | 1.0 | 0.1 | 0.16 | 1 |
 
 ```tsx
 "use client";
-const [fuss] = useState(() => createFussStore(0));
-<LazyHeroScene text="no–fuss" fuss={fuss} onUnsupported={() => setUnsupported(true)} />
-<FussSlider onValueChange={fuss.set} hint="…" />
-// 404: createFussStore(1), przycisk woła fuss.set(0)
+// hero `/`: start z chaosu (reduced motion: 0), układanie 1 → 0 w 1600 ms (ease-in-out) po `onReady` i intro + INTRO_REVEAL_DELAY_MS
+const [fuss] = useState(() => createFussStore(prefersReducedMotion ? 0 : 1));
+const band = useRef<HTMLDivElement>(null); // <div ref={band} className={styles.band} /> w siatce hero
+<LazyHeroScene text="no–fuss" fuss={fuss} frame={band} onReady={() => setSceneReady(true)} onUnsupported={() => setUnsupported(true)} />
+// 404: useState(() => createFussStore(1)), przycisk „Posprzątaj” woła fuss.set(0)
 ```
 Rodzic kanwy musi mieć `position: relative` (kanwa: `absolute; inset: 0; z-index: 0`). Jedna scena na stronę.
 
 #### Decyzje sceny
-- **Start jak legacy:** scena powstaje od razu po hydratacji (pod preloaderem), bez wejścia `opacity`; po zjeździe
-  kurtyny litery już stoją. Budowa geometrii i kompilacja shaderów nie trafia na animację kurtyny.
+- **Start:** scena powstaje od razu po hydratacji (pod preloaderem), bez wejścia `opacity`. Litery startują w pozie
+  startowego zamieszania (`scatterBody` z `physics.ts`: ta sama poza, do której ciągnie `stepWorld` przy stałym `f`), więc przy
+  `f = 1` od pierwszej klatki są rozrzucone, zamiast rozlatywać się z napisu. Budowa geometrii i kompilacja shaderów nie trafia na animację kurtyny.
 - **LCP:** h1 i copy renderuje serwer; three.js jest w osobnym chunku ładowanym po hydratacji.
-- **Suwak → scena:** mutowalny sklep; scena czyta `fuss.get()` w każdym kroku (wartość suwaka / 100, bez krzywej).
-  Wygładzanie wyłącznie w scenie (lerp 0.12 na krok, jak legacy). 404: „Posprzątaj” ustawia 0 od razu, licznik 1100 ms.
+- **Sklep → scena:** mutowalny sklep; scena czyta `fuss.get()` w każdym kroku. Wygładzanie w scenie (lerp 0.12 na krok, jak legacy).
+  404: „Posprzątaj” ustawia 0 od razu, licznik 1100 ms. Hero `/` (`HomeHeroStage`): po `onReady` i intro, z opóźnieniem
+  `INTRO_REVEAL_DELAY_MS` (razem z reveal h1), sklep schodzi 1 → 0 w 1600 ms (ease-in-out, rAF): litery z chaosu układają się
+  w napis. To samo przy nawigacji klienckiej na `/` (intro już było, start po `onReady`).
 - **Pętla:** działa tylko gdy kanwa jest w viewporcie (`IntersectionObserver`) i karta widoczna (`visibilitychange`);
-  po wznowieniu akumulator jest zerowany (bez skoku). `ResizeObserver` na kanwie; pixel ratio ≤ 2.
+  po wznowieniu akumulator jest zerowany (bez skoku). `ResizeObserver` na kanwie i ramce (`frame`); pixel ratio ≤ 2.
+- **Ramka (`frame`, hero `/` od 768 px):** kanwa zostaje na całe hero (odepchnięte litery nie ucinają się), a `fitScene`
+  mierzy ramkę (`getBoundingClientRect`) i ustawia środek grupy na środku ramki, skalę do min(62% szerokości kanwy,
+  wysokość ramki / wysokość napisu). Wysokość napisu = glify + `baseW · sin(TILT_Z)` (przechył 0.06 podnosi prawy koniec),
+  więc rogi napisu mijają h1 (z lewej u góry) i lead (z prawej u dołu). Ramka o wysokości 0 = zwykłe `offsetYDesktop`.
 - **Krok czasu (1:1 z legacy):** legacy wołał `getElapsedTime()` a potem `getDelta()` → delta 0 → `|| .016`, czyli stałe
   dt = 0.016 na klatkę i lerpy 0.12 / 0.05 na klatkę. Port: 60 kroków/s (`FixedStepper`, tolerancja drgań rAF 25%),
   każdy z dt = 0.016; czas drgań `t = kroki / 60`. Przy 60 Hz jeden krok na klatkę (poza strefą kursora i spokoju
@@ -502,75 +530,113 @@ Rodzic kanwy musi mieć `position: relative` (kanwa: `absolute; inset: 0; z-inde
   fizyka jest bitowo równa legacy (rozrzut, drgania, kolizje).
 - **Wskaźnik (jak legacy):** `mousemove` na `window`, `clientX / innerWidth − 0.5`; start 0 = środek ekranu, więc
   odpychanie działa od pierwszej klatki. Dotyk: tylko emulowany `mousemove` po tapnięciu (jak legacy).
-- **Reduced motion (jak legacy):** bez drgań, obrotu, „oddechu” i odpychania; suwak nadal rozrzuca litery (akcja użytkownika).
-- **Fallback:** wyjątek WebGL albo błąd fontu → napis CSS z gradientem (legacy `.hero__fallback`), suwak ukryty.
+- **Reduced motion (jak legacy):** bez drgań, obrotu, „oddechu” i odpychania; rozrzut ze sklepu (404) zostaje. Hero `/` bez układania:
+  sklep od 0, napis ułożony od pierwszej klatki.
+- **Fallback:** wyjątek WebGL albo błąd fontu → napis CSS z gradientem (legacy `.hero__fallback`).
 - **Ekspozycja 0.8:** legacy ustawiał 1.15, ale `applyTheme()` natychmiast nadpisywał na 0.8 (efektywnie 0.8).
 - **Środowisko (r160 → r186):** legacy wołał `new RoomEnvironment()` bez renderera, co w r160 dawało światło główne 5
   zamiast 900 (ciemny pokój, jasne panele → kontrastowe odbicia). r186 ma zawsze 900 i pokój przesunięty o y −3.5,
   więc używamy kopii z r160 (`LegacyRoomEnvironment`).
 - **Sprzątanie:** geometrie, materiał, env map, PMREM, `RoomEnvironment`, renderer, obserwatory, listenery. Font cache'owany w module.
-- **Warstwy:** tło, kanwa i naklejki `z-index: 0` pod siatką (1), treść `z-index: 2`; stąd sloty w `HomeHeroStage`.
+- **Warstwy:** tło i kanwa `z-index: 0` pod siatką (1), ramka `.band` też 0, treść `z-index: 2`; stąd sloty w `HomeHeroStage`.
 - **Dostępność:** kanwa `aria-hidden`; na `/` `VisuallyHidden` „W tle trójwymiarowy napis no–fuss.” (nowe zdanie);
   na 404 `h1.sr-only` 1:1 z legacy, tekst `aria-live="polite"`. „Wróć na stronę główną →” (accent) widoczny od początku,
   obok „Posprzątaj ↓” (ghost) i „Realizacje”; po „Posprzątaj” przycisk znika, a fokus idzie na „Wróć na stronę główną →”.
-- **Nagłówki `/`:** rola „Design & Development” to `<p>` w kroju `--t-title` (legacy: `h2` przed `h1`), jedyny `h1` to hasło.
-- **Hero `/` pod usługi:** pod h1 lead (`hero.lead` z `home.ts`, `--t-lead`) i `ContactCta`. Kolejność DOM: h1, lead, CTA,
-  rola z akapitami, suwak. Telefon / tablet (< 1024 px): pierwszy wiersz siatki ma min. `100svh − 2 × --section-y`
-  (h1 + lead + CTA dosunięte do dołu pierwszego ekranu), rola, akapity i suwak pod nim; kanwa ograniczona do
-  `min(100%, 100svh)` (`.hero .scene`). Hero ma `min-height`, nie stałą wysokość (treść nie jest obcinana).
-  Desktop: układ legacy (rola u góry, h1 + lead + CTA na dole 1/span 8, suwak 9/span 4).
-- **Tytuł 404:** `not-found.tsx` nie obsługuje `metadata`; eksperymentalny `global-not-found.js` omija root layout.
-  Zostaje domyślny tytuł „NO-FUSS©2026”, Next sam dodaje `noindex`.
+- **Nagłówki `/`:** jedyny `h1` to hasło. Rola „Design & Development”, dwa akapity, suwak „Zamieszanie” i naklejki
+  z legacy usunięte (odciążenie pierwszego ekranu); kto co robi w duecie mówi podpis zdjęcia w `AboutSection`.
+- **Hero `/` pod usługi:** telefon (< 768 px): h1, lead (`hero.lead` z `home.ts`, `--t-lead`) i `ContactCta` dosunięte do dołu
+  pierwszego ekranu (wiersz siatki min. `100svh − 2 × --section-y`), napis 3D nad nimi (`offsetYMobile`). Od 768 px po
+  przekątnej: siatka `auto / minmax(120px, 1fr) / auto`, `.headline` ma `display: contents`, h1 w wierszu 1 (1/span 8,
+  lewy górny róg), ramka `.band` w wierszu 2 (1/-1), lead z CTA (`.aside`) w wierszu 3 (7/-1, od 1024 px 9/span 4,
+  prawy dolny róg). Hero ma `min-height`, nie stałą wysokość (treść nie jest obcinana), kanwa wypełnia całe hero.
+- **Metadane 404:** `app/not-found.tsx` eksportuje `metadata = { title: "404", description: "404: tej strony nie ma.", robots: null }`:
+  template z layoutu daje „404 — NO-FUSS©2026” (1:1 z legacy), `robots: null` kasuje odziedziczone `index, follow`, więc zostaje
+  jeden tag `noindex` wstawiany przez Next przy 404. Docs Next 16 opisują `metadata` tylko dla `global-not-found.js`, ale resolver
+  16.3 czyta `metadata` z `not-found` (sprawdzić przy aktualizacji Next). React `<title>` nie wystarcza, bo tytuł z layoutu stoi
+  w `<head>` pierwszy.
 
 ---
 
 ### Strona główna
 
-Źródło: `legacy/no-fuss-v5.html` (+ nowe sekcje „Jak pracujemy” i FAQ spoza legacy). Server Components, reveal przez `Reveal`.
+Źródło: `legacy/no-fuss-v5.html` (+ nowe sekcje „Jak pracujemy” i FAQ spoza legacy). Server Components. Reveal tylko na
+nagłówkach sekcji, linii statementu „O nas”, nagłówku stopki i kaflach (realizacje, wiedza); wiersze list, akapity, kroki,
+logotypy i CTA pod listami są widoczne od razu. Liczników przy nagłówkach i numerów wierszy nie ma (numery tylko w krokach procesu,
+poza licznikiem realizacji „01–06” — liczba kafli).
 Sekcje z legacy są bez propsów (dane z `src/content/home.ts`); `ProcessSection` i `FaqSection` dostają dane z propsów
 (`src/content/process.ts`, `src/content/faq.ts`) w `app/page.tsx`.
 Kolejność pod klientów usługowych (zmiana wobec legacy): `HomeHero` → `ServicesList` → `ProcessSection` → `WorkGrid` →
-`AboutSection` → `TestimonialsSection` → `FaqSection` → stopka (layout).
+`AboutSection` → `KnowledgeTeaser #wiedza` → `TestimonialsSection` → `FaqSection` → stopka (layout). Strona ma `revalidate = 3600`
+(kafle zajawki zależą od dzisiejszej daty).
 
 | Komponent | Sekcja (kotwica) | Tonacja | Nagłówek | Reveal |
 |---|---|---|---|---|
 | `HomeHero` | `section#hero` | ciemna | `h1` display | `trigger="intro"` |
-| `ServicesList` | `section#uslugi` | jasna | `h2` mono „Co robimy” (licznik „01–05”), usługi w `h3` | nagłówek + każdy wiersz `li` + `ContactCta` pod listą (od 1024 px od kolumny 4) |
-| `ProcessSection` | `section#proces.tone-light` | jasna (kafle ciemne) | `h2` mono „Jak pracujemy” (licznik „01–04”), kroki w `h3` | nagłówek + `ol` (kafle `.fade` ze staggerem `--i`) |
+| `ServicesList` | `section#uslugi` | jasna | `h2` mono „Co robimy”, usługi w `h3` (bez numerów; `no` tylko jako id w JSON-LD) | nagłówek; wiersze `li` (hover: limonka + wcięcie 12 px) i `ContactCta note` pod listą (od 1024 px od kolumny 4) bez reveal |
+| `ProcessSection` | `section#proces.tone-light` | jasna | `h2` mono „Jak pracujemy”, kroki w `h3` | nagłówek; kroki (kolumny z kreską 1 px, numer mono, subgrid wyrównuje wiersze, hover: limonka + wcięcie 12 px) bez reveal |
 | `WorkGrid` | `section#realizacje.tone-dark` | ciemna | `h2` mono „Produkty i realizacje” (licznik „01–06”) | nagłówek + każdy kafel osobno (`li`) |
-| `AboutSection` | `section#o-nas`, siatka 12 | jasna | `h2` sr-only „O nas” | cała sekcja; zdjęcie `.fade`, statement liniami 0–2, drugi statement `--i:4`, logotypy `--i:5` |
+| `AboutSection` | `section#o-nas`, siatka 12 | jasna | `h2` sr-only „O nas” | cała sekcja; statement liniami 0–1; `figure`: portrety Magdy i Kuby obok siebie (3:4, `personCards[id].photo` z `about.ts`, te same co na `/o-nas`; bez zdjęcia `PhotoPlaceholder` z imieniem) z podpisem „kto co robi” pod każdym (mono-sm z `people`, te same dwie kolumny); drugi statement i logotypy bez reveal |
+| `KnowledgeTeaser` | `section#wiedza.tone-dark` | ciemna | mono „Wiedza” + `h2` w roli h2 „Przekazujemy wiedzę dalej”, „Zobacz wszystko →” (`/wiedza`) | nagłówek + każdy kafel osobno (`li`); **zwraca `null`** bez wydarzeń |
 | `TestimonialsSection` | `section#opinie.tone-dark` | ciemna | `h2` mono „Co mówią klienci” | nagłówek + każdy `figure`; **zwraca `null`**, gdy `publishedTestimonials()` jest puste (teraz: same placeholdery) |
-| `FaqSection` | `section#faq.tone-light` | jasna | `h2` mono „Częste pytania” (licznik z liczby pytań), pytania w `h3` w `summary` | nagłówek + każdy wiersz + zdanie i `ContactCta` pod listą; **zwraca `null`** przy pustej liście |
-| `Footer` (layout) | `footer#kontakt` | ciemna | display CTA | `Reveal` |
+| `FaqSection` | `section#faq.tone-light` | jasna | `h2` mono „Częste pytania”, pytania w `h3` w `summary` (bez numerów) | nagłówek; wiersze i zdanie pod listą (bez `ContactCta`, zaraz niżej jest stopka) bez reveal; **zwraca `null`** przy pustej liście |
+| `Footer` (layout) | `footer#kontakt` | ciemna | display CTA | `Reveal` (linie nagłówka) |
 
 Rytm tonacji: nie da się przeplatać wszystkich par. Usługi i proces są obie jasne (proces między jasnymi usługami
-a ciemnymi realizacjami, każda tonacja da dwie takie same obok siebie); proces odróżniają ciemne kafle.
-Dopóki opinie są ukryte, „O nas” i FAQ też są jasne obok siebie; z opiniami rytm FAQ jest poprawny (ciemna → jasna → stopka ciemna).
+a ciemnymi realizacjami, każda tonacja da dwie takie same obok siebie); proces odróżnia układ: cztery kolumny zamiast wierszy.
+„Wiedza” (ciemna) rozdziela jasne „O nas” i FAQ. Gdy pojawią się opinie (ciemne), staną obok ciemnej „Wiedzy”: wtedy do decyzji,
+czy przenieść zajawkę albo zmienić jej tonację.
 
 Wszystkie sekcje mają `aria-labelledby`. Jedyny `h1` jest w `HomeHero`.
 
-Siatka realizacji (od 768 px, 1:1 z legacy): `xl` 5/span 8 · `l` span 5, `l + l` 7/span 5 · `m` 6/span 3, `m + m` 10/span 3 ·
-`s` span 3, `s.off` 5/span 3, `s.off2` 9/span 3. Poniżej 768 px wszystko 1/-1. Odstęp 56 px pion / 8 px poziom.
+Siatka realizacji (od 1024 px, 1:1 z legacy): `xl` 5/span 8 · `l` span 5, `l + l` 7/span 5 · `m` 6/span 3, `m + m` 10/span 3 ·
+`s` span 3, `s.off` 5/span 3, `s.off2` 9/span 3. 768–1023 px: `xl` 5/span 8, pozostałe span 6 (dwie równe kolumny).
+Poniżej 768 px wszystko 1/-1. Odstęp 56 px pion / 8 px poziom.
 Kafle: OurMoney `xl` · AION MIND + Busy Bee `l + l` · OTB + Automation House `m + m` · Sassy `s` na końcu (tag „Eksperyment” z case'u).
-Opinie (od 900 px): 1/span 7, 8/span 5, 4/span 6. Usługi (od 1024 px): numer span 1, nazwa 4/span 4, opis 9/span 4.
-Tekst sekcji o nas: zdjęcie 1/span 4 + tekst 6/span 7 (640 px), 1/span 3 + 5/span 8 (1024 px).
-Proces: kafle 1 kolumna → 2 (640 px) → 4 (1024 px). FAQ jak usługi (od 1024 px): numer span 1, pytanie 4/span 8, „+” w 12, odpowiedź 4/span 7.
+Opinie (od 900 px): 1/span 7, 8/span 5, 4/span 6. Usługi (od 1024 px): nazwa 4/span 4, opis 9/span 4; niżej jedna pod drugą.
+O nas: portrety z podpisem (telefon: maks. 340 px) 1/span 4 + tekst 6/span 7 (640 px), 1/span 3 + 5/span 8 (1024 px).
+Logotypy: pętla `MarqueeLoop` (40 s na pół toru, ok. 40 px/s, krawędzie wygaszone maską 40 px), każdy znak w polu wysokości 48 px
+(środek w pionie), odstęp 48 px (`padding-right`, także po ostatnim znaku kopii), `--logo-size: 24px`, od 768 px 28 px.
+W torze `max-width: none` na logo (`100%` z `PartnerLogo` zwija SVG do zera w kontenerze o szerokości z treści).
+Proces: kolumny 1 → 2 (640 px) → 4 (1024 px). FAQ jak usługi (od 1024 px): pytanie 4/span 8, „+” w 12, odpowiedź 4/span 7.
+Wiedza: kafle 1 kolumna → 2 (640 px) → 3 (1024 px), odstęp 56 px pion / 16 px poziom (`--event-gap`); od 768 px „Zobacz wszystko →” po prawej, na linii dołu `h2`.
+
+`ServicesList`: hover wiersza tylko w CSS (`@media (hover: hover)`): `.item:hover` ustawia tło `--accent`, kolor `--on-accent`
+i `--muted: #3F4A12`, a `.name` / `.desc` dostają `translateX(12px)` (0.4 s `--ease`). `.name` / `.desc` mają tam stały
+`padding-right: 24px` (zapas na przesunięcie, tekst nie wychodzi poza limonkę). Wiersze nie są fokusowalne (brak linków),
+więc nie ma stanu fokusu. Przy reduced motion wcięcie 12 px zostaje, tylko bez animacji.
+
+#### `KnowledgeTeaser` — server
+```ts
+interface KnowledgeTeaserProps {
+  id: string; label: string; title: string;  // kotwica, etykieta mono, `h2` (`${id}-heading`)
+  more: { label: string; href: string };     // „Zobacz wszystko →” do `/wiedza`
+  items: readonly TeaserEvent[];             // `teaserEvents(events, todayIso(), 3)`: najbliższe nadchodzące + najnowsze minione
+  tone?: "light" | "dark";                   // domyślnie dark
+  className?: string;
+}
+```
+Kafle `EventTile` w wariancie z danych (`upcoming` / `past`), tylko wydarzenia z `featured: true` (`teaserEvents`). Placeholdery widoczne jak na `/wiedza`. Brak minionych → dopełniają dalsze nadchodzące.
 
 #### `ProcessSection` — server
 ```ts
 interface ProcessSectionProps {
   id: string;                     // kotwica; nagłówek dostaje `${id}-heading` (aria-labelledby)
-  label: string; counter?: string;
+  label: string;
   steps: readonly { no: string; title: string; text: string }[];   // ProcessSectionStep z @/content/process
   tone?: "light" | "dark";        // domyślnie light
   className?: string;
 }
 ```
-Ogólny proces współpracy (strona główna). Kafle mają `.tone-dark` (tło `--bg` = `--dark`, biały tekst, czytelne `--muted`),
-numer w roli display, tytuł `h3` w roli title, opis zawsze widoczny. Nic nie jest fokusowalne, brak hovera.
+Ogólny proces współpracy (strona główna). Kroki jako lekkie kolumny jak `FactRow`: kreska 1 px (`--ink` 18%) nad krokiem,
+numer mono `--muted` (`aria-hidden`, kolejność niesie `<ol>`), tytuł `h3` w roli title, opis `--muted`. Bez kafli i bez reveal.
+Kroki w `<ol>`: każdy `li` zajmuje 3 wiersze siatki (`grid-template-rows: subgrid`), więc numer, tytuł i opis stoją w rzędzie w jednej linii
+(1 → 2 → 4 kolumny). Padding kroku w spoczynku `16px 0`, przy hoverze (`@media (hover: hover)`) dochodzi `padding-right: 24px`
+jako zapas na przesunięcie; tło `background-clip: padding-box` (kreska 1 px zostaje nad limonką).
+Hover tylko w `@media (hover: hover)`: `--accent`, tekst `--on-accent`, `--muted: #3F4A12`, dzieci `translateX(12px)`, 0.4 s `--ease`.
+Nic nie jest fokusowalne (bez tabindex, bez `data-cursor`). Reduced motion: wcięcie 12 px zostaje, tylko bez animacji.
 Nie myl z `ProcessSteps` (case Automation House: 5 kroków, opis na hover / `:focus-within`, `tabIndex=0`); jego kontrakt bez zmian.
 ```tsx
-<ProcessSection id="proces" label={processSection.label} counter={processSection.counter} steps={processSection.steps} />
+<ProcessSection id="proces" label={processSection.label} steps={processSection.steps} />
 ```
 
 #### `FaqSection` — server
@@ -579,44 +645,63 @@ interface FaqSectionProps {
   id: string;                     // kotwica; nagłówek `${id}-heading`
   label: string;
   items: readonly FaqItem[];      // już przefiltrowane: publishedFaq()
-  more?: string;                  // zdanie nad CTA
-  cta?: boolean;                  // ContactCta pod listą, domyślnie true
+  more?: string;                  // zdanie pod listą; bez własnego CTA (zaraz niżej stopka #kontakt)
   tone?: "light" | "dark";
   className?: string;
 }
 ```
-Natywne `<details>/<summary>` (zero JS, Tab + Enter/Spacja): numer mono (`aria-hidden`), pytanie w `h3` (`--t-title`),
+Natywne `<details>/<summary>` (zero JS, Tab + Enter/Spacja): pytanie w `h3` (`--t-title`), bez numeru i licznika,
 „+” w mono obracany do „×” przy `[open]` (off przy reduced motion). Wiersze z obrysem 1 px (`--ink` 18%) jak w `ServicesList`,
-hover limonkowy z wcięciem 12 px jak w `FindSection`, fokus: obrys 2 px `--ink`. Licznik liczony z długości listy.
+hover tylko w `@media (hover: hover)`: `--accent`, `--on-accent`, `--muted: #3F4A12`, pytanie `translateX(var(--indent))` (12 px, od 1024 px 6 px), „+” `translate: -12px 0` (osobno od `transform`, który niesie obrót), stały `padding-right: 24px` pytania jako zapas, 0.4 s `--ease`; fokus: obrys 2 px `--ink`; reduced motion: wcięcie bez animacji. Bez reveal (tylko nagłówek sekcji).
 Pytania z placeholderem `[…]` odfiltrowuje `publishedFaq()` (i w UI, i w JSON-LD `FAQPage`).
 
 ---
 
 ### Podstrona `/o-nas`
 
-Źródło: `legacy/o-nas-v5.html`. Kolejność: `TeamHero` → `TeamSheets` → `Marquee` → `RolesSplit` → `FindSection #social` →
-`FindSection #posty` → `StickerBoard #play`. Klienckie są tylko `Reveal`, `CopyEmail`, `ScrambleLink` (w `SocialLinks`) i `DragSticker`.
+Źródło: `legacy/o-nas-v5.html`. Kolejność: `PageHero` → `TeamSheets` → `Marquee` → `RolesSplit` → `FindSection #social` →
+`FindSection #posty` → `FindSection #wydarzenia` (zajawka `/wiedza`) → `StickerBoard #play`. Klienckie są tylko `Reveal`, `CopyEmail`, `ScrambleLink` (w `SocialLinks`) i `DragSticker`.
+CTA kontaktu: w `PageHero` (`cta`) i na końcu `RolesSplit`.
 
-#### `TeamHero` / `TeamSheets` / `RolesSplit` / `StickerBoard` — server, bez propsów
-- `TeamHero` (legacy `.team-hero`): `Reveal trigger="intro"`, `<h1>` display w 3 liniach + lead statement. Jasne tło.
+#### `PageHero` — server
+```ts
+interface PageHeroProps { lines: readonly string[]; lead: string; cta?: boolean /* ContactCta pod leadem */ }
+```
+Jasne hero podstron `/o-nas` i `/wiedza` (legacy `.team-hero`): `Reveal trigger="intro"`, `<h1>` display w liniach (`max-width: 12ch`)
+i lead statement (`--muted`; od 1024 px h1 1/span 8, lead 9/span 4 dosunięty do dołu).
+`cta` (domyślnie bez): `ContactCta` pod leadem, stagger po leadzie; od 1024 px w kolumnie leadu 9/span 4. Włączone na `/o-nas`, na `/wiedza` bez.
+```tsx
+<PageHero lines={aboutHero.lines} lead={aboutHero.lead} cta />
+```
+
+#### `TeamSheets` / `RolesSplit` / `StickerBoard` — server, bez propsów
 - `TeamSheets` (legacy `.sheets`): ciemny pas (`--dark`), karty `--shade-900`: Magda i Kuba z `people`, trzecia karta agentów AI. Każda karta w osobnym `Reveal`.
-  Zdjęcie: gdy `personCards[id].photo` istnieje (dziś tylko Kuba), `next/image` z klasą `.photo` (`object-fit: cover`, `object-position: 50% 10%`,
+  Od 900 px `.cell` i karta (`className`) to subgrid wierszy `.sheets` (900–1199 px `span 5`, od 1200 px `span 6` = wiersze `PersonCard`):
+  karty w rzędzie mają zdjęcia, role, bio, fakty i linki na tej samej wysokości mimo różnej liczby linii w nazwie.
+  Zdjęcie: gdy `personCards[id].photo` istnieje (Magda i Kuba), `next/image` z klasą `.photo` (`object-fit: cover`, `object-position` z `photo.focus`,
   `sizes="(min-width: 1200px) 33vw, (min-width: 900px) 17vw, 100vw"`, bez `priority`); inaczej `PhotoPlaceholder` z `photoLabel`.
+  Agenci AI: `PhotoPlaceholder` z robotem (`AgentIllustration`, `currentColor`), wygląd z `variant="ai"`.
 - `RolesSplit` („Kto co robi”): każdy wiersz to `Reveal` ze `style={{ "--v": "92%" }}`; romb (18 px, obrót 45°) jedzie od 50% do `--v`
   po `is-in`. Legenda z `people[].givenName`. Nagłówek to `<h2>` w mono.
+  Pod wierszami `ContactCta` w osobnym `Reveal` (`margin-top: 48px`); wiersze są w wrapperze `div`, żeby `.row:last-child` dawał dolną linię.
 - `StickerBoard` (`#play`): cała sekcja to `Reveal as="section"`. 6 naklejek z `STICKERS` na pozycjach z legacy, każda to `DragSticker`
-  z `index` (0–4, przycięty modulo) dla fade-in stagger. Zdjęcia: Magda placeholder,
-  Kuba `next/image` z `personCards.kuba.photo` (3:4 `cover`, `draggable={false}`, `pointer-events: none`; naklejki `z-index: 3` nad nim);
+  z `index` (0–4, przycięty modulo) dla fade-in stagger. Zdjęcia z `people` + `personCards[id].photo`: `next/image`
+  (3:4 `cover`, `object-position` z `photo.focus`, `draggable={false}`, `pointer-events: none`; naklejki `z-index: 3` nad nim); bez zdjęcia `PhotoPlaceholder` z imieniem (Kuba limonkowy);
   blok zdjęć ma `.fade`.
 
-#### `Marquee` — server (Reveal + CSS)
+#### `Marquee` / `MarqueeLoop` — server (Reveal + CSS)
 ```ts
 interface MarqueeProps { items: readonly string[]; copies?: number /* 4 */; className?: string }
+interface MarqueeLoopProps { children: ReactNode; copies?: number /* 4 */; className?: string }
 ```
-Pętla 22 s (`translate -50%`). Pierwsza kopia czytelna, kolejne `aria-hidden`, „✦” zawsze `aria-hidden`. Stoi przy reduced motion.
+`MarqueeLoop`: sama pętla. `copies` kopii `children` w rzędzie, tor jedzie liniowo o połowę (`translate -50%`), tempo z `--marquee-duration`
+(domyślnie 22 s; ustawia je klasa okna). Połowa toru musi być szersza niż okno (stąd 4 kopie). Pierwsza kopia czytelna, kolejne `aria-hidden`.
+Stoi przy reduced motion. Używają jej `Marquee` i logotypy partnerów w `AboutSection`.
+`Marquee`: limonkowy pasek (legacy `.marquee`, h2 wersalikami, „✦” zawsze `aria-hidden`), 22 s.
 Cały pasek jest w `Reveal` z `.fade` (fade-in on-scroll); pętla używa `translate`, reveal używa `transform`, więc się nie gryzą.
 ```tsx
 <Marquee items={marqueeItems} />
+<MarqueeLoop className={styles.clientsMarquee}><ul aria-labelledby={id}>…</ul></MarqueeLoop>
 ```
 
 #### `FindSection` — server
@@ -628,11 +713,19 @@ interface FindSectionProps {
   tone?: "light" | "dark";
 }
 ```
-Legacy `.find`: nagłówek (sticky ≥ 1024 px) + lista wierszy z hoverem limonkowym. Linki przez `externalLinkProps` (placeholdery: [Linki-placeholdery](#linki-placeholdery)).
+Legacy `.find`: nagłówek (sticky ≥ 1024 px) + lista wierszy z hoverem limonkowym (`--muted: #3F4A12` na limonce). Wiersz (`FindItem`):
+tytuł, opcjonalny `kicker` (linia mono nad tytułem, `--muted`) i `meta` po prawej bez łamania i bez kurczenia (`white-space: nowrap`,
+`flex-shrink: 0`; `metaMono` → mono 12 px). Na hover przesuwa się tylko `meta`: zewnętrzne po skosie, wewnętrzne („→”) 4 px w prawo.
+Linki zewnętrzne przez `externalLinkProps` (nowa karta),
+wewnętrzne (`/…`) przez `next/link` w tej samej karcie (placeholdery: [Linki-placeholdery](#linki-placeholdery)).
 ```tsx
 <FindSection {...findUs} extra={<CopyEmail email={site.email} className={findCopyClassName} />} />
 <FindSection {...linkedinPosts} tone="dark" />
+<FindSection {...publishedEventsTeaser(todayIso())} tone={posts ? "light" : "dark"} />
 ```
+`#wydarzenia` (`publishedEventsTeaser` z `about.ts`): do 3 najbliższych wydarzeń bez `[…]` (wiersz: kicker „17–18.11.2026 · Katowice”
+nad tytułem, „→” po prawej → `/wiedza#<id>`) + „Wszystkie wydarzenia →” (`/wiedza`). Na telefonie, obok zajawki na `/`, wejście na `/wiedza` (HUD chowa link < 640 px).
+Tonacja przeciwna do sekcji nad nią. Strona ma `revalidate = 3600` (lista zależy od dzisiejszej daty).
 
 #### `DragSticker` — client
 ```ts
@@ -646,6 +739,29 @@ interface DragStickerProps {
 - Klawiatura: `tabIndex=0`, strzałki o 16 px (przycięte do planszy), `role="img"`, `aria-label` 1:1 z legacy, `aria-describedby` → ukryta instrukcja.
 - Pozycja żyje w DOM (`left/top` w px), bez re-renderu na ruch. Reduced motion: bez przejść `scale`/`rotate`.
 - Sekcja nie ma `data-stickers`, więc naklejki spod kursora tu nie działają.
+
+---
+
+### Podstrona `/wiedza`
+
+Zakładka „Wiedza” (nowa strona, bez wzorca w legacy): „Przekazujemy wiedzę dalej”, minione i nadchodzące warsztaty, prelekcje, meetupy.
+Kolejność: `PageHero` → `EventsSection #nadchodzace` (ciemna) → `EventsSection #minione` (jasna) → stopka.
+Dane z `src/content/events.ts`; podział `splitEvents(events, todayIso())`: ostatni dzień (`endDate ?? date`, `YYYY-MM-DD`) ≥ dziś
+(Europe/Warsaw) → nadchodzące (najbliższe pierwsze), reszta → minione (najnowsze pierwsze). `revalidate = 3600`: kafel sam przechodzi
+do minionych po swoim ostatnim dniu.
+
+#### `EventsSection` — server
+```ts
+interface EventsSectionProps {
+  id: string; label: string;                 // nagłówek `h2` mono `${id}-heading`, licznik „01–0N” z długości listy
+  events: readonly KnowledgeEvent[];         // posortowane przez splitEvents
+  variant: "upcoming" | "past";              // upcoming: 1 → 2 kolumny (768 px), gap 16 (`--event-gap`); past: 1 → 2 (640) → 3 (1024), gap 56/16
+  empty?: string;                            // zdanie zamiast kafli; bez niego pusta sekcja zwraca null
+  footer?: ReactNode;                        // pod listą (lead), np. „Organizujesz wydarzenie? Zaproś nas →” (#kontakt)
+  tone?: "light" | "dark"; className?: string;
+}
+```
+Każdy kafel w osobnym `Reveal as="li"`. Nadchodzące zawsze się renderują (`empty`: „Na razie nic nie planujemy.”), minione znikają bez danych.
 
 ---
 
@@ -672,7 +788,7 @@ Produkty (`/ourmoney`, `/aion-mind`): warianty `wide` / `split`. Strony WWW (`/b
 | `DragBall` | client | `.otb` | OTB |
 | `ToySwitcher` | client | `.sw2` | Sassy |
 | `SpecList` | server | `.spec`, `.facts` | Busy Bee, AH, OTB, Sassy |
-| `ProcessSteps` | server | `.steps` | AH |
+| `ProcessSteps` | client | `.steps` | AH |
 | `CaseStory` | server | — (nowy) | Busy Bee, AH, OTB, Sassy |
 
 #### `CaseStage` — server
@@ -736,27 +852,27 @@ Rekonstrukcja ekranu Dziennika AION MIND (maj 2026) w `PhoneFrame`. Dane i arytm
 - Kalendarz: `role="grid"` → `row` → `columnheader` / `gridcell` (`aria-selected`) z przyciskiem dnia.
 - Klawiatura: roving tabindex; ←/→ ±1 dzień, ↑/↓ ±7, Home/End tydzień (z Ctrl: siatka), Enter/Spacja/klik → „Tydzień N” (ISO 8601) w `aria-live`.
 - Karty podsumowań: `aria-pressed`, komunikat w `role="status"` (toast 1,6 s).
+- Toast: blokiem zawierającym jest ekran (`.jr` ma `position: relative`), `max-width: calc(100% - 8px)`, dłuższy komunikat łamie się (`text-wrap: balance`).
 - Paleta, zaokrąglenia i małe rozmiary px to ekran aplikacji (stałe z legacy, zmienne `--jr-*`), krój `var(--sans)`.
 
 #### `LiveFrame` — client
 ```ts
 interface LiveFrameProps {
-  src: string; title: string; urlLabel: string;
+  src: string; title: string; urlLabel: string;   // urlLabel: sam host, np. „www.busybeefilm.pl”
   poster: Required<CaseStudyImage>;
-  load?: "auto" | "click";   // auto: Busy Bee, AH; click: OTB, Sassy
   loadLabel?: string;        // domyślnie „Otwórz na żywo ↗”
-  loadAriaLabel?: string;
+  loadAriaLabel?: string;    // „Załaduj żywą stronę <host>”
   className?: string;
 }
 ```
 Limonkowa scena z ramką przeglądarki, własny `Reveal`; stawiaj zaraz pod hero. `iframe` 1440×900 skalowany `--s = szerokość / 1440`
 (`ResizeObserver`), `loading="lazy"`, `referrerPolicy="no-referrer"`, `sandbox="allow-scripts allow-same-origin"`.
 Pasek adresu (mono 12 px, `--t-mono-sm`) to link do strony w nowej karcie na całą wysokość paska 48 px (obszar dotyku).
-Reduced motion, poniżej 768 px i `pointer: coarse`: nic nie ładuje się samo, niezależnie od `load`; poniżej 768 px przycisk
-„Otwórz na żywo ↗” jest linkiem do strony w nowej karcie (zamiast ramki w skali ~0,25). SSR renderuje poster z przyciskiem,
-tryb ustala się po hydratacji (bez mismatchu). Żywa ramka ma `data-native-cursor` (kursor systemowy, patrz `Cursor`).
+Ramka nigdy nie ładuje się sama (żywa strona przechwytuje kółko i Tab): poster + przycisk „Otwórz na żywo ↗”, `iframe` dopiero
+po kliknięciu. Poniżej 768 px przycisk jest linkiem do strony w nowej karcie (zamiast ramki w skali ~0,25). SSR renderuje poster
+z przyciskiem, tryb ustala się po hydratacji (bez mismatchu). Żywa ramka ma `data-native-cursor` (kursor systemowy, patrz `Cursor`).
 ```tsx
-<LiveFrame {...otbLive} load="click" />
+<LiveFrame {...otbLive} />
 ```
 
 #### `FilmStrip` — client
@@ -768,6 +884,7 @@ Klawiatura: ← → Home End. Autoprzewijanie co 3,2 s w widoku (IO 0.4), pauza 
 Przycisk „Pauza” / „Wznów” (mono 12 px, prawy górny róg, zmienna etykieta bez `aria-pressed`, WCAG 2.2.2): pauza z przycisku jest trwała;
 przycisk renderuje się tylko, gdy autoprzewijanie jest możliwe (bez reduced motion, ≥ 2 klatki, `autoAdvanceMs > 0`).
 `data-lenis-prevent`; wyśrodkowanie przez `scrollTo` taśmy (bez przewijania strony).
+Pionowe kółko i pionowy swipe nad taśmą przewijają stronę (`overscroll-behavior-y: auto` nadpisuje `contain` z `[data-lenis-prevent]`), w poziomie `contain`.
 
 #### `PhoneScroller` — client
 ```ts
@@ -784,7 +901,8 @@ telefonu z widoku wyłącza tryb. Klawiatura działa zawsze. `pointer: fine` bez
 interface DragBallProps { label: string; words: readonly [string, string]; caption: string; ballLabel: string; className?: string }
 ```
 Rekonstrukcja hero otb.vc w DOM/CSS. Kula `role="slider"`, Pointer Events z capture, strzałki (Shift = większy krok). Gradient idzie za kulą.
-`touch-action: none` tylko na kuli.
+`touch-action: none` tylko na kuli. Korzeń to `<figure>` (tu trafia `className`); podpis `caption` jako `TileCaption` pod polem,
+nie na nim (paleta pola nie daje stałego kontrastu).
 
 #### `ToySwitcher` — client
 ```ts
@@ -798,12 +916,17 @@ Przenikanie obrazów 0.5 s (bez przy reduced motion).
 interface SpecListProps { items: readonly { term: string; value: string; chip?: string; href?: string }[]; variant?: "rows" | "tiles"; className?: string }
 ```
 `<dl>` z `FactRow`. `rows` = legacy `.spec` (wielkie wiersze), `tiles` = legacy `.facts` (Sassy). Stagger przez `nth-child`; musi być w `Reveal`.
+`rows`: poniżej 768 px jedna kolumna (termin nad wartością, odstęp 8 px), 768–1023 px `minmax(0,1fr) minmax(0,2fr)`, od 1024 px
+`minmax(0,4fr) minmax(0,8fr)`; długie wartości i linki łamią się (`overflow-wrap: break-word`).
 
-#### `ProcessSteps` — server
+#### `ProcessSteps` — client
 ```ts
 interface ProcessStepsProps { steps: readonly { title: string; text: string }[]; ariaLabel?: string; className?: string }
 ```
 `<ol>` z licznikiem 01–05; opis rozwija się na hover i `:focus-within` (krok ma `tabIndex=0`). Bez hovera opisy widoczne od razu.
+Po wejściu w widok (IO, `rootMargin` −40% od dołu, raz) kroki podświetlają się po kolei (`.active`: limonka jak hover, opis zwinięty,
+bo rozwinięcie podnosi rząd): start po 600 ms, 700 ms na krok, potem wszystkie gasną (≈ 3,5 s, poniżej progu WCAG 2.2.2).
+Hover / fokus na kroku mają pierwszeństwo (`:has()`), off przy reduced motion.
 
 #### `CaseStory` — server
 ```ts
@@ -844,7 +967,7 @@ function caseHeroFacts(summary: CaseStudySummary, facts: readonly CaseStudyFact[
 type CaseStudySectionProps =
   | { label: string; tone?: "light" | "dark"; id?; className?; layout?: "wide"; children: ReactNode }
   | { label: string; tone?: "light" | "dark"; id?; className?; layout: "split"; text: ReactNode; visual: ReactNode; flip?: boolean }
-  | { label: string; tone?: "light" | "dark"; id?; className?; layout: "lite"; hint?: ReactNode; bleed?: boolean; children: ReactNode };
+  | { label: string; tone?: "light" | "dark"; id?; className?; layout: "lite"; hint?: ReactNode; hintTouch?: ReactNode; bleed?: boolean; children: ReactNode };
 ```
 Hero: kicker to `<p class="mono">` z chipem „Case study”, tytuł `h1` mega, lead statement, fakty w `<dl>` (`FactRow`, mono-sm).
 
@@ -863,7 +986,7 @@ działa na każdej stronie). `cta.tone` ustawiaj **przeciwnie do ostatniej sekcj
 |---|---|---|
 | `wide` (domyślnie) | `.cs-block` + `.cs-wide` | etykieta mono (`MonoLabel`, kolumny 1–2), treść w kolumnach 3–12 od 1024 px |
 | `split` | `.cs-block` + `.cs-txt` / `.cs-vis` | tekst sticky (3–6) + wizualizacja (8–12); `flip` zamienia strony |
-| `lite` | `.lite` / `.cs-lite` | wiersz mono: etykieta jako `<h2>` (`--i:0`), `hint` po prawej (`--i:1`); pod spodem treść na pełną szerokość, odstęp 24 px; `bleed` = treść od krawędzi do krawędzi (nagłówek z gutterem) |
+| `lite` | `.lite` / `.cs-lite` | wiersz mono: etykieta jako `<h2>` (`--i:0`), `hint` po prawej (`--i:1`); `hintTouch` zastępuje `hint` przy `@media (hover: none)` (sam CSS), np. AH: `hint="Rebranding · najedź na krok" hintTouch="Rebranding"`; pod spodem treść na pełną szerokość, odstęp 24 px; `bleed` = treść od krawędzi do krawędzi (nagłówek z gutterem) |
 
 Wariant `lite` (case studies stron): treść w środku daj w `<Fade index={2}>`. `.cs-lite` (OTB, Sassy) ma 32 px odstępu:
 strony nadpisują klasą `section.csLite` w `page.module.css`.
@@ -891,14 +1014,15 @@ Wszystkie `page.tsx` to Server Components: `buildMetadata` + `<JsonLd>` + organi
 
 | Route | Plik | Źródło legacy | Sekcje | JSON-LD strony |
 |---|---|---|---|---|
-| `/` | `app/page.tsx` | `no-fuss-v5` | `HomeHero` → `ServicesList` → `ProcessSection #proces` → `WorkGrid` → `AboutSection` → `TestimonialsSection` (ukryta bez opinii) → `FaqSection #faq` | `homeGraphNodes()`: `ItemList #realizacje`, `OfferCatalog #uslugi`, `Review` (tylko nie-placeholdery, teraz 0), `FAQPage #faq` (`publishedFaq()`) |
-| `/o-nas` | `app/o-nas/page.tsx` | `o-nas-v5` | `TeamHero` → `TeamSheets` → `Marquee` → `RolesSplit` → `FindSection` ×2 → `StickerBoard` | `BreadcrumbList` + `AboutPage #webpage` (`mainEntity` → Organization, `mentions` → Person) |
+| `/` | `app/page.tsx` | `no-fuss-v5` | `HomeHero` → `ServicesList` → `ProcessSection #proces` → `WorkGrid` → `AboutSection` → `KnowledgeTeaser #wiedza` → `TestimonialsSection` (ukryta bez opinii) → `FaqSection #faq`; `revalidate = 3600` | `homeGraphNodes()`: `ItemList #realizacje`, `OfferCatalog #uslugi`, `Review` (tylko nie-placeholdery, teraz 0), `FAQPage #faq` (`publishedFaq()`) |
+| `/o-nas` | `app/o-nas/page.tsx` | `o-nas-v5` | `PageHero` → `TeamSheets` → `Marquee` → `RolesSplit` → `FindSection` ×3 (`#wydarzenia`: zajawka `/wiedza`) → `StickerBoard`; `revalidate = 3600` | `BreadcrumbList` + `AboutPage #webpage` (`mainEntity` → Organization, `mentions` → Person) |
+| `/wiedza` | `app/wiedza/page.tsx` | — (nowa) | `PageHero` → `EventsSection #nadchodzace` → `EventsSection #minione`; `revalidate = 3600` | `BreadcrumbList` + `CollectionPage #webpage` (`hasPart` → `Event`) + `Event` na wydarzenie bez `[…]` (`performer` → Person, `organizer` = `host`) |
 | `/ourmoney` | `app/ourmoney/` | `case-ourmoney-v2` | `CaseStage` phones, wide/split, `SplitCalculator`, `CaseScreens`, `CaseNumbers`, `TechStack` | `BreadcrumbList` + `CreativeWork` (`about` → app) + `SoftwareApplication` (`FinanceApplication`, oferty 24,99 / 249,99 PLN) |
 | `/aion-mind` | `app/aion-mind/` | `case-aion-mind-v1` | `CaseStage` image, `JournalScreen`, `GuideCards`, `RolePath`, `CaseNumbers` | jak wyżej, `LifestyleApplication`, `installUrl` = sklepy, `contributor` = Magda, `publisher` = `Organization` AION MIND z `employee` = Magda (etat, nie produkt no-fuss) |
 | `/busy-bee` | `app/busy-bee/page.tsx` | `case-busybee-v3` | `LiveFrame` → lite: `CaseStory`, `FilmStrip` (podpis: reklamy Busy Bee dla ich klientów), `PhoneScroller`, `SpecList` | `BreadcrumbList` + `CreativeWork` (`about.url` = żywa strona) + `WebSite` klienta |
 | `/automation-house` | `app/automation-house/page.tsx` | `case-automation-house-v1` | `LiveFrame` → lite: `CaseStory`, `ProcessSteps`, `PhoneScroller`, `SpecList` | jak Busy Bee |
-| `/otb` | `app/otb/` | `case-otb-v2` | `LiveFrame` (click) → lite: `CaseStory`, `DragBall`, `PhoneScroller`, `SpecList` | jak Busy Bee |
-| `/sassy` | `app/sassy/` | `case-sassy-v2` | `LiveFrame` (click) → lite: `CaseStory`, `ToySwitcher`, 2 × `PhoneFrame`, `SpecList tiles` | jak Busy Bee, `WebSite.author` = Magda |
+| `/otb` | `app/otb/` | `case-otb-v2` | `LiveFrame` → lite: `CaseStory`, `DragBall`, `PhoneScroller`, `SpecList` | jak Busy Bee |
+| `/sassy` | `app/sassy/` | `case-sassy-v2` | `LiveFrame` → lite: `CaseStory`, `ToySwitcher`, 2 × `PhoneFrame`, `SpecList tiles` | jak Busy Bee, `WebSite.author` = Magda |
 | 404 | `app/not-found.tsx` | `404` | `NotFoundHero` | — |
 
 Każdy case kończy się blokiem CTA z szablonu, potem „Następny projekt”.
@@ -909,15 +1033,17 @@ Metadane case studies: `buildMetadata({ path, type: "article", description: case
 
 | Plik | Co |
 |---|---|
-| `site.ts` | `site` (w tym `contact: SiteContact` = `{ email, calendarUrl, responseNote }`, `homeTitle`, `description`), `people`, `products` (tylko produkty własne no-fuss: OurMoney; AION MIND to etat Magdy, adres w `cases/aion-mind.ts`), `isPlaceholder()` |
-| `routes.ts` | `routes`, `caseOrder`, `getRoute`, `getNextCase`, `getNavSection` |
-| `navigation.ts` | `mainNav` (Usługi, Realizacje, O nas, Kontakt; wszystkie widoczne na każdej szerokości, `hideOnSmall` nieużywane) |
+| `site.ts` | `site` (w tym `contact: SiteContact` = `{ email, calendarUrl, responseNote }`, `brandTitle` = tytuł `/` i sufiks podstron, `description`), `people`, `products` (tylko produkty własne no-fuss: OurMoney; AION MIND to etat Magdy, adres w `cases/aion-mind.ts`), `isPlaceholder()` |
+| `routes.ts` | `routes` (`source: null` = strona bez wzorca w legacy, np. `/wiedza`), `caseOrder`, `getRoute`, `getNextCase`, `getNavSection` |
+| `navigation.ts` | `mainNav` (Usługi, Realizacje, O nas, Wiedza, Kontakt; „Wiedza” z `hideOnSmall`, reszta widoczna na każdej szerokości) |
 | `types.ts` | typy współdzielone (`CaseStudy`, `CaseStudySummary`, `CaseStudyStory`, `SocialLink`, `Person`…) |
-| `home.ts` | `hero` (lead, akapit o duecie), `about`, `work` (kafle), `servicesSection`, `testimonialsSection`, `publishedTestimonials()`; typy `WorkTile`, `SizedImage` |
+| `home.ts` | `hero` (lead, akapit o duecie), `about`, `work` (kafle), `servicesSection`, `testimonialsSection`, `publishedTestimonials()`; typy `WorkTile`, `SizedImage` (portrety w `#o-nas` biorą się z `personCards` w `about.ts`) |
 | `home-jsonld.ts` | węzły JSON-LD strony głównej (`workItemList`, `servicesCatalog`, `reviews`, `faqPage`). W `workItemList` `creator` wg `CaseStudy.ownership`: `own`/`client` → no-fuss; `employment` → `Organization` pracodawcy (`ids.externalOrganization(url)`) + `contributor` = Person z `employer.employee` |
-| `process.ts` | `processSection` (label, counter, 4 kroki `ProcessSectionStep`) dla `ProcessSection` |
+| `events.ts` | treść `/wiedza`: `eventsHero`, `eventsDescription`, `upcomingSection`, `pastSection`, `knowledgeTeaser` (zajawka na `/`), `events` (`KnowledgeEvent`: `id`, `title`, `format`, `date` `YYYY-MM-DD` (minione bez znanego dnia: `YYYY-MM` → „06.2026”), `endDate?` (wielodniowe), `time?`, `host?`, `place?` (miasto), `venue?` (obiekt, np. „PGE Narodowy”), `online?`, `people`, `text?`, `link?`, `logo?` (jasne, bez tła; nadchodzące: róg kafla, minione: róg zdjęcia), `photo?` (minione), `featured?` (zajawka na `/`)), `todayIso()` (Europe/Warsaw), `splitEvents()`, `teaserEvents()`, `isPublishedEvent()`, `eventDate()`, `eventPeople()`. Bez `host` / `place` / `text`: „Gdzie” z tego, co jest (pusty wiersz się nie renderuje), bez opisu. Łącznik, przy którym tytuł nie może się łamać: `WJ` (word joiner) po nim, JSON-LD go usuwa |
+| `events-jsonld.ts` | `eventsGraphNodes()`: `CollectionPage` + `Event` (tylko `isPublishedEvent`; `endDate` u wielodniowych, `image` z `photo`, `Place.name` = `venue ?? place`; bez `place` i `online` bez `location`, bez `host` bez `organizer`, bez `text` bez `description`) |
+| `process.ts` | `processSection` (label, 4 kroki `ProcessSectionStep`) dla `ProcessSection` |
 | `faq.ts` | `faqSection` (label, `more`, pytania `FaqItem`), `publishedFaq()` (bez placeholderów `[…]`) |
-| `about.ts` | treść `/o-nas` (`aboutHero`, `personCards`, `aiCard`, `marqueeItems`, `rolesSplit`, `findUs`, `linkedinPosts`); opcjonalne `personCards[id].photo` (`AboutPhoto`: `src`, `width`, `height`, `alt`), dziś tylko Kuba (`/assets/team/kuba.avif`, 640×640), trafia też do `image` w JSON-LD `Person` |
+| `about.ts` | treść `/o-nas` (`aboutHero`, `personCards`, `aiCard`, `marqueeItems`, `rolesSplit`, `findUs`, `linkedinPosts`, `eventsTeaser` + `publishedEventsTeaser(today)`); opcjonalne `personCards[id].photo` (`AboutPhoto`: `src`, `width`, `height`, `alt`, `focus` = `object-position` twarzy we wszystkich kadrach: źródło 1:1, więc `x` działa w kadrach 3:4, `y` w 4:3), dziś Magda i Kuba (`/assets/team/magda.avif`, `kuba-v2.avif`, 1254×1254; podmiana zdjęcia = nowa nazwa pliku, bo `/_next/image` i CDN cache'ują po `src`), trafia też do `image` w JSON-LD `Person` |
 | `cases/index.ts` | `cases` (6 × `CaseStudy` w kolejności `caseOrder`), `getCase(path)`, `CasePath`, `caseDescription(c)` |
 | `cases/<slug>.ts` | `CaseStudy` + dane bloków (`*Live`, `*Phone`, `*Spec`, `*Next`, obrazy, liczby…) |
 
@@ -940,7 +1066,8 @@ Zasada: tylko fakty z `legacy/case-*.html` i repo. Bez danych (wynik, kod OTB) p
 
 Kafle `work.tiles` są wyprowadzone z `cases` (`tileLabel` → `title`, `title` → `name`, `years`, `kind`, `cover`):
 w `home.ts` zostaje tylko układ (`size`, `offset`, `square`, `screens`) i okładka OurMoney (inny `alt` niż w case'ie).
-Kolejność kafli jest z legacy (inna niż `caseOrder`), poza Sassy przeniesionym na koniec. Wymiary obrazów to realne piksele (`sips`); helper `img()` w plikach case'ów
+Kolejność kafli jest z legacy (inna niż `caseOrder`), poza Sassy przeniesionym na koniec.
+Wymiary obrazów to realne piksele (`sips`); helper `img()` w plikach case'ów
 zwraca `Required<CaseStudyImage>`.
 
 ```ts
@@ -974,7 +1101,7 @@ Poza Reactem: `@/lib/intro` → `isIntroDone()`, `subscribeIntro(fn)`, zdarzenie
 ## Nowa strona: checklista
 
 1. **Route:** dopisz wpis do `src/content/routes.ts` (`path`, `title` 1:1 z `<title>` legacy bez sufiksu,
-   `kind`, `section`, `legacy` — stare pliki do przekierowań 301, `source`, `lastModified`, `changeFrequency`, `priority`).
+   `kind`, `section`, `legacy` — stare pliki do przekierowań 301, `source` (`null` bez wzorca), `lastModified`, `changeFrequency`, `priority`).
    Sitemap i redirecty zaktualizują się same. Dopisz stronę do `public/llms.txt`.
    Case study: `CaseStudy` w `src/content/cases/<slug>.ts` (z `summary`, `description`, dla stron WWW też `story`),
    wpis w `caseOrder` i w `byPath` w `src/content/cases/index.ts`.
@@ -984,8 +1111,8 @@ Poza Reactem: `@/lib/intro` → `isIntroDone()`, `subscribeIntro(fn)`, zdarzenie
    import { buildMetadata } from "@/lib/seo/metadata";
    export const metadata = buildMetadata({ path: "/otb", type: "article" });
    ```
-   Tytuł z `routes.ts` + template „%s — NO-FUSS©2026”. Wyjątek: `/` (tytuł `null` w routes) dostaje
-   `site.homeTitle` jako `absolute` (bez template'u), opis `site.description`. Canonical, OG, Twitter, robots składa helper.
+   Tytuł z `routes.ts` + template „%s — NO-FUSS©2026”. Wyjątek: `/` (tytuł `null` w routes) dostaje sam
+   `site.brandTitle` „NO-FUSS©2026” jako `absolute` (1:1 z legacy), opis `site.description`. Canonical, OG, Twitter, robots składa helper.
    Obraz OG dziedziczy się z `app/opengraph-image.tsx`; własny: `app/<slug>/opengraph-image.tsx`.
 4. **JSON-LD:**
    ```tsx
@@ -996,8 +1123,10 @@ Poza Reactem: `@/lib/intro` → `isIntroDone()`, `subscribeIntro(fn)`, zdarzenie
    )} />
    ```
    Organization, WebSite i Person są już w layoucie (łączone przez `@id`). `faq(path, items)` dla sekcji FAQ.
-5. **Hero:** `Reveal trigger="intro"` (odsłania się po preloaderze), ciemne tło `GlowBackdrop`, strefa `data-stickers`.
-6. **Sekcje:** `.section` (+ `.tone-dark` naprzemiennie), treść w `Reveal`, linie `Line` / `Fade` z `index`.
+5. **Hero:** `Reveal trigger="intro"` (odsłania się po preloaderze), ciemne tło `GlowBackdrop`. Naklejki (`data-stickers`) tylko
+   w stopce i na 404: w hero z obiektem 3D to drugi głośny element.
+6. **Sekcje:** `.section` (+ `.tone-dark` naprzemiennie), reveal (`Reveal` + `Line` / `Fade` z `index`) tylko na nagłówku sekcji
+   i kaflach; wiersze list, akapity i CTA widoczne od razu.
 7. **Obrazy:** `next/image` z `public/assets/**` (AVIF/WebP włączone), zawsze `alt` 1:1 z legacy.
 
 ## Konwencje CSS Modules

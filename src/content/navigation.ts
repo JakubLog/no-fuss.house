@@ -10,19 +10,20 @@ export interface NavItem {
    * daje `aria-current="true"`.
    */
   section?: NavSection;
-  /** Ukryj poniżej 640 px (4 linki nie mieszczą się w HUD na telefonie). */
+  /** Ukryj poniżej 640 px (więcej niż 4 linki nie mieści się w HUD obok logo na telefonie). */
   hideOnSmall?: boolean;
 }
 
 /**
- * Nawigacja główna HUD. Etykiety 1:1 z legacy + „Usługi” (sekcja #uslugi z v5).
- * Kolejność jak sekcje strony głównej: usługi, realizacje, o nas, kontakt.
- * Wszystkie 4 linki są widoczne na każdej szerokości: HUD mieści je od ~340 px,
- * przy 320 px nav zawija się pod logo. `hideOnSmall` zostaje w typie na przyszłość.
+ * Nawigacja główna HUD. Etykiety 1:1 z legacy + „Usługi” (sekcja #uslugi z v5) + „Wiedza”.
+ * Kolejność: usługi, realizacje, o nas, wiedza, kontakt.
+ * 4 linki mieszczą się obok logo od ~340 px (przy 320 px nav zawija się pod logo). „Wiedza”
+ * jest ukryta poniżej 640 px: na telefonie prowadzą tam zajawki na `/` (`#wiedza`) i `/o-nas#wydarzenia`.
  */
 export const mainNav = [
   { label: "Usługi", href: "/#uslugi" },
   { label: "Realizacje", href: "/#realizacje", section: "work" },
   { label: "O nas", href: "/o-nas", section: "about" },
+  { label: "Wiedza", href: "/wiedza", section: "events", hideOnSmall: true },
   { label: "Kontakt", href: "#kontakt" },
 ] as const satisfies readonly NavItem[];

@@ -1,4 +1,5 @@
 import { Heading } from "@/components/atoms/Heading";
+import { ContactCta } from "@/components/molecules/ContactCta";
 import { Reveal } from "@/components/organisms/Reveal";
 import { rolesSplit } from "@/content/about";
 import { people } from "@/content/site";
@@ -8,7 +9,8 @@ import styles from "./RolesSplit.module.css";
 /**
  * „Kto co robi” (legacy o-nas-v5): wiersze z torem 2 px i rombem w akcencie.
  * Romb startuje na środku i jedzie do `--v`, gdy wiersz dostanie `is-in`
- * (Reveal = IntersectionObserver). Animacja w CSS. Server Component.
+ * (Reveal = IntersectionObserver). Animacja w CSS. Pod wierszami CTA kontaktu
+ * (`ContactCta`, osobny `Reveal`). Server Component.
  */
 export function RolesSplit() {
   const [left, right] = people;
@@ -26,14 +28,20 @@ export function RolesSplit() {
         <span>← {left.givenName}</span>
         <span>{right.givenName} →</span>
       </div>
-      {rolesSplit.rows.map((row) => (
-        <Reveal key={row.label} className={styles.row} style={{ "--v": row.position }}>
-          <Heading as="h3" variant="title" lines={[row.label]} className={styles.rowTitle} />
-          <div className={styles.track} aria-hidden="true">
-            <b />
-          </div>
-        </Reveal>
-      ))}
+      {/* Wrapper: `.row:last-child` domyka listę dolną linią (CTA leży już poza nim). */}
+      <div>
+        {rolesSplit.rows.map((row) => (
+          <Reveal key={row.label} className={styles.row} style={{ "--v": row.position }}>
+            <Heading as="h3" variant="title" lines={[row.label]} className={styles.rowTitle} />
+            <div className={styles.track} aria-hidden="true">
+              <b />
+            </div>
+          </Reveal>
+        ))}
+      </div>
+      <Reveal className={styles.cta}>
+        <ContactCta index={0} />
+      </Reveal>
     </section>
   );
 }

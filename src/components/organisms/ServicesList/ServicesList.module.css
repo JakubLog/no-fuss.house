@@ -1,7 +1,5 @@
-/* Usługi: 1:1 z legacy `.services`, `.service` (no-fuss-v5.html). */
+/* Usługi: na bazie legacy `.services`, `.service` (no-fuss-v5.html), bez numerów wierszy. */
 .head {
-  display: flex;
-  justify-content: space-between;
   margin-bottom: 48px;
 }
 
@@ -17,29 +15,31 @@
 .item {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: var(--gap);
+  gap: 8px var(--gap);
   align-items: baseline;
   padding: 24px 0;
   border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
-}
-
-.no {
-  grid-column: span 2;
-  color: var(--muted);
+  transition:
+    background-color 0.4s var(--ease),
+    color 0.4s var(--ease);
 }
 
 .name {
-  grid-column: span 10;
+  grid-column: 1 / -1;
   font: var(--t-title);
+  transition: transform 0.4s var(--ease);
 }
 
 .desc {
-  grid-column: 3 / -1;
+  grid-column: 1 / -1;
   color: var(--muted);
   max-width: 52ch;
+  transition:
+    color 0.4s var(--ease),
+    transform 0.4s var(--ease);
 }
 
-/* CTA pod listą: w kolumnie opisów od 1024 px. */
+/* CTA pod listą: w kolumnie nazw od 1024 px. */
 .cta {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -56,15 +56,45 @@
     grid-column: 4 / -1;
   }
 
-  .no {
-    grid-column: span 1;
-  }
-
   .name {
     grid-column: 4 / span 4;
   }
 
   .desc {
     grid-column: 9 / span 4;
+  }
+}
+
+/*
+ * Hover wiersza jak FAQ: limonkowe tło, tekst `--on-accent`, #3F4A12 = stała z legacy (przygaszony tekst
+ * na limonce, 7,92:1). Wcięcie 12 px przez `transform` nazwy i opisu (wiersz i sąsiedzi nie zmieniają
+ * wymiarów); 24 px z prawej to zapas, żeby przesunięty tekst nie wyszedł poza limonkę. Wiersze nie są
+ * linkami: bez strzałki i bez zmiany kursora. Tylko przy prawdziwym hoverze (dotyk bez „przyklejenia”).
+ * Przy `prefers-reduced-motion` wcięcie 12 px zostaje, tylko bez animacji (bez transition), żeby tekst
+ * nie przykleił się do lewej krawędzi limonki.
+ */
+@media (hover: hover) {
+  .name,
+  .desc {
+    padding-right: 24px;
+  }
+
+  .item:hover {
+    background-color: var(--accent);
+    color: var(--on-accent);
+    --muted: #3F4A12;
+  }
+
+  .item:hover .name,
+  .item:hover .desc {
+    transform: translateX(12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item,
+  .name,
+  .desc {
+    transition: none;
   }
 }

@@ -71,7 +71,7 @@ export default function AutomationHousePage() {
           <CaseStory story={automationHouse.story} />
         </CaseStudySection>
 
-        <CaseStudySection layout="lite" label="02 / Proces" hint="Rebranding · najedź na krok">
+        <CaseStudySection layout="lite" label="02 / Proces" hint="Rebranding · najedź na krok" hintTouch="Rebranding">
           <ProcessSteps steps={automationHouseSteps} ariaLabel="Rebranding" />
         </CaseStudySection>
 

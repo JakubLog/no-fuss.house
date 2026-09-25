@@ -16,11 +16,12 @@
   grid-column: 1 / -1;
 }
 
-.head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 16px;
+/* Chip „P1”… przyklejony do prawego górnego rogu karty (jak tag kafla realizacji); mieści się
+   w górnym paddingu (24 px), więc nie zachodzi na nazwę przy żadnej liczbie linii. */
+.code {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .photo {
@@ -32,18 +33,19 @@
   background: var(--shade-700);
 }
 
+/* Kadr agentów AI: ciemny jak tło portretów, bez kresek placeholdera, robot liniami w akcencie. */
 .ai .photo > * {
-  background: var(--accent);
-  color: var(--on-accent);
+  background: var(--dark);
+  color: var(--accent);
 }
 
 .ai .photo > *::before {
-  opacity: 0.2;
+  content: none;
 }
 
 .ai .photo svg {
   position: relative;
-  width: 42%;
+  width: 32%;
   height: auto;
   display: block;
 }

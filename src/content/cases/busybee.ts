@@ -54,13 +54,14 @@ export const busybee = {
 /** Blok „Następny projekt” (tytuł 1:1 z legacy). */
 export const busybeeNext = { href: busybee.next, title: "Automation House" } as const;
 
-/** Żywa strona w ramce pod hero. */
+/** Żywa strona w ramce pod hero, ładowana po kliknięciu (poster + „Otwórz na żywo ↗”). */
 export const busybeeLive = {
   src: BUSYBEE_URL,
   title: "Busy Bee Film, żywa strona",
-  urlLabel: "www.busybeefilm.pl · przewijaj i klikaj",
-  /* Poster tylko jako fallback (reduced motion / przed załadowaniem ramki). */
+  urlLabel: "www.busybeefilm.pl",
+  /* Poster przed kliknięciem „Otwórz na żywo ↗” i fallback. */
   poster: busybee.cover,
+  loadAriaLabel: "Załaduj żywą stronę busybeefilm.pl",
 } as const;
 
 /**

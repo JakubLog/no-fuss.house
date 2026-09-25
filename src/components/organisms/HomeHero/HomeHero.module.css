@@ -1,8 +1,8 @@
 /*
- * Hero strony głównej (legacy `.hero`, no-fuss-v5.html) z leadem i CTA pod h1.
- * Telefon / tablet (< 1024 px): pierwszy ekran = scena 3D + h1, lead i CTA dosunięte do dołu;
- * rola, akapity i suwak pod nim (suwak nie jest pierwszym elementem przed treścią).
- * Desktop: układ legacy (rola i akapity u góry, h1 z lewej na dole, suwak z prawej).
+ * Hero strony głównej (legacy `.hero`, no-fuss-v5.html).
+ * Telefon (< 768 px): scena na całe hero, h1, lead i CTA dosunięte do dołu pierwszego ekranu.
+ * Od 768 px układ po przekątnej: h1 w lewym górnym rogu, lead z CTA w prawym dolnym,
+ * a scena to pas między nimi (środkowy wiersz siatki), więc tekst nie leży na napisie 3D.
  */
 .hero {
   position: relative;
@@ -11,28 +11,28 @@
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   column-gap: var(--gap);
-  grid-template-rows: minmax(calc(100svh - var(--section-y) * 2), auto) auto auto;
+  grid-template-rows: minmax(calc(100svh - var(--section-y) * 2), auto);
   padding: var(--section-y) var(--gutter);
   color: var(--ink);
 }
 
-/* Treść nad siatką overlay (z-index 1); tło, kanwa i naklejki pod nią. */
-.top,
-.fuss,
+/*
+ * Ramka napisu 3D (pusta, pod siatką overlay). Telefon: górna część hero, tylko na fallback CSS
+ * (scena liczy się z `offsetYMobile`). Od 768 px: pas między h1 a leadem z CTA, który scena
+ * mierzy (`frame`) i w który wpisuje napis; kanwa i tak leży na całym hero.
+ */
+.band {
+  position: absolute;
+  inset: 0 0 24%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Treść nad siatką overlay (z-index 1). */
 .headline {
   position: relative;
   z-index: 2;
-}
-
-/* Telefon: kanwa (i fallback) tylko na pierwszym ekranie, żeby napis 3D nie zjechał pod akapity. */
-.hero .scene {
-  bottom: auto;
-  height: min(100%, 100svh);
-}
-
-.headline {
   grid-column: 1 / -1;
-  grid-row: 1;
   align-self: end;
   display: flex;
   flex-direction: column;
@@ -41,45 +41,22 @@
   padding: 0 8px;
 }
 
+.aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+}
+
 .lead {
   font: var(--t-lead);
   max-width: 44ch;
 }
 
-.cta {
-  margin-top: 8px;
-}
-
-.top {
-  grid-column: 1 / -1;
-  grid-row: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: var(--section-y);
-}
-
-.role {
-  font: var(--t-title);
-}
-
-/* Akapity pod rolą (rola też jest `p`, ale ma własny krój). */
-.top p:not(.role) {
-  font: var(--t-body);
-  max-width: 46ch;
-}
-
-.fuss {
-  grid-column: 1 / -1;
-  grid-row: 3;
-  margin-top: 32px;
-}
-
-/* Brak WebGL / fontu: napis CSS (legacy `.hero__fallback`). */
+/* Brak WebGL / fontu: napis CSS (legacy `.hero__fallback`) na środku ramki. */
 .fallback {
   position: absolute;
   inset: 0;
-  z-index: 0;
   display: grid;
   place-items: center;
   font: var(--t-mega);
@@ -92,49 +69,43 @@
   pointer-events: none;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .hero {
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto minmax(120px, 1fr) auto;
   }
 
-  .hero .scene {
-    bottom: 0;
-    height: 100%;
-  }
-
-  .top {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    column-gap: var(--gap);
-    grid-row: 1;
-    align-self: start;
-    margin-top: 0;
-  }
-
-  .role {
-    grid-column: 1 / span 3;
-  }
-
-  /* nth-of-type liczy też rolę (`p`), więc akapity to 2. i 3. */
-  .top p:nth-of-type(2) {
-    grid-column: 4 / span 3;
-  }
-
-  .top p:nth-of-type(3) {
-    grid-column: 7 / span 6;
-  }
-
+  /* Dzieci (h1, lead z CTA) stają się elementami siatki hero: rogi po przekątnej. */
   .headline {
-    grid-column: 1 / span 8;
-    grid-row: 2;
-    margin-top: 48px;
+    display: contents;
   }
 
-  .fuss {
-    grid-column: 9 / span 4;
+  .title {
+    position: relative;
+    z-index: 2;
+    grid-row: 1;
+    grid-column: 1 / span 8;
+    align-self: start;
+    padding-inline: 8px;
+  }
+
+  .band {
+    position: relative;
+    inset: auto;
     grid-row: 2;
+    grid-column: 1 / -1;
+  }
+
+  .aside {
+    position: relative;
+    z-index: 2;
+    grid-row: 3;
+    grid-column: 7 / -1;
     align-self: end;
-    margin: 0;
-    padding: 0 0 8px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .aside {
+    grid-column: 9 / span 4;
   }
 }

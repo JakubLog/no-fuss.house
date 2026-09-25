@@ -6,12 +6,15 @@ import styles from "./WorkGrid.module.css";
 
 const HEADING_ID = "realizacje-heading";
 
-/** `sizes` okładek: szerokość kafla w siatce 12 kolumn od 768 px, pełna szerokość niżej. */
+/**
+ * `sizes` okładek: szerokość kafla w siatce 12 kolumn od 1024 px, w dwóch kolumnach
+ * 768–1023 px (`xl` 8/12), pełna szerokość niżej.
+ */
 const SIZES: Record<WorkTileSize, string> = {
   xl: "(min-width: 768px) 66vw, 100vw",
-  l: "(min-width: 768px) 42vw, 100vw",
-  m: "(min-width: 768px) 25vw, 100vw",
-  s: "(min-width: 768px) 25vw, 100vw",
+  l: "(min-width: 1024px) 42vw, (min-width: 768px) 50vw, 100vw",
+  m: "(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw",
+  s: "(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw",
 };
 
 function placementClass(tile: WorkTileData): string {
@@ -20,8 +23,8 @@ function placementClass(tile: WorkTileData): string {
 
 /**
  * Sekcja `#realizacje` (legacy `.work`, `tone-dark`): nagłówek mono z licznikiem
- * i asymetryczna siatka kafli. Każdy kafel odsłania się osobno (Reveal na `<li>`).
- * Server Component.
+ * i asymetryczna siatka kafli (od 1024 px; 768–1023 px dwie równe kolumny). Każdy kafel
+ * odsłania się osobno (Reveal na `<li>`). Server Component.
  */
 export function WorkGrid() {
   return (

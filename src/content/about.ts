@@ -1,3 +1,4 @@
+import { eventDate, events, isPublishedEvent, splitEvents } from "./events";
 import { hasPlaceholder } from "./site";
 import type { InternalPath, Person } from "./types";
 
@@ -37,6 +38,11 @@ export interface AboutPhoto {
   width: number;
   height: number;
   alt: string;
+  /**
+   * `object-position` twarzy w każdym kadrze (karta, „Oklej nas”, `#o-nas` na `/`). Źródło jest 1:1, więc
+   * `x` przesuwa tylko kadry 3:4 (widać 75% szerokości), `y` tylko kadr 4:3 karty od 1200 px (75% wysokości).
+   */
+  focus: string;
 }
 
 export interface AboutCard {
@@ -78,11 +84,23 @@ export const aboutHero = {
   lead: `Magda projektuje i${NBSP}prowadzi produkt. Kuba pisze kod i${NBSP}pilnuje, żeby działał. Agenci AI pracują z${NBSP}nami ramię w${NBSP}ramię. Jesteśmy AI native.`,
 } as const;
 
-/** Karty osób, kluczowane `Person["id"]` z `site.ts`. */
+/**
+ * Karty osób, kluczowane `Person["id"]` z `site.ts`. Zdjęcia: źródła 1254×1254 (1:1, AVIF) w
+ * `public/assets/team/`; karta i „Oklej nas” przycinają je `object-fit: cover`. Podmiana zdjęcia =
+ * nowa nazwa pliku (`-v2`…): `/_next/image` i CDN trzymają stary wariant pod tym samym `src`.
+ */
 export const personCards: Record<Person["id"], AboutCard> = {
   magda: {
     code: "P1",
     photoLabel: "Zdjęcie Magdy 3:4",
+    /* Twarz na ~33% szerokości źródła: x 0% daje ją na ~44% kadru 3:4 (bliżej się nie da bez ucinania głowy). */
+    photo: {
+      src: "/assets/team/magda.avif",
+      width: 1254,
+      height: 1254,
+      alt: "Magda Nestorowicz",
+      focus: "0% 10%",
+    },
     roles: ["Design", "Produkt"],
     /* AION MIND to etat Magdy, nie produkt no-fuss (decyzja Kuby); daty z case'u AION MIND. */
     bio: `Product Designerka. Buduje OurMoney razem z${NBSP}Kubą. Na etacie w${NBSP}AION MIND od pierwszego ekranu doszła do prowadzenia całego produktu: od czerwca 2026 jest Head of Operations.`,
@@ -98,12 +116,18 @@ export const personCards: Record<Person["id"], AboutCard> = {
   kuba: {
     code: "P2",
     photoLabel: "Zdjęcie Kuby 3:4",
-    /* Źródło 640×640 (1:1); karta i „Oklej nas” przycinają je `object-fit: cover`. */
-    photo: { src: "/assets/team/kuba.avif", width: 640, height: 640, alt: "Kuba Fedoszczak" },
-    roles: ["Kod"],
+    photo: {
+      src: "/assets/team/kuba-v2.avif",
+      width: 1254,
+      height: 1254,
+      alt: "Kuba Fedoszczak",
+      focus: "50% 20%",
+    },
+    roles: ["Architektura", "Procesy", "Oprogramowanie"],
     bio: `Developer. Odpowiada za produkcję aplikacji, jej bezpieczeństwo i${NBSP}całą stronę technologiczną OurMoney.`,
     facts: [
       { term: "Buduje", value: { kind: "links", links: [{ label: "OurMoney", href: "/ourmoney" }] } },
+      { term: "Etat", value: { kind: "links", links: [{ label: "Automation House", href: "/automation-house" }] } },
       { term: "Supermoc", value: { kind: "text", text: "[placeholder: jedno zdanie]" } },
       { term: "Stack", value: { kind: "text", text: "[placeholder]" } },
       { term: "Po godzinach", value: { kind: "text", text: "[placeholder]" } },
@@ -160,7 +184,9 @@ export const rolesSplit = {
 export interface FindItem {
   /** Tekst główny (kolumna lewa). */
   title: string;
-  /** Tekst po prawej: strzałka „↗” albo metadane posta. */
+  /** Linia mono nad tytułem, np. data i miasto wydarzenia. */
+  kicker?: string;
+  /** Tekst po prawej (nie łamie się): strzałka „↗” / „→” albo metadane posta. */
   meta: string;
   /** Metadane w mono 12 px (posty). */
   metaMono?: boolean;
@@ -225,6 +251,44 @@ export function publishedLinkedinPosts(): (Omit<typeof linkedinPosts, "note" | "
   if (!items.some((item) => item.href)) return null;
   const { note, ...rest } = linkedinPosts;
   return { ...rest, note: hasPlaceholder(note) ? undefined : note, items };
+}
+
+export const eventsTeaser = {
+  id: "wydarzenia",
+  label: "Na żywo / 05",
+  title: "Przekazujemy wiedzę dalej",
+  lead: `Warsztaty, prelekcje i${NBSP}meetupy z${NBSP}naszym udziałem: nadchodzące z${NBSP}zapisami, minione ze zdjęciami.`,
+  ariaLabel: "Wydarzenia no-fuss",
+  /** Ile najbliższych wydarzeń pokazać nad wierszem „Wszystkie wydarzenia”. */
+  limit: 3,
+  all: { title: "Wszystkie wydarzenia", meta: "→", href: "/wiedza" },
+} as const satisfies {
+  id: string;
+  label: string;
+  title: string;
+  lead: string;
+  ariaLabel: string;
+  limit: number;
+  all: FindItem;
+};
+
+/**
+ * `#wydarzenia` na `/o-nas` (jedno z wejść na `/wiedza` na telefonie: HUD chowa link
+ * poniżej 640 px). Najbliższe wydarzenia bez placeholderów `[…]` (`isPublishedEvent`, reguła
+ * `/o-nas`) prowadzą do kafla `/wiedza#<id>`; ostatni wiersz do całej strony.
+ */
+export function publishedEventsTeaser(
+  today: string,
+): Omit<typeof eventsTeaser, "limit" | "all"> & { items: readonly FindItem[] } {
+  const { limit, all, ...rest } = eventsTeaser;
+  const { upcoming } = splitEvents(events.filter(isPublishedEvent), today);
+  const items: FindItem[] = upcoming.slice(0, limit).map((e) => ({
+    title: e.title,
+    kicker: [eventDate(e).label, e.place].filter(Boolean).join(" · "),
+    meta: "→",
+    href: `/wiedza#${e.id}`,
+  }));
+  return { ...rest, items: [...items, all] };
 }
 
 export const stickerPlay = {

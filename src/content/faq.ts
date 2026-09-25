@@ -14,7 +14,7 @@ const NBSP = " ";
 
 export const faqSection = {
   label: "Częste pytania",
-  /** Zdanie nad CTA pod listą. */
+  /** Zdanie pod listą (przed stopką `#kontakt`). */
   more: "Nie ma tu Waszego pytania? Zadajcie je na rozmowie.",
   items: [
     {

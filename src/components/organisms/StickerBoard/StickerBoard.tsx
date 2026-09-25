@@ -13,13 +13,11 @@ import styles from "./StickerBoard.module.css";
 const INSTRUCTIONS_ID = "play-instructions";
 
 /**
- * „Oklej nas” (legacy `#play`): placeholder Magdy, zdjęcie Kuby i sześć naklejek do
- * przeciągania (wskaźnik, dotyk, strzałki). Sekcja jest serwerowa, klienckie są
- * tylko naklejki (`DragSticker`). Server Component.
+ * „Oklej nas” (legacy `#play`): zdjęcia Magdy i Kuby (`personCards[id].photo`; bez zdjęcia placeholder,
+ * Kuby limonkowy) i sześć naklejek do przeciągania (wskaźnik, dotyk, strzałki). Sekcja jest serwerowa,
+ * klienckie są tylko naklejki (`DragSticker`). Server Component.
  */
 export function StickerBoard() {
-  const [magda, kuba] = people;
-  const kubaPhoto = personCards[kuba.id].photo;
   return (
     <Reveal as="section" id={stickerPlay.id} aria-labelledby="play-title" className={cx("section tone-dark", styles.play)}>
       <div className={styles.head}>
@@ -32,20 +30,29 @@ export function StickerBoard() {
         {stickerPlay.instructions}
       </p>
       <div className={cx(styles.photos, "fade")} style={{ "--i": 3 }}>
-        <PhotoPlaceholder label={magda.givenName} className={styles.photo} />
-        {kubaPhoto ? (
-          <Image
-            src={kubaPhoto.src}
-            width={kubaPhoto.width}
-            height={kubaPhoto.height}
-            alt={kubaPhoto.alt}
-            sizes="(min-width: 750px) 300px, 40vw"
-            draggable={false}
-            className={`${styles.photo} ${styles.img}`}
-          />
-        ) : (
-          <PhotoPlaceholder label={kuba.givenName} tone="lime" className={styles.photo} />
-        )}
+        {people.map((person, i) => {
+          const photo = personCards[person.id].photo;
+          return photo ? (
+            <Image
+              key={person.id}
+              src={photo.src}
+              width={photo.width}
+              height={photo.height}
+              alt={photo.alt}
+              sizes="(min-width: 750px) 300px, 40vw"
+              draggable={false}
+              className={`${styles.photo} ${styles.img}`}
+              style={{ objectPosition: photo.focus }}
+            />
+          ) : (
+            <PhotoPlaceholder
+              key={person.id}
+              label={person.givenName}
+              tone={i === 1 ? "lime" : "tile"}
+              className={styles.photo}
+            />
+          );
+        })}
       </div>
       {stickerPlay.spots.map(([left, top], i) => (
         <DragSticker

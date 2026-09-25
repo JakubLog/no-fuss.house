@@ -1,4 +1,3 @@
-import { Line } from "@/components/atoms/Line";
 import { ContactCta } from "@/components/molecules/ContactCta";
 import { servicesSection } from "@/content/home";
 import { cx } from "@/lib/cx";
@@ -8,9 +7,11 @@ import styles from "./ServicesList.module.css";
 const HEADING_ID = "uslugi-heading";
 
 /**
- * Sekcja `#uslugi` (legacy `.services`): nagłówek mono z licznikiem i lista pięciu
- * usług w `<ol>` (numer mono, nazwa w roli `title`, opis `--muted`). Każdy wiersz
- * odsłania się osobno. Pod listą CTA kontaktu (`ContactCta`). Server Component.
+ * Sekcja `#uslugi` (legacy `.services`): nagłówek mono (jedyny reveal w sekcji) i lista pięciu
+ * usług w `<ul>` (nazwa w roli `title`, opis `--muted`), widoczna od razu. Bez numerów z legacy:
+ * kolejność usług nic nie znaczy (`no` zostaje tylko jako id w JSON-LD). Wiersze nie są linkami; hover
+ * (tylko CSS, `hover: hover`) jak w FAQ: limonkowe tło i wcięcie 12 px. Pod listą CTA kontaktu
+ * (`ContactCta`). Server Component.
  */
 export function ServicesList() {
   return (
@@ -19,28 +20,18 @@ export function ServicesList() {
         <h2 id={HEADING_ID} className={cx("fade", styles.label)}>
           {servicesSection.label}
         </h2>
-        <span className="fade" style={{ "--i": 1 }} aria-hidden="true">
-          {servicesSection.counter}
-        </span>
       </Reveal>
-      <ol className={styles.list}>
+      <ul className={styles.list}>
         {servicesSection.items.map((service) => (
-          <Reveal as="li" key={service.no} className={styles.item}>
-            <span className={cx("mono", "fade", styles.no)} aria-hidden="true">
-              {service.no}
-            </span>
-            <h3 className={styles.name}>
-              <Line>{service.name}</Line>
-            </h3>
-            <p className={cx("fade", styles.desc)} style={{ "--i": 2 }}>
-              {service.description}
-            </p>
-          </Reveal>
+          <li key={service.no} className={styles.item}>
+            <h3 className={styles.name}>{service.name}</h3>
+            <p className={styles.desc}>{service.description}</p>
+          </li>
         ))}
-      </ol>
-      <Reveal className={styles.cta}>
-        <ContactCta index={0} note />
-      </Reveal>
+      </ul>
+      <div className={styles.cta}>
+        <ContactCta note />
+      </div>
     </section>
   );
 }

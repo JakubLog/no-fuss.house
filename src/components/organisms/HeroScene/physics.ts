@@ -55,6 +55,15 @@ export const rnd = (i: number, k: number) => {
   return (x - Math.floor(x)) * 2 - 1;
 };
 
+/* Rozrzut przy zamieszaniu 1 (legacy): przesunięcie celu sprężyny, obrót i odchyłka skali litery. */
+const SCATTER_X = 1.1;
+const SCATTER_Y = 1.5;
+const SCATTER_Z = 1.6;
+const SCATTER_RX = 1.2;
+const SCATTER_RY = 1.4;
+const SCATTER_RZ = 1.9;
+const SCATTER_SCALE = 0.35;
+
 export interface Vec3 {
   x: number;
   y: number;
@@ -93,7 +102,7 @@ export interface World {
 }
 
 export interface StepInput {
-  /** Cel zamieszania 0–1 (suwak). */
+  /** Cel zamieszania 0–1 (`FussStore`). */
   fussTarget: number;
   /** Czas w sekundach (drgania, oddech). */
   t: number;
@@ -127,6 +136,24 @@ export function createBody(hx: number, hy: number, i: number, r: number): Body {
   };
 }
 
+/**
+ * Ustawia literę w spoczynku w pozie rozrzutu dla zamieszania `f` (bez drgań): tam, dokąd
+ * `stepWorld` ciągnie ją przy stałym `f`. Start sceny z zamieszaniem > 0 zaczyna się od chaosu,
+ * zamiast od napisu, który rozlatuje się w pierwszych klatkach. `f = 0` → dom.
+ */
+export function scatterBody(u: Body, f: number): void {
+  u.p.x = u.hx + rnd(u.i, 1) * SCATTER_X * f;
+  u.p.y = u.hy + rnd(u.i, 2) * SCATTER_Y * f;
+  u.p.z = rnd(u.i, 3) * SCATTER_Z * f;
+  u.v.x = 0;
+  u.v.y = 0;
+  u.v.z = 0;
+  u.rot.x = rnd(u.i, 4) * SCATTER_RX * f;
+  u.rot.y = rnd(u.i, 5) * SCATTER_RY * f;
+  u.rot.z = rnd(u.i, 6) * SCATTER_RZ * f;
+  u.scale = 1 + rnd(u.i, 7) * SCATTER_SCALE * f;
+}
+
 /** Jedna klatka legacy `render()` (bez samego rysowania). Kolejność operacji 1:1. */
 export function stepWorld(world: World, input: StepInput, dt: number = LEGACY_DT): void {
   const { bodies } = world;
@@ -142,9 +169,9 @@ export function stepWorld(world: World, input: StepInput, dt: number = LEGACY_DT
 
   /* sprężyna do celu + odpychanie od wskaźnika (od pierwszej klatki, jak legacy); obie jako siły w tym samym kroku */
   for (const u of bodies) {
-    const tx = u.hx + rnd(u.i, 1) * 1.1 * f + Math.sin(t * 1.7 + u.i) * 0.12 * w;
-    const ty = u.hy + rnd(u.i, 2) * 1.5 * f + Math.cos(t * 2.1 + u.i * 2) * 0.16 * w;
-    const tz = rnd(u.i, 3) * 1.6 * f;
+    const tx = u.hx + rnd(u.i, 1) * SCATTER_X * f + Math.sin(t * 1.7 + u.i) * 0.12 * w;
+    const ty = u.hy + rnd(u.i, 2) * SCATTER_Y * f + Math.cos(t * 2.1 + u.i * 2) * 0.16 * w;
+    const tz = rnd(u.i, 3) * SCATTER_Z * f;
     u.v.x += (tx - u.p.x) * SPRING * dt;
     u.v.y += (ty - u.p.y) * SPRING * dt;
     u.v.z += (tz - u.p.z) * SPRING * dt;
@@ -245,10 +272,10 @@ export function stepWorld(world: World, input: StepInput, dt: number = LEGACY_DT
       u.v.y = 0;
       u.v.z = 0;
     }
-    u.rot.x = rnd(u.i, 4) * 1.2 * f + Math.sin(t * 1.3 + u.i) * 0.25 * w + u.v.y * 0.02;
-    u.rot.y = rnd(u.i, 5) * 1.4 * f - u.v.x * 0.02;
-    u.rot.z = rnd(u.i, 6) * 1.9 * f + Math.cos(t * 1.9 + u.i) * 0.2 * w;
-    u.scale = 1 + rnd(u.i, 7) * 0.35 * f;
+    u.rot.x = rnd(u.i, 4) * SCATTER_RX * f + Math.sin(t * 1.3 + u.i) * 0.25 * w + u.v.y * 0.02;
+    u.rot.y = rnd(u.i, 5) * SCATTER_RY * f - u.v.x * 0.02;
+    u.rot.z = rnd(u.i, 6) * SCATTER_RZ * f + Math.cos(t * 1.9 + u.i) * 0.2 * w;
+    u.scale = 1 + rnd(u.i, 7) * SCATTER_SCALE * f;
   }
 
   /* obrót całości za wskaźnikiem i „oddech” */

@@ -1,7 +1,6 @@
-/* Proces współpracy (strona główna, `#proces`). Kafle jak legacy `.steps` (ProcessSteps), ale opisy zawsze widoczne. */
+/* Proces współpracy (strona główna, `#proces`): lekkie kolumny z kreską 1 px nad krokiem (jak `FactRow`), bez kafli.
+   Hover jak w `FaqSection`: limonkowe tło kolumny, treść wcięta o 12 px (transform, bez zmiany układu). */
 .head {
-  display: flex;
-  justify-content: space-between;
   margin-bottom: 48px;
 }
 
@@ -9,40 +8,69 @@
   font: inherit;
 }
 
+/* Każdy krok zajmuje trzy wiersze siatki (numer, tytuł, opis) i dzieli je z sąsiadami przez subgrid:
+   dwuliniowy tytuł obniża opisy całego rzędu, więc numery, tytuły i opisy stoją w jednej linii. */
 .steps {
   list-style: none;
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--gap);
+  gap: 16px var(--gap);
 }
 
-/* Kafel ma `.tone-dark` (tokeny ciemne w poddrzewie): tło `--bg` = #101318, tekst biały, `--muted` czytelny. */
+/* Padding w spoczynku: z lewej i z prawej 0 (tekst w linii nagłówka); dół 16 px jak góra. Przy hoverze
+   z prawej dochodzi 24 px zapasu, żeby po wcięciu 12 px limonka zostawiała 12 px z obu stron. Tło kończy
+   się pod kreską (padding-box), więc kreska 1 px przy hoverze zostaje taka sama i w tym samym miejscu. */
 .step {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 48px;
-  min-height: 280px;
-  padding: 24px 20px 24px;
-  background: var(--bg);
-  color: var(--ink);
+  grid-row: span 3;
+  display: grid;
+  grid-template-rows: subgrid;
+  row-gap: 8px;
+  padding: 16px 0;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  background-clip: padding-box;
+  transition:
+    background-color 0.4s var(--ease),
+    color 0.4s var(--ease);
+}
+
+.no,
+.title,
+.text {
+  transition:
+    color 0.4s var(--ease),
+    transform 0.4s var(--ease);
 }
 
 .no {
-  font: var(--t-display);
-  letter-spacing: -0.03em;
-  line-height: 0.9;
+  margin-bottom: 16px;
+  color: var(--muted);
 }
 
 .title {
   font: var(--t-title);
-  font-weight: 700;
 }
 
 .text {
-  margin-top: 8px;
   color: var(--muted);
   max-width: 44ch;
+}
+
+/* Kroki są nieklikalne i niefokusowalne: sam hover, bez strzałki i bez stanu fokusu.
+   #3F4A12: stała z legacy (przygaszony tekst na limonce, 7,92:1). */
+@media (hover: hover) {
+  .step {
+    padding-right: 24px;
+  }
+
+  .step:hover {
+    background-color: var(--accent);
+    color: var(--on-accent);
+    --muted: #3F4A12;
+  }
+
+  .step:hover :is(.no, .title, .text) {
+    transform: translateX(12px);
+  }
 }
 
 @media (min-width: 640px) {
@@ -55,8 +83,13 @@
   .steps {
     grid-template-columns: repeat(4, 1fr);
   }
+}
 
-  .step {
-    min-height: 360px;
+@media (prefers-reduced-motion: reduce) {
+  .step,
+  .no,
+  .title,
+  .text {
+    transition: none;
   }
 }

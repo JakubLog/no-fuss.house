@@ -64,6 +64,21 @@
   font-weight: 400;
 }
 
+/* `hintTouch`: podmiana podpowiedzi bez hovera (dotyk), sam CSS, więc bez migotania po SSR. */
+.hintTouch {
+  display: none;
+}
+
+@media (hover: none) {
+  .hintHover {
+    display: none;
+  }
+
+  .hintTouch {
+    display: inline;
+  }
+}
+
 .lite.bleed {
   padding-inline: 0;
 }

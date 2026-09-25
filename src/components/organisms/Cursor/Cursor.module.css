@@ -9,13 +9,45 @@
   height: 88px;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition:
+    opacity 0.3s,
+    filter 0.28s var(--ease);
   will-change: translate;
   filter: drop-shadow(0 8px 10px rgba(187, 255, 0, 0.25));
+  /* Wzorzec limonki: `Cursor.tsx` czyta go raz (rgb) i porównuje z tłem pod wskaźnikiem; krążki malują nim `currentColor`. */
+  color: var(--accent);
+}
+
+/* Ton `accent` (nad limonkowym tłem): ciemny kursor, cień zamiast limonkowej poświaty. */
+.cursor[data-tone="accent"] {
+  filter: drop-shadow(0 8px 10px rgba(16, 19, 24, 0.25));
 }
 
 .cursor[data-on="true"] {
   opacity: 1;
+}
+
+/* Gradient strzałki, obrysu pierścienia/krążków i kropki; w tonie `accent` jednolity `#101318`. */
+.stopHi,
+.stopMid,
+.stopLo {
+  transition: stop-color 0.28s var(--ease);
+}
+
+.stopHi {
+  stop-color: #EAFFB0;
+}
+
+.stopMid {
+  stop-color: var(--accent);
+}
+
+.stopLo {
+  stop-color: #7DAA00;
+}
+
+.cursor[data-tone="accent"] :is(.stopHi, .stopMid, .stopLo) {
+  stop-color: var(--on-accent);
 }
 
 /* Strzałka ↔ pierścień (link) ↔ kropka (grab): jeden SVG, stan w `data-state`. */
@@ -27,7 +59,8 @@
   transform-box: fill-box;
   transition:
     scale 0.28s var(--ease),
-    opacity 0.2s;
+    opacity 0.2s,
+    fill 0.28s var(--ease);
 }
 
 .arrow {
@@ -41,6 +74,45 @@
   transform-origin: center;
   scale: 0;
   opacity: 0;
+}
+
+.ring {
+  fill: rgba(187, 255, 0, 0.28);
+}
+
+.cursor[data-tone="accent"] .ring {
+  fill: rgba(16, 19, 24, 0.12);
+}
+
+/* Pełny krążek `help` / `calendar`: limonka ze znakiem `#101318`, w tonie `accent` odwrotnie. */
+.disc,
+.iconDot {
+  transition: fill 0.28s var(--ease);
+}
+
+.disc {
+  fill: currentColor;
+}
+
+.icon {
+  stroke: var(--on-accent);
+  transition: stroke 0.28s var(--ease);
+}
+
+.iconDot {
+  fill: var(--on-accent);
+}
+
+.cursor[data-tone="accent"] .disc {
+  fill: var(--on-accent);
+}
+
+.cursor[data-tone="accent"] .icon {
+  stroke: currentColor;
+}
+
+.cursor[data-tone="accent"] :is(.iconDot, .glyph) {
+  fill: currentColor;
 }
 
 .cursor[data-state="link"] .arrow,
@@ -75,10 +147,12 @@
   font-family: var(--sans);
   font-size: 20px;
   font-weight: 600;
-  fill: #101318;
+  fill: var(--on-accent);
   text-anchor: middle;
   dominant-baseline: central;
-  transition: opacity 0.2s;
+  transition:
+    opacity 0.2s,
+    fill 0.28s var(--ease);
 }
 
 .glyphClose,

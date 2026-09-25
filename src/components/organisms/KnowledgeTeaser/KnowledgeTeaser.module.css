@@ -1,0 +1,43 @@
+/* Zajawka „Wiedza” na stronie głównej: nagłówek jak `FindSection`, siatka jak minione na /wiedza. */
+.head {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 16px;
+  margin-bottom: 48px;
+}
+
+.title {
+  max-width: 16ch;
+}
+
+.list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 56px var(--event-gap);
+}
+
+@media (min-width: 640px) {
+  .list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  /* Link „Zobacz wszystko” po prawej, na linii dołu nagłówka. */
+  .head {
+    grid-template-columns: 1fr auto;
+    column-gap: 16px;
+    align-items: end;
+  }
+
+  .label {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

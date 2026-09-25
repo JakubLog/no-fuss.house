@@ -26,6 +26,8 @@
   gap: 12px;
   aspect-ratio: 9 / 18.6;
   padding: 56px 14px 24px;
+  /* Blok zawierający toast: ekran (300 px), nie korpus PhoneFrame. */
+  position: relative;
   overflow: hidden;
   font-family: var(--sans);
   background: var(--jr-bg);
@@ -225,16 +227,22 @@
   color: var(--jr-sub);
 }
 
+/* Dłuższy komunikat łamie się w granicach ekranu (zrównoważone linie). Margines 4 px i padding
+   12 px: toast tygodnia (~288 px) mieści się w jednej linii jak w legacy. Line-height 15 px
+   + padding 8 px daje dla jednej linii tę samą wysokość co legacy (10 + 11 + 10). */
 .toast {
   position: absolute;
   left: 50%;
   bottom: 8%;
   translate: -50% 0;
-  padding: 10px 14px;
-  white-space: nowrap;
+  width: max-content;
+  max-width: calc(100% - 8px);
+  padding: 8px 12px;
   font-size: 11px;
   font-weight: 500;
-  line-height: 1;
+  line-height: 15px;
+  text-align: center;
+  text-wrap: balance;
   color: #FFFFFF;
   background: var(--jr-ink);
   border-radius: 999px;

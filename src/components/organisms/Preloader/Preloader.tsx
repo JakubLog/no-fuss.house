@@ -15,6 +15,8 @@ const MAX_MS = 1200;
 const FILL_MS = 180;
 /** Kurtyna jedzie 1 s, element znika z DOM po 1,2 s (legacy). */
 const REMOVE_AFTER_MS = 1200;
+/** Treść pod kurtyną (elementy root layoutu): `inert`, dopóki kurtyna zasłania. */
+const COVERED_SELECTOR = ".skip-link, body > header, body > main, body > footer";
 
 const easeOut = (x: number) => 1 - (1 - x) * (1 - x);
 
@@ -27,7 +29,10 @@ const easeOut = (x: number) => 1 - (1 - x) * (1 - x);
  *
  * Działa tylko przy pierwszym wejściu: żyje w root layout, który nie montuje się
  * ponownie przy nawigacji klienckiej; gdyby jednak się zamontował po intro
- * (`isIntroDone()`), od razu znika. Przy `prefers-reduced-motion` kończy się od razu.
+ * (`isIntroDone()`), od razu znika. Przy `prefers-reduced-motion` nie pokazuje się wcale
+ * (CSS `display: none` od pierwszej klatki, także przed hydratacją), a `markIntroDone()`
+ * idzie od razu. Na czas paska skip link, HUD, `main` i stopka mają `inert` (Tab nie chodzi
+ * pod kurtyną); zdejmowany w `finish`, najpóźniej po `MAX_MS` i w cleanupie.
  * Blokadę scrolla robi `body:has([data-preloader="active"])` w globals.css,
  * bez JS chowa go `<noscript>` w layoucie. Client Component.
  */
@@ -37,12 +42,12 @@ export function Preloader() {
   const fillRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isIntroDone()) {
+    if (isIntroDone() || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      markIntroDone();
       const raf = requestAnimationFrame(() => setPhase("removed"));
       return () => cancelAnimationFrame(raf);
     }
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const fill = fillRef.current;
     const start = performance.now();
     /** Czas (ms od startu), w którym fonty były gotowe; `null` = jeszcze nie. */
@@ -51,6 +56,17 @@ export function Preloader() {
     let raf = 0;
     let removeTimer = 0;
     let cancelled = false;
+
+    /*
+     * Tylko elementy, które `inert` dostały tutaj; zdjęcie jest idempotentne. Timer to
+     * bezpiecznik: gdy rAF stoi (karta w tle, zawieszony wątek), treść i tak odblokuje się po MAX_MS.
+     */
+    const covered = Array.from(document.querySelectorAll<HTMLElement>(COVERED_SELECTOR)).filter((el) => !el.inert);
+    for (const el of covered) el.inert = true;
+    const uncover = () => {
+      for (const el of covered) el.inert = false;
+    };
+    const uncoverTimer = window.setTimeout(uncover, MAX_MS);
 
     const fonts = typeof document.fonts === "undefined" ? null : document.fonts;
     if (!fonts || fonts.status === "loaded") {
@@ -67,35 +83,33 @@ export function Preloader() {
     }
 
     const finish = () => {
+      uncover();
       setPhase("done");
       markIntroDone();
-      removeTimer = window.setTimeout(() => setPhase("removed"), reduced ? 0 : REMOVE_AFTER_MS);
+      removeTimer = window.setTimeout(() => setPhase("removed"), REMOVE_AFTER_MS);
     };
 
-    if (reduced) {
-      if (fill) fill.style.transform = "scaleX(1)";
-      raf = requestAnimationFrame(finish);
-    } else {
-      /*
-       * Koniec paska: gotowość fontów + krótki dobieg, w granicach 600–1200 ms.
-       * Dopóki fonty nie są gotowe, pasek idzie tak, by dojść do 100% w 1200 ms;
-       * gdy są, przyspiesza (postęp tylko rośnie).
-       */
-      const step = (now: number) => {
-        const elapsed = now - start;
-        const endAt = readyAt === null ? MAX_MS : Math.min(MAX_MS, Math.max(MIN_MS, readyAt + FILL_MS));
-        progress = Math.max(progress, easeOut(Math.min(1, elapsed / endAt)));
-        if (fill) fill.style.transform = `scaleX(${progress})`;
-        if (elapsed < endAt) raf = requestAnimationFrame(step);
-        else finish();
-      };
-      raf = requestAnimationFrame(step);
-    }
+    /*
+     * Koniec paska: gotowość fontów + krótki dobieg, w granicach 600–1200 ms.
+     * Dopóki fonty nie są gotowe, pasek idzie tak, by dojść do 100% w 1200 ms;
+     * gdy są, przyspiesza (postęp tylko rośnie).
+     */
+    const step = (now: number) => {
+      const elapsed = now - start;
+      const endAt = readyAt === null ? MAX_MS : Math.min(MAX_MS, Math.max(MIN_MS, readyAt + FILL_MS));
+      progress = Math.max(progress, easeOut(Math.min(1, elapsed / endAt)));
+      if (fill) fill.style.transform = `scaleX(${progress})`;
+      if (elapsed < endAt) raf = requestAnimationFrame(step);
+      else finish();
+    };
+    raf = requestAnimationFrame(step);
 
     return () => {
       cancelled = true;
       cancelAnimationFrame(raf);
       window.clearTimeout(removeTimer);
+      window.clearTimeout(uncoverTimer);
+      uncover();
     };
   }, []);
 

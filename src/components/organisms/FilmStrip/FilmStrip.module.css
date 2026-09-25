@@ -40,7 +40,6 @@
   display: flex;
   gap: var(--gap);
   overflow-x: auto;
-  overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
   padding: 0 var(--gutter);
   scroll-padding-inline: var(--gutter);
@@ -52,6 +51,15 @@
 
 .strip::-webkit-scrollbar {
   display: none;
+}
+
+/* globals.css (lenis.css) daje `[data-lenis-prevent]` `overscroll-behavior: contain`
+   w obu osiach (0,2,0 wygrywa z `.strip`), więc pionowe kółko i pionowy swipe nad
+   taśmą nie przewijały strony. Tu 0,3,0 (jak w PhoneScroller): w poziomie zostaje
+   `contain` (gest nie cofa historii), w pionie łańcuchowanie do strony. */
+.film .strip.strip {
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
 }
 
 .strip[data-drag] {

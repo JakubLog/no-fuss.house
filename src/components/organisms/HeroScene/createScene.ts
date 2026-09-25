@@ -14,7 +14,7 @@ import {
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import { FontLoader, type Font } from "three/addons/loaders/FontLoader.js";
 import { LegacyRoomEnvironment } from "./legacyRoomEnvironment";
-import { createBody, FixedStepper, stepWorld, TICK_RATE, type Body, type World } from "./physics";
+import { createBody, FixedStepper, scatterBody, stepWorld, TICK_RATE, type Body, type World } from "./physics";
 import type { FussStore, SceneFit, SceneRepel } from "./types";
 
 /**
@@ -24,11 +24,18 @@ import type { FussStore, SceneFit, SceneRepel } from "./types";
 
 export const FONT_URL = "/three/fonts/helvetiker_bold.typeface.json";
 
+/**
+ * Dopasowanie hero `/`. Od 768 px napis wpisuje się w ramkę (`frame`: pas między h1 w lewym
+ * górnym rogu a leadem z CTA w prawym dolnym): środek ramki, wysokość z przechyłem = wysokość
+ * ramki (przechył podnosi prawy koniec, a h1 stoi z lewej, lead z prawej, więc rogi napisu mijają
+ * tekst), szerokość do 62% kanwy. Telefon: bez ramki, napis nad tekstem (`offsetYMobile`).
+ */
 export const DEFAULT_FIT: SceneFit = {
   widthDesktop: 0.62,
   widthMobile: 0.86,
+  heightDesktop: 1,
   maxScale: 1.4,
-  offsetYDesktop: 0.02,
+  offsetYDesktop: 0,
   offsetYMobile: 0.12,
 };
 
@@ -36,6 +43,8 @@ export const DEFAULT_REPEL: SceneRepel = { radius: 1.2, strength: 60 };
 
 const MOBILE_BREAKPOINT = 768;
 const SIZE = 2;
+/** Przechył grupy w osi Z (legacy): prawy koniec napisu wyżej, więc napis jest wyższy o `baseW · sin`. */
+const TILT_Z = 0.06;
 
 /* Font ładowany raz na sesję (hero ↔ 404 bez ponownego pobierania). */
 let fontPromise: Promise<Font> | null = null;
@@ -59,6 +68,12 @@ export interface CreateSceneOptions {
   fuss: FussStore;
   fit: SceneFit;
   repel: SceneRepel | false;
+  /**
+   * Ramka napisu od 768 px (element na stronie, np. pas między tekstami): napis na jej środku,
+   * wysokość ograniczona `fit.heightDesktop` × wysokość ramki. Kanwa zostaje na całe hero,
+   * więc odepchnięte litery nie ucinają się. Ramka o wysokości 0 (np. `display: none`) = brak ramki.
+   */
+  frame?: HTMLElement | null;
   /** Pierwsza klatka z literami narysowana. */
   onReady?: () => void;
   /** Font się nie wczytał (WebGL działa, ale nie ma czego rysować). */
@@ -75,7 +90,7 @@ export interface SceneHandle {
  * Fizyka w `physics.ts` (stały krok jak legacy, sprawdzana symulacją).
  */
 export function createHeroScene(canvas: HTMLCanvasElement, options: CreateSceneOptions): SceneHandle {
-  const { text, fuss: fussStore, fit, repel, onReady, onError } = options;
+  const { text, fuss: fussStore, fit, repel, frame: frameEl, onReady, onError } = options;
   const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   let reduced = reducedQuery.matches;
 
@@ -120,6 +135,7 @@ export function createHeroScene(canvas: HTMLCanvasElement, options: CreateSceneO
 
   const letters: Letter[] = [];
   let baseW = 1;
+  let baseH = 1;
   let disposed = false;
   let readySent = false;
   /* legacy: grupa startuje z obrotem 0 i dostaje (−0.12, 0, 0.06) po wczytaniu fontu */
@@ -145,14 +161,26 @@ export function createHeroScene(canvas: HTMLCanvasElement, options: CreateSceneO
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     const mobile = w < MOBILE_BREAKPOINT;
-    const scale = Math.min((visW() * (mobile ? fit.widthMobile : fit.widthDesktop)) / baseW, fit.maxScale);
-    group.scale.setScalar(scale);
+    const byWidth = (visW() * (mobile ? fit.widthMobile : fit.widthDesktop)) / baseW;
+    /* Ramka (desktop): środek i wysokość z prostokątów na stronie, px → jednostki świata na z = 0. */
+    const box = !mobile && frameEl ? frameEl.getBoundingClientRect() : null;
+    const unit = visH() / h;
+    if (box && box.height > 0) {
+      const own = canvas.getBoundingClientRect();
+      const byHeight = fit.heightDesktop ? (box.height * unit * fit.heightDesktop) / baseH : Infinity;
+      group.scale.setScalar(Math.min(byWidth, byHeight, fit.maxScale));
+      group.position.y = (own.top + h / 2 - (box.top + box.height / 2)) * unit;
+      return;
+    }
+    group.scale.setScalar(Math.min(byWidth, fit.maxScale));
     group.position.y = visH() * (mobile ? fit.offsetYMobile : fit.offsetYDesktop);
   };
 
   const buildLetters = (font: Font) => {
     const k = SIZE / font.data.resolution;
     let x = 0;
+    let minY = Infinity;
+    let maxY = -Infinity;
     Array.from(text).forEach((ch, i) => {
       const glyph = font.data.glyphs[ch] ?? font.data.glyphs.o;
       const advance = (glyph?.ha ?? 0) * k;
@@ -172,6 +200,8 @@ export function createHeroScene(canvas: HTMLCanvasElement, options: CreateSceneO
         if (bb) {
           const cx = (bb.max.x + bb.min.x) / 2;
           const cy = (bb.max.y + bb.min.y) / 2;
+          minY = Math.min(minY, bb.min.y);
+          maxY = Math.max(maxY, bb.max.y);
           geometry.translate(-cx, -cy, -0.25);
           const mesh = new Mesh(geometry, material);
           group.add(mesh);
@@ -184,17 +214,18 @@ export function createHeroScene(canvas: HTMLCanvasElement, options: CreateSceneO
       x += advance;
     });
     baseW = x || 1;
+    /* Wysokość napisu na ekranie: glify + różnica wysokości końców przez przechył `TILT_Z`. */
+    baseH = (maxY > minY ? maxY - minY : 1) + baseW * Math.sin(TILT_Z);
+    /* Start w pozie startowego zamieszania: przy 1 (404, hero `/` przed ułożeniem) litery od razu są rozrzucone. */
     for (const { body } of letters) {
       body.hx -= x / 2;
       body.hy -= SIZE * 0.36;
-      body.p.x = body.hx;
-      body.p.y = body.hy;
-      body.p.z = 0;
+      scatterBody(body, world.fuss);
     }
     world.bodies = letters.map((letter) => letter.body);
     world.rotX = -0.12;
     world.rotY = 0;
-    group.rotation.set(-0.12, 0, 0.06);
+    group.rotation.set(-0.12, 0, TILT_Z);
     fitScene();
     syncGroup();
   };
@@ -288,6 +319,8 @@ export function createHeroScene(canvas: HTMLCanvasElement, options: CreateSceneO
     if (!running && letters.length) renderer.render(scene, camera);
   });
   resize.observe(canvas);
+  /* Ramka zmienia się bez zmiany kanwy (np. po wczytaniu fontu h1 rośnie, a pas maleje). */
+  if (frameEl) resize.observe(frameEl);
 
   window.addEventListener("mousemove", onMouseMove, { passive: true });
   document.addEventListener("visibilitychange", onVisibility);

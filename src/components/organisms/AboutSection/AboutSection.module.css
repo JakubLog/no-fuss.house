@@ -1,4 +1,4 @@
-/* Sekcja „O nas” na stronie głównej: 1:1 z legacy `.about` (no-fuss-v5.html). */
+/* Sekcja „O nas” na stronie głównej (legacy `.about`): portrety z podpisem „kto co robi” po lewej, statement po prawej. */
 .about {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -7,45 +7,32 @@
 
 .photo {
   grid-column: 1 / -1;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   max-width: 340px;
 }
 
-/* Placeholder obrazu (legacy `.ph`): kafel w ukośne paski z podpisem w ramce. */
-.ph {
-  position: relative;
+/* Dwa portrety obok siebie; podpis pod spodem w tych samych kolumnach (imię pod zdjęciem). */
+.pair,
+.people {
   display: grid;
-  place-items: center;
+  grid-template-columns: 1fr 1fr;
+  column-gap: var(--gap);
+}
+
+/* Źródła 1:1 przycięte do 3:4 jak na `/o-nas` (zdjęcie i placeholder w tym samym kadrze). */
+.img {
+  display: block;
   width: 100%;
-  aspect-ratio: 1;
-  overflow: hidden;
-  background: var(--tile);
-  color: var(--tile-ink);
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
 }
 
-.ph::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  opacity: 0.14;
-  background: repeating-linear-gradient(135deg, currentColor 0 1px, transparent 1px 14px);
-}
-
-.ph span {
-  position: relative;
-  padding: 4px 8px;
-  border: 1px dashed currentColor;
-}
-
-/* Podpis odręczny w akcencie (na ciemnym kaflu). */
-.sign {
-  position: absolute;
-  left: 16px;
-  top: 16px;
-  z-index: 1;
-  width: 58%;
-  rotate: -8deg;
-  color: var(--accent);
+.people {
+  list-style: none;
+  color: var(--muted);
 }
 
 .text {
@@ -77,18 +64,34 @@
   color: var(--muted);
 }
 
+/*
+ * Logotypy w pętli (`MarqueeLoop`): pięć znaków nie mieści się w jednym rzędzie kolumny tekstu.
+ * Wolniej niż limonkowy pasek (40 s na pół toru, ok. 40 px/s), krawędzie wygaszone maską.
+ * Każdy logotyp w polu wysokości 48 px (środek w pionie), rozmiar optyczny liczy `PartnerLogo`;
+ * odstęp 48 px jako `padding-right`, żeby był też po ostatnim znaku kopii (szew pętli).
+ */
+.clientsMarquee {
+  --marquee-duration: 40s;
+  mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent);
+}
+
 .clientsList {
+  --logo-size: 24px;
   list-style: none;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px 32px;
+  display: flex;
+  align-items: center;
 }
 
 .clientsList li {
-  min-height: 56px;
+  height: 48px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  padding-right: 48px;
+}
+
+/* W torze pętli (szerokość z treści) `max-width: 100%` z `PartnerLogo` zwija SVG do zera. */
+.clientsList .logo {
+  max-width: none;
 }
 
 .logo {
@@ -110,9 +113,12 @@
   .text {
     grid-column: 6 / span 7;
   }
+}
 
+/* Od 768 px logotypy w wysokości wzorcowej legacy (28 px). */
+@media (min-width: 768px) {
   .clientsList {
-    grid-template-columns: repeat(4, 1fr);
+    --logo-size: 28px;
   }
 }
 

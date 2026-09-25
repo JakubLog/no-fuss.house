@@ -1,31 +1,35 @@
-/* Legacy `.marquee` (o-nas-v5). */
+/* Legacy `.marquee` (o-nas-v5): limonkowy pasek z tekstem. */
 .marquee {
   position: relative;
   z-index: 2;
-  overflow: hidden;
-  white-space: nowrap;
   padding: 16px 0;
   background: var(--accent);
   color: var(--on-accent);
-}
-
-.track {
-  display: inline-flex;
   font: var(--t-h2);
   text-transform: uppercase;
   letter-spacing: -0.01em;
-  animation: marquee 22s linear infinite;
-}
-
-.group {
-  display: inline-flex;
 }
 
 .item {
   padding-right: 24px;
 }
 
-@keyframes marquee {
+/* `MarqueeLoop`: okno ucina tor, tor (kopie w rzędzie) przesuwa się o połowę własnej szerokości. */
+.loop {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.track {
+  display: inline-flex;
+  animation: loop var(--marquee-duration, 22s) linear infinite;
+}
+
+.group {
+  display: inline-flex;
+}
+
+@keyframes loop {
   to {
     translate: -50% 0;
   }

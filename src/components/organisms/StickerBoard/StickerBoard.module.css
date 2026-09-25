@@ -30,13 +30,12 @@
   aspect-ratio: 3 / 4;
 }
 
-/* Zdjęcie 1:1 przycięte do 3:4; nie łapie wskaźnika ani natywnego drag,
+/* Zdjęcie 1:1 przycięte do 3:4 (punkt twarzy z `photo.focus`); nie łapie wskaźnika ani natywnego drag,
    żeby przeciąganie naklejek po nim działało. Naklejki mają z-index 3. */
 .photos .img {
   display: block;
   height: auto;
   object-fit: cover;
-  object-position: 50% 50%;
   pointer-events: none;
   user-select: none;
   -webkit-user-select: none;

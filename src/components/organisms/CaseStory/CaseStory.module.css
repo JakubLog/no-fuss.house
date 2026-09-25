@@ -11,8 +11,11 @@
   max-width: 44ch;
 }
 
+/* Kolumny 1fr są symetryczne wobec środkowej linii GridOverlay, więc szerszy odstęp
+   (gutter: 56 px na desktopie) nie rozjeżdża się z siatką; 8 px zlewało tekst lead. */
 @media (min-width: 1024px) {
   .story {
     grid-template-columns: repeat(3, 1fr);
+    column-gap: var(--gutter);
   }
 }

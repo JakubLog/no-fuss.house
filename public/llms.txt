@@ -11,7 +11,7 @@ Projektujemy i kodujemy produkty, które załatwiają sprawę bez zbędnego zami
 
 ## Kontakt i wycena
 
-- E-mail: [email@no-fuss]
+- E-mail: general@no-fuss.house
 - Rozmowa: link do kalendarza wkrótce na https://no-fuss.pl/#kontakt
 - Wycena indywidualna, po krótkiej rozmowie o zakresie. Nie publikujemy cennika.
 
@@ -43,8 +43,9 @@ AION MIND (https://aionmind.com, journaling z AI) nie jest produktem no-fuss: to
 
 ## Strony
 
-- [Strona główna](https://no-fuss.pl/): usługi, jak pracujemy, realizacje, o nas, FAQ, kontakt.
+- [Strona główna](https://no-fuss.pl/): usługi, jak pracujemy, realizacje, o nas, wiedza (warsztaty i prelekcje), FAQ, kontakt.
 - [O nas](https://no-fuss.pl/o-nas): Dwie osoby, agenci AI, zero zamieszania. Magda projektuje i prowadzi produkt. Kuba pisze kod i pilnuje, żeby działał. Agenci AI pracują z nami ramię w ramię. Jesteśmy AI native.
+- [Wiedza](https://no-fuss.pl/wiedza): Przekazujemy wiedzę dalej. Warsztaty, prelekcje i meetupy z udziałem Magdy i Kuby: nadchodzące z zapisami, minione ze zdjęciami.
 - [OurMoney — case study](https://no-fuss.pl/ourmoney): produkt własny no-fuss, 12.2025 → teraz. Rola no-fuss: design i produkt (Magda), kod, infrastruktura i bezpieczeństwo (Kuba). Przed premierą w sklepach.
 - [AION MIND — case study](https://no-fuss.pl/aion-mind): etat Magdy, 01.2025 → teraz, nie projekt no-fuss. Magda: Product Designer 01.2025–05.2026, od czerwca 2026 Head of Operations.
 - [Busy Bee — case study](https://no-fuss.pl/busy-bee): strona WWW domu produkcyjnego Busy Bee Film, Warszawa, 2024. Rola no-fuss: design (Magda); kod spoza no-fuss: Michał Gabryelewicz (Webflow).

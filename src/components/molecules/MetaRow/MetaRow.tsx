@@ -7,7 +7,7 @@ export interface MetaRowProps {
   name: ReactNode;
   /** Prawa strona: rok albo zakres, np. „2025–2026”. */
   meta: ReactNode;
-  /** Strzałka „→” po roku; przesuwa się, gdy najbliższy link-przodek ma hover. */
+  /** Strzałka „→” po roku; przesuwa się, gdy najbliższy link-przodek ma hover. Rok ze strzałką się nie łamie. */
   arrow?: boolean;
   className?: string;
 }
@@ -17,7 +17,7 @@ export function MetaRow({ name, meta, arrow = false, className }: MetaRowProps) 
   return (
     <div className={cx("mono", styles.row, className)}>
       <span>{name}</span>
-      <span>
+      <span className={arrow ? styles.meta : undefined}>
         {meta}
         {arrow ? (
           <>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
+import { TileCaption } from "@/components/molecules/TileCaption";
 import { cx } from "@/lib/cx";
 import styles from "./DragBall.module.css";
 
@@ -24,7 +25,7 @@ export interface DragBallProps {
   label: string;
   /** Dwa słowa hasła (lewa góra, prawy dół), np. `["Open to", "beyond"]`. */
   words: readonly [string, string];
-  /** Podpis mono w lewym dolnym rogu. */
+  /** Podpis mono pod polem (`TileCaption`, `--muted` sekcji): na palecie pola nie ma stałego kontrastu. */
   caption: string;
   /** `aria-label` kuli, np. „Kula”. */
   ballLabel: string;
@@ -112,37 +113,32 @@ export function DragBall({ label, words, caption, ballLabel, className }: DragBa
   };
 
   return (
-    <div
-      ref={fieldRef}
-      className={cx(styles.field, className)}
-      style={style}
-      role="group"
-      aria-label={label}
-      onPointerMove={onFieldMove}
-    >
-      <p className={cx(styles.word, styles.a)} aria-hidden="true">
-        {words[0]}
-      </p>
-      <p className={cx(styles.word, styles.b)} aria-hidden="true">
-        {words[1]}
-      </p>
-      <div
-        className={cx(styles.ball, held && styles.held)}
-        role="slider"
-        tabIndex={0}
-        data-cursor="grab"
-        aria-label={ballLabel}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={Math.round(ball.x)}
-        aria-valuetext={`poziomo ${Math.round(ball.x)}%, pionowo ${Math.round(ball.y)}%`}
-        onPointerDown={onBallDown}
-        onPointerMove={onBallMove}
-        onPointerUp={drop}
-        onPointerCancel={drop}
-        onKeyDown={onBallKey}
-      />
-      <span className={cx("mono-sm", styles.caption)}>{caption}</span>
-    </div>
+    <figure className={className}>
+      <div ref={fieldRef} className={styles.field} style={style} role="group" aria-label={label} onPointerMove={onFieldMove}>
+        <p className={cx(styles.word, styles.a)} aria-hidden="true">
+          {words[0]}
+        </p>
+        <p className={cx(styles.word, styles.b)} aria-hidden="true">
+          {words[1]}
+        </p>
+        <div
+          className={cx(styles.ball, held && styles.held)}
+          role="slider"
+          tabIndex={0}
+          data-cursor="grab"
+          aria-label={ballLabel}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.round(ball.x)}
+          aria-valuetext={`poziomo ${Math.round(ball.x)}%, pionowo ${Math.round(ball.y)}%`}
+          onPointerDown={onBallDown}
+          onPointerMove={onBallMove}
+          onPointerUp={drop}
+          onPointerCancel={drop}
+          onKeyDown={onBallKey}
+        />
+      </div>
+      <TileCaption>{caption}</TileCaption>
+    </figure>
   );
 }

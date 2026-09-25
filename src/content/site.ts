@@ -21,7 +21,7 @@ export function hasPlaceholder(text: string): boolean {
 export interface SiteContact {
   /** Adres e-mail (CopyEmail, `mailto:`, JSON-LD). */
   email: string;
-  /** Google Calendar appointment schedule; `null` = link-placeholder (patrz COMPONENTS.md → Linki-placeholdery). */
+  /** Google Calendar appointment schedule; `null` = przycisku „Umów rozmowę ↗” nie ma (`ContactCta`, `Footer`). */
   calendarUrl: string | null;
   /** Krótka obietnica odpowiedzi pod CTA. */
   responseNote: string;
@@ -32,13 +32,11 @@ export const site = {
   name: "no-fuss",
   /** Zapis z logotypu HUD: „no–fuss” (półpauza). */
   wordmark: "no–fuss",
-  /** Tytuł domyślny i sufiks tytułów podstron. */
-  brandTitle: "NO-FUSS©2026",
   /**
-   * Tytuł strony głównej (`<title>`, OG, Twitter) z frazą usługową. Pełny, bez template'u
-   * „%s — NO-FUSS©2026” (`buildMetadata` ustawia go jako `absolute`, żeby marka się nie dublowała).
+   * Tytuł strony głównej (1:1 z legacy `no-fuss-v5.html`) i sufiks tytułów podstron
+   * („O NAS — NO-FUSS©2026”, „OTB VENTURES — CASE STUDY — NO-FUSS©2026”, „404 — NO-FUSS©2026”).
    */
-  homeTitle: "no-fuss — design i development aplikacji, stron i produktów z AI",
+  brandTitle: "NO-FUSS©2026",
   /**
    * Opis strony głównej (`<meta name="description">`, manifest, Organization w JSON-LD), do 155 znaków.
    * Nowe copy o usługach (decyzja Kuby, audyt B2B); opis z legacy był o duecie i OurMoney.
@@ -59,8 +57,8 @@ export const site = {
    * `/o-nas#social`, JSON-LD i `public/llms.txt`. Placeholdery `[…]` do podmiany.
    */
   contact: {
-    /** Placeholder 1:1 z legacy, do podmiany na prawdziwy adres. */
-    email: "[email@no-fuss]",
+    /** Wspólna skrzynka studia (stopka, `/o-nas#social`, JSON-LD `Organization.email`, `llms.txt`). */
+    email: "general@no-fuss.house",
     // link do Google Calendar appointment schedule, poda Kuba
     calendarUrl: null,
     /** Zdanie pod CTA. Placeholder (`[…]`) się nie renderuje (`isPlaceholder`). */
