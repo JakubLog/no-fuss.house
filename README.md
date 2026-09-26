@@ -30,6 +30,8 @@ Skopiuj `.env.example` do `.env.local`.
 | Zmienna | Opis |
 |---|---|
 | `NEXT_PUBLIC_SITE_URL` | Publiczny adres (canonical, OG, sitemap, JSON-LD). Domena nieustalona, fallback w kodzie: `https://no-fuss.pl`. |
+| `RESEND_API_KEY` | Klucz [Resend](https://resend.com) dla formularza kontaktu w stopce (Server Action `src/lib/contact/action.ts`). Bez niego formularz pokazuje błąd z adresem e-mail. |
+| `CONTACT_FROM` | Nadawca maili z formularza, np. `no-fuss <formularz@no-fuss.house>`; domena musi być zweryfikowana w Resend. Odbiorca to `site.contact.email`, Reply-To = adres z formularza. |
 
 ## Struktura
 
@@ -44,7 +46,7 @@ src/
     atoms/             Heading, Text, MonoLabel, Tag, Mark, Line, Fade, ScrambleLink, ArrowLink, Button, Logo, Icons,
                        GlowBackdrop, StickerLayer, PhotoPlaceholder, PartnerLogos, VisuallyHidden
     molecules/         NavList, MetaRow, TileCaption, FactRow, CopyEmail, SocialLinks, PhoneFrame,
-                       CaseProse, PersonCard, WorkTile, TestimonialCard, ContactCta, EventTile
+                       CaseProse, PersonCard, WorkTile, TestimonialCard, ContactCta, ContactForm, EventTile
     organisms/         chrome (Preloader, Hud, GridOverlay, Cursor, SmoothScroll, Footer, Reveal),
                        hero i 3D (HomeHero, HeroScene, NotFoundHero, PageHero), strona główna (+ KnowledgeTeaser),
                        /o-nas, /wiedza (EventsSection), bloki case study
@@ -53,6 +55,7 @@ src/
                        home.ts + home-jsonld.ts, process.ts („Jak pracujemy”), faq.ts (FAQ strony głównej),
                        about.ts, events.ts + events-jsonld.ts (/wiedza i zajawka na /), cases/ (index.ts + jeden plik na case study)
   lib/
+    contact/           formularz kontaktu: walidacja i stany (form.ts), Server Action → Resend (action.ts)
     seo/               buildMetadata, JSON-LD, adres strony, znak do ikon
     hooks/             useReducedMotion, usePointerFine, useReveal, useScramble, …
     href.ts            linki wewnętrzne / zewnętrzne / placeholdery

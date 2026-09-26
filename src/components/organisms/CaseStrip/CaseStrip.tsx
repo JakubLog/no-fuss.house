@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
+import { SectionLabel } from "@/components/atoms/SectionLabel";
 import { cx } from "@/lib/cx";
 import { Reveal } from "../Reveal";
 import styles from "./CaseStrip.module.css";
 
 export interface CaseStripProps {
-  /** Numer i nazwa sekcji mono, np. „03.5 / Codzienność”. Renderowany jako `<h2>`. */
+  /** Numer i nazwa sekcji mono, np. „03.5 / Codzienność”. `<h2>` z samą nazwą (numer `aria-hidden`). */
   label: string;
   /** Tekst po prawej w wierszu nagłówka, np. „Zrzuty z aplikacji”. */
   aside: ReactNode;
@@ -23,7 +24,9 @@ export function CaseStrip({ label, aside, tone = "light", id, className, childre
   return (
     <section id={id} className={cx("section", tone === "dark" && "tone-dark", className)}>
       <Reveal className={cx("mono", styles.head)}>
-        <h2 className={"mono fade"}>{label}</h2>
+        <h2 className={"mono fade"}>
+          <SectionLabel label={label} />
+        </h2>
         <p className="fade" style={{ "--i": 1 }}>
           {aside}
         </p>

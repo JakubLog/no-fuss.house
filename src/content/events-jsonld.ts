@@ -5,7 +5,9 @@ import { getRoute } from "./routes";
 
 /**
  * Węzły JSON-LD `/wiedza`: `CollectionPage` + `Event` dla każdego wydarzenia bez placeholderów
- * (`isPublishedEvent`). Dopóki w danych są same placeholdery, jest tylko `CollectionPage`.
+ * (`isPublishedEvent`) z miejscem albo online. Wydarzenie stacjonarne bez `place` zostaje tylko
+ * w UI: Google wymaga `location`, a pusty węzeł to błąd w Search Console.
+ * Dopóki w danych są same placeholdery, jest tylko `CollectionPage`.
  * Osoby (`performer`) i organizacja łączą się z węzłami z layoutu przez `@id`.
  */
 
@@ -13,6 +15,9 @@ const PATH = "/wiedza";
 
 /** Twarde spacje z copy UI zamieniamy na zwykłe, word joinery usuwamy (czystszy tekst dla crawlerów). */
 const plain = (text: string): string => text.replace(/\u00A0/g, " ").replace(/\u2060/g, "");
+
+/** `Event` wymaga `location`: stacjonarne bez `place` pomijamy (zostają w UI). */
+const hasLocation = (e: KnowledgeEvent): boolean => Boolean(e.online || e.place);
 
 function eventNode(e: KnowledgeEvent): JsonLdNode {
   const url = absoluteUrl(`${PATH}#${e.id}`);
@@ -44,7 +49,7 @@ function eventNode(e: KnowledgeEvent): JsonLdNode {
 
 /** Wszystkie węzły strony `/wiedza` (bez okruszków, te składa strona). */
 export function eventsGraphNodes(): JsonLdNode[] {
-  const published = events.filter(isPublishedEvent);
+  const published = events.filter((e) => isPublishedEvent(e) && hasLocation(e));
   const page: JsonLdNode = {
     "@type": "CollectionPage",
     "@id": `${absoluteUrl(PATH)}#webpage`,

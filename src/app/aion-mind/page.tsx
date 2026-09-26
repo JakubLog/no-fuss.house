@@ -28,8 +28,8 @@ import { MIN_CASE_NUMBERS, caseDescription, publishedNumbers } from "@/content/c
 import styles from "./page.module.css";
 
 const PATH = aionMind.path;
-/** AION MIND jako organizacja (pracodawca Magdy), nie produkt no-fuss. */
-const AION_ORG_ID = ids.externalOrganization(AION_MIND_URL);
+/** AION MIND jako organizacja (pracodawca Magdy z `aionMind.employer`), nie produkt no-fuss. */
+const AION_ORG_ID = ids.externalOrganization(aionMind.employer.url);
 /** „W liczbach” bez placeholderów `[…]`; poniżej `MIN_CASE_NUMBERS` sekcji nie ma. */
 const numbers = publishedNumbers(aionMindNumbers);
 
@@ -84,9 +84,9 @@ export default function AionMindPage() {
           {
             "@type": "Organization",
             "@id": AION_ORG_ID,
-            name: aionMind.title,
-            url: AION_MIND_URL,
-            employee: { "@id": ids.person("magda") },
+            name: aionMind.employer.name,
+            url: aionMind.employer.url,
+            employee: { "@id": ids.person(aionMind.employer.employee) },
           },
         )}
       />

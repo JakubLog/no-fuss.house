@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import Image from "next/image";
 import { ArrowLink } from "@/components/atoms/ArrowLink";
 import { Line } from "@/components/atoms/Line";
@@ -65,9 +66,10 @@ export function AboutSection() {
       <div className={styles.text}>
         <p className={styles.statement}>
           {about.statementLines.map((line, i) => (
-            <Line key={line} index={i}>
-              {line}
-            </Line>
+            <Fragment key={line}>
+              {i > 0 ? " " : null}
+              <Line index={i}>{line}</Line>
+            </Fragment>
           ))}
         </p>
         <p className={cx(styles.statement, styles.muted)}>

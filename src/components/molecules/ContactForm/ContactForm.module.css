@@ -1,0 +1,127 @@
+/*
+ * Formularz kontaktu. Pola ostre, obrys 1 px jak wiersze list (`--ink` 18%, hover 40%), fokus i błąd 2 px.
+ * Wypełnienie pola to drugi cień w kolorze `--bg`: zakrywa naklejki spod kursora (stopka) i tło autofill przeglądarki.
+ */
+.form {
+  --field-ring: 1px;
+  --field-line: color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.fields {
+  display: grid;
+  gap: 16px var(--gap);
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.label {
+  color: var(--muted);
+}
+
+.input {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 0;
+  appearance: none;
+  background: var(--bg);
+  box-shadow:
+    inset 0 0 0 var(--field-ring) var(--field-line),
+    inset 0 0 0 100vmax var(--bg);
+  color: var(--ink);
+  -webkit-text-fill-color: var(--ink);
+  caret-color: var(--accent);
+  font: var(--t-body);
+  transition: box-shadow 0.2s var(--ease);
+}
+
+.input::placeholder {
+  color: var(--muted);
+  -webkit-text-fill-color: var(--muted);
+  opacity: 1;
+}
+
+.input:hover {
+  --field-line: color-mix(in srgb, var(--ink) 40%, transparent);
+}
+
+/* Błąd: limonkowy obrys (stopka jest zawsze ciemna, akcent na ciemnym jest dozwolony) + tag pod polem. */
+.input[aria-invalid="true"] {
+  --field-ring: 2px;
+  --field-line: var(--accent);
+}
+
+/* Po błędzie (po nim w kaskadzie): pole z fokusem ma biały obrys także przy błędzie, błąd niesie tag. */
+.input:focus-visible {
+  outline: none;
+  --field-ring: 2px;
+  --field-line: var(--ink);
+}
+
+.textarea {
+  min-height: 160px;
+  resize: vertical;
+}
+
+/* Tag błędu jak `Tag`: mono 12 px, `#101318` na limonce, padding 2×6 px. */
+.error {
+  justify-self: start;
+  padding: 2px 6px;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  margin-top: 24px;
+}
+
+.note {
+  margin-top: 16px;
+  color: var(--muted);
+}
+
+.status {
+  max-width: 60ch;
+}
+
+.status:not(:empty) {
+  margin-top: 24px;
+}
+
+/* Link w tekście (DESIGN.md): podkreślenie 1 px, hover limonkowe tło. Adres nie łamie się na „-”. */
+.status a {
+  border-bottom: 1px solid currentColor;
+  white-space: nowrap;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.status a:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+@media (min-width: 768px) {
+  .fields {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .wide {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .input,
+  .status a {
+    transition: none;
+  }
+}

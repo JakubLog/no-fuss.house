@@ -213,7 +213,7 @@ Klasy `.cls-*` i `id` z oryginalnego InPost usunięte (inline `<style>` w SVG by
 
 ## Molekuły (`src/components/molecules`)
 
-Wszystkie są Server Components, poza `CopyEmail`.
+Wszystkie są Server Components, poza `CopyEmail` i `ContactForm`.
 
 ### `NavList` — server-compatible (bez hooków)
 ```ts
@@ -267,7 +267,7 @@ komponent zwraca `null` (stopka bez „Social”, karta Magdy bez linków). Patr
 interface ContactCtaProps { index?: number; note?: boolean; className?: string }
 const CONTACT_CTA_LABELS: { primary: "Porozmawiajmy →"; calendar: "Umów rozmowę ↗" };
 ```
-Accent „Porozmawiajmy →” → `#kontakt` (stopka) i ghost „Umów rozmowę ↗” → `site.contact.calendarUrl` (nowa karta).
+Accent „Porozmawiajmy →” → `#kontakt` (stopka z formularzem `ContactForm`) i ghost „Umów rozmowę ↗” → `site.contact.calendarUrl` (nowa karta).
 Przy `calendarUrl: null` ghosta **nie ma** (sam „Porozmawiajmy →”), bez wyszarzonego placeholdera. `note` dokłada
 `site.contact.responseNote` (mono-sm, `--muted`), ale nie gdy to placeholder `[…]`. `index` = `.fade` + `--i` (reveal z rodzicem).
 Przyciski zawijają się (odstęp 8 px). Dane tylko z `site.contact`.
@@ -278,6 +278,25 @@ Przyciski zawijają się (odstęp 8 px). Dane tylko z `site.contact`.
 <PageHero lines={aboutHero.lines} lead={aboutHero.lead} cta />   {/* /o-nas: ContactCta index={lines.length + 1} pod leadem */}
 {/* RolesSplit: <Reveal className={styles.cta}><ContactCta index={0} /></Reveal> pod wierszami */}
 ```
+
+### `ContactForm` — client
+```ts
+interface ContactFormProps { className?: string }
+const CONTACT_FORM_COPY: { label; fields: { name; email; message }; messagePlaceholder; submit; pending; sent; failed; trap };
+```
+Formularz kontaktu w stopce (`Footer`, jedyne użycie): imię, e-mail, wiadomość (wszystkie wymagane) → Server Action
+`sendContactMessage` z `@/lib/contact/action` przez `useActionState`. Serwer wysyła przez Resend API (`fetch`, bez SDK)
+na `site.contact.email` z Reply-To = adres z formularza; potrzebuje `RESEND_API_KEY` i `CONTACT_FROM` (README). Walidacja
+i limity (`CONTACT_LIMITS`: 120 / 254 / 5000 znaków, te same w `maxLength`) w `@/lib/contact/form` (`parseContactForm`, czysty moduł).
+Stany (`ContactFormState`): `idle`; `invalid` (tag błędu pod polem jak `Tag`, limonkowy obrys pola, `aria-invalid` +
+`aria-describedby`, fokus na pierwsze błędne pole, wartości wracają przez `defaultValue`, bo React resetuje formularz po akcji);
+`failed` (brak konfiguracji, błąd API, timeout 10 s: wartości zostają, w `role="status"` link `mailto:`); `sent` (pola czyste,
+„Dzięki, wiadomość doszła. Odpiszemy na …”). W trakcie wysyłki „Wysyłamy…” i `aria-disabled` na przycisku (fokus zostaje,
+drugi submit blokowany w `onSubmit`). Pułapka na boty: pole `website` (sr-only + `aria-hidden`, `tabIndex={-1}`); wypełnione =
+odpowiedź `sent` bez maila. Obok wysyłki ghost „Umów rozmowę ↗” (tylko z `calendarUrl`), pod spodem `responseNote` (bez
+placeholdera `[…]`). Pola: obrys 1 px `--ink` 18% (hover 40%, fokus 2 px `--ink`), wypełnienie `--bg` drugim cieniem (zakrywa
+naklejki i tło autofill), karetka w akcencie, od 768 px imię | e-mail w dwóch kolumnach, wiadomość na całą szerokość
+(`data-lenis-prevent`, `resize: vertical`). Wymaga ciemnego rodzica z `--bg` (stopka ustawia `--bg: var(--hero-sky)`).
 
 ### `PhoneFrame` — server
 ```ts
@@ -383,7 +402,7 @@ Placeholdery nie są klikalnymi linkami (bez `href="#"`, bez skoku na górę, po
 | `SocialLinks` (stopka, karty osób) | link **pomijany**; bez żadnego prawdziwego → brak `<nav>` (lista równorzędnych profili, brakujący nic nie wnosi) |
 | wiersze `FindSection` (`/o-nas#social`, `#posty`) | `<span>` z klasą wiersza, opacity .5, bez hovera, sr-only „(wkrótce)” (układ sekcji zostaje) |
 | `EventTile` (`/wiedza`, `/#wiedza`) | nadchodzące: `Button href={null}` (przygaszony, sr-only „(wkrótce)”); minione: link **pomijany** |
-| `ContactCta` / `Footer` („Umów rozmowę ↗” przy `calendarUrl: null`) | przycisk **pomijany** (w stopce bez notki znika cały blok pod nagłówkiem) |
+| `ContactCta` / `ContactForm` („Umów rozmowę ↗” przy `calendarUrl: null`) | przycisk **pomijany** (w stopce zostaje sam „Wyślij wiadomość →”) |
 
 Tekstowe placeholdery `[…]` się nie renderują (dane zostają w plikach do podmiany). Helpery: `isPlaceholder()`
 (cały tekst w nawiasach / `#`) i `hasPlaceholder()` (`[…]` także w środku zdania) z `site.ts`; filtry danych:
@@ -416,9 +435,9 @@ Montowany w layoucie. Strony go nie renderują.
 | `Preloader` | client | pasek 110×4 po `document.fonts.ready`, min. 600 ms / max. 1200 ms, kurtyna 1 s, `markIntroDone()`; tylko pierwsze wejście (root layout, przy nawigacji klienckiej się nie pokazuje; po `isIntroDone()` od razu znika); bez JS chowa go `<noscript>` w layoucie. Na czas paska `.skip-link` oraz `body > header/main/footer` mają `inert`; zdejmowany w `finish()` (razem z `markIntroDone()`), bezpiecznikiem po `MAX_MS` i w cleanupie. Nowe landmarki root layoutu dopisz do `COVERED_SELECTOR`. Przy `prefers-reduced-motion` preloader ma `display: none` w CSS modułu, `markIntroDone()` idzie od razu w efekcie, a blokada scrolla `body:has([data-preloader="active"])` w globals.css działa tylko przy `prefers-reduced-motion: no-preference` |
 | `Hud` | client | logo, nav (`<header>`, `<nav aria-label="Główna">`), postęp scrolla. Fokus: biały obrys 2 px (odwraca się w `difference`). Poniżej 480 px nav w `--t-mono-sm` z odstępem 8 px, na < ~340 px nav zawija się pod logo. „Wiedza” (`hideOnSmall`) ukryta poniżej 640 px |
 | `GridOverlay` | client | 3 piony + 2 poziomy z krzyżykami, `mix-blend-mode: difference` |
-| `Cursor` | client | strzałka (lerp 0.18) + naklejki; tylko `pointer: fine`, off przy reduced motion. Jeden SVG 88 px (punkt wskaźnika w środku), stan w `data-state` bez re-renderów: `arrow`; `link` nad `a[href], button, [role="button"], label, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])` (bez `:disabled`) → limonkowy pierścień; `grab` nad `[data-cursor="grab"]` (ma pierwszeństwo; track `FilmStrip`, kula `DragBall`, naklejka `StickerBoard`) → mała kropka, `data-pressed` przy wciśnięciu ją ściska. Opt-out `[data-cursor="arrow"]` (kafle `ProcessSteps`: fokusowalne, nieklikalne) wymusza strzałkę. `help` nad `[data-cursor="help"]` (`summary` w `FaqSection`) → pełny limonkowy krążek z „?”, przy `details[open]` z „−” (`data-open`, odświeża się przy ruchu); `calendar` nad `[data-cursor="calendar"]` (`Button` „Umów rozmowę ↗” w `ContactCta` i `Footer`) → krążek z ikoną kalendarza; wciśnięcie ściska oba do 0.8 jak `link`. Wartości `data-cursor`: `arrow` \| `grab` \| `help` \| `calendar`; kolejność detekcji (`closest`): arrow → grab → help → calendar → link. Śledzi `pointermove` (działa też przy `preventDefault` na `pointerdown`). Nad `[data-native-cursor]` (żywa ramka `LiveFrame`, ekran `PhoneScroller`) i po wejściu do `iframe` / wyjściu z okna chowa się, zostaje kursor systemowy. Reguła w `globals.css`: `html[data-cursor="on"] :not([data-native-cursor], [data-native-cursor] *) { cursor: none !important }`, więc `cursor:` w modułach nie przebija się; element z `data-native-cursor` musi sam ustawić `cursor` (`auto` albo własny). Ton w `data-tone` (`base` / `accent`): hit-test `elementsFromPoint` przy zmianie celu (`pointermove` / `pointerover`), pierwsze nieprzezroczyste tło na stosie (i `::before` wierzchniego) równe `--accent` → ciemny wariant; `img` / `video` / `canvas` wyżej na stosie → `base`; przeliczany też na `transitionrun` / `transitionend` / `transitioncancel` `background-color` elementów ze stosu i raz po `pointerup` |
+| `Cursor` | client | strzałka (lerp 0.18) + naklejki; tylko `pointer: fine`, off przy reduced motion. Jeden SVG 88 px (punkt wskaźnika w środku), stan w `data-state` bez re-renderów: `arrow`; `link` nad `a[href], button, [role="button"], label, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])` (bez `:disabled`) → limonkowy pierścień; `grab` nad `[data-cursor="grab"]` (ma pierwszeństwo; track `FilmStrip`, kula `DragBall`, naklejka `StickerBoard`) → mała kropka, `data-pressed` przy wciśnięciu ją ściska. Opt-out `[data-cursor="arrow"]` (kafle `ProcessSteps`: fokusowalne, nieklikalne) wymusza strzałkę. `help` nad `[data-cursor="help"]` (`summary` w `FaqSection`) → pełny limonkowy krążek z „?”, przy `details[open]` z „−” (`data-open`, odświeża się przy ruchu); `calendar` nad `[data-cursor="calendar"]` (`Button` „Umów rozmowę ↗” w `ContactCta` i `ContactForm`) → krążek z ikoną kalendarza; wciśnięcie ściska oba do 0.8 jak `link`. Wartości `data-cursor`: `arrow` \| `grab` \| `help` \| `calendar`; kolejność detekcji (`closest`): arrow → grab → help → calendar → link. Śledzi `pointermove` (działa też przy `preventDefault` na `pointerdown`). Nad `[data-native-cursor]` (żywa ramka `LiveFrame`, ekran `PhoneScroller`) i po wejściu do `iframe` / wyjściu z okna chowa się, zostaje kursor systemowy. Reguła w `globals.css`: `html[data-cursor="on"] :not([data-native-cursor], [data-native-cursor] *) { cursor: none !important }`, więc `cursor:` w modułach nie przebija się; element z `data-native-cursor` musi sam ustawić `cursor` (`auto` albo własny). Ton w `data-tone` (`base` / `accent`): hit-test `elementsFromPoint` przy zmianie celu (`pointermove` / `pointerover`), pierwsze nieprzezroczyste tło na stosie (i `::before` wierzchniego) równe `--accent` → ciemny wariant; `img` / `video` / `canvas` wyżej na stosie → `base`; przeliczany też na `transitionrun` / `transitionend` / `transitioncancel` `background-color` elementów ze stosu i raz po `pointerup` |
 | `SmoothScroll` | client | Lenis (lerp 0.1), stop do końca preloadera, kotwice, reset przy zmianie route |
-| `Footer` | server | `#kontakt` (cel „Porozmawiajmy →”), płaskie tło `--hero-sky` (bez smug), CTA display z revealem linii; na końcu limonka `Mark` „zamieszania” wjeżdża od prawej do lewej (własny `Reveal` słowa, opóźnienie `--reveal-duration` po jego `is-in`, tło w `::before`, kolor liter gradientem `background-clip: text` na tej samej krawędzi; reduced motion: od razu limonka), „Umów rozmowę ↗” (tylko z `calendarUrl`) + `responseNote` widoczne od razu, `CopyEmail`, `SocialLinks`, copyright; jedyna strefa naklejek (`data-stickers`) na stronach treści |
+| `Footer` | server | `#kontakt` (cel „Porozmawiajmy →”), min. `100svh`, płaskie tło `--hero-sky` (bez smug, `--bg` = `--hero-sky`, `color-scheme: dark`), CTA display z revealem linii; na końcu limonka `Mark` „zamieszania” wjeżdża od prawej do lewej (własny `Reveal` słowa, opóźnienie `--reveal-duration` po jego `is-in`, tło w `::before`, kolor liter gradientem `background-clip: text` na tej samej krawędzi; reduced motion: od razu limonka). Pod nagłówkiem `ContactForm` widoczny od razu (od 768 px od kolumny 3, od 1024 px kolumny 3–10; w nim „Umów rozmowę ↗” i `responseNote`); nagłówek z formularzem stoją na środku wolnego miejsca (`.main`, `flex: 1`), niżej w przepływie (nie absolutnie, więc nic nie nachodzi przy wysokim formularzu) wiersz `CopyEmail`, `SocialLinks`, copyright; jedyna strefa naklejek (`data-stickers`) na stronach treści |
 | `Reveal` | client | wrapper `data-reveal` |
 
 ### `Reveal` — client

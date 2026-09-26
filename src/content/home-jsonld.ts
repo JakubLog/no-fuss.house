@@ -1,6 +1,7 @@
 import { faq, ids, type JsonLdNode, type JsonValue } from "@/lib/seo/jsonld";
 import { absoluteUrl } from "@/lib/seo/site-url";
 import { getCase } from "./cases";
+import { softwareAppId } from "./cases/software-app";
 import { publishedFaq } from "./faq";
 import { publishedTestimonials, servicesSection, work } from "./home";
 
@@ -15,16 +16,17 @@ const plain = (text: string): string => text.replace(/ /g, " ");
 const orgRef = { "@id": ids.organization };
 
 /**
- * Autorstwo pozycji wg `CaseStudy.ownership`: projekty własne i klientów → `creator` = no-fuss;
- * etat (`employment`, AION MIND) → `creator` = pracodawca, `contributor` = zatrudniona osoba.
+ * Autorstwo pozycji. `CreativeWork` to case study, więc `creator` = no-fuss zawsze (jak na stronach
+ * case'ów, ten sam `@id`). Etat (`employment`, AION MIND): `contributor` = zatrudniona osoba,
+ * `about` = aplikacja (`SoftwareApplication` z `publisher` = pracodawca na stronie case'u).
  */
 function authorship(href: string): { [key: string]: JsonValue } {
   const c = getCase(href);
   if (c?.ownership === "employment" && c.employer) {
-    const { name, url, employee } = c.employer;
     return {
-      creator: { "@type": "Organization", "@id": ids.externalOrganization(url), name, url },
-      contributor: { "@id": ids.person(employee) },
+      creator: orgRef,
+      contributor: { "@id": ids.person(c.employer.employee) },
+      about: { "@id": softwareAppId(href) },
     };
   }
   return { creator: orgRef };

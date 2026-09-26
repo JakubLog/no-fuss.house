@@ -55,7 +55,7 @@ export function EventTile({ event, variant, className }: EventTileProps) {
           ) : null}
         </div>
         <time dateTime={date.iso} className={styles.when}>
-          <span className={styles.day}>{date.day}</span>
+          <span className={styles.day}>{date.day}</span>{" "}
           <span className="mono">
             {[date.year, date.weekday, event.time].filter(Boolean).join(" · ")}
           </span>

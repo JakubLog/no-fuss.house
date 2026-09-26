@@ -20,7 +20,7 @@ export interface SiteRoute {
   path: InternalPath;
   /**
    * Tytuł strony BEZ sufiksu (sufiks „ — NO-FUSS©2026” dokleja template w layout).
-   * Copy 1:1 z `<title>` legacy. `null` = strona główna (sam „NO-FUSS©2026”).
+   * Copy 1:1 z `<title>` legacy. `null` = strona główna (`site.homeTitle`).
    */
   title: string | null;
   kind: RouteKind;

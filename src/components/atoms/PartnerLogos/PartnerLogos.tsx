@@ -3,7 +3,7 @@ import { cx } from "@/lib/cx";
 import styles from "./PartnerLogos.module.css";
 
 /**
- * Logotypy partnerów z paska „Współpracujemy z” (legacy `no-fuss-v5.html`, `.clients__list`).
+ * Logotypy partnerów z paska „Współpracujemy / Współpracowaliśmy z” (legacy `no-fuss-v5.html`, `.clients__list`: „Współpracujemy z”).
  * Ścieżki 1:1 z legacy / `public/assets/logos/*.svg`, kolor przez `fill="currentColor"`.
  * Każdy logotyp: `role="img"`, `aria-label` i `<title>` z nazwą firmy. Server Components.
  * Znaki należą do ich właścicieli (patrz `public/assets/logos/README.md`).

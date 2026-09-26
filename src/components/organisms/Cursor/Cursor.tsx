@@ -23,8 +23,6 @@ const MAX_STICKERS = 8;
  * nad nimi chowamy strzałkę, zostaje kursor systemowy (bez podwójnego kursora).
  */
 const NATIVE_CURSOR_SELECTOR = "[data-native-cursor]";
-/** Opt-out: element fokusowalny, ale nieklikalny (kafle `ProcessSteps`), zostaje strzałka. Pierwszeństwo przed `grab` i `link`. */
-const ARROW_SELECTOR = '[data-cursor="arrow"]';
 /** Elementy przeciągalne (FilmStrip, DragBall, naklejki StickerBoard): stan `grab`, ma pierwszeństwo przed `link`. */
 const GRAB_SELECTOR = '[data-cursor="grab"]';
 /** Pytanie FAQ (`summary`): krążek z „?”, przy otwartym `details` z „−”. */
@@ -110,14 +108,13 @@ export function Cursor() {
       cursor.dataset.pressed = "false";
     };
 
-    /* Kolejność: arrow (opt-out) → grab → help → calendar → link. */
+    /* Kolejność: grab → help → calendar → link. */
     const setState = (target: Element | null) => {
       let state: CursorState = "arrow";
-      if (!target || target.closest(ARROW_SELECTOR)) state = "arrow";
-      else if (target.closest(GRAB_SELECTOR)) state = "grab";
-      else if (target.closest(HELP_SELECTOR)) state = "help";
-      else if (target.closest(CALENDAR_SELECTOR)) state = "calendar";
-      else if (target.closest(LINK_SELECTOR)) state = "link";
+      if (target?.closest(GRAB_SELECTOR)) state = "grab";
+      else if (target?.closest(HELP_SELECTOR)) state = "help";
+      else if (target?.closest(CALENDAR_SELECTOR)) state = "calendar";
+      else if (target?.closest(LINK_SELECTOR)) state = "link";
       if (cursor.dataset.state !== state) cursor.dataset.state = state;
       /* Otwarte pytanie FAQ: „−” zamiast „?” (odświeża się przy następnym ruchu). */
       const open = state === "help" && target?.closest("details")?.open === true ? "true" : "false";

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { MonoLabel } from "@/components/atoms/MonoLabel";
+import { SectionLabel } from "@/components/atoms/SectionLabel";
 import { Reveal } from "@/components/organisms/Reveal";
 import { cx } from "@/lib/cx";
 import styles from "./CaseStudyLayout.module.css";
@@ -31,7 +32,8 @@ export interface CaseStudySectionSplitProps extends CaseStudySectionBase {
 export interface CaseStudySectionLiteProps extends CaseStudySectionBase {
   /**
    * Sekcja „lite” z case studies stron (legacy `.lite` / `.cs-lite`): wiersz nagłówka
-   * mono (etykieta jako `<h2>` po lewej, `hint` po prawej), pod spodem treść na pełną szerokość.
+   * mono (etykieta jako `<h2>` po lewej, numer `aria-hidden`, więc nagłówek to sama nazwa;
+   * `hint` po prawej), pod spodem treść na pełną szerokość.
    */
   layout: "lite";
   /** Podpowiedź po prawej w wierszu nagłówka, np. „Przeciągnij taśmę”. */
@@ -67,7 +69,9 @@ export function CaseStudySection(props: CaseStudySectionProps) {
         className={cx("section", styles.lite, tone === "dark" && "tone-dark", props.bleed && styles.bleed, className)}
       >
         <div className={cx("mono", styles.liteHead)}>
-          <h2 className={cx("mono", "fade", styles.liteLabel)}>{label}</h2>
+          <h2 className={cx("mono", "fade", styles.liteLabel)}>
+            <SectionLabel label={label} />
+          </h2>
           {props.hint ? (
             <p className="fade" style={{ "--i": 1 }}>
               {props.hintTouch ? (
@@ -93,7 +97,7 @@ export function CaseStudySection(props: CaseStudySectionProps) {
       className={cx("section", styles.block, tone === "dark" && "tone-dark", isSplit && props.flip && styles.flip, className)}
     >
       <MonoLabel muted className={cx("fade", styles.no)}>
-        {label}
+        <SectionLabel label={label} />
       </MonoLabel>
       {props.layout === "split" ? (
         <>

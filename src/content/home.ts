@@ -29,7 +29,7 @@ export const about = {
   statementLines: ["Projektujemy i kodujemy", "produkty, które", "załatwiają sprawę."],
   aboutLink: { label: "Poznaj nas", href: "/o-nas" },
   ourMoneyLink: { label: "OurMoney", href: "https://ourmoney.pl" },
-  clientsLabel: "Współpracujemy z",
+  clientsLabel: "Współpracujemy / Współpracowaliśmy z",
 } as const;
 
 /* ---------- #realizacje ---------- */

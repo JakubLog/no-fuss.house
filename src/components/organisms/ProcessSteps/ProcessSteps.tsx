@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { cx } from "@/lib/cx";
+import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
+import { useSweep } from "@/lib/hooks/useSweep";
 import styles from "./ProcessSteps.module.css";
 
 export interface ProcessStep {
   /** Nazwa kroku, np. „Discovery”. */
   title: string;
-  /** Opis odsłaniany na hover / fokus. */
+  /** Opis rozwijany przyciskiem (na hover także podglądany). */
   text: string;
 }
 
@@ -25,55 +27,48 @@ const SWEEP_DELAY_MS = 600;
 
 /**
  * Proces jako taśma kroków (legacy `.steps`, Automation House): numer 01–05 z licznika CSS,
- * nazwa, opis rozwijany na hover i `:focus-within` (krok ma `tabIndex=0`, więc działa
- * z klawiatury i tapnięciem). Po wejściu w widok (górna krawędź listy nad 60% wysokości okna)
- * kroki raz podświetlają się po kolei (`.active`: limonka jak na hover, opis zostaje zwinięty),
- * potem wszystkie gasną. Hover i fokus mają pierwszeństwo (CSS). Przy reduced motion przebiegu nie ma.
+ * nazwa (`h3`), opis. Z myszą: hover podgląda opis, a nazwa kroku to przycisk rozwijający
+ * (`aria-expanded`, klik w cały kafel, Enter / Spacja z klawiatury; otwarty jest jeden krok naraz).
+ * Bez hovera (dotyk) opisy są widoczne od razu i przycisków nie ma (serwer renderuje przyciski).
+ * Po wejściu w widok (górna krawędź listy nad 60% wysokości okna) kroki raz podświetlają się
+ * po kolei (`.active`: limonka jak na hover, opis zostaje zwinięty), potem wszystkie gasną.
+ * Hover i fokus mają pierwszeństwo (CSS). Przy reduced motion przebiegu nie ma.
  * Musi być wewnątrz `Reveal`. Client Component.
  */
 export function ProcessSteps({ steps, ariaLabel, className }: ProcessStepsProps) {
   const listRef = useRef<HTMLOListElement>(null);
-  const [active, setActive] = useState<number | null>(null);
-  const count = steps.length;
-
-  useEffect(() => {
-    const list = listRef.current;
-    if (!list || typeof IntersectionObserver === "undefined") return;
-    let timer = 0;
-    const show = (index: number) => {
-      setActive(index < count ? index : null);
-      if (index < count) timer = window.setTimeout(() => show(index + 1), SWEEP_STEP_MS);
-    };
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (!entries.some((e) => e.isIntersecting)) return;
-        io.disconnect();
-        // Jak `CountUp`: preferencja sprawdzana w chwili startu.
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-        timer = window.setTimeout(() => show(0), SWEEP_DELAY_MS);
-      },
-      { rootMargin: "0px 0px -40% 0px" },
-    );
-    io.observe(list);
-    return () => {
-      io.disconnect();
-      window.clearTimeout(timer);
-    };
-  }, [count]);
+  const active = useSweep(listRef, steps.length, { stepMs: SWEEP_STEP_MS, delayMs: SWEEP_DELAY_MS });
+  const canHover = useMediaQuery("(hover: hover)", true);
+  const [open, setOpen] = useState<number | null>(null);
+  const idBase = useId();
 
   return (
     <ol ref={listRef} className={cx(styles.steps, className)} aria-label={ariaLabel}>
       {steps.map((step, i) => (
         <li
           key={step.title}
-          className={cx("fade", styles.step, i === active && styles.active)}
+          className={cx("fade", styles.step, i === active && styles.active, canHover && i === open && styles.open)}
           style={i ? { "--i": i } : undefined}
-          tabIndex={0}
-          data-cursor="arrow"
         >
           <div>
-            <strong className={styles.title}>{step.title}</strong>
-            <small className={cx("mono-sm", styles.text)}>{step.text}</small>
+            <h3 className={styles.title}>
+              {canHover ? (
+                <button
+                  type="button"
+                  className={styles.toggle}
+                  aria-expanded={i === open}
+                  aria-controls={`${idBase}-${i}`}
+                  onClick={() => setOpen(i === open ? null : i)}
+                >
+                  {step.title}
+                </button>
+              ) : (
+                step.title
+              )}
+            </h3>
+            <p id={`${idBase}-${i}`} className={cx("mono-sm", styles.text)}>
+              {step.text}
+            </p>
           </div>
         </li>
       ))}

@@ -1,5 +1,6 @@
 export * from "./CaseProse";
 export * from "./ContactCta";
+export * from "./ContactForm";
 export * from "./CopyEmail";
 export * from "./EventTile";
 export * from "./FactRow";

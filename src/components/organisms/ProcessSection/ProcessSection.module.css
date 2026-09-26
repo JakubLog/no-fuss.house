@@ -1,5 +1,6 @@
 /* Proces współpracy (strona główna, `#proces`): lekkie kolumny z kreską 1 px nad krokiem (jak `FactRow`), bez kafli.
-   Hover jak w `FaqSection`: limonkowe tło kolumny, treść wcięta o 12 px (transform, bez zmiany układu). */
+   Hover jak w `FaqSection`: limonkowe tło kolumny, treść wcięta o 12 px (transform, bez zmiany układu).
+   Ten sam stan daje jednorazowy przebieg po wejściu w widok (`.active` z `useSweep`). */
 .head {
   margin-bottom: 48px;
 }
@@ -17,15 +18,15 @@
   gap: 16px var(--gap);
 }
 
-/* Padding w spoczynku: z lewej i z prawej 0 (tekst w linii nagłówka); dół 16 px jak góra. Przy hoverze
-   z prawej dochodzi 24 px zapasu, żeby po wcięciu 12 px limonka zostawiała 12 px z obu stron. Tło kończy
-   się pod kreską (padding-box), więc kreska 1 px przy hoverze zostaje taka sama i w tym samym miejscu. */
+/* Padding: z lewej 0 (tekst w linii nagłówka), góra i dół 16 px, z prawej 24 px zapasu, żeby po wcięciu 12 px
+   limonka zostawiała 12 px z obu stron. Zapas jest zawsze (także na dotyku, gdzie świeci przebieg), więc podświetlenie
+   nie zmienia łamania tekstu. Tło kończy się pod kreską (padding-box), więc kreska 1 px zostaje ta sama i w tym samym miejscu. */
 .step {
   grid-row: span 3;
   display: grid;
   grid-template-rows: subgrid;
   row-gap: 8px;
-  padding: 16px 0;
+  padding: 16px 24px 16px 0;
   border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
   background-clip: padding-box;
   transition:
@@ -58,10 +59,6 @@
 /* Kroki są nieklikalne i niefokusowalne: sam hover, bez strzałki i bez stanu fokusu.
    #3F4A12: stała z legacy (przygaszony tekst na limonce, 7,92:1). */
 @media (hover: hover) {
-  .step {
-    padding-right: 24px;
-  }
-
   .step:hover {
     background-color: var(--accent);
     color: var(--on-accent);
@@ -71,6 +68,18 @@
   .step:hover :is(.no, .title, .text) {
     transform: translateX(12px);
   }
+}
+
+/* Przebieg (`.active`): to samo co hover, na każdym urządzeniu. Ustępuje hoverowi, więc nigdy nie świecą dwa kroki
+   naraz. Osobne reguły: w starszym Firefoksie niewspierany `:has()` unieważniłby regułę zgrupowaną z `:hover`. */
+.steps:not(:has(.step:hover)) .active {
+  background-color: var(--accent);
+  color: var(--on-accent);
+  --muted: #3F4A12;
+}
+
+.steps:not(:has(.step:hover)) .active :is(.no, .title, .text) {
+  transform: translateX(12px);
 }
 
 @media (min-width: 640px) {

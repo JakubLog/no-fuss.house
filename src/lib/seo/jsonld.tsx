@@ -38,7 +38,7 @@ export const ids = {
   breadcrumb: (path: string) => `${absoluteUrl(path)}#breadcrumb`,
   creativeWork: (path: string) => `${absoluteUrl(path)}#work`,
   faq: (path: string) => `${absoluteUrl(path)}#faq`,
-  /** Organizacja spoza no-fuss (pracodawca z `CaseStudy.employer`), np. `https://aionmind.com/#organization`. */
+  /** Organizacja spoza no-fuss (pracodawca z `CaseStudy.employer`, strona case'u), np. `https://aionmind.com/#organization`. */
   externalOrganization: (url: string) => `${url.replace(/\/$/, "")}/#organization`,
 } as const;
 

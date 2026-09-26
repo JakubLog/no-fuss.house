@@ -44,6 +44,8 @@
   font-weight: 700;
 }
 
+/* Zwinięty opis jest też `visibility: hidden` (poza drzewem dostępności, zgodnie z `aria-expanded`);
+   przy zwijaniu `visibility` czeka na koniec animacji. */
 .text {
   display: block;
   margin-top: 8px;
@@ -51,9 +53,31 @@
   max-height: 0;
   opacity: 0;
   overflow: hidden;
+  visibility: hidden;
   transition:
     max-height 0.5s var(--ease),
-    opacity 0.4s;
+    opacity 0.4s,
+    visibility 0s linear 0.5s;
+}
+
+/* Przycisk rozwijający: klikalny cały kafel (`::after` na `.step`), obrys fokusu na kaflu. */
+.toggle {
+  text-align: inherit;
+}
+
+.toggle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.toggle:focus-visible {
+  outline: none;
+}
+
+.toggle:focus-visible::after {
+  outline: 2px solid var(--on-accent);
+  outline-offset: -4px;
 }
 
 /* #3F4A12: stała z legacy (przygaszony tekst na limonce). */
@@ -64,15 +88,12 @@
   --muted: #3F4A12;
 }
 
-.step:focus-visible {
-  outline-color: var(--on-accent);
-  outline-offset: -4px;
-}
-
 .step:hover .text,
-.step:focus-within .text {
+.open .text {
   max-height: 120px;
   opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
 }
 
 /* Przebieg po wejściu w widok (`.active` z JS): limonka jak na hover, ale bez rozwijania opisu (dłuższy opis
@@ -85,11 +106,12 @@
   --muted: #3F4A12;
 }
 
-/* Bez hovera (dotyk): opisy widoczne od razu, żeby nie ukrywać treści za tapnięciem. */
+/* Bez hovera (dotyk): opisy widoczne od razu, bez przycisków, żeby nie ukrywać treści za tapnięciem. */
 @media (hover: none) {
   .text {
     max-height: none;
     opacity: 1;
+    visibility: visible;
   }
 }
 

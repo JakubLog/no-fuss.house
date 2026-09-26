@@ -10,6 +10,7 @@ export * from "./MonoLabel";
 export * from "./PartnerLogos";
 export * from "./PhotoPlaceholder";
 export * from "./ScrambleLink";
+export * from "./SectionLabel";
 export * from "./StickerLayer";
 export * from "./Tag";
 export * from "./Text";

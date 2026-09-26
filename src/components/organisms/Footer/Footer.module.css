@@ -4,13 +4,24 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   padding: var(--section-y) var(--gutter);
   background: var(--hero-sky);
   color: #FFFFFF;
-  /* Zawsze ciemna: tokeny tonacji jak w tone-dark (np. focus ring = --ink). */
+  color-scheme: dark;
+  /* Zawsze ciemna: tokeny tonacji jak w tone-dark (np. focus ring = --ink, wypełnienie pól formularza = --bg). */
+  --bg: var(--hero-sky);
   --ink: #FFFFFF;
   --muted: #A9ABAD;
+}
+
+/* Nagłówek i formularz: środek wolnego miejsca nad wierszem z e-mailem (gdy stopka ma zapas wysokości). */
+.main {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 /* Nagłówek display (DESIGN.md: nagłówki hero i stopki). */
@@ -66,24 +77,15 @@
   transform: none;
 }
 
-/* Kalendarz + notka pod nagłówkiem, w kolumnie pierwszej linii. */
-.contact {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 16px 24px;
+/* Formularz pod nagłówkiem, w kolumnie pierwszej linii (od 768 px kolumna 3, od 1024 px kolumny 3–10). */
+.form {
   margin-top: 48px;
-  color: var(--muted);
 }
 
 .bottom {
-  position: absolute;
+  position: relative;
   z-index: 2;
-  left: var(--gutter);
-  right: var(--gutter);
-  bottom: var(--section-y);
+  margin-top: var(--section-y);
   display: flex;
   flex-wrap: wrap;
   gap: 12px 32px;
@@ -100,7 +102,7 @@
 }
 
 @media (min-width: 768px) {
-  .contact {
+  .form {
     margin-left: calc((100% - 11 * var(--gap)) / 12 * 2 + 2 * var(--gap));
   }
 
@@ -111,6 +113,12 @@
 
   .l3 {
     grid-column: 4 / -1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .form {
+    width: calc((100% - 11 * var(--gap)) / 12 * 8 + 7 * var(--gap));
   }
 }
 

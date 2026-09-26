@@ -6,5 +6,7 @@ export { useReveal, INTRO_REVEAL_DELAY_MS } from "./useReveal";
 export type { RevealTrigger, RevealTarget, UseRevealOptions } from "./useReveal";
 export { useScramble, SCRAMBLE_CHARS, SCRAMBLE_DURATION_MS } from "./useScramble";
 export type { UseScrambleOptions, UseScrambleResult } from "./useScramble";
+export { useSweep } from "./useSweep";
+export type { UseSweepOptions } from "./useSweep";
 export { useViewportSize } from "./useViewportSize";
 export type { ViewportSize } from "./useViewportSize";

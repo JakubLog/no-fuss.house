@@ -21,7 +21,7 @@ export function hasPlaceholder(text: string): boolean {
 export interface SiteContact {
   /** Adres e-mail (CopyEmail, `mailto:`, JSON-LD). */
   email: string;
-  /** Google Calendar appointment schedule; `null` = przycisku „Umów rozmowę ↗” nie ma (`ContactCta`, `Footer`). */
+  /** Google Calendar appointment schedule; `null` = przycisku „Umów rozmowę ↗” nie ma (`ContactCta`, `ContactForm`). */
   calendarUrl: string | null;
   /** Krótka obietnica odpowiedzi pod CTA. */
   responseNote: string;
@@ -33,10 +33,12 @@ export const site = {
   /** Zapis z logotypu HUD: „no–fuss” (półpauza). */
   wordmark: "no–fuss",
   /**
-   * Tytuł strony głównej (1:1 z legacy `no-fuss-v5.html`) i sufiks tytułów podstron
+   * Marka z legacy (`no-fuss-v5.html`): sufiks tytułów podstron
    * („O NAS — NO-FUSS©2026”, „OTB VENTURES — CASE STUDY — NO-FUSS©2026”, „404 — NO-FUSS©2026”).
    */
   brandTitle: "NO-FUSS©2026",
+  /** `<title>` strony głównej: marka + krótki opis oferty (do ~60 znaków, żeby Google nie ucinał). */
+  homeTitle: "NO-FUSS©2026 | Studio produktowe: aplikacje, strony i AI",
   /**
    * Opis strony głównej (`<meta name="description">`, manifest, Organization w JSON-LD), do 155 znaków.
    * Nowe copy o usługach (decyzja Kuby, audyt B2B); opis z legacy był o duecie i OurMoney.
@@ -53,7 +55,7 @@ export const site = {
   timeZone: "Europe/Warsaw",
   foundingYear: 2026,
   /**
-   * Kontakt: jedno źródło prawdy dla stopki, CTA („Porozmawiajmy →”, „Umów rozmowę ↗”),
+   * Kontakt: jedno źródło prawdy dla stopki (formularz wysyła na `email`), CTA („Porozmawiajmy →”, „Umów rozmowę ↗”),
    * `/o-nas#social`, JSON-LD i `public/llms.txt`. Placeholdery `[…]` do podmiany.
    */
   contact: {

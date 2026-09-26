@@ -109,13 +109,14 @@ export interface CaseStudyImage {
 }
 
 /**
- * Czyj to projekt (JSON-LD `creator` na stronie głównej):
+ * Czyj to projekt (JSON-LD kafli na stronie głównej):
  * `own` – produkt / eksperyment no-fuss, `client` – zlecenie dla klienta,
- * `employment` – praca na etacie jednej z osób (twórcą jest pracodawca, patrz `employer`).
+ * `employment` – praca na etacie jednej z osób (aplikacja jest pracodawcy, patrz `employer`;
+ * case study i tak jest no-fuss, więc `creator` w JSON-LD to zawsze no-fuss).
  */
 export type CaseOwnership = "own" | "client" | "employment";
 
-/** Pracodawca przy `ownership: "employment"` (węzeł `Organization` w JSON-LD). */
+/** Pracodawca przy `ownership: "employment"` (węzeł `Organization` + `employee` na stronie case'u). */
 export interface CaseEmployer {
   name: string;
   /** Adres pracodawcy; `@id` organizacji = `${url}/#organization`. */
@@ -139,7 +140,7 @@ export interface CaseStudy {
   tileLabel: string;
   /** Rok / zakres lat z kafla, np. „2025”, „2025–2026”. */
   years: string;
-  /** Czyj to projekt: własny, klienta czy etat (steruje `creator` w JSON-LD strony głównej). */
+  /** Czyj to projekt: własny, klienta czy etat (przy etacie JSON-LD dostaje `contributor` i `about` aplikacji). */
   ownership: CaseOwnership;
   /** Tylko przy `ownership: "employment"`: pracodawca. */
   employer?: CaseEmployer;

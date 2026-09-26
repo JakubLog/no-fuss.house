@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import { cx } from "@/lib/cx";
 import { Line } from "../Line";
 import styles from "./Heading.module.css";
@@ -16,7 +16,8 @@ export interface HeadingProps {
   as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "span" | "div";
   /**
    * Linie odsłaniane od dołu ze staggerem 80 ms. Gdy podane, `children` jest ignorowane.
-   * Przy samych stringach `aria-label` składa się automatycznie.
+   * Między liniami idzie spacja (w `textContent` i nazwie dostępnej słowa się nie sklejają;
+   * między blokami `.line` się nie renderuje).
    */
   lines?: readonly ReactNode[];
   /** Indeks staggeru pierwszej linii (np. 1, gdy przed nagłówkiem jest etykieta z `--i:0`). */
@@ -51,20 +52,19 @@ export function Heading({
   "aria-label": ariaLabel,
 }: HeadingProps) {
   const upper = uppercase ?? UPPERCASE_BY_DEFAULT[variant];
-  const autoLabel =
-    lines && lines.every((l) => typeof l === "string") ? (lines as readonly string[]).join(" ") : undefined;
 
   return (
     <Tag
       id={id}
       className={cx(styles[variant], upper && styles.upper, className)}
-      aria-label={ariaLabel ?? autoLabel}
+      aria-label={ariaLabel}
     >
       {lines
         ? lines.map((line, i) => (
-            <Line key={i} index={startIndex + i}>
-              {line}
-            </Line>
+            <Fragment key={i}>
+              {i > 0 ? " " : null}
+              <Line index={startIndex + i}>{line}</Line>
+            </Fragment>
           ))
         : children}
     </Tag>

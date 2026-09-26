@@ -114,7 +114,7 @@ i `body`, a mono zostaje dla metadanych.
 ## Layout
 
 Siatka 12 kolumn, gutter 16 px (mobile) / 56 px (desktop), sekcje z paddingiem pionowym
-72 / 96 px. Hero i stopka mają pełną wysokość ekranu. Hero strony głównej od 768 px stoi po przekątnej:
+72 / 96 px. Hero ma pełną wysokość ekranu, stopka co najmniej pełną (z formularzem bywa wyższa). Hero strony głównej od 768 px stoi po przekątnej:
 h1 w lewym górnym rogu, lead i CTA w prawym dolnym, napis 3D w pasie między nimi (dopasowany do wysokości
 pasa); na telefonie napis nad tekstem, tekst na dole ekranu. Kafle realizacji układają się
 asymetrycznie (od 1024 px): duży kafel na 8 kolumn dosunięty do prawej, potem pary 5+5, potem trójki
@@ -149,12 +149,19 @@ naklejki i kursor, czyli warstwa zabawy, nie warstwa interfejsu.
 - **Link nawigacji**: mono 14 px; hover uruchamia scramble znaków; przełączniki mają
   skrót w nawiasie kwadratowym, np. `MOTYW[A]`.
 - **Link w tekście**: podkreślenie 1 px, na hover tło limonkowe.
-- **CTA kontaktu** (`ContactCta`): przycisk accent „Porozmawiajmy →” (do stopki `#kontakt`) + ghost
+- **CTA kontaktu** (`ContactCta`): przycisk accent „Porozmawiajmy →” (do stopki `#kontakt` z formularzem) + ghost
   „Umów rozmowę ↗” (kalendarz); przyciski prostokątne, min. 48 px, odstęp 8 px, zawijają się na wąskich
-  ekranach. Bez adresu kalendarza ghosta nie ma (także w stopce), zamiast wyszarzonego przycisku. Pod h1 w hero
+  ekranach. Bez adresu kalendarza ghosta nie ma (także w stopce obok wysyłki formularza), zamiast wyszarzonego przycisku. Pod h1 w hero
   i pod listą usług; pod FAQ na stronie głównej tylko zdanie, bo zaraz niżej jest stopka. Na `/o-nas` pod leadem hero
   (od 1024 px w kolumnie leadu 9–12, 32 px pod nim) i na końcu „Kto co robi” (48 px pod ostatnim wierszem, od lewej
   krawędzi treści), przed `#social`.
+- **Formularz kontaktu** (`ContactForm`, stopka `#kontakt` pod nagłówkiem, od 768 px od kolumny 3, od 1024 px kolumny 3–10):
+  imię i e-mail obok siebie (od 768 px), wiadomość na całą szerokość. Etykiety mono 12 px `--muted` nad polami. Pola ostre,
+  min. 48 px, tekst body 16 px, obrys 1 px `--ink` 18% (hover 40%), fokus: obrys 2 px `--ink` zamiast obwódki z odstępem,
+  karetka w akcencie, wypełnienie tłem stopki (naklejki spod kursora nie prześwitują przez pola). Błąd: obrys 2 px w akcencie
+  i tag pod polem jak `Tag` (mono 12 px, `#101318` na limonce); przy fokusie obrys wraca do białego, błąd niesie tag. Pod polami
+  accent „Wyślij wiadomość →” (w trakcie „Wysyłamy…”) i ghost „Umów rozmowę ↗”, niżej notka o odpowiedzi i wynik w body:
+  „Dzięki, wiadomość doszła. Odpiszemy na …” albo adres e-mail jako link w tekście, gdy wysyłka się nie uda.
 - **Lista usług** (`ServicesList`, strona główna `#uslugi`): wiersze z obrysem 1 px (`--ink` 18%), nazwa w roli title, opis
   `--muted`, bez numerów. Wiersze nie są linkami, ale hover (tylko `hover: hover`) daje im to co w FAQ: limonkowe tło,
   tekst `#101318`, opis `#3F4A12` (7,92:1) i wcięcie 12 px transformem nazwy i opisu (0,4 s `--ease`; wiersz i sąsiedzi
