@@ -26,3 +26,6 @@ pnpm-debug.log*
 
 # vercel
 .vercel
+
+# makiety i surowe eksporty wideo (źródła poza Next.js, kilkadziesiąt MB)
+mockups/

@@ -1,0 +1,42 @@
+.strip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(70vw, 280px);
+  gap: var(--gap);
+  margin: 0 calc(-1 * var(--gutter));
+  padding: 0 var(--gutter) 8px;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 var(--gutter);
+}
+
+.step {
+  scroll-snap-align: start;
+}
+
+.when {
+  display: block;
+  margin-top: 24px;
+  color: var(--muted);
+}
+
+.title {
+  margin: 8px 0 4px;
+  font: var(--t-title);
+}
+
+.text {
+  margin: 0;
+  color: var(--muted);
+}
+
+@media (min-width: 1024px) {
+  .strip {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(5, 1fr);
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+  }
+}
