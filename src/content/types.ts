@@ -100,6 +100,15 @@ export interface CaseStudyStory {
   effect: string;
 }
 
+/** Wideo pętla bez dźwięku (showreel pod hero). Ścieżki w `public/`. */
+export interface CaseStudyVideo {
+  src: string;
+  poster: string;
+  alt: string;
+  width: number;
+  height: number;
+}
+
 export interface CaseStudyImage {
   /** Ścieżka w `public/`, np. `/assets/otb/d-00.webp`. */
   src: string;

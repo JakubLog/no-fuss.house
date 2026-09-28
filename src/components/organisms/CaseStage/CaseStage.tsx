@@ -1,9 +1,10 @@
 import Image from "next/image";
 import { Fade } from "@/components/atoms/Fade";
 import { PhoneFrame } from "@/components/molecules/PhoneFrame";
-import type { CaseStudyImage } from "@/content/types";
+import type { CaseStudyImage, CaseStudyVideo } from "@/content/types";
 import { cx } from "@/lib/cx";
 import { Reveal } from "../Reveal";
+import { CaseStageVideo } from "./CaseStageVideo";
 import styles from "./CaseStage.module.css";
 
 type StageImage = Required<CaseStudyImage>;
@@ -33,7 +34,13 @@ export interface CaseStageImageProps extends CaseStageBase {
   index?: number;
 }
 
-export type CaseStageProps = CaseStagePhonesProps | CaseStageImageProps;
+export interface CaseStageVideoProps extends CaseStageBase {
+  /** Showreel na pełną szerokość: pętla bez dźwięku z przyciskiem pauzy. */
+  variant: "video";
+  video: CaseStudyVideo;
+}
+
+export type CaseStageProps = CaseStagePhonesProps | CaseStageImageProps | CaseStageVideoProps;
 
 /**
  * Limonkowa scena pod hero case study: trzy telefony wystające poza dolną krawędź
@@ -48,6 +55,16 @@ export function CaseStage(props: CaseStageProps) {
             <PhoneFrame image={image} sizes="(max-width: 960px) 33vw, 300px" />
           </Fade>
         ))}
+      </Reveal>
+    );
+  }
+
+  if (props.variant === "video") {
+    return (
+      <Reveal className={cx(styles.stage, styles.image, styles.video, props.className)}>
+        <Fade>
+          <CaseStageVideo video={props.video} />
+        </Fade>
       </Reveal>
     );
   }

@@ -34,3 +34,27 @@
   width: 100%;
   height: auto;
 }
+
+/* Showreel: tło jak pierwsza klatka, żeby nie mignęła limonka przed plakatem. */
+.video {
+  background: #ecebe3;
+}
+
+.toggle {
+  position: absolute;
+  right: var(--gutter);
+  bottom: 16px;
+  z-index: 1;
+  padding: 2px 6px;
+  border: 0;
+  background: var(--dark);
+  color: #fff;
+  font: var(--t-mono-sm);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

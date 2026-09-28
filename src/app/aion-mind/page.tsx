@@ -1,12 +1,13 @@
-import Image from "next/image";
 import { Fade } from "@/components/atoms/Fade";
 import { Mark } from "@/components/atoms/Mark";
 import { VisuallyHidden } from "@/components/atoms/VisuallyHidden";
 import { CaseBigLine, CaseProse } from "@/components/molecules/CaseProse";
 import { TileCaption } from "@/components/molecules/TileCaption";
 import { CaseNumbers } from "@/components/organisms/CaseNumbers";
+import { AmphitheatreScreen } from "@/components/organisms/AmphitheatreScreen";
 import { CaseStage } from "@/components/organisms/CaseStage";
 import { CaseStrip } from "@/components/organisms/CaseStrip";
+import { EvolutionStrip } from "@/components/organisms/EvolutionStrip";
 import { GuideCards } from "@/components/organisms/GuideCards";
 import { JournalScreen } from "@/components/organisms/JournalScreen";
 import { RolePath } from "@/components/organisms/RolePath";
@@ -15,6 +16,7 @@ import {
   AION_MIND_URL,
   aionMind,
   aionMindAppDescription,
+  aionMindEvolution,
   aionMindGuides,
   aionMindImages,
   aionMindNumbers,
@@ -102,11 +104,11 @@ export default function AionMindPage() {
         }}
         cta={{
           tone: "light",
-          text: "Jako no-fuss projektujemy i kodujemy takie produkty dla klientów, od pierwszego ekranu do wydania.",
+          text: "Jako no-fuss projektujemy i kodujemy takie produkty dla klientów, od pierwszego ekranu do wdrożenia i premiery.",
         }}
         next={{ href: aionMind.next, title: "Busy Bee", arrow: "→" }}
       >
-        <CaseStage variant="image" image={aionMindImages.og} />
+        <CaseStage variant="video" video={aionMindImages.showreel} />
 
         <CaseStudySection label="01 / Problem">
           <CaseProse
@@ -151,7 +153,7 @@ export default function AionMindPage() {
                 <JournalScreen />
               </Fade>
               <TileCaption>
-                Ekran Dziennika odtworzony w&nbsp;HTML na podstawie ekranu z&nbsp;aionmind.com. Klikaj dni i&nbsp;karty.
+                Ekran Dziennika odtworzony w&nbsp;HTML na podstawie kodu aplikacji. Przewijaj wpisy i&nbsp;podsumuj tydzień.
               </TileCaption>
             </figure>
           }
@@ -166,23 +168,18 @@ export default function AionMindPage() {
             <CaseProse
               lines={["Kontekst", "ma miejsce"]}
               paragraphs={[
-                "Zebrana wiedza o użytkowniku nie jest ukryta w modelu. Ma swoje miejsce, postęp i podział: tożsamość, wizja i cel, wewnętrzne zasoby i blokady. Do każdej części można wrócić i ją poprawić.",
+                "Zebrana wiedza o użytkowniku nie jest ukryta w modelu. Ma swoje miejsce i trzy etapy: wartości, kierunek, otoczenie. Każdy uzupełnia się w rozmowie z przewodnikiem, zmienia ilustrację Amfiteatru i odblokowuje kolejnego przewodnika. Do każdej części można wrócić i ją poprawić.",
               ]}
             />
           }
           visual={
             <figure>
-              <Fade index={1} className={styles.one}>
-                <Image
-                  className={styles.img}
-                  src={aionMindImages.context.src}
-                  alt={aionMindImages.context.alt}
-                  width={aionMindImages.context.width}
-                  height={aionMindImages.context.height}
-                  sizes="320px"
-                />
+              <Fade index={1}>
+                <AmphitheatreScreen />
               </Fade>
-              <TileCaption>Ekran Amfiteatru Wiedzy z&nbsp;zebranym kontekstem.</TileCaption>
+              <TileCaption>
+                Ekran Amfiteatru Wiedzy odtworzony w&nbsp;HTML na podstawie kodu aplikacji. Wybierz etap i&nbsp;go uzupełnij.
+              </TileCaption>
             </figure>
           }
         />
@@ -191,7 +188,21 @@ export default function AionMindPage() {
           <GuideCards guides={aionMindGuides} />
         </CaseStrip>
 
-        <CaseStudySection label="04 / Rola" tone="dark">
+        <CaseStudySection label="04 / Ewolucja">
+          <CaseProse
+            lines={["Z PWA", <>do codziennej <Mark>refleksji</Mark></>]}
+            paragraphIndex={3}
+            paragraphs={[
+              "Wyzwaniem było przekształcenie wersji PWA w aplikację mobilną, która jest maksymalnie prosta i prowadzi użytkownika do tego, co daje wartość: codziennej refleksji. Każda kolejna wersja zabierała jeden krok między otwarciem aplikacji a pierwszym zdaniem.",
+            ]}
+          />
+        </CaseStudySection>
+
+        <CaseStrip label="04.1 / Od szkieletu do 1.0" aside="Ekrany z Figmy Magdy">
+          <EvolutionStrip steps={aionMindEvolution} />
+        </CaseStrip>
+
+        <CaseStudySection label="05 / Rola" tone="dark">
           <CaseProse
             lines={["Od ekranu do całości"]}
             spaced
@@ -204,12 +215,12 @@ export default function AionMindPage() {
         </CaseStudySection>
 
         {numbers.length >= MIN_CASE_NUMBERS ? (
-          <CaseStrip label="05 / W liczbach" aside="Stan: wrzesień 2026">
+          <CaseStrip label="06 / W liczbach" aside="Stan: wrzesień 2026">
             <CaseNumbers items={numbers} />
           </CaseStrip>
         ) : null}
 
-        <CaseStudySection label="06 / Głos użytkownika" tone="dark">
+        <CaseStudySection label="07 / Głos użytkownika" tone="dark">
           <VisuallyHidden as="h2">Głos użytkownika</VisuallyHidden>
           <figure>
             <blockquote>
