@@ -1,6 +1,7 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { site } from "@/content/site";
-import { loadGoogleFont } from "@/lib/seo/og-font";
 
 export const alt = `${site.wordmark} — ${site.slogan}`;
 export const size = { width: 1200, height: 630 };
@@ -9,16 +10,19 @@ export const contentType = "image/png";
 const CAPTION_TOP = site.brandTitle;
 const CAPTION_BOTTOM = site.slogan.toUpperCase();
 
+/* Statyczne instancje krojów strony z `./fonts` (satori nie czyta woff2 ani osi zmiennych). */
+const FONTS_DIR = join(process.cwd(), "src/app/fonts");
+
 /** Domyślny obraz OG (dziedziczony przez wszystkie strony bez własnego). */
 export default async function OpengraphImage() {
   const [sans, mono] = await Promise.all([
-    loadGoogleFont("TikTok Sans", 700, site.wordmark),
-    loadGoogleFont("Geist Mono", 400, CAPTION_TOP + CAPTION_BOTTOM),
+    readFile(join(FONTS_DIR, "TikTokSans-Bold.ttf")),
+    readFile(join(FONTS_DIR, "GeistMono-Regular.ttf")),
   ]);
 
   const fonts = [
-    ...(sans ? [{ name: "TikTok Sans", data: sans, weight: 700 as const, style: "normal" as const }] : []),
-    ...(mono ? [{ name: "Geist Mono", data: mono, weight: 400 as const, style: "normal" as const }] : []),
+    { name: "TikTok Sans", data: sans, weight: 700 as const, style: "normal" as const },
+    { name: "Geist Mono", data: mono, weight: 400 as const, style: "normal" as const },
   ];
 
   const monoStyle = { fontFamily: "Geist Mono", fontSize: 24, lineHeight: "32px", color: "#FFFFFF" };

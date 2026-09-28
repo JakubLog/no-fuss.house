@@ -7,7 +7,7 @@ Układ i motion wzorowane na haoqi.design, paleta z Figmy no-fuss. Tokeny i zasa
 
 - Next.js 16 (App Router, Turbopack), React 19, TypeScript (strict)
 - CSS Modules + tokeny w CSS custom properties (bez Tailwinda)
-- Kroje przez `next/font/google`: TikTok Sans (zmienny, oś `opsz`), Geist Mono 400/500
+- Kroje z repo (`src/app/fonts`, OFL) przez `next/font/local`: TikTok Sans (zmienny, osie `wght` i `opsz`), Geist Mono 400–500; obraz OG czyta ich statyczne instancje TTF
 - Lenis (smooth scroll), three.js (sceny 3D, ładowane `next/dynamic` z `ssr: false`)
 - Metodologia atomowa: `atoms` → `molecules` → `organisms` → `templates` → `app`
 - SEO / AEO: Metadata API, `sitemap.ts`, `robots.ts`, `manifest.ts`, obrazy OG i ikony generowane kodem, JSON-LD (`@graph`), `public/llms.txt`
@@ -29,7 +29,7 @@ Skopiuj `.env.example` do `.env.local`.
 
 | Zmienna | Opis |
 |---|---|
-| `NEXT_PUBLIC_SITE_URL` | Publiczny adres (canonical, OG, sitemap, JSON-LD). Domena nieustalona, fallback w kodzie: `https://no-fuss.pl`. |
+| `NEXT_PUBLIC_SITE_URL` | Publiczny adres (canonical, OG, sitemap, JSON-LD). Domena: `https://no-fuss.house` (też fallback w kodzie, gdy zmiennej brak albo ma zły format; wtedy ostrzeżenie w logu). |
 | `RESEND_API_KEY` | Klucz [Resend](https://resend.com) dla formularza kontaktu w stopce (Server Action `src/lib/contact/action.ts`). Bez niego formularz pokazuje błąd z adresem e-mail. |
 | `CONTACT_FROM` | Nadawca maili z formularza, np. `no-fuss <formularz@no-fuss.house>`; domena musi być zweryfikowana w Resend. Odbiorca to `site.contact.email`, Reply-To = adres z formularza. |
 
@@ -38,6 +38,7 @@ Skopiuj `.env.example` do `.env.local`.
 ```
 src/
   app/                 layout, not-found, sitemap, robots, manifest, OG, ikony
+    fonts/             kroje strony (woff2 dla next/font, TTF dla obrazu OG) + licencje OFL
     page.tsx           /  (strona główna)
     o-nas/             /o-nas
     wiedza/            /wiedza, zakładka „Wiedza” (warsztaty, prelekcje, meetupy: nadchodzące i minione)
@@ -47,7 +48,7 @@ src/
                        GlowBackdrop, StickerLayer, PhotoPlaceholder, PartnerLogos, VisuallyHidden
     molecules/         NavList, MetaRow, TileCaption, FactRow, CopyEmail, SocialLinks, PhoneFrame,
                        CaseProse, PersonCard, WorkTile, TestimonialCard, ContactCta, ContactForm, EventTile
-    organisms/         chrome (Preloader, Hud, GridOverlay, Cursor, SmoothScroll, Footer, Reveal),
+    organisms/         chrome (Hud, GridOverlay, Cursor, SmoothScroll, Footer, Reveal),
                        hero i 3D (HomeHero, HeroScene, NotFoundHero, PageHero), strona główna (+ KnowledgeTeaser),
                        /o-nas, /wiedza (EventsSection), bloki case study
     templates/         CaseStudyLayout (fakty standardowe, blok CTA; + CaseStudySection: wide / split / lite)
@@ -59,7 +60,7 @@ src/
     seo/               buildMetadata, JSON-LD, adres strony, znak do ikon
     hooks/             useReducedMotion, usePointerFine, useReveal, useScramble, …
     href.ts            linki wewnętrzne / zewnętrzne / placeholdery
-    intro.ts           orkiestracja preloader → reveal
+    intro.ts           start wejścia: fonty gotowe → reveal hero
   styles/              tokens.css, globals.css
 public/
   assets/              obrazy (kopia legacy/assets)
@@ -118,5 +119,7 @@ Audyty UX: `.ux/audits/`. Treści w `[nawiasach]` to placeholdery.
 
 ## Bezpieczeństwo
 
-Nagłówki w `next.config.ts`: `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, bez `X-Powered-By`.
-CSP jeszcze nieustawione (fonty są self-hostowane przez `next/font`, więc da się je wprowadzić bez wyjątków dla Google).
+Nagłówki w `next.config.ts`: `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `X-Frame-Options: DENY`
+i `Content-Security-Policy: frame-ancestors 'none'`; bez `X-Powered-By`. Pełne CSP jeszcze nieustawione (na razie tylko
+`frame-ancestors`; fonty są self-hostowane przez `next/font`, więc da się je wprowadzić bez wyjątków dla Google).
+Rate limit formularza kontaktu to reguła Vercel Firewall na każdy `POST` (poza kodem aplikacji).

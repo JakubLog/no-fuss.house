@@ -295,17 +295,16 @@ export const stickerPlay = {
   id: "play",
   title: "Oklej nas",
   hint: "Przeciągnij naklejki ↓",
-  /** aria-label naklejki 1:1 z legacy. */
-  stickerLabel: "Naklejka, przesuwaj strzałkami",
-  /** Instrukcja dla czytników ekranu (nowa, legacy jej nie miało). */
-  instructions: "Naklejki można przeciągać myszą lub palcem. Z klawiatury: przejdź do naklejki klawiszem Tab i przesuwaj ją strzałkami.",
-  /** Pozycje startowe [left %, top %] 1:1 z legacy. */
+  /**
+   * Pozycje startowe [left %, top %] planszy: `landscape` 1:1 z legacy (od 768 px w poziomie), `portrait`
+   * na rogach i szwie zdjęć (telefon, tablet w pionie; pozycje legacy zasłaniały tam twarze).
+   */
   spots: [
-    [8, 30],
-    [78, 22],
-    [16, 68],
-    [84, 62],
-    [46, 80],
-    [60, 14],
+    { landscape: [8, 30], portrait: [1, 32] },
+    { landscape: [78, 22], portrait: [80, 35] },
+    { landscape: [16, 68], portrait: [1, 72] },
+    { landscape: [84, 62], portrait: [77, 81] },
+    { landscape: [46, 80], portrait: [40, 76] },
+    { landscape: [60, 14], portrait: [77, 13] },
   ],
 } as const;

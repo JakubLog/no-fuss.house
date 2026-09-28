@@ -1,7 +1,6 @@
 import { ScrambleLink } from "@/components/atoms/ScrambleLink";
 import type { NavItem } from "@/content/navigation";
 import { getNavSection } from "@/content/routes";
-import { cx } from "@/lib/cx";
 import styles from "./NavList.module.css";
 
 export interface NavListProps {
@@ -32,7 +31,7 @@ export function NavList({ items, pathname, ariaLabel, className }: NavListProps)
     <nav aria-label={ariaLabel} className={className}>
       <ul className={styles.list}>
         {items.map((item) => (
-          <li key={item.href} className={cx(item.hideOnSmall && styles.hideSmall)}>
+          <li key={item.href}>
             <ScrambleLink href={item.href} className={styles.link} aria-current={getAriaCurrent(item, pathname)}>
               {item.label}
             </ScrambleLink>

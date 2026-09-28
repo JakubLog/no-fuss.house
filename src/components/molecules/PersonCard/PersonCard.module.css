@@ -28,13 +28,25 @@
   position: relative;
 }
 
+/* Kadr 3:4 (od 1200 px 4:3). Poniżej 900 px (pełna szerokość) pionowy kadr byłby wyższy niż ekran
+   (688×917 przy 768 px), więc przycinamy go do 60svh; `object-fit: cover` i punkt twarzy
+   (`object-position` z `photo.focus`) ustawia zdjęcie w TeamSheets. */
 .card .photo > * {
   aspect-ratio: 3 / 4;
   background: var(--shade-700);
 }
 
-/* Kadr agentów AI: ciemny jak tło portretów, bez kresek placeholdera, robot liniami w akcencie. */
-.ai .photo > * {
+@media (max-width: 899px) {
+  .card .photo > * {
+    max-height: 60svh;
+  }
+}
+
+/* Kadr agentów AI: niski (16:9 na każdej szerokości; ilustracja nie potrzebuje portretu), ciemny jak
+   tło portretów, bez kresek placeholdera, robot liniami w akcencie. Od 1200 px kadr stoi u góry
+   wspólnego wiersza zdjęć. */
+.card.ai .photo > * {
+  aspect-ratio: 16 / 9;
   background: var(--dark);
   color: var(--accent);
 }
@@ -50,10 +62,13 @@
   display: block;
 }
 
+/* `align-content`: we wspólnym wierszu subgridu (od 900 px) chipy nie rozciągają się do wysokości
+   sąsiedniej karty, gdy tam role łamią się na dwie linie. */
 .roles {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  align-content: flex-start;
 }
 
 .bio {
@@ -85,9 +100,11 @@
   text-underline-offset: 3px;
 }
 
-.facts dd a:hover {
-  background: var(--accent);
-  color: var(--on-accent);
+@media (hover: hover) {
+  .facts dd a:hover {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
 }
 
 .meter {
@@ -139,10 +156,12 @@
   content: "↗";
 }
 
-.links nav a:hover {
-  background: var(--accent);
-  color: var(--on-accent);
-  box-shadow: none;
+@media (hover: hover) {
+  .links nav a:hover {
+    background: var(--accent);
+    color: var(--on-accent);
+    box-shadow: none;
+  }
 }
 
 @media (min-width: 900px) {

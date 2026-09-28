@@ -91,10 +91,11 @@ export default function OurMoneyPage() {
           title: ourmoney.title,
           lead: ourmoney.lead,
           summary: ourmoney.summary,
+          ownership: ourmoney.ownership,
           facts: ourmoney.facts,
           datePublished: ourmoney.datePublished,
         }}
-        cta={{ tone: "light", text: "OurMoney to nasz własny produkt, a Twój zaprojektujemy i zakodujemy tak samo." }}
+        cta={{ tone: "dark", text: "OurMoney to nasz własny produkt, a Twój zaprojektujemy i zakodujemy tak samo." }}
         next={{ href: ourmoney.next, title: aionMind.title, arrow: "↗" }}
       >
         <CaseStage variant="phones" images={ourmoneyImages.stage} />
@@ -176,8 +177,8 @@ export default function OurMoneyPage() {
                 />
               </Fade>
               <TileCaption>
-                U góry działający kalkulator, niżej „Nasze zasady” w aplikacji. Przy 6 500 i 4 500 zł dochodu oraz
-                4 000 zł wydatków: 59% i 2 360 zł.
+                U&nbsp;góry działający kalkulator, niżej „Nasze zasady” w&nbsp;aplikacji. Przy 6&nbsp;500 i&nbsp;4&nbsp;500&nbsp;zł
+                dochodu oraz 4&nbsp;000&nbsp;zł wydatków: 59% i&nbsp;2&nbsp;360&nbsp;zł.
               </TileCaption>
             </figure>
           }
@@ -223,16 +224,16 @@ export default function OurMoneyPage() {
               <Fade index={1}>
                 <PairSubscription />
               </Fade>
-              <TileCaption>24,99 zł miesięcznie albo 249,99 zł rocznie. Jedna subskrypcja obejmuje oboje.</TileCaption>
+              <TileCaption>24,99&nbsp;zł miesięcznie albo 249,99&nbsp;zł rocznie. Jedna subskrypcja obejmuje oboje.</TileCaption>
             </figure>
           }
         />
 
-        <CaseStrip label="03.5 / Codzienność" aside="Zrzuty z aplikacji" tone="dark">
+        <CaseStrip label="03.5 / Codzienność" aside="Zrzuty z aplikacji">
           <CaseScreens screens={ourmoneyScreens} />
         </CaseStrip>
 
-        <CaseStudySection label="04 / System wizualny">
+        <CaseStudySection label="04 / System wizualny" tone="dark">
           <CaseProse
             lines={["Jeden akcent"]}
             spaced
@@ -256,12 +257,13 @@ export default function OurMoneyPage() {
           </CaseProse>
         </CaseStudySection>
 
-        <CaseStrip label="05 / W liczbach" aside="Stan: wrzesień 2026" tone="dark">
+        <CaseStrip label="05 / W liczbach" aside="Stan: wrzesień 2026">
           <CaseNumbers items={ourmoneyNumbers} />
         </CaseStrip>
 
         <CaseStudySection
           layout="split"
+          tone="dark"
           label="06 / Pod maską"
           text={
             <CaseProse
@@ -278,7 +280,7 @@ export default function OurMoneyPage() {
           }
         />
 
-        <CaseStudySection label="07 / Gdzie jesteśmy" tone="dark">
+        <CaseStudySection label="07 / Gdzie jesteśmy">
           <CaseProse
             lines={["Przed premierą"]}
             paragraphs={[

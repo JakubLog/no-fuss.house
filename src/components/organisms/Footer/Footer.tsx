@@ -40,9 +40,11 @@ export function Footer() {
         <ContactForm className={styles.form} />
       </div>
       <div className={cx("mono", styles.bottom)}>
-        <CopyEmail email={site.contact.email} className={styles.link} />
+        <address className={styles.address}>
+          <CopyEmail email={site.contact.email} className={styles.link} />
+        </address>
         <SocialLinks links={site.social} ariaLabel="Social" />
-        <span>{site.copyright}</span>
+        <small className={styles.copyright}>{site.copyright}</small>
       </div>
     </Reveal>
   );

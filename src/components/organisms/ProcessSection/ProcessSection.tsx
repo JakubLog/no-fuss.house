@@ -17,8 +17,8 @@ export interface ProcessSectionProps {
   className?: string;
 }
 
-/** Ile ms świeci każdy krok w przebiegu. 4 kroki = 3,6 s: poniżej 5 s, więc bez przycisku pauzy (WCAG 2.2.2). */
-const SWEEP_STEP_MS = 900;
+/** Ile ms świeci każdy krok w zapętlonym przebiegu (cykl 4 kroków = 5,6 s). */
+const SWEEP_STEP_MS = 1400;
 /** Start przebiegu po wejściu w widok: krótka pauza, żeby pierwszy krok nie zapalał się w trakcie przewijania. */
 const SWEEP_DELAY_MS = 300;
 
@@ -28,15 +28,16 @@ const SWEEP_DELAY_MS = 300;
  * (jedyna numeracja na stronie głównej, bo to faktyczna kolejność), tytuł `h3` w roli title,
  * opis `--muted`. Siatka 1 → 2 (640 px) → 4 kolumny (1024 px); kroki dzielą wiersze przez subgrid,
  * więc numery, tytuły i opisy stoją w rzędzie w jednej linii. Hover (tylko myszą): limonkowe tło kolumny
- * i treść wcięta o 12 px, jak w `FaqSection`. Po wejściu w widok (górna krawędź listy nad 60% wysokości okna)
- * kroki raz podświetlają się po kolei (`.active`: to samo co hover, także na dotyku), potem wszystkie gasną;
- * hover ma pierwszeństwo (CSS), przy reduced motion przebiegu nie ma. W odróżnieniu od `ProcessSteps`
- * (case Automation House) nic nie jest fokusowalne ani ukryte za hoverem. Client Component, dane z propsów.
+ * i treść wcięta o 12 px, jak w `FaqSection`; na limonce w tle pojawia się duży numer kroku. Gdy lista jest w widoku
+ * (górna krawędź nad 60% wysokości okna), kroki podświetlają się po kolei w pętli (`.active`: to samo co hover, także
+ * na dotyku); po wyjściu z widoku przebieg gaśnie. Hover ma pierwszeństwo (CSS). Bez przycisku pauzy (decyzja
+ * projektowa; cykl 5,6 s przekracza próg WCAG 2.2.2). Przy reduced motion przebiegu nie ma. Nic nie jest fokusowalne.
+ * Client Component, dane z propsów.
  */
 export function ProcessSection({ id, label, steps, tone = "light", className }: ProcessSectionProps) {
   const headingId = `${id}-heading`;
   const listRef = useRef<HTMLOListElement>(null);
-  const active = useSweep(listRef, steps.length, { stepMs: SWEEP_STEP_MS, delayMs: SWEEP_DELAY_MS });
+  const active = useSweep(listRef, steps.length, { stepMs: SWEEP_STEP_MS, delayMs: SWEEP_DELAY_MS, loop: true });
 
   return (
     <section
@@ -57,6 +58,9 @@ export function ProcessSection({ id, label, steps, tone = "light", className }: 
             </span>
             <h3 className={styles.title}>{step.title}</h3>
             <p className={styles.text}>{step.text}</p>
+            <span className={styles.ghost} aria-hidden="true">
+              {step.no}
+            </span>
           </li>
         ))}
       </ol>

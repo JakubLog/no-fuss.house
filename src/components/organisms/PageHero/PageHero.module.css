@@ -14,29 +14,39 @@
   position: relative;
 }
 
+/* 12ch łamie linie jak w legacy; `min-width: min-content` wygrywa z `max-width`, więc gdy najdłuższe
+   słowo w wersalikach jest szersze niż 12ch („PRZEKAZUJEMY”), pudełko rośnie i `.line` go nie przycina.
+   Zapas 0,04em na końcu linii: ujemny tracking wysuwa rysunek ostatniej litery poza jej szerokość. */
 .title {
   max-width: 12ch;
+  min-width: min-content;
+}
+
+.title > :global(.line) {
+  padding-inline-end: 0.04em;
 }
 
 .lead {
   font: var(--t-statement);
   letter-spacing: -0.01em;
   color: var(--muted);
-  max-width: 26ch;
+  max-width: 30ch;
 }
 
+/* Lead w 5 kolumnach (8–12): w 4 miał ok. 300–440 px i przy 1024–1440 zostawiał jednowyrazowe
+   linie („prelekcjach”). Nagłówek (12ch) mieści się w 7 kolumnach od 1024 px. */
 @media (min-width: 1024px) {
   .title {
-    grid-column: 1 / span 8;
+    grid-column: 1 / span 7;
   }
 
   .lead {
-    grid-column: 9 / span 4;
+    grid-column: 8 / span 5;
     align-self: end;
   }
 
   /* CTA pod leadem, w jego kolumnie (odstęp = row-gap 32 px). */
   .cta {
-    grid-column: 9 / span 4;
+    grid-column: 8 / span 5;
   }
 }

@@ -35,10 +35,11 @@ function AgentIllustration() {
 
 /**
  * Karty postaci (legacy `.sheets`): Magda, Kuba (dane z `site.ts` + `about.ts`)
- * i agenci AI. Osoby mają zdjęcia (`card.photo`; bez niego placeholder), agenci ilustrację.
- * Ciemne tło, karty `--shade-900`. Od 900 px karty w rzędzie dzielą wiersze przez subgrid, więc
- * zdjęcia, role, bio i linki stoją równo mimo różnej liczby linii w nazwie. Każda karta odsłania
- * się osobno. Server Component.
+ * i agenci AI. Osoby mają zdjęcia (`card.photo`; bez niego placeholder), agenci ilustrację w niskim
+ * kadrze 16:9. Ciemne tło, karty `--shade-900`. Od 900 px karty w rzędzie dzielą wiersze przez
+ * subgrid, więc zdjęcia, role, bio i linki stoją równo mimo różnej liczby linii w nazwie; przy
+ * 900–1199 px (dwie kolumny) karta agentów bierze cały trzeci rząd. Każda karta odsłania się
+ * osobno. Server Component.
  */
 export function TeamSheets() {
   return (

@@ -53,9 +53,14 @@
   transition: transform 0.4s var(--ease);
 }
 
-.rows .link:hover,
 .rows .link:focus-visible {
   transform: translate(6px, -6px);
+}
+
+@media (hover: hover) {
+  .rows .link:hover {
+    transform: translate(6px, -6px);
+  }
 }
 
 .chip {

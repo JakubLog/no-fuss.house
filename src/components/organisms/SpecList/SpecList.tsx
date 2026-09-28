@@ -1,3 +1,4 @@
+import { LinkText } from "@/components/atoms/ArrowLink";
 import { Tag } from "@/components/atoms/Tag";
 import { FactRow } from "@/components/molecules/FactRow";
 import { cx } from "@/lib/cx";
@@ -36,7 +37,7 @@ export function SpecList({ items, variant = "rows", className }: SpecListProps) 
         <FactRow key={item.term} term={item.term} className={cx("fade", styles.row)}>
           {item.href ? (
             <a className={styles.link} href={item.href} target="_blank" rel="noopener">
-              {item.value}
+              <LinkText text={item.value} />
             </a>
           ) : (
             item.value

@@ -89,7 +89,13 @@
     filter 0.4s;
 }
 
-.frame:hover .img,
+@media (hover: hover) {
+  .frame:hover .img {
+    scale: 1.04;
+    filter: none;
+  }
+}
+
 .frame[aria-pressed="true"] .img {
   scale: 1.04;
   filter: none;
@@ -113,7 +119,13 @@
     transform 0.4s var(--ease);
 }
 
-.frame:hover .caption,
+@media (hover: hover) {
+  .frame:hover .caption {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .frame:focus-visible .caption,
 .frame[aria-pressed="true"] .caption {
   opacity: 1;
@@ -138,7 +150,12 @@
   border: 1px solid var(--alpha-400);
 }
 
-.pause:hover,
+@media (hover: hover) {
+  .pause:hover {
+    border-color: var(--accent);
+  }
+}
+
 .pause[data-paused] {
   border-color: var(--accent);
 }

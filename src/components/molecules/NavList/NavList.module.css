@@ -11,13 +11,3 @@
   white-space: nowrap;
   padding: 4px 0;
 }
-
-.hideSmall {
-  display: none;
-}
-
-@media (min-width: 640px) {
-  .hideSmall {
-    display: list-item;
-  }
-}

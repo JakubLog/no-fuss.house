@@ -41,7 +41,9 @@ function aboutPage(): JsonLdNode {
 /**
  * `/o-nas` 1:1 z legacy/o-nas-v5.html + CTA kontaktu (pod leadem hero i pod „Kto co robi”) + zajawka
  * `#wydarzenia` (link do `/wiedza`, jedno z wejść na telefonie).
- * Zajawka ma tonację przeciwną do sekcji nad nią (`#posty` ciemne albo `#social` jasne). Server Component.
+ * Rytm tonów od `RolesSplit` (jasne) do `StickerBoard` (ciemne): `#wydarzenia` zawsze jasne, `#posty` ciemne,
+ * `#social` ciemne, gdy postów nie ma. Z postami (trzy sekcje między jasną a ciemną) pełnej naprzemienności
+ * nie ma: `#social` jest wtedy jasne jak `RolesSplit` nad nim. Server Component.
  */
 export default function AboutPage() {
   const posts = publishedLinkedinPosts();
@@ -54,10 +56,11 @@ export default function AboutPage() {
       <RolesSplit />
       <FindSection
         {...findUs}
+        tone={posts ? "light" : "dark"}
         extra={<CopyEmail email={site.contact.email} className={findCopyClassName} />}
       />
       {posts ? <FindSection {...posts} tone="dark" /> : null}
-      <FindSection {...publishedEventsTeaser(todayIso())} tone={posts ? "light" : "dark"} />
+      <FindSection {...publishedEventsTeaser(todayIso())} tone="light" />
       <StickerBoard />
     </>
   );

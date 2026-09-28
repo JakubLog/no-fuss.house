@@ -3,7 +3,6 @@
 import Lenis from "lenis";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, type ReactNode } from "react";
-import { isIntroDone, subscribeIntro } from "@/lib/intro";
 import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 import { getLenis, setLenis } from "./lenis-store";
 
@@ -25,7 +24,6 @@ function getSamePageTarget(anchor: HTMLAnchorElement): { target: HTMLElement; ha
  * Smooth scroll Lenis (npm, lerp 0.1) na całym dokumencie.
  *
  * - Wyłączony przy `prefers-reduced-motion` (natywny scroll).
- * - Zatrzymany, dopóki preloader nie skończy (jak w legacy).
  * - Respektuje `data-lenis-prevent` (natywny scroll w zagnieżdżonych kontenerach).
  * - Kotwice na tej samej stronie (`#kontakt`, `/#realizacje` na `/`) przewija płynnie
  *   (bez Lenis natywnie), przenosi na cel fokus i ustawia `#hash` w adresie.
@@ -95,8 +93,6 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
       autoRaf: true,
       stopInertiaOnNavigate: true,
     });
-    if (!isIntroDone()) lenis.stop();
-    const unsubscribeIntro = subscribeIntro(() => lenis.start());
     setLenis(lenis);
 
     /* Tylko powrót/naprzód między route'ami; sam `#hash` (klik w kotwicę) nie zmienia ścieżki. */
@@ -108,7 +104,6 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
 
     return () => {
       window.removeEventListener("popstate", onPopState);
-      unsubscribeIntro();
       lenis.destroy();
       setLenis(null);
     };

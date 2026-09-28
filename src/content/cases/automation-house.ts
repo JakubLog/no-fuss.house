@@ -3,6 +3,7 @@ import type { CaseStudy, CaseStudyImage } from "../types";
 
 /**
  * Case study Automation House. Copy 1:1 z `legacy/case-automation-house-v1.html`.
+ * Automation House by Tigers to pracodawca Kuby (etat), nie klient no-fuss (decyzja właściciela).
  * Wymiary obrazów zmierzone `sips` (realne piksele plików w `public/`).
  */
 
@@ -20,18 +21,19 @@ export const automationHouse = {
   path: "/automation-house",
   title: "Automation House",
   kind: "Strona WWW",
-  kicker: "Strona WWW · 06.2026",
-  tileLabel: "Automation House",
+  kicker: "Strona WWW · Etat Kuby · 06.2026",
+  tileLabel: "Automation House — etat Kuby",
   years: "2026",
-  ownership: "client",
+  ownership: "employment",
+  employer: { name: "Automation House by Tigers", url: AUTOMATION_HOUSE_URL, employee: "kuba" },
+  /* Bez `client`: Automation House to pracodawca Kuby, nie klient no-fuss. */
   summary: {
-    role: "Design i development: Magda (design), Kuba (kod, Next.js)",
+    role: "Kod: Kuba (etat w Automation House), design: Magda",
     scope: "Rebranding strony: od discovery do wdrożenia",
     time: "06.2026",
-    client: "Automation House by Tigers, Warszawa",
     result: { value: "Strona działa: automation.house ↗", href: AUTOMATION_HOUSE_URL },
   },
-  /* Klient, Magda i Kuba z legacy są w `summary`; „Dla AI” z faktów legacy. */
+  /* Magda i Kuba z legacy są w `summary`; „Dla AI” z faktów legacy. */
   facts: [{ term: "Dla AI", value: "Czytelna dla scraperów AI" }],
   /* Z kroków procesu legacy; problem nie wynika z danych, więc „Zadanie”. */
   story: {
@@ -40,10 +42,10 @@ export const automationHouse = {
       "Rebranding strony Automation House by Tigers: ustalić, co firma robi naprawdę i komu to sprzedaje, i pokazać to na nowej stronie.",
     done:
       "Warsztaty i rozmowy z zespołem, potrzeby osób odwiedzających stronę, nowa architektura treści, system wizualny i ekrany (Magda), kod w Next.js (Kuba). Struktura i treść czytelne także dla AI.",
-    effect: "Nowa strona działa pod adresem automation.house. Discovery, projekt i kod zrobił jeden zespół.",
+    effect: "Nowa strona działa pod adresem automation.house.",
   },
   description:
-    "Rebranding strony Automation House by Tigers (06.2026): no-fuss od discovery przez design (Magda) po kod w Next.js (Kuba). Strona czytelna także dla AI.",
+    "Rebranding strony Automation House by Tigers (06.2026), pracodawcy Kuby: kod w Next.js (Kuba, na etacie), design (Magda). Strona czytelna także dla AI.",
   /* alt z kafla na stronie głównej (no-fuss-v5) */
   cover: img("d-00.webp", 1400, 875, "Automation House: strona główna"),
   datePublished: "2026-06",
@@ -77,7 +79,7 @@ export const automationHousePhone = {
 } as const;
 
 export const automationHouseSpec = [
-  { term: "Klient", value: "Automation House by Tigers" },
+  { term: "Firma", value: "Automation House by Tigers" },
   { term: "Zakres", value: "Rebranding strony" },
   { term: "Design", value: "Magda" },
   { term: "Kod", value: "Kuba", chip: "Next.js" },

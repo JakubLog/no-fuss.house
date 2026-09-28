@@ -37,7 +37,8 @@ export interface LiveFrameProps {
  * - Pasek adresu jest linkiem „Otwórz stronę” (nowa karta): fallback, gdy strona
  *   blokuje osadzanie albo ramka się nie ładuje.
  * - Ramka nigdy nie ładuje się sama (żywa strona przechwytuje kółko i Tab): najpierw poster
- *   i przycisk (legacy `.live`), `<iframe>` dopiero po kliknięciu. Poniżej 768 px przycisk
+ *   i przycisk w prawym dolnym rogu postera (legacy `.live` miał go na środku), `<iframe>` dopiero
+ *   po kliknięciu; fokus przechodzi wtedy na okno ramki. Poniżej 768 px przycisk
  *   jest linkiem do strony w nowej karcie (desktopowy układ w skali ~0,25 jest nieczytelny).
  * - SSR renderuje poster z przyciskiem; tryb (przycisk / link) ustala się po hydratacji.
  * - Żywa ramka ma `data-native-cursor`: nad nią systemowy kursor zamiast własnego.
@@ -72,6 +73,12 @@ export function LiveFrame({
     return () => observer.disconnect();
   }, []);
 
+  /* Po kliknięciu przycisk znika z DOM: fokus przechodzi na okno ramki (`tabIndex={-1}`), a nie spada
+   na `body`; Tab prowadzi dalej do `iframe`. Bez przewijania strony. */
+  useEffect(() => {
+    if (isLive) viewportRef.current?.focus({ preventScroll: true });
+  }, [isLive]);
+
   return (
     <Reveal className={cx(styles.stage, className)}>
       <div className={cx("fade", styles.frame)}>
@@ -84,7 +91,14 @@ export function LiveFrame({
         >
           <span className={styles.urlText}>{urlLabel}</span>
         </a>
-        <div ref={viewportRef} className={styles.viewport} data-native-cursor={isLive ? "" : undefined}>
+        <div
+          ref={viewportRef}
+          className={styles.viewport}
+          role="group"
+          aria-label={title}
+          tabIndex={isLive ? -1 : undefined}
+          data-native-cursor={isLive ? "" : undefined}
+        >
           <Image
             className={styles.poster}
             src={poster.src}

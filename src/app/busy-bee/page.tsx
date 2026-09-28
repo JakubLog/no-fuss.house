@@ -61,6 +61,7 @@ export default function BusyBeePage() {
           kicker: busybee.kicker,
           title: busybee.title,
           summary: busybee.summary,
+          ownership: busybee.ownership,
           facts: busybee.facts,
           datePublished: busybee.datePublished,
         }}

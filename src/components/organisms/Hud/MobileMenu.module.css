@@ -1,0 +1,134 @@
+/*
+ * Menu na telefonie: pełny ekran pod HUD (z-index 50), nad treścią i siatką (z-index 1–2).
+ * Zamknięte: `visibility: hidden` (poza drzewem a11y i kolejnością Tab), kurtyna zwinięta do górnej
+ * krawędzi. Otwarcie: kurtyna zjeżdża (0,7 s `--ease`), linie i e-mail wjeżdżają ze staggerem.
+ * Zamknięcie: kurtyna wraca w górę (`--close`), treść wraca pod maskę dopiero za nią.
+ */
+.menu {
+  --close: 0.5s;
+  position: fixed;
+  inset: 0;
+  z-index: 49;
+  display: flex;
+  flex-direction: column;
+  padding: 88px var(--gutter) 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--bg);
+  visibility: hidden;
+  clip-path: inset(0 0 100% 0);
+  transition:
+    clip-path var(--close) var(--ease),
+    visibility 0s var(--close);
+}
+
+.menu[data-open] {
+  visibility: visible;
+  clip-path: inset(0);
+  transition: clip-path 0.7s var(--ease);
+}
+
+.menu[data-open] :global(.line) > span,
+.menu[data-open] :global(.fade) {
+  transition-delay: calc(0.15s + var(--i, 0) * var(--reveal-stagger));
+}
+
+.menu:not([data-open]) :global(.line) > span,
+.menu:not([data-open]) :global(.fade) {
+  transition-duration: 0s;
+  transition-delay: var(--close);
+}
+
+/* Blokada scrolla strony pod otwartym menu; przewija się tylko panel. */
+:global(body):has(.menu[data-open]) {
+  overflow: hidden;
+}
+
+/* Lista przy dolnej krawędzi: w zasięgu kciuka. */
+.nav {
+  margin-top: auto;
+}
+
+.list {
+  list-style: none;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.item {
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+/* Cały wiersz jest celem dotyku; na najwęższych ekranach tag schodzi pod nazwę (dalej przy prawej krawędzi). */
+.link {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 16px 0;
+  font: var(--t-display);
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  transition:
+    background-color 0.4s var(--ease),
+    color 0.4s var(--ease);
+}
+
+.link :global(.line),
+.here {
+  transition: translate 0.4s var(--ease);
+}
+
+.here {
+  display: flex;
+  margin-left: auto;
+}
+
+.meta {
+  margin-top: 32px;
+}
+
+.email {
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+/* Hover jak wiersze FAQ (tylko mysz): limonka, nazwa wcięta o 12 px, tag cofnięty o 12 px i odwrócony. */
+@media (hover: hover) {
+  .link:hover {
+    background-color: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .link:hover :global(.line) {
+    translate: 12px 0;
+  }
+
+  .link:hover .here {
+    translate: -12px 0;
+  }
+
+  .link:hover .here > * {
+    background: var(--on-accent);
+    color: var(--accent);
+  }
+
+  .email:hover {
+    border-color: currentColor;
+  }
+}
+
+@media (min-width: 768px) {
+  .menu {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu,
+  .menu[data-open],
+  .link,
+  .link :global(.line),
+  .here {
+    transition: none;
+  }
+}

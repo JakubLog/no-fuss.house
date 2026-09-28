@@ -15,8 +15,8 @@ export interface PageHeroProps {
 
 /**
  * Jasne hero podstron (`/o-nas`, `/wiedza`; legacy `.team-hero` z o-nas-v5): nagłówek
- * display w liniach, lead w kroju statement i opcjonalnie CTA kontaktu. Odsłania się po
- * preloaderze. Server Component.
+ * display w liniach, lead w kroju statement i opcjonalnie CTA kontaktu. Odsłania się na
+ * starcie wejścia (`Reveal trigger="intro"`). Server Component.
  */
 export function PageHero({ lines, lead, cta = false }: PageHeroProps) {
   return (

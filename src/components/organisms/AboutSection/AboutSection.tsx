@@ -56,7 +56,7 @@ export function AboutSection() {
           <ul className={cx("mono-sm", styles.people)}>
             {people.map((person) => (
               <li key={person.id}>
-                {person.name} — {person.role}
+                {person.name}&nbsp;— {person.role}
               </li>
             ))}
           </ul>

@@ -122,14 +122,33 @@
   text-transform: uppercase;
 }
 
+/* Telefon (do 479 px): mega ma tu minimum 56 px, a wersaliki „AUTOMATION” czy „OURMONEY →” są
+   szersze niż kolumna i `.line` (`overflow: hidden`) by je ucięła. Rola display (40 px) mieści
+   najdłuższe słowo ze strzałką i jej przesunięciem na hover. */
+@media (max-width: 479px) {
+  .nextTitle {
+    font: var(--t-display);
+  }
+}
+
+/* Ostatnie słowo ze strzałką razem: „→” nie zostaje sama w linii. */
+.nextLast {
+  white-space: nowrap;
+}
+
 .arrow {
   display: inline-block;
   transition: transform 0.5s var(--ease);
 }
 
-.next:hover .arrow,
 .next:focus-visible .arrow {
   transform: translate(8px, -8px);
+}
+
+@media (hover: hover) {
+  .next:hover .arrow {
+    transform: translate(8px, -8px);
+  }
 }
 
 .next:focus-visible {

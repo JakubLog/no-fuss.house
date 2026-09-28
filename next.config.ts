@@ -15,7 +15,10 @@ function legacyRedirects() {
   );
 }
 
-/* CSP celowo nieustawione (propozycja w README / raporcie). */
+/*
+ * Z CSP na razie tylko `frame-ancestors 'none'` (razem z `X-Frame-Options` dla starszych przeglądarek: strona
+ * nie daje się osadzić w ramce, więc bez clickjackingu formularza). Pełne CSP później (propozycja w README / raporcie).
+ */
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
@@ -23,6 +26,8 @@ const securityHeaders = [
     key: "Permissions-Policy",
     value: "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()",
   },
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "Content-Security-Policy", value: "frame-ancestors 'none'" },
 ];
 
 const nextConfig: NextConfig = {
@@ -30,6 +35,13 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
     formats: ["image/avif", "image/webp"],
+  },
+  experimental: {
+    /*
+     * Jedyna Server Action to formularz kontaktu: maks. 5374 znaki (120 + 254 + 5000) po do 4 B w UTF-8, z JS
+     * wysyłany jest też poprzedni stan (`invalid`/`failed` z wartościami), do tego narzut multipart: 64 kB z zapasem.
+     */
+    serverActions: { bodySizeLimit: "64kb" },
   },
   async redirects() {
     return legacyRedirects();

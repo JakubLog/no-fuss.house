@@ -17,14 +17,15 @@
 }
 
 /*
- * Ramka napisu 3D (pusta, pod siatką overlay). Telefon: górna część hero, tylko na fallback CSS
+ * Ramka napisu 3D (pusta; z-index 2, bo fallback CSS to napis, nie tło, więc leży nad siatką overlay).
+ * Telefon: górna część hero, tylko na fallback CSS
  * (scena liczy się z `offsetYMobile`). Od 768 px: pas między h1 a leadem z CTA, który scena
  * mierzy (`frame`) i w który wpisuje napis; kanwa i tak leży na całym hero.
  */
 .band {
   position: absolute;
   inset: 0 0 24%;
-  z-index: 0;
+  z-index: 2;
   pointer-events: none;
 }
 

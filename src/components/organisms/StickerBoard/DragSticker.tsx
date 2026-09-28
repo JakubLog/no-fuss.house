@@ -1,42 +1,32 @@
 "use client";
 
-import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import { useRef, useState, type PointerEvent } from "react";
 import { cx } from "@/lib/cx";
 import styles from "./StickerBoard.module.css";
-
-/** Krok przesunięcia strzałką (legacy: 16 px). */
-const KEY_STEP = 16;
-
-const KEY_DELTAS: Record<string, readonly [number, number]> = {
-  ArrowLeft: [-KEY_STEP, 0],
-  ArrowRight: [KEY_STEP, 0],
-  ArrowUp: [0, -KEY_STEP],
-  ArrowDown: [0, KEY_STEP],
-};
 
 export interface DragStickerProps {
   /** Zaufany SVG z `STICKERS`. */
   svg: string;
-  /** Pozycja startowa w % planszy. */
-  left: number;
-  top: number;
-  /** Bok naklejki w px. */
+  /** Pozycja startowa [left %, top %] w planszy, układ poziomy (od 768 px). */
+  landscapeSpot: readonly [number, number];
+  /** Pozycja startowa [left %, top %] w planszy, układ pionowy (telefon, tablet w pionie). */
+  portraitSpot: readonly [number, number];
+  /** Bok naklejki w px w układzie poziomym (w pionowym CSS skaluje go z szerokością ekranu). */
   size: number;
   /** Obrót w stopniach. */
   rotate: number;
-  label: string;
-  /** `id` instrukcji dla czytnika ekranu. */
-  describedBy?: string;
   /** Indeks staggeru reveal (`.fade` + `--i`), przycięty przez wołającego (np. modulo). */
   index?: number;
 }
 
 /**
- * Jedna przeciągana naklejka: Pointer Events (mysz, dotyk, pióro) z pointer
- * capture i strzałki z klawiatury (16 px). Pozycja trzymana w DOM (`left`/`top`
- * w px po pierwszym ruchu), bez re-renderu na każdy ruch. Client Component.
+ * Jedna przeciągana naklejka: Pointer Events (mysz, dotyk, pióro) z pointer capture. Dekoracja
+ * poza kolejnością Tab i drzewem dostępności (`aria-hidden`, decyzja właściciela: Tab nie
+ * skacze po planszy). Pozycję startową i rozmiar liczy CSS (osobno układ poziomy i pionowy,
+ * przycięte do planszy); po pierwszym ruchu pozycja w DOM (`left`/`top` w px), bez re-renderu
+ * na każdy ruch. Client Component.
  */
-export function DragSticker({ svg, left, top, size, rotate, label, describedBy, index }: DragStickerProps) {
+export function DragSticker({ svg, landscapeSpot, portraitSpot, size, rotate, index }: DragStickerProps) {
   const ref = useRef<HTMLDivElement>(null);
   const offset = useRef({ x: 0, y: 0 });
   /* Ref dla logiki ruchu (bez czekania na re-render), stan tylko dla klasy. */
@@ -77,30 +67,26 @@ export function DragSticker({ svg, left, top, size, rotate, label, describedBy, 
     setHeld(false);
   };
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    const delta = KEY_DELTAS[event.key];
-    if (!delta) return;
-    event.preventDefault();
-    const el = event.currentTarget;
-    moveTo(el.offsetLeft + delta[0], el.offsetTop + delta[1]);
-  };
-
   return (
     <div
       ref={ref}
       className={cx(styles.drag, held && styles.held, "fade")}
-      style={{ left: `${left}%`, top: `${top}%`, "--s": `${size}px`, "--r": `${rotate}deg`, "--i": index }}
-      tabIndex={0}
-      role="img"
+      style={{
+        "--x": landscapeSpot[0],
+        "--y": landscapeSpot[1],
+        "--x-p": portraitSpot[0],
+        "--y-p": portraitSpot[1],
+        "--s": size,
+        "--r": `${rotate}deg`,
+        "--i": index,
+      }}
+      aria-hidden="true"
       data-cursor="grab"
-      aria-label={label}
-      aria-describedby={describedBy}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={drop}
       onPointerCancel={drop}
       onLostPointerCapture={drop}
-      onKeyDown={handleKeyDown}
       dangerouslySetInnerHTML={{ __html: svg }}
     />
   );

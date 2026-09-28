@@ -1,8 +1,8 @@
 /**
  * Publiczny adres strony. Źródło: `NEXT_PUBLIC_SITE_URL` (patrz `.env.example`).
- * Domena nie jest jeszcze ustalona, więc zawsze mamy bezpieczny fallback.
+ * Bez zmiennej (albo przy złym formacie) używamy docelowej domeny.
  */
-export const FALLBACK_SITE_URL = "https://no-fuss.pl";
+export const FALLBACK_SITE_URL = "https://no-fuss.house";
 
 function resolveSiteUrl(): URL {
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
@@ -10,7 +10,8 @@ function resolveSiteUrl(): URL {
     try {
       return new URL(raw);
     } catch {
-      // Zły format w env: spadamy na fallback zamiast wywracać build.
+      // Zły format w env: ostrzegamy i spadamy na fallback zamiast wywracać build.
+      console.warn(`NEXT_PUBLIC_SITE_URL="${raw}" to nie jest poprawny URL; używam ${FALLBACK_SITE_URL}.`);
     }
   }
   return new URL(FALLBACK_SITE_URL);

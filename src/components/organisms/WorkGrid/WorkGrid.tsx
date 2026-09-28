@@ -17,6 +17,14 @@ const SIZES: Record<WorkTileSize, string> = {
   s: "(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw",
 };
 
+/** `sizes` kafla, który w 768–1023 px domyka siatkę na całą szerokość (`fullOnTablet` niżej). */
+const SIZES_TABLET_FULL: Record<WorkTileSize, string> = {
+  xl: "(min-width: 1024px) 66vw, 100vw",
+  l: "(min-width: 1024px) 42vw, 100vw",
+  m: "(min-width: 1024px) 25vw, 100vw",
+  s: "(min-width: 1024px) 25vw, 100vw",
+};
+
 function placementClass(tile: WorkTileData): string {
   return cx(styles[tile.size], tile.offset === 1 && styles.off, tile.offset === 2 && styles.off2);
 }
@@ -42,9 +50,18 @@ export function WorkGrid() {
           /* Legacy: drugi kafel w parze (`.l + .l`, `.m + .m`) ma okładkę z `--i:1`. */
           const prev: WorkTileData | undefined = work.tiles[i - 1];
           const second = (tile.size === "l" || tile.size === "m") && prev?.size === tile.size;
+          /* 1:1 z regułą tabletu w `WorkGrid.module.css`
+             (`.grid > .xl:first-child ~ li:last-child:nth-child(even) { grid-column: 1 / -1 }`):
+             pierwszy kafel `xl`, ten ostatni i na parzystej pozycji `nth-child` (nieparzysty indeks,
+             więc nie pierwszy, jak wymaga `~`). */
+          const fullOnTablet = work.tiles[0]?.size === "xl" && i === work.tiles.length - 1 && i % 2 === 1;
           return (
             <Reveal as="li" key={tile.href} className={placementClass(tile)}>
-              <WorkTile tile={tile} sizes={SIZES[tile.size]} index={second ? 1 : undefined} />
+              <WorkTile
+                tile={tile}
+                sizes={(fullOnTablet ? SIZES_TABLET_FULL : SIZES)[tile.size]}
+                index={second ? 1 : undefined}
+              />
             </Reveal>
           );
         })}

@@ -8,6 +8,8 @@
   transition: border-color 0.2s;
 }
 
-.link:hover {
-  border-color: currentColor;
+@media (hover: hover) {
+  .link:hover {
+    border-color: currentColor;
+  }
 }

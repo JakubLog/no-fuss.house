@@ -30,15 +30,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Preloader aktywny: blokada scrolla (zastępuje body.is-loading z legacy).
-   Tylko gdy ruch nie jest ograniczony — przy prefers-reduced-motion preloader ma
-   display: none (Preloader.module.css), więc nie trzeba blokować scrolla. */
-@media (prefers-reduced-motion: no-preference) {
-  body:has([data-preloader="active"]) {
-    overflow: hidden;
-  }
-}
-
 a {
   color: inherit;
   text-decoration: none;
@@ -166,7 +157,7 @@ html.lenis body {
   column-gap: var(--gap);
 }
 
-/* ---------- reveal (sterowany przez organizm Reveal / Preloader) ---------- */
+/* ---------- reveal (sterowany przez organizm Reveal) ---------- */
 .line {
   display: block;
   overflow: hidden;

@@ -27,8 +27,18 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Mobile: przy nieparzystej liczbie kafli ostatni na całą szerokość (bez pustego slotu). */
+@media (max-width: 899px) {
+  .num:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Od 900 px jeden rząd: tyle równych kolumn, ile kafli (4 na /ourmoney, 3 na /aion-mind). */
 @media (min-width: 900px) {
   .nums {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
   }
 }

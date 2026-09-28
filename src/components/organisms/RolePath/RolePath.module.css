@@ -27,7 +27,7 @@
   text-transform: uppercase;
 }
 
-@media (min-width: 800px) {
+@media (min-width: 900px) {
   .path {
     grid-template-columns: 1fr 1fr;
   }

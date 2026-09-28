@@ -1,7 +1,8 @@
+/* Naklejki to obiekty, nie tło: nad siatką overlay (z-index 1); treść strefy (też 2, później w DOM) nad nimi. */
 .layer {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: 2;
   pointer-events: none;
   overflow: hidden;
 }

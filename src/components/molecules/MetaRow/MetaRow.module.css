@@ -15,7 +15,12 @@
   transition: transform 0.4s var(--ease);
 }
 
-:global(a):hover .arrow,
+@media (hover: hover) {
+  :global(a):hover .arrow {
+    transform: translate(3px, -3px);
+  }
+}
+
 :global(a):focus-visible .arrow {
   transform: translate(3px, -3px);
 }

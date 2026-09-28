@@ -47,8 +47,11 @@
   opacity: 1;
 }
 
-.input:hover {
-  --field-line: color-mix(in srgb, var(--ink) 40%, transparent);
+/* Hover przed błędem i fokusem w kaskadzie: oba go nadpisują. */
+@media (hover: hover) {
+  .input:hover {
+    --field-line: color-mix(in srgb, var(--ink) 40%, transparent);
+  }
 }
 
 /* Błąd: limonkowy obrys (stopka jest zawsze ciemna, akcent na ciemnym jest dozwolony) + tag pod polem. */
@@ -84,6 +87,14 @@
   margin-top: 24px;
 }
 
+/*
+ * W trakcie wysyłki (`aria-disabled`): wygaszenie i brak uniesienia daje `Button`, tu tylko kursor „progress”
+ * (0-3-0 wygrywa z `cursor: default` z `.button[aria-disabled="true"]` niezależnie od kolejności arkuszy).
+ */
+.actions .submit[aria-disabled="true"] {
+  cursor: progress;
+}
+
 .note {
   margin-top: 16px;
   color: var(--muted);
@@ -104,9 +115,11 @@
   transition: background-color 0.2s, color 0.2s;
 }
 
-.status a:hover {
-  background: var(--accent);
-  color: var(--on-accent);
+@media (hover: hover) {
+  .status a:hover {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
 }
 
 @media (min-width: 768px) {

@@ -43,6 +43,18 @@
 }
 
 /*
+ * „bez zamieszania” na wąskim ekranie łamie się wewnątrz jednej linii (`.line`), a tam odstęp to samo
+ * `line-height` (1em), więc limonka dotykała „bez”. Interlinia 1em + `--gap` daje ten sam skok co między
+ * liniami (1em + gap siatki); ujemne marginesy (−gap/2, na dole też −0,06em z `.line`) zdejmują
+ * półinterlinię, więc gdy linia się nie łamie, układ jest identyczny jak przedtem.
+ */
+.l3 {
+  line-height: calc(1em + var(--gap));
+  margin-top: calc(var(--gap) / -2);
+  margin-bottom: calc(var(--gap) / -2 - 0.06em);
+}
+
+/*
  * „zamieszania”: limonka wjeżdża od prawej do lewej na samym końcu. Słowo ma własny Reveal: `.line` je
  * przycina, więc `is-in` przychodzi dopiero, gdy wysuwająca się linia jest w kadrze, a opóźnienie
  * `--reveal-duration` czeka, aż linia dojedzie. Tło to `::before` (scaleX od prawej; z niego kursor czyta
@@ -97,8 +109,20 @@
   transition: border-color 0.2s;
 }
 
-.link:hover {
-  border-color: currentColor;
+@media (hover: hover) {
+  .link:hover {
+    border-color: currentColor;
+  }
+}
+
+/* `<address>` z e-mailem i `<small>` z copyrightem: wygląd reszty wiersza mono (bez kursywy
+   i domyślnego `font-size: smaller`). */
+.address {
+  font-style: normal;
+}
+
+.copyright {
+  font-size: inherit;
 }
 
 @media (min-width: 768px) {
@@ -130,6 +154,10 @@
 
   .word .mark::before {
     transform: none;
+    transition: none;
+  }
+
+  .link {
     transition: none;
   }
 }

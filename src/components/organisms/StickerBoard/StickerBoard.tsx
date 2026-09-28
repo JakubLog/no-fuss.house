@@ -10,12 +10,10 @@ import { cx } from "@/lib/cx";
 import { DragSticker } from "./DragSticker";
 import styles from "./StickerBoard.module.css";
 
-const INSTRUCTIONS_ID = "play-instructions";
-
 /**
  * „Oklej nas” (legacy `#play`): zdjęcia Magdy i Kuby (`personCards[id].photo`; bez zdjęcia placeholder,
- * Kuby limonkowy) i sześć naklejek do przeciągania (wskaźnik, dotyk, strzałki). Sekcja jest serwerowa,
- * klienckie są tylko naklejki (`DragSticker`). Server Component.
+ * Kuby limonkowy) i sześć naklejek do przeciągania wskaźnikiem lub palcem (dekoracja poza kolejnością
+ * Tab, `aria-hidden`). Sekcja jest serwerowa, klienckie są tylko naklejki (`DragSticker`). Server Component.
  */
 export function StickerBoard() {
   return (
@@ -26,9 +24,6 @@ export function StickerBoard() {
           {stickerPlay.hint}
         </Fade>
       </div>
-      <p id={INSTRUCTIONS_ID} className="sr-only">
-        {stickerPlay.instructions}
-      </p>
       <div className={cx(styles.photos, "fade")} style={{ "--i": 3 }}>
         {people.map((person, i) => {
           const photo = personCards[person.id].photo;
@@ -39,7 +34,7 @@ export function StickerBoard() {
               width={photo.width}
               height={photo.height}
               alt={photo.alt}
-              sizes="(min-width: 750px) 300px, 40vw"
+              sizes="(min-width: 768px) and (orientation: landscape) 300px, (min-width: 1023px) 450px, 44vw"
               draggable={false}
               className={`${styles.photo} ${styles.img}`}
               style={{ objectPosition: photo.focus }}
@@ -54,16 +49,14 @@ export function StickerBoard() {
           );
         })}
       </div>
-      {stickerPlay.spots.map(([left, top], i) => (
+      {stickerPlay.spots.map(({ landscape, portrait }, i) => (
         <DragSticker
-          key={`${left}-${top}`}
+          key={landscape.join("-")}
           svg={STICKERS[i % STICKERS.length]}
-          left={left}
-          top={top}
+          landscapeSpot={landscape}
+          portraitSpot={portrait}
           size={96 + ((i * 17) % 40)}
           rotate={(i % 2 ? 1 : -1) * (8 + i * 3)}
-          label={stickerPlay.stickerLabel}
-          describedBy={INSTRUCTIONS_ID}
           index={4 + (i % 5)}
         />
       ))}

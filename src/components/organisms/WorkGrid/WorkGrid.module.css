@@ -34,6 +34,14 @@
   }
 }
 
+/* Tablet: po `xl` (sam w rzędzie) kafle idą parami, więc przy parzystej pozycji ostatni zostałby sam
+   obok pustej komórki. Taki kafel domyka siatkę na całą szerokość. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .grid > .xl:first-child ~ li:last-child:nth-child(even) {
+    grid-column: 1 / -1;
+  }
+}
+
 /* Asymetria par i trójek z legacy dopiero od 1024 px. */
 @media (min-width: 1024px) {
   /* Para 5 + 5: pierwszy od lewej, drugi od kolumny 7. */

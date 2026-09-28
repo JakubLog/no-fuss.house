@@ -6,7 +6,7 @@ colors:
   # Źródło: Figma OoTIQaKer6V1uxTwwGvXK4, node 351:24343 + decyzja Magdy o jasnych sekcjach (2026-09-21)
   base:
     light: "#FCFCFB"       # jasne sekcje
-    dark: "#101318"        # Dark - Light/900: hero, stopka, preloader
+    dark: "#101318"        # Dark - Light/900: hero, stopka
     shade-900: "#15181D"   # ciemna sekcja w motywie ciemnym, kafle
     shade-700: "#272A2F"   # kafle na ciemnym
     accent: "#BBFF00"      # limonka z renderu Figmy; UWAGA: zmienna Accent/Primary/900 ma wartość #FCE803 (żółty) — do rozstrzygnięcia
@@ -78,7 +78,7 @@ Paleta no-fuss: głęboki grafit `#101318`, jasne `#FCFCFB`, jeden neonowy akcen
 Strona jest **mieszana tonalnie**: hero i stopka są zawsze ciemne, sekcje treści naprzemiennie
 jasne (`tone-light`) i ciemne (`tone-dark`). Przełącznika motywu nie ma (usunięty 2026-09-21): tonacja wynika wyłącznie z rytmu sekcji.
 
-Akcent występuje jako **tło** (tagi, zaznaczenie, `mark` w nagłówku, pasek preloadera) z tekstem
+Akcent występuje jako **tło** (tagi, zaznaczenie, `mark` w nagłówku) z tekstem
 `#101318`, a na ciemnym także jako kolor obiektu 3D, kursora i poświaty w hero. Nigdy jako tekst
 na jasnym tle. HUD i siatka są białe w `mix-blend-mode: difference`, więc same odwracają się
 nad każdą sekcją.
@@ -118,16 +118,24 @@ Siatka 12 kolumn, gutter 16 px (mobile) / 56 px (desktop), sekcje z paddingiem p
 h1 w lewym górnym rogu, lead i CTA w prawym dolnym, napis 3D w pasie między nimi (dopasowany do wysokości
 pasa); na telefonie napis nad tekstem, tekst na dole ekranu. Kafle realizacji układają się
 asymetrycznie (od 1024 px): duży kafel na 8 kolumn dosunięty do prawej, potem pary 5+5, potem trójki
-o różnych offsetach; 768–1023 px duży kafel zostaje, reszta w dwóch równych kolumnach. Pod każdym
-kaflem wiersz mono: nazwa po lewej, rok po prawej (rok ze strzałką zawsze w jednej linii).
+o różnych offsetach; 768–1023 px duży kafel zostaje, reszta w dwóch równych kolumnach. Gdy pierwszy kafel jest
+duży, a ostatni wypada na parzystej pozycji, ostatni zajmuje pełny rząd; CSS i `sizes` obrazu muszą używać tego
+samego warunku. Pod każdym kaflem wiersz mono: nazwa po lewej, rok po prawej (rok ze strzałką zawsze w jednej linii).
 
-Stała warstwa `position: fixed` (siatka ma najniższy z-index: nad tłami sekcji, pod całą treścią; HUD leży na wierzchu):
+Stała warstwa `position: fixed` (siatka ma najniższy z-index: nad tłami sekcji, pod całą treścią, także pod napisem 3D i naklejkami; HUD leży na wierzchu):
 - **siatka**: 3 piony (lewy gutter, środek, prawy gutter) i 2 poziomy (⅓ i ⅔ wysokości),
   z przerwą 12 px wokół przecięć i krzyżykiem 12 px w każdym przecięciu; rysowana na biało
   w `mix-blend-mode: difference`, więc sama odwraca się na każdym tle,
-- **HUD**: logo i nawigacja u góry, pasek postępu scrolla przy prawej krawędzi
-  (nav w mono 12 px poniżej 480 px; link „Wiedza” dopiero od 640 px, niżej nie mieści się obok logo).
-  Fokus w HUD: biały obrys 2 px, odwracany razem z HUD.
+- **HUD**: logo i nawigacja u góry, pasek postępu scrolla przy prawej krawędzi.
+  Fokus w HUD: biały obrys 2 px, odwracany razem z HUD. Linki w wierszu od 768 px; niżej zamiast nich
+  przycisk „MENU” (mono 14 px) z dwiema kreskami 22×2 px (jak kreska w logo), które składają się w krzyżyk (0,4 s `--ease`).
+- **Menu na telefonie** (< 768 px): pełny ekran pod HUD (logo i krzyżyk zostają na wierzchu), ciemna kurtyna `#101318`
+  zjeżdża z góry (0,7 s `--ease`, zamknięcie 0,5 s w górę), linki w roli display wersalikami wjeżdżają od dołu ze
+  staggerem jak nagłówki (`.line`). Wiersze z obrysem 1 px jak FAQ, przy dolnej krawędzi (w zasięgu kciuka); bieżąca
+  strona lub sekcja (case study → Realizacje) ma tag „Tu jesteś” po prawej. Pod listą e-mail w mono. Hover (tylko mysz)
+  jak FAQ: limonkowe tło, nazwa wcięta o 12 px, tag odwrócony. Strona pod menu się nie przewija. Zamykają je krzyżyk,
+  Escape, link, zmiana ścieżki i wyjście fokusem poza menu. Przy reduced motion bez kurtyny i wjazdu linii. Bez JS
+  przycisku nie ma, a linki zawijają się w wierszu HUD obok logo.
 
 ## Elevation & Depth
 
@@ -153,15 +161,17 @@ naklejki i kursor, czyli warstwa zabawy, nie warstwa interfejsu.
   „Umów rozmowę ↗” (kalendarz); przyciski prostokątne, min. 48 px, odstęp 8 px, zawijają się na wąskich
   ekranach. Bez adresu kalendarza ghosta nie ma (także w stopce obok wysyłki formularza), zamiast wyszarzonego przycisku. Pod h1 w hero
   i pod listą usług; pod FAQ na stronie głównej tylko zdanie, bo zaraz niżej jest stopka. Na `/o-nas` pod leadem hero
-  (od 1024 px w kolumnie leadu 9–12, 32 px pod nim) i na końcu „Kto co robi” (48 px pod ostatnim wierszem, od lewej
+  (od 1024 px w kolumnach 8–12, 32 px pod nim) i na końcu „Kto co robi” (48 px pod ostatnim wierszem, od lewej
   krawędzi treści), przed `#social`.
 - **Formularz kontaktu** (`ContactForm`, stopka `#kontakt` pod nagłówkiem, od 768 px od kolumny 3, od 1024 px kolumny 3–10):
   imię i e-mail obok siebie (od 768 px), wiadomość na całą szerokość. Etykiety mono 12 px `--muted` nad polami. Pola ostre,
-  min. 48 px, tekst body 16 px, obrys 1 px `--ink` 18% (hover 40%), fokus: obrys 2 px `--ink` zamiast obwódki z odstępem,
-  karetka w akcencie, wypełnienie tłem stopki (naklejki spod kursora nie prześwitują przez pola). Błąd: obrys 2 px w akcencie
-  i tag pod polem jak `Tag` (mono 12 px, `#101318` na limonce); przy fokusie obrys wraca do białego, błąd niesie tag. Pod polami
-  accent „Wyślij wiadomość →” (w trakcie „Wysyłamy…”) i ghost „Umów rozmowę ↗”, niżej notka o odpowiedzi i wynik w body:
-  „Dzięki, wiadomość doszła. Odpiszemy na …” albo adres e-mail jako link w tekście, gdy wysyłka się nie uda.
+  min. 48 px, tekst body 16 px, obrys 1 px `--ink` 18% (hover tylko myszą: 40%), fokus: obrys 2 px `--ink`,
+  karetka w akcencie, wypełnienie tłem stopki. Błąd: obrys 2 px w akcencie i tag pod polem jak `Tag`; przy fokusie
+  obrys wraca do białego. Pod polami accent „Wyślij wiadomość →” i ghost „Umów rozmowę ↗”. W trakcie wysyłki
+  przycisk ma opacity .6, nie unosi się i pokazuje `cursor: progress`. Po zwykłym błędzie wartości zostają, a wynik
+  w `role="status"` podaje adres e-mail. Odrzucone wywołanie akcji (firewall, sieć, limit body) montuje formularz od
+  nowa z tymi samymi wartościami, komunikatem w `role="alert"` i fokusem na przycisku wysyłki. Sukces:
+  „Dzięki, wiadomość doszła. Odpiszemy na …”.
 - **Lista usług** (`ServicesList`, strona główna `#uslugi`): wiersze z obrysem 1 px (`--ink` 18%), nazwa w roli title, opis
   `--muted`, bez numerów. Wiersze nie są linkami, ale hover (tylko `hover: hover`) daje im to co w FAQ: limonkowe tło,
   tekst `#101318`, opis `#3F4A12` (7,92:1) i wcięcie 12 px transformem nazwy i opisu (0,4 s `--ease`; wiersz i sąsiedzi
@@ -171,20 +181,18 @@ naklejki i kursor, czyli warstwa zabawy, nie warstwa interfejsu.
   faktyczna kolejność), tytuł w roli title, opis `--muted`. Bez kafli. Kroki dzielą wiersze przez subgrid, więc numery,
   tytuły i opisy stoją w rzędzie w jednej linii także przy dwuliniowych tytułach. Hover (tylko `hover: hover`, jak w FAQ):
   limonkowe tło kolumny pod kreską (kreska zostaje), tekst `#101318`, numer i opis `#3F4A12`, treść wcięta o 12 px
-  (`translateX`, 0,4 s `--ease`). Kroki są nieklikalne: bez strzałek i bez fokusu. Przy reduced motion wcięcie 12 px bez animacji.
+  (`translateX`, 0,4 s `--ease`), a w prawym dolnym rogu wyłania się duży numer kroku (8% `#101318` na limonce, ucięty krawędzią).
+  Kroki są nieklikalne: bez strzałek i bez fokusu. Gdy sekcja jest w widoku, kroki podświetlają się po kolei w pętli (01 → 04 → 01,
+  1,4 s na krok), tak samo jak na hover, także na dotyku; hover ma pierwszeństwo. Bez przycisku pauzy. Przy reduced motion
+  bez przebiegu, wcięcie 12 px bez animacji.
 - **FAQ** (`FaqSection`, strona główna przed stopką, bez własnego CTA): wiersze z obrysem 1 px jak lista usług, natywne `details` / `summary` bez JS. Pytanie w roli title (bez numeru), „+” w mono obracany o 45° po otwarciu. Hover (tylko `hover: hover`): limonkowe tło, tekst `#101318`, pytanie wcięte `translateX` (12 px, od 1024 px 6 px, tyle co dawny `padding-inline`), „+” cofnięty o 12 px od prawej krawędzi, 0,4 s `--ease`; wiersz i sąsiedzi się nie ruszają. Fokus z klawiatury: obrys 2 px, bez limonki. Przy reduced motion wcięcie bez animacji. Odpowiedź w kolumnie pytania, maks. 60 znaków w wierszu.
-- **Preloader**: pasek 110×4 px na środku, limonkowy na 25% bieli, tło `#101318`, po wypełnieniu kurtyna
-  odjeżdża w górę (1 s). Pasek czeka na fonty (`document.fonts.ready`) i trwa od 600 ms do 1200 ms.
-  Tylko przy pierwszym wejściu, nie przy nawigacji między stronami. Na czas paska treść pod kurtyną jest `inert`
-  (Tab nie chodzi pod zasłoną). Przy reduced motion preloadera nie ma.
 - **Naklejka**: SVG 72–120 px z białym obrysem 4 px, pojawia się pod kursorem w stopce (i na 404), nie w hero
   strony głównej (tam jest już obiekt 3D). Pop scale 0→1, losowa rotacja ±25°, znika po 2.4 s.
 - **Kursor**: limonkowa strzałka z gradientem, podąża z opóźnieniem (lerp 0.18); tylko
   na urządzeniach ze wskaźnikiem `fine`. Nad elementem interaktywnym (link, przycisk, pole, `summary`,
   element z `tabindex`) strzałka płynnie (0.28 s, `--ease`) zmienia się w limonkowy pierścień ~40 px
   (półprzezroczyste wypełnienie, obrys z gradientu, ta sama poświata); nad elementem przeciąganym
-  (`data-cursor="grab"`) w małą pełną kropkę, która przy wciśnięciu się ściska. Element fokusowalny, ale nieklikalny (kafle kroków procesu),
-  dostaje `data-cursor="arrow"` i zostaje strzałką. Dwa stany dedykowane, ten sam krążek ~40 px z obrysem
+  (`data-cursor="grab"`) w małą pełną kropkę, która przy wciśnięciu się ściska. Dwa stany dedykowane, ten sam krążek ~40 px z obrysem
   z gradientu, ale pełny limonkowy: nad pytaniem FAQ (`data-cursor="help"`) z „?” (`#101318`, sans 600),
   a przy otwartym pytaniu z „−”; nad „Umów rozmowę ↗” (`data-cursor="calendar"`) z ikoną kalendarza
   (obrys `#101318` 2 px, dwa uszka, kropka). Systemowy kursor jest
@@ -193,16 +201,16 @@ naklejki i kursor, czyli warstwa zabawy, nie warstwa interfejsu.
 
 ## Motion
 
-Jedna orkiestracja wejścia (preloader → kurtyna → reveal linii nagłówka ze staggerem; w hero strony głównej razem z nim
-litery 3D „no–fuss” układają się z rozrzutu w napis, 1,6 s ease-in-out),
+Jedna orkiestracja wejścia, bez preloadera: gdy fonty są gotowe (najpóźniej 300 ms po załadowaniu JS), po 250 ms rusza reveal
+linii nagłówka hero ze staggerem; w hero strony głównej razem z nim litery 3D „no–fuss” układają się z rozrzutu w napis, 1,6 s ease-in-out;
 potem reveal przy wejściu w viewport, ale tylko tam, gdzie niesie rytm: nagłówki sekcji (etykieta mono,
 linie statementu, nagłówek stopki) i kafle (realizacje, wydarzenia). Wiersze list, akapity, kroki procesu,
 logotypy i CTA pod listami są widoczne od razu (`Reveal` + `.fade`/`Fade`, opacity + translateY(16px),
 900 ms, stagger 80 ms na `--i`). Na samym końcu nagłówka stopki limonka „zamieszania” wjeżdża od prawej do lewej
 (900 ms `--ease`, 900 ms po tym, jak słowo wejdzie w kadr, więc już po wjeździe linii). Elementy z własną animacją (marquee, taśma filmowa, scena 3D) i warstwy
-stałe (Hud, kursor, siatka, preloader) poza revealem. Smooth scroll przez Lenis. Przy
+stałe (Hud, kursor, siatka) poza revealem. Smooth scroll przez Lenis. Przy
 `prefers-reduced-motion: reduce` wyłączone: Lenis, scramble, naklejki, obrót obiektu 3D, animacja smug, układanie liter
-(napis od razu ułożony); reveal zamienia się w natychmiastowe pokazanie. Przy reduced motion nie ma też preloadera (ani klatki kurtyny),
+(napis od razu ułożony); reveal zamienia się w natychmiastowe pokazanie (hero bez czekania na fonty),
 a kotwice skaczą natychmiast.
 
 Hover w sekcjach treści mówi jednym językiem (wzór: FAQ): limonkowe tło i wcięcie 12 px transformem, 0,4 s `--ease`
@@ -230,11 +238,13 @@ w liczbie mnogiej i ma pozyskiwać klientów usługowych: case'y klientów to na
 - **OurMoney**: jedyny produkt własny duetu (wspólny budżet dla par, budowany razem).
 - **AION MIND**: etat Magdy (Product Designer od 01.2025, od czerwca 2026 Head of Operations),
   **nie** produkt no-fuss. Komunikujemy „produkt, w którym Magda pracuje / który współtworzy”,
-  nigdy „produkt własny”. Rola no-fuss w faktach: „—”.
+  nigdy „produkt własny”. Pierwszy termin faktów to „Rola” (nie „Rola no-fuss”), wartość: „— (etat Magdy, nie projekt no-fuss)”.
 - **Busy Bee**: design Magdy, kod Michał Gabryelewicz (Webflow, spoza no-fuss). Marki na taśmie
   to klienci Busy Bee Film, nie no-fuss, i podpis to mówi.
 - **OTB Ventures**: design Magdy razem z Piotrem Chuchłą; kto kodował, brak danych (wiersz pominięty).
-- **Automation House**: design (Magda) i kod (Kuba), od discovery do wdrożenia.
+- **Automation House**: etat Kuby (pracodawca: Automation House by Tigers), **nie** klient no-fuss.
+  Kod Kuby na etacie, design Magdy. Etykiety jak przy AION MIND: „Etat Kuby” w kickerze i na kaflu,
+  „Firma” zamiast „Klient” w faktach, bez wiersza „Klient” w hero.
 - **Sassy**: eksperyment i warsztat Magdy, nie zlecenie.
 
 Nie wymyślamy liczb, wyników ani cytatów: efekt to fakt (np. działająca strona, zakres).
@@ -242,27 +252,32 @@ Nie wymyślamy liczb, wyników ani cytatów: efekt to fakt (np. działająca str
 ## Podstrona „O nas" (v5)
 
 - **Hero**: jasne tło, nagłówek display w trzech liniach („Dwie osoby, / agenci AI, / zero zamieszania”)
-  i lead w kroju statement; pod leadem `ContactCta`. Bez sceny 3D i bez duetu paneli (odznaka „×” z v4 usunięta).
+  i lead w kroju statement; pod leadem `ContactCta`. H1 ma `max-width: 12ch` i `min-width: min-content`, lead
+  `max-width: 30ch`; od 1024 px zajmują odpowiednio kolumny 1–7 i 8–12. Bez sceny 3D i bez duetu paneli.
 - **Trzy karty**: ciemny pas `#101318`, karty `#15181D` z obrysem 1 px: Magda (P1), Kuba (P2), agenci AI (P3,
-  ciemny kadr `#101318` bez kresek z robotem liniami w limonce, żeby nie krzyczał obok portretów). Nagłówek h2, chip „P1”…
-  przyklejony do prawego górnego rogu karty (jak tag kafla realizacji),
-  zdjęcie (Magda i Kuba: prawdziwe portrety 1:1 przycięte do kadru), role jako tagi, bio,
-  lista `dl` w mono (termin | wartość w jednym wierszu) ze wskaźnikiem „Zamieszanie 0%”, linki social pod spodem.
-  Poniżej 900 px jedna kolumna, od 900 px dwie kolumny (w karcie zdjęcie z lewej), od 1200 px trzy karty
-  pionowe obok siebie ze zdjęciem 4:3. Karty w rzędzie trzymają wspólne wiersze (subgrid): zdjęcia, role, bio,
-  fakty i linki zaczynają się na tej samej wysokości, także przy jednoliniowej nazwie („Agenci AI”).
+  ciemny kadr `#101318` bez kresek z robotem liniami w limonce). Nagłówek h2, chip „P1”… przyklejony do prawego
+  górnego rogu karty, zdjęcie (Magda i Kuba: portrety przycięte przez `object-fit: cover` i `photo.focus`), role jako
+  tagi (`align-content: flex-start`), bio, lista `dl` w mono i linki social pod spodem. Poniżej 900 px jedna kolumna,
+  kadr portretu ma maks. `60svh`; kadr agentów AI jest 16:9 na każdej szerokości. Od 900 px dwie kolumny z poziomą
+  kartą (zdjęcie z lewej), a trzecia karta zajmuje cały rząd; od 1200 px trzy pionowe karty obok siebie ze zdjęciem
+  4:3. Karty w rzędzie trzymają wspólne wiersze (subgrid): zdjęcia, role, bio, fakty i linki zaczynają się na tej
+  samej wysokości. Hover linków tylko przy `(hover: hover)`.
 - **Marquee**: limonkowy pasek, rola `h2` wersalikami, separator „✦”, pętla 22 s; stoi przy reduced motion.
   Cały pasek ma fade-in on-scroll (`Reveal`); pętla jedzie na `translate`, więc nie koliduje z reveal `transform`.
 - **Kto co robi**: nagłówek mono, wiersze z torem 2 px i rombem 18 px w akcencie; pozycja rombu (`--v`, 0% = Magda,
   100% = Kuba) jedzie od środka po wejściu w viewport. Legenda nad torami: Magda z lewej, Kuba z prawej; pod wierszami
   `ContactCta`.
 - **Social i posty** (`#social`, `#posty`): nagłówek przyklejony po lewej (od 1024 px), lista wierszy po prawej
-  z obrysem 1 px między wierszami; hover i fokus dają wierszowi limonkowe tło. Posty w ciemnej tonacji,
-  metadane w mono 12 px. Linki-placeholdery wyglądają jak linki, ale są oznaczone jako niedostępne.
-- **Na żywo** (`#wydarzenia`): ten sam układ co social i posty, w tonacji przeciwnej do sekcji nad nią. Najbliższe
-  wydarzenia i wiersz „Wszystkie wydarzenia →” do zakładki „Wiedza” (`/wiedza`).
-- **Oklej nas** (`#play`): plansza z sześcioma naklejkami przeciąganymi wskaźnikiem, dotykiem i strzałkami z klawiatury.
+  z obrysem 1 px między wierszami. Hover (tylko myszą) i fokus dają limonkowe tło, przesuwają tytuł o 12 px
+  transformem, a strzałki cofają do środka wiersza o 8 px; e-mail używa `text-indent: 12px`. `#posty` jest ciemne,
+  `#social` ciemne bez postów, jasne z postami. Metadane w mono 12 px; placeholdery są niedostępne.
+- **Na żywo** (`#wydarzenia`): ten sam układ, zawsze w jasnej tonacji. Najbliższe wydarzenia i wiersz
+  „Wszystkie wydarzenia →” do zakładki „Wiedza” (`/wiedza`).
+- **Oklej nas** (`#play`): plansza z sześcioma naklejkami przeciąganymi wskaźnikiem i dotykiem. Naklejki to dekoracja poza kolejnością Tab.
   Zdjęcia i naklejki mają fade-in on-scroll ze staggerem przyciętym do 5 kroków (naklejki pozycjonowane `left`/`top`, bez konfliktu z `transform` reveal).
+  Dwa układy: poziomy od 768 px 1:1 z legacy (86svh, zdjęcia 300 px, naklejki po bokach zdjęć) i pionowy (telefon, tablet w pionie):
+  plansza na wysokość treści, podpowiedź pod tytułem, zdjęcia 44vw (do 450 px), naklejki skalowane z szerokością ekranu (65% przy 390 px)
+  na rogach i szwie zdjęć, nie na twarzach. Pozycje startowe są przycięte do planszy (nic nie wystaje za krawędź).
 - Okrągłe kształty dozwolone tylko w warstwie zabawy (naklejki), nie w UI.
 
 ## Zakładka „Wiedza” (`/wiedza`)
@@ -292,18 +307,21 @@ Nie wymyślamy liczb, wyników ani cytatów: efekt to fakt (np. działająca str
 ## Komponenty case study
 
 Wspólny szkielet: ciemne hero (chip „Case study” + kicker mono, tytuł mega, lead statement, fakty w `dl` mono),
-sekcje naprzemiennie jasne i ciemne, blok CTA kontaktu, limonkowy blok „Następny projekt” na końcu.
-Fakty w hero zaczynają się zawsze od standardowych, w tej kolejności: „Rola no-fuss”, „Zakres”, „Czas”,
-„Klient” (jeśli jest), „Wynik” (tylko fakt, np. działająca strona z linkiem „↗”); potem fakty specyficzne
-(platformy, sklepy, stack). Ten sam `dl` mono-sm z `FactRow`, bez nowych rozmiarów. Produkty (OurMoney, AION MIND)
-mają sekcje z etykietą mono po lewej i tekstem lub układem tekst + wizualizacja; strony WWW mają sekcje „lite”
-(wiersz mono: etykieta po lewej, podpowiedź po prawej, pod spodem treść na pełną szerokość).
+sekcje naprzemiennie jasne i ciemne, blok CTA kontaktu, limonkowy blok „Następny projekt” na końcu. `/ourmoney`
+od `03.5` ma rytm: jasne `03.5`, ciemne `04`, jasne `05`, ciemne `06`, jasne `07`, ciemne CTA. `/otb`,
+`/busy-bee` i `/automation-house`: `01` ciemne, `02` jasne, `03` ciemne, `04` jasne, CTA ciemne.
+Fakty w hero zaczynają się od „Rola no-fuss”, a przy `ownership: "employment"` (AION MIND, Automation House)
+od „Rola”; dalej „Zakres”, „Czas”, „Klient” (jeśli jest), „Wynik” (tylko fakt, np. działająca strona z linkiem
+„↗”), potem fakty specyficzne. Ten sam `dl` mono-sm z `FactRow`, bez nowych rozmiarów. Produkty mają sekcje z
+etykietą mono po lewej i tekstem lub wizualizacją; strony WWW sekcje „lite”.
 
 - **CaseStage**: limonkowa scena zaraz pod hero, na pełną szerokość. Wariant z telefonami: trzy makiety obok siebie,
   wystające poza dolną krawędź (środkowa wyżej). Wariant z obrazem: jedna grafika bez marginesów.
 - **LiveFrame**: limonkowa scena z ramką przeglądarki `#101318` (trzy kwadratowe kropki, pasek adresu mono 12 px
-  w pasku 48 px, bez zaokrągleń i cieni), 48 px oddechu dookoła. Najpierw zawsze poster z przyciskiem „Otwórz na żywo ↗”
-  (wszystkie case'y WWW), żywa strona w skali 1440×900 dopiero po kliknięciu; na telefonie przycisk otwiera nową kartę.
+  w pasku 48 px, bez zaokrągleń i cieni), 48 px oddechu dookoła. Nieprzyciemniony poster nie ma nakładki na całość:
+  przycisk „Otwórz na żywo ↗” jest w prawym dolnym rogu, ma min. 48 px, hover −2 px tylko myszą i obrys accent
+  z ciemną obwódką przy fokusie. Żywa strona w skali 1440×900 ładuje się tylko po kliknięciu; fokus trafia na
+  okno `role="group"` z obrysem accent. Na telefonie przycisk ma inset 8 px, padding 12/16 i otwiera nową kartę.
 - **FilmStrip**: taśma filmowa na `#101318` z perforacją u góry i u dołu (paski 12 px w `#FCFCFB` na 60%),
   klatki z podpisem mono pojawiającym się na hover, fokus i przy aktywnej klatce. Przeciąganie myszą,
   natywny scroll ze snapem, autoprzewijanie co 3,2 s z przyciskiem „Pauza” / „Wznów” (mono) w prawym górnym rogu.
@@ -314,8 +332,9 @@ mają sekcje z etykietą mono po lewej i tekstem lub układem tekst + wizualizac
   z legacy), dwa napisy w roli display 400, podpis mono pod polem (`--muted` sekcji), kula 22% szerokości z gradientem,
   za którą idą smugi tła.
   Kula to jedyna krągłość w sekcji (warstwa zabawy), pole jest ostre.
-- **ToySwitcher**: lista zabawek po lewej (rola title, wiersze z obrysem 1 px, aktywna w kolorze tekstu ze strzałką
-  „→” i wcięciem 12 px, nieaktywne `--muted`, tag w mono), obraz 16:10 po prawej z przenikaniem 0,5 s i podpisem mono.
+- **ToySwitcher**: lista zabawek i obraz 16:10 z podpisem mono. Poniżej 1024 px podgląd stoi wizualnie nad listą,
+  choć w DOM `tablist` zostaje przed `tabpanel`. Aktywny wiersz ma strzałkę i nazwę od lewej, tag dosunięty w prawo
+  przez `margin-left: auto`; nieaktywne są `--muted`, obraz przenika 0,5 s.
 - **SplitCalculator**: kafel `--tile`, trzy przyciski modeli z obrysem 1 px (aktywny na limonce), trzy suwaki
   z torem 2 px i uchwytem-rombem w akcencie, pasek wyniku 72 px dzielony limonka / jasny z kwotami w roli title.
 - **JournalScreen**: ekran Dziennika AION MIND w makiecie telefonu. To rekonstrukcja cudzej aplikacji, więc ma
@@ -329,6 +348,8 @@ mają sekcje z etykietą mono po lewej i tekstem lub układem tekst + wizualizac
 - **Blok CTA** (każdy case, przed „Następny projekt”): sekcja w tonacji przeciwnej do ostatniej sekcji,
   nagłówek w roli h2 („Chcesz podobny projekt?”), jedno zdanie w roli lead (`--muted`, do 40 znaków szerokości)
   i `ContactCta` („Porozmawiajmy →” do `#kontakt`, „Umów rozmowę ↗”). Odsłania się jak sekcja (stagger 0–2).
+- **Następny projekt**: ostatnie słowo + twarda spacja + strzałka są jednym `nowrap`; do 479 px tytuł używa
+  `--t-display` (40 px) zamiast `--t-mega`, żeby najdłuższe nazwy nie wychodziły poza `.line`.
 - **Fakty (strony WWW)**: wielkie wiersze `dl` (termin mono, wartość w roli h2, limonkowy chip technologii, link ze
   strzałką „↗”) albo kafle 2 / 4 kolumny (Sassy).
 

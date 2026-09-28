@@ -18,7 +18,8 @@ export interface CaseNumbersProps {
 }
 
 /**
- * Kafle „W liczbach” (legacy `.nums`): 2 kolumny, od 900 px 4, licznik od zera
+ * Kafle „W liczbach” (legacy `.nums`): 2 kolumny (nieparzysty ostatni na całą szerokość),
+ * od 900 px jeden rząd z kolumną na każdy kafel; licznik od zera
  * przy wejściu w viewport. Server Component; animuje tylko liść `CountUp` (client).
  */
 export function CaseNumbers({ items, className }: CaseNumbersProps) {

@@ -1,10 +1,32 @@
 "use server";
 
 import { site } from "@/content/site";
-import { CONTACT_HONEYPOT, parseContactForm, type ContactFormState, type ContactValues } from "./form";
+import {
+  CONTACT_HONEYPOT,
+  CONTACT_INITIAL_STATE,
+  parseContactForm,
+  type ContactFormState,
+  type ContactValues,
+} from "./form";
 
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
 const SEND_TIMEOUT_MS = 10_000;
+const SUBJECT = "Kontakt ze strony no-fuss";
+
+/** Opis błędu Resend do logu: tylko `name` i `message` z JSON-a (surowe body może zawierać adres e-mail). */
+async function describeResendError(response: Response): Promise<string> {
+  try {
+    const body: unknown = await response.json();
+    if (typeof body !== "object" || body === null) return "";
+    const { name, message } = body as Record<string, unknown>;
+    return [name, message]
+      .filter((part): part is string => typeof part === "string")
+      .join(": ")
+      .slice(0, 300);
+  } catch {
+    return "";
+  }
+}
 
 /**
  * Wysyła wiadomość przez Resend API na `site.contact.email`; Reply-To = adres z formularza,
@@ -28,13 +50,14 @@ async function deliver(values: ContactValues): Promise<boolean> {
         from,
         to: [site.contact.email],
         reply_to: values.email,
-        subject: `Kontakt ze strony: ${values.name}`,
+        subject: SUBJECT,
         text: `Imię: ${values.name}\nE-mail: ${values.email}\n\n${values.message}\n`,
       }),
       signal: AbortSignal.timeout(SEND_TIMEOUT_MS),
     });
     if (!response.ok) {
-      console.error(`[contact] Resend ${response.status}: ${(await response.text()).slice(0, 500)}`);
+      const detail = await describeResendError(response);
+      console.error(`[contact] Resend ${response.status}${detail ? `: ${detail}` : ""}`);
       return false;
     }
     return true;
@@ -49,9 +72,13 @@ export async function sendContactMessage(
   _previous: ContactFormState,
   formData: FormData,
 ): Promise<ContactFormState> {
+  if (!(formData instanceof FormData)) return CONTACT_INITIAL_STATE;
   const parsed = parseContactForm(formData);
   const trap = formData.get(CONTACT_HONEYPOT);
-  if (typeof trap === "string" && trap !== "") return { status: "sent", email: parsed.values.email };
+  if (typeof trap === "string" && trap !== "") {
+    console.warn("[contact] honeypot hit");
+    return { status: "sent", email: parsed.values.email };
+  }
   if (!parsed.ok) return { status: "invalid", values: parsed.values, errors: parsed.errors };
   if (!(await deliver(parsed.values))) return { status: "failed", values: parsed.values };
   return { status: "sent", email: parsed.values.email };

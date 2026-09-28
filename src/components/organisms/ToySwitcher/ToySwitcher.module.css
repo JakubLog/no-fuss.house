@@ -11,9 +11,11 @@
   flex-direction: column;
 }
 
+/* Strzałka aktywnej pozycji (`::before`) to osobny element flex: przy `space-between` stałaby sama
+   z lewej, a nazwa na środku. Stąd `flex-start` + tag dosunięty w prawo `margin-left: auto`. */
 .tab {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: baseline;
   gap: 16px;
   padding: 16px 0;
@@ -31,11 +33,14 @@
 }
 
 .tab small {
+  margin-left: auto;
   white-space: nowrap;
 }
 
-.tab:hover {
-  color: var(--ink);
+@media (hover: hover) {
+  .tab:hover {
+    color: var(--ink);
+  }
 }
 
 .tab[aria-selected="true"] {
@@ -51,6 +56,14 @@
 .view {
   position: relative;
   margin: 0;
+}
+
+/* Jedna kolumna (poniżej 1024 px): podgląd nad listą. Pod siedmioma pozycjami zmieniałby się poza
+   ekranem. Tylko kolejność wizualna; w DOM (i dla czytnika) `tablist` zostaje przed `tabpanel`. */
+@media (max-width: 1023px) {
+  .view {
+    order: -1;
+  }
 }
 
 .frame {

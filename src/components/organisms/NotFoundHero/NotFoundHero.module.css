@@ -71,11 +71,11 @@
   gap: 8px;
 }
 
-/* Brak WebGL / fontu: napis CSS (legacy `.hero__fallback`). */
+/* Brak WebGL / fontu: napis CSS (legacy `.hero__fallback`), jak kanwa nad siatką overlay. */
 .fallback {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: 2;
   display: grid;
   place-items: center;
   font: var(--t-mega);

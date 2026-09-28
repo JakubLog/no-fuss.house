@@ -6,7 +6,7 @@ import { useReducedMotion } from "./useReducedMotion";
 
 /**
  * - `view`: odsłonięcie przy wejściu w viewport (IntersectionObserver, raz).
- * - `intro`: odsłonięcie po preloaderze (hero). Przy nawigacji client-side,
+ * - `intro`: odsłonięcie na starcie wejścia (hero; fonty gotowe, `@/lib/intro`). Przy nawigacji client-side,
  *   gdy intro już było, odsłania od razu po krótkim opóźnieniu.
  */
 export type RevealTrigger = "view" | "intro";
@@ -15,7 +15,7 @@ export interface UseRevealOptions {
   trigger?: RevealTrigger;
 }
 
-/** Opóźnienie reveal hero po zjeździe kurtyny (legacy: 250 ms). */
+/** Opóźnienie reveal hero po starcie wejścia (legacy: 250 ms po ruszeniu kurtyny). */
 export const INTRO_REVEAL_DELAY_MS = 250;
 
 /** Parametry obserwatora 1:1 z legacy. */

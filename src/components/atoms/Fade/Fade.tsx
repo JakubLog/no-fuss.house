@@ -13,7 +13,7 @@ export interface FadeProps {
 
 /**
  * Element wjeżdżający z przezroczystości (`.fade`, klasa globalna).
- * Odsłania się, gdy przodek dostanie `is-in` (Reveal / Preloader). Server Component.
+ * Odsłania się, gdy przodek dostanie `is-in` (Reveal). Server Component.
  */
 export function Fade({ children, index, as: Tag = "div", className, style, id }: FadeProps) {
   return (

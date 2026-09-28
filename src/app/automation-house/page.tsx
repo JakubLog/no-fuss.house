@@ -20,6 +20,8 @@ import { caseDescription } from "@/content/cases";
 
 const PATH = automationHouse.path;
 const cover = automationHouse.cover;
+/** Automation House by Tigers jako organizacja (pracodawca Kuby z `automationHouse.employer`), nie klient no-fuss. */
+const AH_ORG_ID = ids.externalOrganization(automationHouse.employer.url);
 
 export const metadata = buildMetadata({
   path: PATH,
@@ -43,14 +45,25 @@ export default function AutomationHousePage() {
             image: cover.src,
             url: AUTOMATION_HOUSE_URL,
             keywords: ["Rebranding strony", "Next.js"],
+            /* Kod: Kuba (etat), design: Magda. */
+            contributors: ["kuba", "magda"],
           }),
           {
             "@type": "WebSite",
             "@id": `${AUTOMATION_HOUSE_URL}/#website`,
             url: AUTOMATION_HOUSE_URL,
             name: "Automation House",
-            publisher: { "@type": "Organization", name: "Automation House by Tigers", address: "Warszawa" },
+            publisher: { "@id": AH_ORG_ID },
             subjectOf: { "@id": ids.creativeWork(PATH) },
+          },
+          /* Etat Kuby: Automation House by Tigers zatrudnia Kubę; to pracodawca, nie klient no-fuss. */
+          {
+            "@type": "Organization",
+            "@id": AH_ORG_ID,
+            name: automationHouse.employer.name,
+            url: automationHouse.employer.url,
+            address: "Warszawa",
+            employee: { "@id": ids.person(automationHouse.employer.employee) },
           },
         )}
       />
@@ -59,6 +72,7 @@ export default function AutomationHousePage() {
           kicker: automationHouse.kicker,
           title: automationHouse.title,
           summary: automationHouse.summary,
+          ownership: automationHouse.ownership,
           facts: automationHouse.facts,
           datePublished: automationHouse.datePublished,
         }}

@@ -99,6 +99,7 @@ export default function AionMindPage() {
           title: aionMind.title,
           lead: aionMind.lead,
           summary: aionMind.summary,
+          ownership: aionMind.ownership,
           facts: aionMind.facts,
           datePublished: aionMind.datePublished,
         }}

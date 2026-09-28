@@ -1,6 +1,6 @@
 /* Proces współpracy (strona główna, `#proces`): lekkie kolumny z kreską 1 px nad krokiem (jak `FactRow`), bez kafli.
-   Hover jak w `FaqSection`: limonkowe tło kolumny, treść wcięta o 12 px (transform, bez zmiany układu).
-   Ten sam stan daje jednorazowy przebieg po wejściu w widok (`.active` z `useSweep`). */
+   Hover jak w `FaqSection`: limonkowe tło kolumny, treść wcięta o 12 px (transform, bez zmiany układu), w tle duży numer.
+   Ten sam stan daje zapętlony przebieg w widoku (`.active` z `useSweep`). */
 .head {
   margin-bottom: 48px;
 }
@@ -20,8 +20,12 @@
 
 /* Padding: z lewej 0 (tekst w linii nagłówka), góra i dół 16 px, z prawej 24 px zapasu, żeby po wcięciu 12 px
    limonka zostawiała 12 px z obu stron. Zapas jest zawsze (także na dotyku, gdzie świeci przebieg), więc podświetlenie
-   nie zmienia łamania tekstu. Tło kończy się pod kreską (padding-box), więc kreska 1 px zostaje ta sama i w tym samym miejscu. */
+   nie zmienia łamania tekstu. Tło kończy się pod kreską (padding-box), więc kreska 1 px zostaje ta sama i w tym samym miejscu.
+   `isolation` + `overflow`: duży numer (`.ghost`) leży nad tłem kroku, pod treścią, i nie wychodzi poza kolumnę. */
 .step {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   grid-row: span 3;
   display: grid;
   grid-template-rows: subgrid;
@@ -56,6 +60,25 @@
   max-width: 44ch;
 }
 
+/* Znak wodny: numer kroku w prawym dolnym rogu, ucięty dolną krawędzią. Widać go tylko na limonce (hover i `.active`):
+   wjeżdża 16 px z dołu i rozjaśnia się, trochę wolniej niż tło. Kolor `--on-accent` 8%: ledwie ciemniejsza limonka. */
+.ghost {
+  position: absolute;
+  z-index: -1;
+  right: 12px;
+  bottom: -0.12em;
+  font: 700 clamp(7rem, 11vw, 11rem) / 0.8 var(--sans);
+  letter-spacing: -0.04em;
+  color: color-mix(in srgb, var(--on-accent) 8%, transparent);
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.6s var(--ease),
+    transform 0.6s var(--ease);
+  pointer-events: none;
+  user-select: none;
+}
+
 /* Kroki są nieklikalne i niefokusowalne: sam hover, bez strzałki i bez stanu fokusu.
    #3F4A12: stała z legacy (przygaszony tekst na limonce, 7,92:1). */
 @media (hover: hover) {
@@ -67,6 +90,11 @@
 
   .step:hover :is(.no, .title, .text) {
     transform: translateX(12px);
+  }
+
+  .step:hover .ghost {
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -80,6 +108,11 @@
 
 .steps:not(:has(.step:hover)) .active :is(.no, .title, .text) {
   transform: translateX(12px);
+}
+
+.steps:not(:has(.step:hover)) .active .ghost {
+  opacity: 1;
+  transform: none;
 }
 
 @media (min-width: 640px) {
@@ -98,7 +131,8 @@
   .step,
   .no,
   .title,
-  .text {
+  .text,
+  .ghost {
     transition: none;
   }
 }

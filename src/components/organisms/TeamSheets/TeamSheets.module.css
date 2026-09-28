@@ -14,8 +14,8 @@
   --bg: var(--shade-900);
 }
 
-/* Zdjęcie 1:1 w kadrze karty (3:4, od 1200 px 4:3; proporcje ustawia PersonCard).
-   Punkt twarzy (`object-position`) z `photo.focus` w danych. */
+/* Zdjęcie w kadrze karty (3:4, poniżej 900 px maks. 60svh, od 1200 px 4:3; proporcje ustawia
+   PersonCard). Punkt twarzy (`object-position`) z `photo.focus` w danych. */
 .photo {
   display: block;
   width: 100%;
@@ -38,6 +38,14 @@
     display: grid;
     grid-row: span 5;
     grid-template-rows: subgrid;
+  }
+}
+
+/* Dwie kolumny: nieparzysta ostatnia karta (agenci AI) nie zostaje sama obok pustej komórki, tylko
+   bierze cały rząd w tym samym układzie poziomym (kadr 2/6 karty, treść obok). */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .cell:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
   }
 }
 

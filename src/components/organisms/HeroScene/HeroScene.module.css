@@ -1,12 +1,14 @@
 /*
  * Kanwa wypełnia strefę hero (legacy `.hero__canvas`). Rodzic: position: relative.
- * Bez wejścia opacity: legacy pokazywał kanwę od razu (litery pojawiają się po wczytaniu fontu,
- * zwykle jeszcze pod preloaderem).
+ * z-index 2: napis 3D to obiekt, nie tło, więc leży nad siatką overlay (z-index 1); treść hero
+ * (też 2, później w DOM) i tak jest nad kanwą. Legacy miał -1 (linie siatki przecinały litery).
+ * Bez wejścia opacity: legacy pokazywał kanwę od razu (litery pojawiają się po wczytaniu fontu
+ * typeface).
  */
 .canvas {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: 2;
   width: 100%;
   height: 100%;
   display: block;

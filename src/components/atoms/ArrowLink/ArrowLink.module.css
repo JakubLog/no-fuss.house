@@ -3,7 +3,6 @@
   transition: transform 0.4s var(--ease);
 }
 
-.link:hover .arrow,
 .link:focus-visible .arrow {
   transform: translate(3px, -3px);
 }
@@ -17,9 +16,27 @@
   transition: background-color 0.2s;
 }
 
-.underline:hover {
-  background: var(--accent);
-  color: var(--on-accent);
+@media (hover: hover) {
+  .link:hover .arrow {
+    transform: translate(3px, -3px);
+  }
+
+  .underline:hover {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+}
+
+/* `LinkText`: ostatnie słowo ze strzałką jako całość; szersze od kolumny łamie się tylko przed kropką (`<wbr>`).
+   `inline-block` nie dziedziczy podkreślenia linku, stąd `text-decoration: inherit`. */
+.keep {
+  display: inline-block;
+  max-width: 100%;
+  text-decoration: inherit;
+}
+
+.segment {
+  white-space: nowrap;
 }
 
 @media (prefers-reduced-motion: reduce) {

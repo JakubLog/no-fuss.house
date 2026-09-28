@@ -44,18 +44,50 @@
   border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
 }
 
-/* Hover: `--muted` jak w innych limonkowych hoverach (#3F4A12, czytelny na limonce), więc linia `kicker` nie ginie. */
-.item:hover {
+/* Hover: `--muted` jak w innych limonkowych hoverach (#3F4A12, czytelny na limonce), więc linia `kicker` nie ginie.
+   Tekst (`.itemTitle`) jedzie w prawo o 12 px przez `transform`, nie `padding` — układ wiersza się nie zmienia.
+   E-mail (`.copy`) nie ma elementu z tekstem (tekst linku podmienia CopyEmail), więc wcięcie 12 px daje
+   `text-indent` dziedziczony przez anonimowy element flex z tekstem.
+   Fokus klawiatury (`:focus-visible`) dostaje ten sam efekt poza `@media (hover: hover)`. */
+@media (hover: hover) {
+  .item:hover {
+    background: var(--accent);
+    color: var(--on-accent);
+    --muted: #3F4A12;
+  }
+
+  .item:hover > .itemTitle {
+    transform: translateX(12px);
+  }
+
+  .copy:hover {
+    text-indent: 12px;
+  }
+}
+
+.item:focus-visible {
   background: var(--accent);
   color: var(--on-accent);
   --muted: #3F4A12;
-  padding-inline: 12px;
 }
 
+.item:focus-visible > .itemTitle {
+  transform: translateX(12px);
+}
+
+.copy:focus-visible {
+  text-indent: 12px;
+}
+
+.itemTitle,
 .meta,
 .copy::after {
   display: inline-block;
   transition: transform 0.4s var(--ease);
+}
+
+.copy {
+  transition: text-indent 0.4s var(--ease);
 }
 
 /* Prawa kolumna się nie łamie i nie kurczy: data i strzałka zostają w jednej linii także obok długiego tytułu. */
@@ -64,14 +96,28 @@
   white-space: nowrap;
 }
 
-.item:hover > .meta,
-.copy:hover::after {
-  transform: translate(4px, -4px);
+/* Wiersz nie ma poziomego paddingu, więc strzałki jadą do środka wiersza (w lewo), żeby nie wyjść
+   poza limonkowe tło (na ciemnym #social znikałyby). */
+@media (hover: hover) {
+  .item:hover > .meta,
+  .copy:hover::after {
+    transform: translate(-8px, -4px);
+  }
+
+  /* Link wewnętrzny („→”): strzałka jedzie poziomo, nie po skosie. */
+  .internal:hover > .meta {
+    transform: translateX(-8px);
+  }
 }
 
-/* Link wewnętrzny („→”): strzałka jedzie w prawo, nie po skosie. */
-.internal:hover > .meta {
-  transform: translateX(4px);
+.item:focus-visible > .meta,
+.copy:focus-visible::after {
+  transform: translate(-8px, -4px);
+}
+
+/* Link wewnętrzny („→”): strzałka jedzie poziomo, nie po skosie. */
+.internal:focus-visible > .meta {
+  transform: translateX(-8px);
 }
 
 .itemTitle {
@@ -89,6 +135,8 @@
    na dotyku CopyEmail otwiera `mailto:`, więc strzałka. */
 .copy::after {
   content: "↗";
+  /* `text-indent` wcina tylko tekst adresu, nie znak w `::after` (inline-block dziedziczy wcięcie) */
+  text-indent: 0;
 }
 
 @media (pointer: fine) {
@@ -102,14 +150,19 @@
   opacity: 0.5;
 }
 
-.soon:hover {
-  background: none;
-  color: inherit;
-  padding-inline: 0;
-}
+@media (hover: hover) {
+  .soon:hover {
+    background: none;
+    color: inherit;
+  }
 
-.soon:hover > .meta {
-  transform: none;
+  .soon:hover > .itemTitle {
+    transform: none;
+  }
+
+  .soon:hover > .meta {
+    transform: none;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -125,7 +178,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .itemTitle,
   .meta,
+  .copy,
   .copy::after {
     transition: none;
   }

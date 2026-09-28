@@ -13,6 +13,8 @@ const img = (file: string, width: number, height: number, alt: string): Required
   alt,
 });
 
+const NBSP = "\u00A0";
+
 export const SASSY_URL = "https://sassy-tan.vercel.app";
 
 export const sassy = {
@@ -70,7 +72,7 @@ export const sassyToysTitle = "Wszystko da się złapać";
 export const sassyToys = [
   { name: "Pulpit", tag: "kamera", caption: "Retro pulpit: foldery do przeciągania, aparat robi zdjęcie", image: img("d-00.webp", 1600, 1000, "Pulpit") },
   { name: "Biurko", tag: "bento", caption: "Zadania, OKR-y, wykres, ekspres do kawy", image: img("d-01.webp", 1600, 1000, "Biurko") },
-  { name: "Business case", tag: "suwak", caption: "220 h miesięcznie i karta zapala się na czerwono", image: img("d-02.webp", 1600, 1000, "Business case") },
+  { name: "Business case", tag: "suwak", caption: `220${NBSP}h miesięcznie i karta zapala się na czerwono`, image: img("d-02.webp", 1600, 1000, "Business case") },
   { name: "Waga", tag: "SERIOUS", caption: "Słowo na zmiennym kroju, do rozchudzenia", image: img("d-04.webp", 1600, 1000, "Waga") },
   { name: "Karteczki", tag: "tablica", caption: "Kreda, gąbka, karteczki", image: img("d-06.webp", 1600, 1000, "Karteczki") },
   { name: "Identyfikator", tag: "koszulka", caption: "Karta w folii z podpisami odręcznymi", image: img("d-07.webp", 1600, 1000, "Identyfikator") },
@@ -86,7 +88,7 @@ export const sassyMobile = [
 /** 03 / Fakty: kafle (legacy `.facts`). */
 export const sassySpec = [
   { term: "Koncept, design, kod", value: "Magda" },
-  { term: "Stack", value: "HTML · CSS · JS, 1 plik" },
+  { term: "Stack", value: `HTML · CSS · JS, 1${NBSP}plik` },
   { term: "Kiedy", value: "Lipiec 2026" },
   { term: "Strona", value: "sassy-tan.vercel.app ↗", href: SASSY_URL },
 ] as const;

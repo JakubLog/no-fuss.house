@@ -10,7 +10,7 @@ import styles from "./HeroScene.module.css";
  * Kanwa WebGL z napisem 3D (legacy `.hero__canvas`). Ładuj przez `LazyHeroScene`
  * (next/dynamic, `ssr: false`), nigdy bezpośrednio: import ciągnie three.js.
  *
- * Scena powstaje od razu (pod preloaderem), bez dodatkowego wejścia opacity. Litery startują
+ * Scena powstaje od razu po hydratacji, bez dodatkowego wejścia opacity. Litery startują
  * w pozie startowego zamieszania (`fuss.get()`), fizyka działa od pierwszej klatki. Kanwa jest
  * dekoracją (`aria-hidden`), tekstowy odpowiednik daje rodzic. Client Component.
  */

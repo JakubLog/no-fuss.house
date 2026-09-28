@@ -15,8 +15,11 @@ export const CONTACT_LIMITS: Readonly<Record<ContactField, number>> = {
   message: 5000,
 };
 
-/** Pułapka na boty: pole niewidoczne dla ludzi i czytników. Wypełnione = odpowiedź „wysłane” bez maila. */
-export const CONTACT_HONEYPOT = "website";
+/**
+ * Pułapka na boty: pole niewidoczne dla ludzi i czytników. Wypełnione = odpowiedź „wysłane” bez maila.
+ * Nazwa celowo nic nie znaczy (`website`/`url` wypełniają autouzupełnianie i menedżery haseł).
+ */
+export const CONTACT_HONEYPOT = "nf_field_2";
 
 export type ContactFormState =
   | { status: "idle" }
@@ -32,7 +35,26 @@ export type ContactParseResult =
   | { ok: true; values: ContactValues }
   | { ok: false; values: ContactValues; errors: ContactErrors };
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+/**
+ * Adres tylko w ASCII (Chromium sam zamienia domenę IDN na punycode `xn--`): część lokalna to atomy RFC 5322 rozdzielone
+ * pojedynczymi kropkami, domena to etykiety DNS (1–63 znaki, bez `-` na brzegach) z kropką, TLD z liter (min. 2)
+ * albo punycode. Kropki rozdzielają powtórzenia jednoznacznie, a etykieta ma górny limit, więc bez katastrofalnego
+ * backtrackingu (długość i tak sprawdzana wcześniej).
+ */
+const EMAIL_ATOM = String.raw`[A-Za-z0-9!#$%&'*+/=?^_\`{|}~-]+`;
+const DOMAIN_LABEL = String.raw`[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?`;
+const EMAIL_PATTERN = new RegExp(
+  String.raw`^${EMAIL_ATOM}(?:\.${EMAIL_ATOM})*@(?:${DOMAIN_LABEL}\.)+(?:[A-Za-z]{2,}|xn--[A-Za-z0-9-]+)$`,
+);
+
+/**
+ * Niewidoczne znaki usuwane z imienia: formatujące (`\p{Cf}`: bidi U+202A–E / U+2066–9 / U+200E–F / U+061C, U+200B,
+ * U+FEFF…) i sterujące (`\p{Cc}`) poza `\t`–`\r`, które normalizacja białych znaków zamienia na spację. Zostają
+ * ZWNJ i ZWJ (U+200C, U+200D): bez nich rozpadają się emoji złożone i pisownia części pism.
+ */
+const NAME_INVISIBLE = /(?![\t-\r\u200C\u200D])[\p{Cc}\p{Cf}]/gu;
+/** Jak wyżej dla wiadomości, ale z białych znaków zostaje tylko `\n` (`\r\n`/`\r` → `\n` i `\t` → spacja idą wcześniej). */
+const MESSAGE_INVISIBLE = /(?![\n\u200C\u200D])[\p{Cc}\p{Cf}]/gu;
 
 function readText(formData: FormData, field: string): string {
   const value = formData.get(field);
@@ -41,13 +63,18 @@ function readText(formData: FormData, field: string): string {
 
 /**
  * Normalizuje i sprawdza pola: imię w jednej linii (białe znaki → spacja), e-mail bez spacji,
- * wiadomość z końcami linii `\n` (tak liczy `maxLength` w przeglądarce). Wszystkie pola są wymagane.
+ * wiadomość z końcami linii `\n` (tak liczy `maxLength` w przeglądarce). Z imienia i wiadomości znikają
+ * znaki sterujące i formatujące; limity liczą się po oczyszczeniu. Wszystkie pola są wymagane.
  */
 export function parseContactForm(formData: FormData): ContactParseResult {
   const values: ContactValues = {
-    name: readText(formData, "name").replace(/\s+/g, " ").trim(),
+    name: readText(formData, "name").replace(NAME_INVISIBLE, "").replace(/\s+/g, " ").trim(),
     email: readText(formData, "email").trim(),
-    message: readText(formData, "message").replace(/\r\n?/g, "\n").trim(),
+    message: readText(formData, "message")
+      .replace(/\r\n?/g, "\n")
+      .replace(/\t/g, " ")
+      .replace(MESSAGE_INVISIBLE, "")
+      .trim(),
   };
   const errors: ContactErrors = {};
 
@@ -57,9 +84,8 @@ export function parseContactForm(formData: FormData): ContactParseResult {
   }
 
   if (!values.email) errors.email = "Wpisz adres e-mail";
-  else if (values.email.length > CONTACT_LIMITS.email || !EMAIL_PATTERN.test(values.email)) {
-    errors.email = "Sprawdź adres e-mail";
-  }
+  else if (values.email.length > CONTACT_LIMITS.email) errors.email = "Adres e-mail jest za długi";
+  else if (!EMAIL_PATTERN.test(values.email)) errors.email = "Sprawdź adres e-mail";
 
   if (!values.message) errors.message = "Napisz, w czym możemy pomóc";
   else if (values.message.length > CONTACT_LIMITS.message) {

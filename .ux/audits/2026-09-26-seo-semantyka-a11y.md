@@ -224,3 +224,25 @@ Przy 390×844 (`/`, `/o-nas`, `/busy-bee`, `/ourmoney`) nie znalazłem zasłoni�
 - jeden `main` i `lang="pl"`.
 
 Dziś poziomy są poprawne, bo kompozycja stron jest płaska i stała, ale nic ich nie pilnuje. Odrzucone alternatywy: kontekst React z poziomem nagłówka (nie działa w Server Components bez `"use client"`) i lint `jsx-a11y` (nie widzi poziomów między komponentami).
+
+### ✅ Wdrożone
+2026-09-26 (niezacommitowane), decyzje właściciela do P1.1–P1.8. Sprawdzone na `next dev` (Chromium, 1440×900, dotyk przez emulację CDP):
+- **P1.1:** `Heading` wstawia spację między `lines`; to samo w stopce, statemencie „O nas” i `<time>` w `EventTile`. Usunięte obejście `aria-label` (automatyczne w `Heading` i ręczne w stopce). `textContent`: „Budujemy produkty bez zamieszania”, „Czy ja nie płacę więcej?”, „17–18.11 2026 · wt–śr”. Wygląd bez zmian (zrzuty hero i stopki). `[zweryfikowane]`
+- **P1.2:** tytuł `/` = „NO-FUSS©2026 | Studio produktowe: aplikacje, strony i AI” (56 zn., `site.homeTitle`), także `og:title` i `twitter:title`. Podstrony bez zmian. `[zweryfikowane]`
+- **P1.3:** nowy atom `SectionLabel`: numer „NN / ” widoczny, ale `aria-hidden`. Użyty w `CaseStudySection` (`lite` `h2` i kicker `wide`/`split`) oraz w `CaseStrip`. Nazwy w drzewie dostępności: „W skrócie”, „Mobile”, „Codzienność”, „W liczbach”, „Przewodnicy”. Copy etykiet bez zmian. `[zweryfikowane]`
+- **P1.4:** `authorship()` zawsze daje `creator` = no-fuss; AION MIND dostaje `contributor` = Magda i `about` → `…/aion-mind#app`. Węzeł `Organization` AION na stronie case'u czyta `aionMind.employer`. `[zweryfikowane]`
+- **P1.5:** `Event` tylko dla wydarzeń z `place` albo `online`. „Polska With AI” zostaje w UI, ale wypada z JSON-LD i z `hasPart`. `[zweryfikowane]`
+- **P1.6:** kroki procesu (Automation House) to przyciski w `h3` z `aria-expanded`/`aria-controls`:
+  - Enter, Spacja lub klik w kafel rozwija opis, otwarty jest jeden krok naraz;
+  - zwinięty opis ma `visibility: hidden`;
+  - obrys fokusu na kaflu;
+  - hover myszą podgląda opis jak wcześniej;
+  - na dotyku nie ma przycisków, a opisy są widoczne od razu.
+  - Opt-out kursora `data-cursor="arrow"` usunięty (nie miał już użytkowników). `[zweryfikowane]`
+- **P1.7:** naklejki na /o-nas są poza Tab (`aria-hidden`, bez roli i obsługi strzałek, usunięte instrukcja dla czytnika i `stickerLabel`). Przeciąganie myszą działa. Przystanki Tab do stopki: 26 → 20. `[zweryfikowane]`
+  - Uwaga: WCAG 2.1.1 i 2.5.7 formalnie obejmują każdą funkcję. Naklejki traktujemy jako dekorację bez treści (decyzja właściciela).
+- **P1.8:** fakty hero z powtarzającą się treścią linku dostają sr-only termin: „App Store: Pobierz ↗”, „Google Play: Pobierz ↗”. Wygląd bez zmian. `[zweryfikowane]`
+- **Kontrola:** `tsc` i ESLint na zmienionych plikach bez błędów. axe-core 0 naruszeń na `/`, `/o-nas`, `/wiedza`, `/automation-house`, `/aion-mind`, `/ourmoney`, `/busy-bee`.
+- **Dokumentacja:** `docs/COMPONENTS.md` i `DESIGN.md` zaktualizowane.
+
+Otwarte: wszystkie P2.

@@ -25,8 +25,8 @@ export interface ToySwitcherProps {
 }
 
 /**
- * Przełącznik zabawek Sassy (legacy `.sw2`): lista po lewej (sticky od 1024 px),
- * kadr 16:10 po prawej z przenikaniem i podpisem.
+ * Przełącznik zabawek Sassy (legacy `.sw2`): od 1024 px lista po lewej (sticky),
+ * kadr 16:10 po prawej z przenikaniem i podpisem; węziej kadr nad listą (tylko wizualnie).
  *
  * Wzorzec ARIA tabs: `tablist` + `tab` (roving tabindex) + jeden `tabpanel`.
  * Klawiatura: ↑ ↓ (jak w legacy) oraz ← → Home End; aktywacja od razu przy zmianie fokusu.

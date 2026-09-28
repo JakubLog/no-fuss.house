@@ -1,5 +1,5 @@
 import { hasPlaceholder } from "./site";
-import type { FaqItem } from "./types";
+import type { FaqItem, FaqMore } from "./types";
 
 /**
  * FAQ strony głównej (`#faq`). Nowe copy (spoza legacy), fakty tylko z repo
@@ -14,8 +14,12 @@ const NBSP = " ";
 
 export const faqSection = {
   label: "Częste pytania",
-  /** Zdanie pod listą (przed stopką `#kontakt`). */
-  more: "Nie ma tu Waszego pytania? Zadajcie je na rozmowie.",
+  /** Zdanie pod listą (przed stopką `#kontakt`): „na rozmowie” to link do formularza w stopce. */
+  more: {
+    before: "Nie ma tu Waszego pytania? Zadajcie je ",
+    link: { label: "na rozmowie", href: "#kontakt" },
+    after: ".",
+  } satisfies FaqMore,
   items: [
     {
       question: "Ile kosztuje projekt?",

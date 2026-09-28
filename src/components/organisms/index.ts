@@ -28,7 +28,6 @@ export * from "./NotFoundHero";
 export * from "./PageHero";
 export * from "./PairSubscription";
 export * from "./PhoneScroller";
-export * from "./Preloader";
 export * from "./ProcessSection";
 export * from "./ProcessSteps";
 export * from "./Reveal";

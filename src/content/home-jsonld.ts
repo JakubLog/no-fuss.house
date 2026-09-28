@@ -4,6 +4,7 @@ import { getCase } from "./cases";
 import { softwareAppId } from "./cases/software-app";
 import { publishedFaq } from "./faq";
 import { publishedTestimonials, servicesSection, work } from "./home";
+import type { CaseStudy } from "./types";
 
 /**
  * Węzły JSON-LD strony głównej (dokładane do `@graph` obok globalnych z layoutu).
@@ -17,16 +18,17 @@ const orgRef = { "@id": ids.organization };
 
 /**
  * Autorstwo pozycji. `CreativeWork` to case study, więc `creator` = no-fuss zawsze (jak na stronach
- * case'ów, ten sam `@id`). Etat (`employment`, AION MIND): `contributor` = zatrudniona osoba,
- * `about` = aplikacja (`SoftwareApplication` z `publisher` = pracodawca na stronie case'u).
+ * case'ów, ten sam `@id`). Etat (`employment`: AION MIND, Automation House): `contributor` = zatrudniona
+ * osoba; `about` = aplikacja tylko przy `softwareApp` (węzeł `SoftwareApplication` z `publisher` =
+ * pracodawca jest na stronie case'u), inaczej `@id` by wisiał.
  */
 function authorship(href: string): { [key: string]: JsonValue } {
-  const c = getCase(href);
+  const c: CaseStudy | undefined = getCase(href);
   if (c?.ownership === "employment" && c.employer) {
     return {
       creator: orgRef,
       contributor: { "@id": ids.person(c.employer.employee) },
-      about: { "@id": softwareAppId(href) },
+      ...(c.softwareApp ? { about: { "@id": softwareAppId(href) } } : {}),
     };
   }
   return { creator: orgRef };

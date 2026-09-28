@@ -1,12 +1,17 @@
 /**
- * Stan orkiestracji wejścia: preloader → kurtyna → reveal hero.
+ * Start wejścia: sygnał dla reveal hero (Reveal `trigger="intro"`) i układania liter 3D na `/`.
  *
- * Preloader wywołuje `markIntroDone()` raz, przy pierwszym wejściu na stronę.
+ * W przeglądarce intro rusza raz, gdy fonty są gotowe (`document.fonts.ready`), najpóźniej
+ * `FONTS_TIMEOUT_MS` po załadowaniu JS (wtedy hero wjeżdża krojem zastępczym, zamiast stać puste).
+ * Przy reduced motion od razu: bez animacji podmiana kroju niczego nie psuje.
  * Kolejne nawigacje po stronie (client-side) widzą `isIntroDone() === true`.
  * Kod spoza Reacta (np. scena three.js) może słuchać zdarzenia `INTRO_EVENT` na `window`.
  */
 
 export const INTRO_EVENT = "nf:intro-done";
+
+/** Najdłużej tyle hero czeka na fonty. Kroje są self-hostowane i preloadowane, więc zwykle są wcześniej. */
+const FONTS_TIMEOUT_MS = 300;
 
 type Listener = () => void;
 
@@ -17,13 +22,11 @@ export function isIntroDone(): boolean {
   return done;
 }
 
-export function markIntroDone(): void {
+function markIntroDone(): void {
   if (done) return;
   done = true;
   listeners.forEach((listener) => listener());
-  if (typeof window !== "undefined") {
-    window.dispatchEvent(new CustomEvent(INTRO_EVENT));
-  }
+  window.dispatchEvent(new CustomEvent(INTRO_EVENT));
 }
 
 export function subscribeIntro(listener: Listener): () => void {
@@ -31,4 +34,13 @@ export function subscribeIntro(listener: Listener): () => void {
   return () => {
     listeners.delete(listener);
   };
+}
+
+if (typeof window !== "undefined") {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || typeof document.fonts === "undefined") {
+    markIntroDone();
+  } else {
+    window.setTimeout(markIntroDone, FONTS_TIMEOUT_MS);
+    document.fonts.ready.then(markIntroDone, markIntroDone);
+  }
 }

@@ -62,7 +62,7 @@ export default function SassyPage() {
         )}
       />
       <CaseStudyLayout
-        hero={{ kicker: sassy.kicker, title: sassy.title, summary: sassy.summary, facts: sassy.facts, datePublished: sassy.datePublished }}
+        hero={{ kicker: sassy.kicker, title: sassy.title, summary: sassy.summary, ownership: sassy.ownership, facts: sassy.facts, datePublished: sassy.datePublished }}
         cta={{ tone: "light" }}
         next={sassyNext}
       >

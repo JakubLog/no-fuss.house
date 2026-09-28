@@ -1,11 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono, TikTok_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { Cursor } from "@/components/organisms/Cursor";
 import { Footer } from "@/components/organisms/Footer";
 import { GridOverlay } from "@/components/organisms/GridOverlay";
 import { Hud } from "@/components/organisms/Hud";
-import { Preloader } from "@/components/organisms/Preloader";
 import { SmoothScroll } from "@/components/organisms/SmoothScroll";
 import { site } from "@/content/site";
 import { JsonLd, siteGraph } from "@/lib/seo/jsonld";
@@ -13,17 +12,22 @@ import { rootMetadata } from "@/lib/seo/metadata";
 import "@/styles/tokens.css";
 import "@/styles/globals.css";
 
-/* Kroje self-hostowane przez next/font (bez zapytań do Google w przeglądarce). */
-const tiktokSans = TikTok_Sans({
-  subsets: ["latin", "latin-ext"],
-  axes: ["opsz"],
+/*
+ * Kroje z repo (`./fonts`, licencja OFL), serwowane z naszej domeny przez next/font (preload,
+ * fallback z dopasowanymi metrykami). Źródło: google/fonts, podzbiór latin + latin-ext (zakresy
+ * jak w Google Fonts). TikTok Sans: osie wght 300–900 i opsz 12–36 (wdth 100, slnt 0 przypięte);
+ * Geist Mono: wght 400–500.
+ */
+const tiktokSans = localFont({
+  src: "./fonts/TikTokSans.woff2",
+  weight: "300 900",
   display: "swap",
   variable: "--font-tiktok-sans",
 });
 
-const geistMono = Geist_Mono({
-  subsets: ["latin", "latin-ext"],
-  weight: ["400", "500"],
+const geistMono = localFont({
+  src: "./fonts/GeistMono.woff2",
+  weight: "400 500",
   display: "swap",
   variable: "--font-geist-mono",
 });
@@ -34,15 +38,8 @@ export const viewport: Viewport = {
   themeColor: site.colors.dark,
 };
 
-/*
- * Bez JavaScriptu: chowamy preloader, zdejmujemy blokadę scrolla
- * i pokazujemy treść, która normalnie czeka na reveal.
- */
-const NO_SCRIPT_CSS = `
-[data-preloader]{display:none!important}
-body:has([data-preloader="active"]){overflow:visible;overflow-x:hidden}
-.line>span,.fade{transform:none!important;opacity:1!important}
-`;
+/* Bez JavaScriptu: pokazujemy treść, która normalnie czeka na reveal. */
+const NO_SCRIPT_CSS = `.line>span,.fade{transform:none!important;opacity:1!important}`;
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
@@ -52,7 +49,6 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
           Przejdź do treści
         </a>
         <SmoothScroll>
-          <Preloader />
           <GridOverlay />
           <Hud />
           <main id="main" tabIndex={-1}>

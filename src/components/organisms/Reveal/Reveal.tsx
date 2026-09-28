@@ -25,7 +25,7 @@ export interface RevealProps extends Omit<HTMLAttributes<HTMLElement>, "children
   as?: RevealElement;
   /**
    * `view` (domyślnie): gdy element wejdzie w viewport (threshold 0.15, raz).
-   * `intro`: po preloaderze; używaj dla hero każdej strony.
+   * `intro`: na starcie wejścia (fonty gotowe, `@/lib/intro`); używaj dla hero każdej strony.
    */
   trigger?: RevealTrigger;
 }

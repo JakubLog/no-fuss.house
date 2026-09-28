@@ -12,8 +12,8 @@ Projektujemy i kodujemy produkty, które załatwiają sprawę bez zbędnego zami
 ## Kontakt i wycena
 
 - E-mail: general@no-fuss.house
-- Formularz kontaktowy: https://no-fuss.pl/#kontakt (stopka każdej strony)
-- Rozmowa: link do kalendarza wkrótce na https://no-fuss.pl/#kontakt
+- Formularz kontaktowy: https://no-fuss.house/#kontakt (stopka każdej strony)
+- Rozmowa: link do kalendarza wkrótce na https://no-fuss.house/#kontakt
 - Wycena indywidualna, po krótkiej rozmowie o zakresie. Nie publikujemy cennika.
 
 ## FAQ
@@ -44,16 +44,16 @@ AION MIND (https://aionmind.com, journaling z AI) nie jest produktem no-fuss: to
 
 ## Strony
 
-- [Strona główna](https://no-fuss.pl/): usługi, jak pracujemy, realizacje, o nas, wiedza (warsztaty i prelekcje), FAQ, kontakt.
-- [O nas](https://no-fuss.pl/o-nas): Dwie osoby, agenci AI, zero zamieszania. Magda projektuje i prowadzi produkt. Kuba pisze kod i pilnuje, żeby działał. Agenci AI pracują z nami ramię w ramię. Jesteśmy AI native.
-- [Wiedza](https://no-fuss.pl/wiedza): Przekazujemy wiedzę dalej. Warsztaty, prelekcje i meetupy z udziałem Magdy i Kuby: nadchodzące z zapisami, minione ze zdjęciami.
-- [OurMoney — case study](https://no-fuss.pl/ourmoney): produkt własny no-fuss, 12.2025 → teraz. Rola no-fuss: design i produkt (Magda), kod, infrastruktura i bezpieczeństwo (Kuba). Przed premierą w sklepach.
-- [AION MIND — case study](https://no-fuss.pl/aion-mind): etat Magdy, 01.2025 → teraz, nie projekt no-fuss. Magda: Product Designer 01.2025–05.2026, od czerwca 2026 Head of Operations.
-- [Busy Bee — case study](https://no-fuss.pl/busy-bee): strona WWW domu produkcyjnego Busy Bee Film, Warszawa, 2024. Rola no-fuss: design (Magda); kod spoza no-fuss: Michał Gabryelewicz (Webflow).
-- [Automation House — case study](https://no-fuss.pl/automation-house): rebranding strony Automation House by Tigers, Warszawa, 06.2026. Rola no-fuss: design i development, od discovery do wdrożenia (Magda: design, Kuba: kod w Next.js).
-- [OTB Ventures — case study](https://no-fuss.pl/otb): strona funduszu VC OTB Ventures, Amsterdam / Warszawa, 06.2025. Rola no-fuss: design (Magda razem z Piotrem Chuchłą). Strona na WordPressie.
-- [Sassy — case study](https://no-fuss.pl/sassy): eksperyment Magdy, 07.2026: strona bez celu w jednym pliku HTML. Projekt własny, nie zlecenie.
+- [Strona główna](https://no-fuss.house/): usługi, jak pracujemy, realizacje, o nas, wiedza (warsztaty i prelekcje), FAQ, kontakt.
+- [O nas](https://no-fuss.house/o-nas): Dwie osoby, agenci AI, zero zamieszania. Magda projektuje i prowadzi produkt. Kuba pisze kod i pilnuje, żeby działał. Agenci AI pracują z nami ramię w ramię. Jesteśmy AI native.
+- [Wiedza](https://no-fuss.house/wiedza): Przekazujemy wiedzę dalej. Warsztaty, prelekcje i meetupy z udziałem Magdy i Kuby: nadchodzące z zapisami, minione ze zdjęciami.
+- [OurMoney — case study](https://no-fuss.house/ourmoney): produkt własny no-fuss, 12.2025 → teraz. Rola no-fuss: design i produkt (Magda), kod, infrastruktura i bezpieczeństwo (Kuba). Przed premierą w sklepach.
+- [AION MIND — case study](https://no-fuss.house/aion-mind): etat Magdy, 01.2025 → teraz, nie projekt no-fuss. Magda: Product Designer 01.2025–05.2026, od czerwca 2026 Head of Operations.
+- [Busy Bee — case study](https://no-fuss.house/busy-bee): strona WWW domu produkcyjnego Busy Bee Film, Warszawa, 2024. Rola no-fuss: design (Magda); kod spoza no-fuss: Michał Gabryelewicz (Webflow).
+- [Automation House — case study](https://no-fuss.house/automation-house): rebranding strony Automation House by Tigers, Warszawa, 06.2026. Etat Kuby (pracodawca: Automation House by Tigers), nie zlecenie no-fuss. Kod w Next.js: Kuba, design: Magda.
+- [OTB Ventures — case study](https://no-fuss.house/otb): strona funduszu VC OTB Ventures, Amsterdam / Warszawa, 06.2025. Rola no-fuss: design (Magda razem z Piotrem Chuchłą). Strona na WordPressie.
+- [Sassy — case study](https://no-fuss.house/sassy): eksperyment Magdy, 07.2026: strona bez celu w jednym pliku HTML. Projekt własny, nie zlecenie.
 
 ## Optional
 
-- [Sitemap](https://no-fuss.pl/sitemap.xml)
+- [Sitemap](https://no-fuss.house/sitemap.xml)

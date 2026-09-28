@@ -1,4 +1,6 @@
 const SEPARATOR = " / ";
+/** Separator z twardymi spacjami: numer i nazwa nie rozchodzą się na „03.3 /” i „Przewodnicy”. */
+const SEPARATOR_NBSP = "\u00A0/\u00A0";
 
 export interface SectionLabelProps {
   /** Etykieta sekcji „NN / Nazwa”, np. „03.5 / Codzienność”. Bez separatora cała jest nazwą. */
@@ -13,11 +15,10 @@ export interface SectionLabelProps {
 export function SectionLabel({ label }: SectionLabelProps) {
   const at = label.indexOf(SEPARATOR);
   if (at < 0) return label;
-  const cut = at + SEPARATOR.length;
   return (
     <>
-      <span aria-hidden="true">{label.slice(0, cut)}</span>
-      {label.slice(cut)}
+      <span aria-hidden="true">{label.slice(0, at) + SEPARATOR_NBSP}</span>
+      {label.slice(at + SEPARATOR.length)}
     </>
   );
 }

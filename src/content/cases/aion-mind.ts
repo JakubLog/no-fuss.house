@@ -78,7 +78,7 @@ export const aionMindEvolution = [
 
 /** 05 / Rola: dwa etapy. */
 export const aionMindPath = [
-  { when: "01.2025 – 05.2026 · Etap 1", title: "Product Designer", scope: "Koncepcja, flow, system wizualny, ekrany" },
+  { when: "01.2025–05.2026 · Etap 1", title: "Product Designer", scope: "Koncepcja, flow, system wizualny, ekrany" },
   { when: "Od czerwca 2026 · Etap 2, trwa", title: "Head of Operations", scope: "Produkt, priorytety, praca z zespołem dev" },
 ] as const;
 
@@ -115,6 +115,7 @@ export const aionMind = {
   years: "2025–2026",
   ownership: "employment",
   employer: { name: "AION MIND", url: AION_MIND_URL, employee: "magda" },
+  softwareApp: true,
   summary: {
     role: "— (etat Magdy, nie projekt no-fuss)",
     scope: "Design produktu, potem cały produkt i zespół",

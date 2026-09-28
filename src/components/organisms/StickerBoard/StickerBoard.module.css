@@ -1,17 +1,21 @@
-/* Legacy „Oklej nas” (o-nas-v5: .play, .play__photos, .drag). */
+/*
+ * Legacy „Oklej nas” (o-nas-v5: .play, .play__photos, .drag). Legacy miał tylko układ poziomy
+ * (naklejki po bokach zdjęć), który na wąskiej planszy zasłaniał twarze i wypadał za krawędź.
+ * - Pionowy (telefon, tablet w pionie; bazowy): plansza ma wysokość treści, zdjęcia 44vw, naklejki
+ *   skalują się z szerokością ekranu i siedzą na rogach i szwie zdjęć (`--x-p`/`--y-p`).
+ * - Poziomy od 768 px: 1:1 z legacy (86svh, zdjęcia do 300 px, naklejki wokół zdjęć, `--x`/`--y`).
+ */
 .play {
   position: relative;
-  min-height: 86svh;
   overflow: hidden;
   touch-action: pan-y;
 }
 
+/* W pionie podpowiedź zawsze pod tytułem: prawy górny róg zostaje dla naklejki. */
 .head {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   gap: 16px;
-  flex-wrap: wrap;
-  align-items: baseline;
 }
 
 .head .title {
@@ -25,8 +29,9 @@
   margin-top: 48px;
 }
 
+/* Dwa zdjęcia wypełniają szerokość; 450 px = 44vw przy 1023 px (tablet w pionie). */
 .photos .photo {
-  width: min(40vw, 300px);
+  width: min(44vw, 450px);
   aspect-ratio: 3 / 4;
 }
 
@@ -50,12 +55,17 @@
   margin-top: 32px;
 }
 
-/* Warstwa zabawy: naklejki mogą być okrągłe (DESIGN.md → Shapes). */
+/* Warstwa zabawy: naklejki mogą być okrągłe (DESIGN.md → Shapes). `--s` to bok w px bez jednostki.
+   W pionie bok rośnie z szerokością jak zdjęcia (0,16vw na px: 65% przy 390 px), najwyżej `--s` px.
+   Pozycja startowa w % planszy, przycięta tak, by naklejka nie wystawała poza planszę. */
 .play .drag {
+  --size: min(var(--s) * 0.16vw, var(--s) * 1px);
   position: absolute;
+  left: clamp(0px, var(--x-p) * 1%, 100% - var(--size));
+  top: clamp(0px, var(--y-p) * 1%, 100% - var(--size));
   z-index: 3;
-  width: var(--s, 110px);
-  height: var(--s, 110px);
+  width: var(--size);
+  height: var(--size);
   rotate: var(--r, 0deg);
   touch-action: none;
   user-select: none;
@@ -83,9 +93,27 @@
   z-index: 4;
 }
 
-.drag:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 4px;
+@media (min-width: 768px) and (orientation: landscape) {
+  .play {
+    min-height: 86svh;
+  }
+
+  .head {
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: baseline;
+  }
+
+  .photos .photo {
+    width: min(40vw, 300px);
+  }
+
+  .play .drag {
+    --size: calc(var(--s) * 1px);
+    left: clamp(0px, var(--x) * 1%, 100% - var(--size));
+    top: clamp(0px, var(--y) * 1%, 100% - var(--size));
+  }
 }
 
 @media (pointer: coarse), (prefers-reduced-motion: reduce) {

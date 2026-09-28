@@ -10,8 +10,10 @@
   transition: transform 0.3s var(--ease);
 }
 
-.button:hover {
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .button:hover {
+    transform: translateY(-2px);
+  }
 }
 
 .ghost {
@@ -26,8 +28,22 @@
   cursor: default;
 }
 
-.placeholder:hover {
-  transform: none;
+@media (hover: hover) {
+  .placeholder:hover {
+    transform: none;
+  }
+}
+
+/* Stan nieaktywny (np. formularz w trakcie wysyłki): przygaszony, bez uniesienia na hover. */
+.button[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: default;
+}
+
+@media (hover: hover) {
+  .button[aria-disabled="true"]:hover {
+    transform: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

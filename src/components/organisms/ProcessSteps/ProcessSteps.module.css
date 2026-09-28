@@ -80,15 +80,29 @@
   outline-offset: -4px;
 }
 
-/* #3F4A12: stała z legacy (przygaszony tekst na limonce). */
-.step:hover,
+/* #3F4A12: stała z legacy (przygaszony tekst na limonce). Hover tylko przy myszy; fokus (także po
+   kliknięciu przycisku) poza `@media (hover: hover)`. */
+@media (hover: hover) {
+  .step:hover {
+    background: var(--accent);
+    color: var(--on-accent);
+    --muted: #3F4A12;
+  }
+
+  .step:hover .text {
+    max-height: 120px;
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+}
+
 .step:focus-within {
   background: var(--accent);
   color: var(--on-accent);
   --muted: #3F4A12;
 }
 
-.step:hover .text,
 .open .text {
   max-height: 120px;
   opacity: 1;

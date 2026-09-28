@@ -49,17 +49,17 @@ export default function OtbPage() {
         )}
       />
       <CaseStudyLayout
-        hero={{ kicker: otb.kicker, title: otb.title, summary: otb.summary, facts: otb.facts, datePublished: otb.datePublished }}
+        hero={{ kicker: otb.kicker, title: otb.title, summary: otb.summary, ownership: otb.ownership, facts: otb.facts, datePublished: otb.datePublished }}
         cta={{ tone: "dark" }}
         next={otbNext}
       >
         <LiveFrame {...otbLive} />
 
-        <CaseStudySection layout="lite" className={styles.csLite} label="01 / W skrócie">
+        <CaseStudySection layout="lite" tone="dark" className={styles.csLite} label="01 / W skrócie">
           <CaseStory story={otb.story} />
         </CaseStudySection>
 
-        <CaseStudySection layout="lite" tone="dark" className={styles.csLite} label="02 / Hero" hint="Przeciągnij kulę">
+        <CaseStudySection layout="lite" className={styles.csLite} label="02 / Hero" hint="Przeciągnij kulę">
           <Fade index={2}>
             <DragBall {...otbBall} />
           </Fade>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { LinkText } from "@/components/atoms/ArrowLink";
 import { Fade } from "@/components/atoms/Fade";
 import { GlowBackdrop } from "@/components/atoms/GlowBackdrop";
 import { Heading } from "@/components/atoms/Heading";
@@ -7,9 +8,10 @@ import { ContactCta } from "@/components/molecules/ContactCta";
 import { Line } from "@/components/atoms/Line";
 import { StickerLayer } from "@/components/atoms/StickerLayer";
 import { Tag } from "@/components/atoms/Tag";
+import { VisuallyHidden } from "@/components/atoms/VisuallyHidden";
 import { FactRow } from "@/components/molecules/FactRow";
 import { Reveal } from "@/components/organisms/Reveal";
-import type { CaseStudyFact, CaseStudySummary } from "@/content/types";
+import type { CaseOwnership, CaseStudyFact, CaseStudySummary } from "@/content/types";
 import { cx } from "@/lib/cx";
 import styles from "./CaseStudyLayout.module.css";
 
@@ -22,9 +24,11 @@ export interface CaseStudyHeroProps {
   lead?: ReactNode;
   /**
    * Standardowe fakty (`CaseStudy.summary`), zawsze pierwsze i w stałej kolejności:
-   * „Rola no-fuss”, „Zakres”, „Czas”, „Klient” (opcjonalnie), „Wynik” (opcjonalnie).
+   * „Rola no-fuss” (przy etacie „Rola”), „Zakres”, „Czas”, „Klient” (opcjonalnie), „Wynik” (opcjonalnie).
    */
   summary: CaseStudySummary;
+  /** `CaseStudy.ownership`: przy `employment` (etat, nie projekt no-fuss) termin roli to „Rola”. */
+  ownership: CaseOwnership;
   /**
    * Dodatkowe fakty po standardowych (siatka `<dl>`: 2 kolumny, od 1024 px 3).
    * Wiersz z terminem standardowym jest pomijany (bez dublowania).
@@ -67,9 +71,13 @@ export interface CaseStudyLayoutProps {
   next?: CaseStudyNextProps;
 }
 
-/** Terminy standardowych faktów hero (kolejność renderu). */
+/**
+ * Terminy standardowych faktów hero (kolejność renderu: role, scope, time, client, result).
+ * `roleEmployment` zastępuje `role` przy `ownership: "employment"`: etat to nie rola studia.
+ */
 export const CASE_SUMMARY_TERMS = {
   role: "Rola no-fuss",
+  roleEmployment: "Rola",
   scope: "Zakres",
   time: "Czas",
   client: "Klient",
@@ -86,11 +94,16 @@ const CTA_HEADING_ID = "case-cta-heading";
 
 /**
  * Fakty hero: standardowe z `summary` (puste pola pominięte), potem `facts` bez wierszy,
- * które powtarzają termin standardowy.
+ * które powtarzają termin standardowy. `ownership` wybiera termin roli.
  */
-export function caseHeroFacts(summary: CaseStudySummary, facts: readonly CaseStudyFact[]): CaseStudyFact[] {
+export function caseHeroFacts(
+  summary: CaseStudySummary,
+  facts: readonly CaseStudyFact[],
+  ownership: CaseOwnership,
+): CaseStudyFact[] {
+  const roleTerm = ownership === "employment" ? CASE_SUMMARY_TERMS.roleEmployment : CASE_SUMMARY_TERMS.role;
   const standard: CaseStudyFact[] = [
-    { term: CASE_SUMMARY_TERMS.role, value: summary.role },
+    { term: roleTerm, value: summary.role },
     { term: CASE_SUMMARY_TERMS.scope, value: summary.scope },
     { term: CASE_SUMMARY_TERMS.time, value: summary.time },
   ];
@@ -117,24 +130,53 @@ function Kicker({ text, datePublished }: { text: string; datePublished?: string 
   );
 }
 
-function FactValue({ fact }: { fact: CaseStudyFact }) {
+/**
+ * Wartość faktu; link z `term`, gdy ta sama treść linku się powtarza („Pobierz ↗” dla App Store
+ * i Google Play): termin w sr-only na początku, więc nazwa to „App Store: Pobierz ↗” (WCAG 2.4.4).
+ * Tekst linku przez `LinkText`: domena ze strzałką nie łamie się na dywizie i „↗” nie zostaje sama.
+ */
+function FactValue({ fact, withTerm }: { fact: CaseStudyFact; withTerm: boolean }) {
   if (!fact.href) return <>{fact.value}</>;
   return (
     <a href={fact.href} target="_blank" rel="noopener">
-      {fact.value}
+      {withTerm ? <VisuallyHidden>{`${fact.term}: `}</VisuallyHidden> : null}
+      <LinkText text={fact.value} />
     </a>
+  );
+}
+
+/**
+ * Tytuł bloku „Następny projekt”: ostatnie słowo i strzałka w jednym `nowrap`. Strzałka jest
+ * `inline-block` (animacja `transform`), a przy elemencie atomowym twarda spacja nie blokuje
+ * złamania linii, więc bez tego „→” zostawała sama w ostatniej linii.
+ */
+function NextTitle({ title, arrow }: { title: string; arrow: "→" | "↗" }) {
+  const cut = title.lastIndexOf(" ") + 1;
+  return (
+    <>
+      {title.slice(0, cut)}
+      <span className={styles.nextLast}>
+        {title.slice(cut)}
+        {"\u00A0"}
+        <span className={styles.arrow} aria-hidden="true">
+          {arrow}
+        </span>
+      </span>
+    </>
   );
 }
 
 /**
  * Szablon case study: ciemne hero na pełną wysokość (chip, tytuł mega, lead,
  * fakty: standardowe z `summary` + `facts`), sekcje z `children`, blok CTA kontaktu
- * („Chcesz podobny projekt?” + `ContactCta`), blok „Następny projekt”. Hero odsłania się po
- * preloaderze (`Reveal trigger="intro"`). Stopka jest w layoucie.
+ * („Chcesz podobny projekt?” + `ContactCta`), blok „Następny projekt”. Hero odsłania się na
+ * starcie wejścia (`Reveal trigger="intro"`). Stopka jest w layoucie.
  * Server Component. Strona dokłada `buildMetadata` i `<JsonLd>` (patrz docs/COMPONENTS.md).
  */
 export function CaseStudyLayout({ hero, children, cta, next }: CaseStudyLayoutProps) {
-  const facts = caseHeroFacts(hero.summary, hero.facts);
+  const facts = caseHeroFacts(hero.summary, hero.facts, hero.ownership);
+  const linkValues = facts.flatMap((fact) => (fact.href ? [fact.value] : []));
+  const repeated = new Set(linkValues.filter((value, i) => linkValues.indexOf(value) !== i));
   /* `<article>`: case study to samodzielna treść (h1, sekcje, następny projekt). */
   return (
     <article>
@@ -154,7 +196,7 @@ export function CaseStudyLayout({ hero, children, cta, next }: CaseStudyLayoutPr
         <Fade as="dl" index={4} className={cx("mono-sm", styles.facts)}>
           {facts.map((fact) => (
             <FactRow key={fact.term} term={fact.term}>
-              <FactValue fact={fact} />
+              <FactValue fact={fact} withTerm={repeated.has(fact.value)} />
             </FactRow>
           ))}
         </Fade>
@@ -180,10 +222,7 @@ export function CaseStudyLayout({ hero, children, cta, next }: CaseStudyLayoutPr
             <span className="mono fade">Następny projekt</span>
             <span className={styles.nextTitle}>
               <Line>
-                {next.title}{" "}
-                <span className={styles.arrow} aria-hidden="true">
-                  {next.arrow ?? "→"}
-                </span>
+                <NextTitle title={next.title} arrow={next.arrow ?? "→"} />
               </Line>
             </span>
           </Link>

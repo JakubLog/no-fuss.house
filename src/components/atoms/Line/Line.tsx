@@ -10,7 +10,7 @@ export interface LineProps {
 
 /**
  * Linia nagłówka odsłaniana od dołu (`.line > span`, klasy globalne).
- * Odsłania się, gdy przodek dostanie `is-in` (Reveal / Preloader). Server Component.
+ * Odsłania się, gdy przodek dostanie `is-in` (Reveal). Server Component.
  */
 export function Line({ children, index, className }: LineProps) {
   return (

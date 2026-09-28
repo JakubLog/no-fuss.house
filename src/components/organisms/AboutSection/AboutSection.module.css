@@ -100,8 +100,10 @@
   transition: opacity 0.3s;
 }
 
-.clientsList li:hover .logo {
-  opacity: 1;
+@media (hover: hover) {
+  .clientsList li:hover .logo {
+    opacity: 1;
+  }
 }
 
 @media (min-width: 640px) {

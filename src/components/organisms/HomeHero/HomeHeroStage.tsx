@@ -22,7 +22,8 @@ const easeInOut = (p: number) => (p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 
 /**
  * Część kliencka hero: kanwa 3D na całe hero, pusta ramka `.band` (od 768 px pas między h1
  * a leadem z CTA, w który scena wpisuje napis; na telefonie tylko miejsce na fallback CSS),
- * potem treść nad siatką. Warstwy ustawia `z-index`, nie kolejność.
+ * potem treść. Kanwa, ramka i treść mają z-index 2 (nad siatką overlay); treść leży nad kanwą
+ * dzięki kolejności w DOM.
  *
  * Wejście: litery startują rozrzucone (zamieszanie 1) i razem z reveal hero (intro +
  * `INTRO_REVEAL_DELAY_MS`) układają się w napis. Przy nawigacji klienckiej to samo, gdy scena

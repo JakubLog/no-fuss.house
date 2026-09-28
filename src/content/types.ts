@@ -120,8 +120,8 @@ export interface CaseStudyImage {
 /**
  * Czyj to projekt (JSON-LD kafli na stronie głównej):
  * `own` – produkt / eksperyment no-fuss, `client` – zlecenie dla klienta,
- * `employment` – praca na etacie jednej z osób (aplikacja jest pracodawcy, patrz `employer`;
- * case study i tak jest no-fuss, więc `creator` w JSON-LD to zawsze no-fuss).
+ * `employment` – praca na etacie jednej z osób (pracodawca w `employer`: AION MIND u Magdy,
+ * Automation House u Kuby; case study i tak jest no-fuss, więc `creator` w JSON-LD to zawsze no-fuss).
  */
 export type CaseOwnership = "own" | "client" | "employment";
 
@@ -149,10 +149,15 @@ export interface CaseStudy {
   tileLabel: string;
   /** Rok / zakres lat z kafla, np. „2025”, „2025–2026”. */
   years: string;
-  /** Czyj to projekt: własny, klienta czy etat (przy etacie JSON-LD dostaje `contributor` i `about` aplikacji). */
+  /** Czyj to projekt: własny, klienta czy etat (przy etacie JSON-LD kafla dostaje `contributor`). */
   ownership: CaseOwnership;
   /** Tylko przy `ownership: "employment"`: pracodawca. */
   employer?: CaseEmployer;
+  /**
+   * `true`: strona case'u publikuje węzeł `SoftwareApplication` (`@id` = `softwareAppId(path)`).
+   * Przy etacie kafel na `/` linkuje go w `about`; bez flagi `about` nie powstaje (brak wiszącego `@id`).
+   */
+  softwareApp?: true;
   /** Standardowe fakty hero (rola no-fuss, zakres, czas, klient, wynik). */
   summary: CaseStudySummary;
   /** Dodatkowe fakty hero po standardowych (platformy, sklepy, stack…). Bez powtórzeń `summary`. */
@@ -176,4 +181,11 @@ export interface CaseStudy {
 export interface FaqItem {
   question: string;
   answer: string;
+}
+
+/** Zdanie pod listą FAQ z linkiem w środku, np. „Zadajcie je [na rozmowie].” (link do `#kontakt`). */
+export interface FaqMore {
+  before: string;
+  link: { label: string; href: string };
+  after?: string;
 }

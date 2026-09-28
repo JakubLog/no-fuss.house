@@ -9,12 +9,14 @@ import type { CaseStudyImage, Service, Testimonial } from "./types";
  * zapisane jako ` `. Placeholdery `[…]` zostają placeholderami.
  */
 
+const NBSP = "\u00A0";
+
 /* ---------- #hero ---------- */
 
 /** Treść hero poza h1 (reszta copy w `HomeHero`). Zmiana wobec legacy pod klientów usługowych (audyt B2B, decyzja Kuby). */
 export const hero = {
   /** Nowe copy (spoza legacy): dla kogo i co, zdanie pod h1. */
-  lead: "Aplikacje mobilne, strony i produkty z AI dla firm, które chcą wydać produkt, a nie zarządzać agencją.",
+  lead: `Aplikacje mobilne, strony i${NBSP}produkty z${NBSP}AI dla firm, które chcą wydać produkt, a${NBSP}nie zarządzać agencją.`,
 } as const;
 
 /* ---------- #o-nas ---------- */
@@ -130,32 +132,27 @@ export const servicesSection = {
     {
       no: "01",
       name: "Aplikacje mobilne",
-      description:
-        "Od pierwszego ekranu do sklepów. Projekt, kod, wydanie i to, co po nim: metryki, retencja, kolejne wersje.",
+      description: `Od pierwszego ekranu do sklepów. Projekt, kod, wydanie i${NBSP}to, co po nim: metryki, retencja, kolejne wersje.`,
     },
     {
       no: "02",
-      name: "Produkty z AI",
-      description:
-        "Agenci AI, automatyzacje. Projektujemy tak, żeby LLM pracował w tle, a użytkownik czuł tylko efekt.",
+      name: `Produkty z${NBSP}AI`,
+      description: `Agenci AI, automatyzacje. Projektujemy tak, żeby LLM pracował w${NBSP}tle, a${NBSP}użytkownik czuł tylko efekt.`,
     },
     {
       no: "03",
-      name: "Strony i landingi",
-      description:
-        "Szybkie, dostępne i zgodne z WCAG. Next.js, CMS do samodzielnej edycji, integracje z tym, co już macie.",
+      name: `Strony i${NBSP}landingi`,
+      description: `Szybkie, dostępne i${NBSP}zgodne z${NBSP}WCAG. Next.js, CMS do samodzielnej edycji, integracje z${NBSP}tym, co już macie.`,
     },
     {
       no: "04",
       name: "Design produktu",
-      description:
-        "Research, flow, prototyp, system wizualny. Decyzje z danych, nie z głowy. Bez slajdów, za to z działającym prototypem.",
+      description: `Research, flow, prototyp, system wizualny. Decyzje z${NBSP}danych, nie z${NBSP}głowy. Bez slajdów, za to z${NBSP}działającym prototypem.`,
     },
     {
       no: "05",
-      name: "Audyt i porządki",
-      description:
-        "Przeglądamy istniejący produkt: UX, dostępność, konwersja, kod. Wychodzicie z listą priorytetów, nie z raportem na 80 stron.",
+      name: `Audyt i${NBSP}porządki`,
+      description: `Przeglądamy istniejący produkt: UX, dostępność, konwersja, kod. Wychodzicie z${NBSP}listą priorytetów, nie z${NBSP}raportem na 80${NBSP}stron.`,
     },
   ] satisfies readonly Service[] as readonly Service[],
 };
