@@ -31,10 +31,10 @@ const legalIdentity = {
 
 export const controllers = people.map((person) => legalIdentity[person.id]);
 
-/** „Magdalena Nestorowicz i Jakub Fedoszczak (ul. …)”: adres w nawiasie tylko, gdy jest. */
+/** „Magdalena Nestorowicz; Jakub Fedoszczak (adres: ul. …)”: średnik oddziela osoby, adres w nawiasie tylko, gdy jest. */
 export const controllersSentence = controllers
-  .map((c) => (c.address ? `${c.name} (${c.address})` : c.name))
-  .join(" i ");
+  .map((c) => (c.address ? `${c.name} (adres: ${c.address})` : c.name))
+  .join("; ");
 
 /** `mailto:` wspólnej skrzynki: jedyny punkt kontaktowy w obu dokumentach. */
 export const contactLink: LegalLink = { label: site.contact.email, href: `mailto:${site.contact.email}` };

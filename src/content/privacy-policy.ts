@@ -14,7 +14,7 @@ const liveFrameHosts = [busybeeLive, automationHouseLive, otbLive, sassyLive].ma
  * Polityka prywatności i ciasteczek (`/polityka-prywatnosci`). Opisuje stan z kodu: formularz → Server Action →
  * Resend (bez bazy danych), hosting Vercel, zero ciasteczek, jeden wpis w `localStorage` (`CookieNotice`),
  * żywe strony klientów w `LiveFrame` dopiero po kliknięciu. Nowe narzędzie (analityka, osadzenia) → zaktualizuj
- * sekcje i `LEGAL_EFFECTIVE_FROM`. Placeholdery `[…]` do podmiany przed publikacją.
+ * sekcje i `LEGAL_EFFECTIVE_FROM`. Dane współadministratorów są w `legal.ts`.
  */
 export const privacyPolicy = {
   hero: {
@@ -30,7 +30,11 @@ export const privacyPolicy = {
       title: "Kto odpowiada za Twoje dane",
       blocks: [
         `Administratorami danych osobowych zbieranych przez stronę ${LEGAL_DOMAIN} są wspólnie (współadministratorzy w rozumieniu art. 26 rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679, „RODO”):`,
-        { list: controllers.map((c) => (c.address ? `${c.name}, ${c.address};` : `${c.name};`)) },
+        {
+          list: controllers.map(
+            (c, i) => `${c.address ? `${c.name}, ${c.address}` : c.name}${i === controllers.length - 1 ? "." : ";"}`,
+          ),
+        },
         ["Najszybciej złapiesz nas pod adresem ", contactLink, ". Tą samą drogą skorzystasz z każdego prawa opisanego niżej."],
         "Nie wyznaczyliśmy inspektora ochrony danych, bo przy naszej skali działania RODO tego nie wymaga (art. 37 RODO).",
       ],

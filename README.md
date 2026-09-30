@@ -88,9 +88,9 @@ Jedno źródło prawdy: `src/content/routes.ts`. Stare adresy (`/no-fuss-v5`, `/
 | `/otb` | `case-otb-v2.html` |
 | `/sassy` | `case-sassy-v2.html` |
 | `/wiedza` | — (nowa strona; wydarzenia w `src/content/events.ts`) |
-| 404 | `404.html` |
 | `/regulamin` | — (nowa strona; treść w `src/content/terms.ts`) |
 | `/polityka-prywatnosci` | — (nowa strona; treść w `src/content/privacy-policy.ts`) |
+| 404 | `404.html` |
 
 ## legacy/
 

@@ -3,7 +3,7 @@ import type { LegalDocument } from "./types";
 
 /**
  * Regulamin świadczenia usług drogą elektroniczną (`/regulamin`, art. 8 UŚUDE): przeglądanie strony i formularz
- * kontaktu. Nie reguluje zleceń (te mają osobne umowy). Placeholdery `[…]` (adresy) są w `legal.ts`.
+ * kontaktu. Nie reguluje zleceń (te mają osobne umowy). Dane usługodawców (`controllersSentence`) są w `legal.ts`.
  */
 export const terms = {
   hero: {
@@ -22,7 +22,7 @@ export const terms = {
           ordered: true,
           list: [
             `Regulamin określa zasady korzystania ze strony internetowej ${LEGAL_DOMAIN} („Strona”) i usług świadczonych na niej drogą elektroniczną. Wydajemy go na podstawie art. 8 ustawy z dnia 18 lipca 2002 r. o świadczeniu usług drogą elektroniczną.`,
-            `Usługodawcami są wspólnie ${controllersSentence}, działający pod marką no-fuss („Usługodawca”, „my”).`,
+            `Usługodawcami są wspólnie: ${controllersSentence}. Działamy pod marką no-fuss („Usługodawca”, „my”).`,
             ["Kontakt z nami: ", contactLink, " albo formularz w stopce Strony."],
             "Regulamin jest dostępny na Stronie bezpłatnie, w formie, która pozwala go zapisać i wydrukować.",
           ],

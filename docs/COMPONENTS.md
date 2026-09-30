@@ -7,7 +7,7 @@ Przed pisaniem CSS przeczytaj [`DESIGN.md`](../DESIGN.md). Wzorce treści i zach
 
 1. **Server Component domyślnie.** `"use client"` tylko przy interakcji (stan, efekty, zdarzenia, `window`).
    Klienckie wrappery (`Reveal`, `SmoothScroll`) przyjmują serwerowe `children`, więc strona zostaje serwerowa.
-2. **three.js tylko przez `next/dynamic` z `ssr: false`** (albo w workerze, jak `HeroScene/scene.worker.ts`), w komponencie klienckim:
+2. **three.js tylko przez `next/dynamic` z `ssr: false`**, w komponencie klienckim:
    ```tsx
    "use client";
    import dynamic from "next/dynamic";
@@ -428,8 +428,6 @@ Hover (`@media (hover: hover)`), bez strzałki i kursora-linku, bo kafel nie jes
 bez `:focus-within`, żeby tap na dotyku go nie przyklejał). Animowane są dzieci, nie `article` (ma `.fade`). Reduced motion: bez przejść
 i bez transformacji, limonka natychmiast.
 
-### Linki-placeholdery
-
 ### `Tally` — server
 ```ts
 interface TallyItem { label: ReactNode; value: ReactNode }   // `TallyRow` z treści (string, string) też pasuje
@@ -438,6 +436,8 @@ interface TallyProps { rows: readonly TallyItem[]; ariaLabel?: string; className
 „Paragon” w mono: `<dl>`, wiersz = etykieta `--muted`, kropkowany odstęp (`dt::after`, `currentColor` 60%) i wartość do prawej
 (maks. 60% szerokości, dłuższa się łamie). Działa na jasnym i ciemnym tle. Użycia: `CookieNotice` (liczniki) i „W skrócie”
 nad polityką prywatności.
+
+### Linki-placeholdery
 
 Placeholdery nie są klikalnymi linkami (bez `href="#"`, bez skoku na górę, poza kolejnością Tab). `href: null` w danych →
 
@@ -463,10 +463,10 @@ Tekstowe placeholdery `[…]` się nie renderują (dane zostają w plikach do po
 
 Wyjątek: kafle wydarzeń (`/wiedza` i zajawka `#wiedza` na `/`): placeholdery `[…]` (dziś brak) są tam **widoczne**
 (decyzja: układ do przeglądu), ale nie trafiają do JSON-LD ani na `/o-nas`.
-Helper dla prawdziwych adresów: `externalLinkProps(href)` z `@/lib/href` (`target="_blank" rel="noopener"`).
-`ScrambleLink` i `SmoothScroll` nadal obsługują `aria-disabled="true"` (dla linków spoza danych).
 Dokumenty prawne (`/regulamin`, `/polityka-prywatnosci`) nie mają placeholderów: brakujący adres współadministratora to `address: null`
 w `legal.ts` (dokument pokazuje wtedy samo imię i nazwisko).
+Helper dla prawdziwych adresów: `externalLinkProps(href)` z `@/lib/href` (`target="_blank" rel="noopener"`).
+`ScrambleLink` i `SmoothScroll` nadal obsługują `aria-disabled="true"` (dla linków spoza danych).
 
 ---
 
@@ -624,8 +624,7 @@ Rodzic sceny musi mieć `position: relative` (opakowanie kanwy: `absolute; inset
 - **Środowisko (r160 → r186):** legacy wołał `new RoomEnvironment()` bez renderera, co w r160 dawało światło główne 5
   zamiast 900 (ciemny pokój, jasne panele → kontrastowe odbicia). r186 ma zawsze 900 i pokój przesunięty o y −3.5,
   więc zapiekamy kopię z r160 (`scripts/legacyRoomEnvironment.js`).
-- **Sprzątanie:** geometrie, materiał, env map, renderer (albo zamknięcie workera), obserwatory, listenery. Font i dane mapy
-  cache'owane w module, czyli na życie wątku: w trybie workera każdy montaż sceny pobiera je ponownie (z cache HTTP) i dekoduje poza głównym wątkiem.
+- **Sprzątanie:** geometrie, materiał, env map, renderer (albo zamknięcie workera), obserwatory, listenery. Font i dane mapy cache'owane w module.
 - **Warstwy:** tło `z-index: 0` pod siatką (1); kanwa, ramka `.band` (z fallbackiem CSS) i treść `z-index: 2` nad siatką,
   bo napis 3D to obiekt, nie tło (legacy: kanwa −1, linie siatki przecinały litery). Treść nad kanwą przez kolejność w DOM
   (kanwa pierwsza w `HomeHeroStage`).
@@ -879,6 +878,27 @@ interface EventsSectionProps {
 ```
 Każdy kafel w osobnym `Reveal as="li"`. Nadchodzące zawsze się renderują (`empty`: „Na razie nic nie planujemy.”), minione znikają bez danych.
 
+### Podstrony prawne `/regulamin` i `/polityka-prywatnosci`
+
+Nowe strony, bez wzorca w legacy. Kolejność: `PageHero` → `LegalDocument` → stopka. Treść: `src/content/terms.ts`,
+`src/content/privacy-policy.ts` (typ `LegalDocument`), wspólne dane w `src/content/legal.ts`. Linki do obu stron są w stopce
+(`<nav aria-label="Dokumenty">`), w HUD ich nie ma (`section: "legal"`).
+
+#### `LegalDocument` — server
+```ts
+interface LegalDocumentProps {
+  document: LegalDocument;          // hero, description, effectiveFrom (ISO), sections: { id, title, blocks }[]
+  numbering: "paragraph" | "index"; // „§ 1” (czytany) albo „01” (aria-hidden)
+  summary?: ReactNode;              // nad sekcjami, np. `Tally` „W skrócie”
+}
+type LegalBlock = LegalText | { list: readonly LegalText[]; ordered?: boolean };   // akapit albo lista
+type LegalText = string | readonly (string | { label; href })[];                  // tekst z linkami
+```
+Jasne `article.section` z obrysem u góry. Od 1024 px spis treści (`<nav>`, `<ol>` kotwic) przyklejony w kolumnach 1–3 (`top: 120px`),
+treść w 5–11; niżej jedna kolumna, spis nad treścią. Nad sekcjami „Obowiązuje od” (`<time>`). Sekcja: `<section id>` z `h2`
+(`--t-title`, numer mono w kolumnie 56 px), tekst body do 68ch wcięty pod tytuł, listy ze znacznikiem mono („—” albo „1.”).
+`scroll-margin-top: 96px` (czyta go też Lenis). Linki: `ArrowLink underline`, `https://` z „↗”, całe w jednej linii. Bez reveal.
+
 ---
 
 ### Case study
@@ -901,27 +921,6 @@ Produkty (`/ourmoney`, `/aion-mind`): warianty `wide` / `split`. Strony WWW (`/b
 | `LiveFrame` | client | `.live` | Busy Bee, AH, OTB, Sassy |
 | `FilmStrip` | client | `.film` | Busy Bee |
 | `PhoneScroller` | client | `.scrollphone` | Busy Bee, AH, OTB |
-### Podstrony prawne `/regulamin` i `/polityka-prywatnosci`
-
-Nowe strony, bez wzorca w legacy. Kolejność: `PageHero` → `LegalDocument` → stopka. Treść: `src/content/terms.ts`,
-`src/content/privacy-policy.ts` (typ `LegalDocument`), wspólne dane w `src/content/legal.ts`. Linki do obu stron są w stopce
-(`<nav aria-label="Dokumenty">`), w HUD ich nie ma (`section: "legal"`).
-
-#### `LegalDocument` — server
-```ts
-interface LegalDocumentProps {
-  document: LegalDocument;          // hero, description, effectiveFrom (ISO), sections: { id, title, blocks }[]
-  numbering: "paragraph" | "index"; // „§ 1” (czytany) albo „01” (aria-hidden)
-  summary?: ReactNode;              // nad sekcjami, np. `Tally` „W skrócie”
-}
-type LegalBlock = LegalText | { list: readonly LegalText[]; ordered?: boolean };   // akapit albo lista
-type LegalText = string | readonly (string | { label; href })[];                  // tekst z linkami
-```
-Jasne `article.section` z obrysem u góry. Od 1024 px spis treści (`<nav>`, `<ol>` kotwic) przyklejony w kolumnach 1–3 (`top: 120px`),
-treść w 5–11; niżej jedna kolumna, spis nad treścią. Nad sekcjami „Obowiązuje od” (`<time>`). Sekcja: `<section id>` z `h2`
-(`--t-title`, numer mono w kolumnie 56 px), tekst body do 68ch wcięty pod tytuł, listy ze znacznikiem mono („—” albo „1.”).
-`scroll-margin-top: 96px` (czyta go też Lenis). Linki: `ArrowLink underline`, `https://` z „↗”, całe w jednej linii. Bez reveal.
-
 | `DragBall` | client | `.otb` | OTB |
 | `ToySwitcher` | client | `.sw2` | Sassy |
 | `SpecList` | server | `.spec`, `.facts` | Busy Bee, AH, OTB, Sassy |
@@ -1182,6 +1181,8 @@ Wszystkie `page.tsx` to Server Components: `buildMetadata` + `<JsonLd>` + organi
 | `/` | `app/page.tsx` | `no-fuss-v5` | `HomeHero` → `ServicesList` → `ProcessSection #proces` → `WorkGrid` → `AboutSection` → `KnowledgeTeaser #wiedza` → `TestimonialsSection` (ukryta bez opinii) → `FaqSection #faq`; `revalidate = 3600` | `homeGraphNodes()`: `ItemList #realizacje`, `OfferCatalog #uslugi`, `Review` (tylko nie-placeholdery, teraz 0), `FAQPage #faq` (`publishedFaq()`) |
 | `/o-nas` | `app/o-nas/page.tsx` | `o-nas-v5` | `PageHero` → `TeamSheets` → `Marquee` → `RolesSplit` → `FindSection` ×3 (`#wydarzenia`: zajawka `/wiedza`) → `StickerBoard`; `revalidate = 3600` | `BreadcrumbList` + `AboutPage #webpage` (`mainEntity` → Organization, `mentions` → Person) |
 | `/wiedza` | `app/wiedza/page.tsx` | — (nowa) | `PageHero` → `EventsSection #nadchodzace` → `EventsSection #minione`; `revalidate = 3600` | `BreadcrumbList` + `CollectionPage #webpage` (`hasPart` → `Event`) + `Event` na wydarzenie bez `[…]` z miejscem albo online (`performer` → Person, `organizer` = `host`) |
+| `/regulamin` | `app/regulamin/page.tsx` | — (nowa) | `PageHero` → `LegalDocument` (`numbering="paragraph"`) | `BreadcrumbList` |
+| `/polityka-prywatnosci` | `app/polityka-prywatnosci/page.tsx` | — (nowa) | `PageHero` → `LegalDocument` (`numbering="index"`, `summary` = `Tally` „W skrócie”) | `BreadcrumbList` |
 | `/ourmoney` | `app/ourmoney/` | `case-ourmoney-v2` | `CaseStage` phones, wide/split, `SplitCalculator`, `CaseScreens`, `CaseNumbers`, `TechStack` | `BreadcrumbList` + `CreativeWork` (`about` → app) + `SoftwareApplication` (`FinanceApplication`, oferty 24,99 / 249,99 PLN) |
 | `/aion-mind` | `app/aion-mind/` | `case-aion-mind-v1` | `CaseStage` image, `JournalScreen`, `GuideCards`, `RolePath`, `CaseNumbers` | jak wyżej, `LifestyleApplication`, `installUrl` = sklepy, `contributor` = Magda, `publisher` = `Organization` AION MIND z `employee` = Magda (etat, nie produkt no-fuss) |
 | `/busy-bee` | `app/busy-bee/page.tsx` | `case-busybee-v3` | `LiveFrame` → lite: `CaseStory`, `FilmStrip` (podpis: reklamy Busy Bee dla ich klientów), `PhoneScroller`, `SpecList` | `BreadcrumbList` + `CreativeWork` (`about.url` = żywa strona) + `WebSite` klienta |
@@ -1204,12 +1205,13 @@ Metadane case studies: `buildMetadata({ path, type: "article", description: case
 | `types.ts` | typy współdzielone (`CaseStudy`, `CaseStudySummary`, `CaseStudyStory`, `SocialLink`, `Person`…) |
 | `home.ts` | `hero` (lead, akapit o duecie), `about`, `work` (kafle), `servicesSection`, `testimonialsSection`, `publishedTestimonials()`; typy `WorkTile`, `SizedImage` (portrety w `#o-nas` biorą się z `personCards` w `about.ts`) |
 | `home-jsonld.ts` | węzły JSON-LD strony głównej (`workItemList`, `servicesCatalog`, `reviews`, `faqPage`). W `workItemList` `creator` = no-fuss zawsze (ten sam `@id` co `CreativeWork` na stronie case'u); `employment` (AION MIND, Automation House) dokłada `contributor` = Person z `employer.employee`, a `about` → `SoftwareApplication` (`softwareAppId`) tylko przy `softwareApp: true` (AION MIND; `publisher` = pracodawca jest na stronie case'u). Bez flagi `about` nie powstaje, więc nie ma wiszącego `@id` |
-| `/regulamin` | `app/regulamin/page.tsx` | — (nowa) | `PageHero` → `LegalDocument` (`numbering="paragraph"`) | `BreadcrumbList` |
-| `/polityka-prywatnosci` | `app/polityka-prywatnosci/page.tsx` | — (nowa) | `PageHero` → `LegalDocument` (`numbering="index"`, `summary` = `Tally` „W skrócie”) | `BreadcrumbList` |
 | `events.ts` | treść `/wiedza`: `eventsHero`, `eventsDescription`, `upcomingSection`, `pastSection`, `knowledgeTeaser` (zajawka na `/`), `events` (`KnowledgeEvent`: `id`, `title`, `format`, `date` `YYYY-MM-DD` (minione bez znanego dnia: `YYYY-MM` → „06.2026”), `endDate?` (wielodniowe), `time?`, `host?`, `place?` (miasto), `venue?` (obiekt, np. „PGE Narodowy”), `online?`, `people`, `text?`, `link?`, `logo?` (jasne, bez tła; nadchodzące: róg kafla, minione: róg zdjęcia), `photo?` (minione), `featured?` (zajawka na `/`)), `todayIso()` (Europe/Warsaw), `splitEvents()`, `teaserEvents()`, `isPublishedEvent()`, `eventDate()`, `eventPeople()`. Bez `host` / `place` / `text`: „Gdzie” z tego, co jest (pusty wiersz się nie renderuje), bez opisu. Łącznik, przy którym tytuł nie może się łamać: `WJ` (word joiner) po nim, JSON-LD go usuwa |
 | `events-jsonld.ts` | `eventsGraphNodes()`: `CollectionPage` + `Event` (tylko `isPublishedEvent` z `place` albo `online`: stacjonarne bez miejsca zostają tylko w UI, bo Google wymaga `location`; `endDate` u wielodniowych, `image` z `photo`, `Place.name` = `venue ?? place`, bez `host` bez `organizer`, bez `text` bez `description`) |
 | `process.ts` | `processSection` (label, 4 kroki `ProcessSectionStep`) dla `ProcessSection` |
 | `faq.ts` | `faqSection` (label, `more`, pytania `FaqItem`), `publishedFaq()` (bez placeholderów `[…]`) |
+| `legal.ts` | wspólne dla dokumentów prawnych i `CookieNotice`: `LEGAL_EFFECTIVE_FROM` (data obu dokumentów i `cookieNotice.version`), `formatLegalDate()`, `LEGAL_DOMAIN`, `controllers` (współadministratorzy: Magdalena Nestorowicz i Jakub Fedoszczak, `address` = miejsce zamieszkania albo `null`), `controllersSentence`, `contactLink`, `privacyLink`, `termsLink`, `cookieNotice` (copy + `rows` z `from` do odliczania), `privacySummary`. Lekki (importuje go klient) |
+| `privacy-policy.ts` | `privacyPolicy: LegalDocument`; hosty `LiveFrame` wyprowadzone z `cases/*Live`. Nowe narzędzie (analityka, osadzenia) → nowa sekcja i nowa `LEGAL_EFFECTIVE_FROM` |
+| `terms.ts` | `terms: LegalDocument` (regulamin usług elektronicznych: strona i formularz) |
 | `about.ts` | treść `/o-nas` (`aboutHero`, `personCards`, `aiCard`, `marqueeItems`, `rolesSplit`, `findUs`, `linkedinPosts`, `eventsTeaser` + `publishedEventsTeaser(today)`); opcjonalne `personCards[id].photo` (`AboutPhoto`: `src`, `width`, `height`, `alt`, `focus` = `object-position` twarzy we wszystkich kadrach: źródło 1:1, więc `x` działa w kadrach 3:4, `y` w 4:3), dziś Magda i Kuba (`/assets/team/magda.avif`, `kuba-v2.avif`, 1254×1254; podmiana zdjęcia = nowa nazwa pliku, bo `/_next/image` i CDN cache'ują po `src`), trafia też do `image` w JSON-LD `Person` |
 | `cases/index.ts` | `cases` (6 × `CaseStudy` w kolejności `caseOrder`), `getCase(path)`, `CasePath`, `caseDescription(c)` |
 | `cases/<slug>.ts` | `CaseStudy` + dane bloków (`*Live`, `*Phone`, `*Spec`, `*Next`, obrazy, liczby…) |
@@ -1232,9 +1234,6 @@ Zasada: tylko fakty z `legacy/case-*.html` i repo. Bez danych (wynik, kod OTB) p
 | `cases/software-app.ts` | `softwareApplication()`, `softwareAppId()` — węzeł `SoftwareApplication` |
 
 Kafle `work.tiles` są wyprowadzone z `cases` (`tileLabel` → `title`, `title` → `name`, `years`, `kind`, `cover`):
-| `legal.ts` | wspólne dla dokumentów prawnych i `CookieNotice`: `LEGAL_EFFECTIVE_FROM` (data obu dokumentów i `cookieNotice.version`), `formatLegalDate()`, `LEGAL_DOMAIN`, `controllers` (współadministratorzy: Magdalena Nestorowicz i Jakub Fedoszczak, `address` = miejsce zamieszkania albo `null`), `controllersSentence`, `contactLink`, `privacyLink`, `termsLink`, `cookieNotice` (copy + `rows` z `from` do odliczania), `privacySummary`. Lekki (importuje go klient) |
-| `privacy-policy.ts` | `privacyPolicy: LegalDocument`; hosty `LiveFrame` wyprowadzone z `cases/*Live`. Nowe narzędzie (analityka, osadzenia) → nowa sekcja i nowa `LEGAL_EFFECTIVE_FROM` |
-| `terms.ts` | `terms: LegalDocument` (regulamin usług elektronicznych: strona i formularz) |
 w `home.ts` zostaje tylko układ (`size`, `offset`, `square`, `screens`) i okładka OurMoney (inny `alt` niż w case'ie).
 Kolejność kafli jest z legacy (inna niż `caseOrder`), poza Sassy przeniesionym na koniec.
 Wymiary obrazów to realne piksele (`sips`); helper `img()` w plikach case'ów
