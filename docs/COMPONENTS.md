@@ -595,7 +595,8 @@ Rodzic kanwy musi mieć `position: relative` (kanwa: `absolute; inset: 0; z-inde
   (kanwa pierwsza w `HomeHeroStage`).
 - **Dostępność:** kanwa `aria-hidden`; na `/` `VisuallyHidden` „W tle trójwymiarowy napis no–fuss.” (nowe zdanie);
   na 404 `h1.sr-only` 1:1 z legacy, tekst `aria-live="polite"`. „Wróć na stronę główną →” (accent) widoczny od początku,
-  obok „Posprzątaj ↓” (ghost) i „Realizacje”; po „Posprzątaj” przycisk znika, a fokus idzie na „Wróć na stronę główną →”.
+  obok „Posprzątaj ↓” (ghost), „Realizacje” i „Droga do Mordoru ↓” (ghost, kotwica `#mordor` do `FellowshipMap`); po „Posprzątaj”
+  przycisk znika, a fokus idzie na „Wróć na stronę główną →”.
 - **Nagłówki `/`:** jedyny `h1` to hasło. Rola „Design & Development”, dwa akapity, suwak „Zamieszanie” i naklejki
   z legacy usunięte (odciążenie pierwszego ekranu); kto co robi w duecie mówi podpis zdjęcia w `AboutSection`.
 - **Hero `/` pod usługi:** telefon (< 768 px): h1, lead (`hero.lead` z `home.ts`, `--t-lead`) i `ContactCta` dosunięte do dołu

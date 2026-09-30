@@ -1,7 +1,6 @@
 import { ids, type JsonLdNode, type JsonValue } from "@/lib/seo/jsonld";
 import { absoluteUrl } from "@/lib/seo/site-url";
 import { eventDate, events, eventsDescription, isPublishedEvent, type KnowledgeEvent } from "./events";
-import { getRoute } from "./routes";
 
 /**
  * Węzły JSON-LD `/wiedza`: `CollectionPage` + `Event` dla każdego wydarzenia bez placeholderów
@@ -54,7 +53,7 @@ export function eventsGraphNodes(): JsonLdNode[] {
     "@type": "CollectionPage",
     "@id": `${absoluteUrl(PATH)}#webpage`,
     url: absoluteUrl(PATH),
-    name: getRoute(PATH)?.title ?? "Wiedza",
+    name: "Wiedza",
     description: eventsDescription,
     inLanguage: "pl-PL",
     isPartOf: { "@id": ids.website },
