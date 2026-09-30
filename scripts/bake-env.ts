@@ -10,7 +10,8 @@
  * Format (odczyt: `envMap.ts`), całość w gzip: nagłówek u32 LE szerokość, wysokość; potem RGB half float
  * (bez alfy: shader bierze tylko `.rgb`) rozdzielone na płaszczyzny bajtów (najpierw starsze, potem młodsze
  * bajty wszystkich składowych), z mantysą zaokrągloną do 6 bitów (błąd względny ≤ 0.8%, poniżej kroku
- * 8-bitowego ekranu). Płaszczyzny i zaokrąglenie: 225 KB zamiast 923 KB dla surowego RGBA.
+ * 8-bitowego ekranu). Płaszczyzny i zaokrąglenie: 226 KB zamiast 923 KB dla surowego RGBA.
+ * Wymaga Node ≥ 22.18 (uruchamianie `.ts` bez kompilacji) i Chrome.
  */
 import { spawn } from "node:child_process";
 import { once } from "node:events";

@@ -1,7 +1,7 @@
 import { CubeUVReflectionMapping, DataTexture, HalfFloatType, LinearFilter, LinearSRGBColorSpace, RGBAFormat } from "three";
 
 /**
- * Zapieczona mapa otoczenia (PMREM pokoju `scripts/legacyRoomEnvironment.ts`, generuje `pnpm bake:env`).
+ * Zapieczona mapa otoczenia (PMREM pokoju `scripts/legacyRoomEnvironment.js`, generuje `pnpm bake:env`).
  * Gotowa tekstura CubeUV: bez renderowania pokoju i kompilacji shaderów PMREM przy wejściu.
  * Format opisuje `scripts/bake-env.ts`.
  */
@@ -43,7 +43,10 @@ async function fetchEnv(): Promise<EnvData> {
   return { width, height, data };
 }
 
-/* Dane pobierane i dekodowane raz na sesję (hero ↔ 404); tekstura osobno dla każdego renderera. */
+/*
+ * Cache modułu: raz na życie wątku. Na głównym wątku (ścieżka awaryjna) to cała wizyta (hero ↔ 404); w trybie workera
+ * każdy montaż sceny to nowy worker, więc plik jest ponownie odczytany (z cache HTTP) i zdekodowany, poza głównym wątkiem.
+ */
 let envPromise: Promise<EnvData> | null = null;
 export function loadEnvMap(): Promise<EnvData> {
   if (!envPromise) {

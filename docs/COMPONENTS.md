@@ -7,7 +7,7 @@ Przed pisaniem CSS przeczytaj [`DESIGN.md`](../DESIGN.md). Wzorce treści i zach
 
 1. **Server Component domyślnie.** `"use client"` tylko przy interakcji (stan, efekty, zdarzenia, `window`).
    Klienckie wrappery (`Reveal`, `SmoothScroll`) przyjmują serwerowe `children`, więc strona zostaje serwerowa.
-2. **three.js tylko przez `next/dynamic` z `ssr: false`**, w komponencie klienckim:
+2. **three.js tylko przez `next/dynamic` z `ssr: false`** (albo w workerze, jak `HeroScene/scene.worker.ts`), w komponencie klienckim:
    ```tsx
    "use client";
    import dynamic from "next/dynamic";
@@ -624,7 +624,8 @@ Rodzic sceny musi mieć `position: relative` (opakowanie kanwy: `absolute; inset
 - **Środowisko (r160 → r186):** legacy wołał `new RoomEnvironment()` bez renderera, co w r160 dawało światło główne 5
   zamiast 900 (ciemny pokój, jasne panele → kontrastowe odbicia). r186 ma zawsze 900 i pokój przesunięty o y −3.5,
   więc zapiekamy kopię z r160 (`scripts/legacyRoomEnvironment.js`).
-- **Sprzątanie:** geometrie, materiał, env map, renderer (albo zamknięcie workera), obserwatory, listenery. Font i dane mapy cache'owane w module.
+- **Sprzątanie:** geometrie, materiał, env map, renderer (albo zamknięcie workera), obserwatory, listenery. Font i dane mapy
+  cache'owane w module, czyli na życie wątku: w trybie workera każdy montaż sceny pobiera je ponownie (z cache HTTP) i dekoduje poza głównym wątkiem.
 - **Warstwy:** tło `z-index: 0` pod siatką (1); kanwa, ramka `.band` (z fallbackiem CSS) i treść `z-index: 2` nad siatką,
   bo napis 3D to obiekt, nie tło (legacy: kanwa −1, linie siatki przecinały litery). Treść nad kanwą przez kolejność w DOM
   (kanwa pierwsza w `HomeHeroStage`).

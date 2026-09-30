@@ -35,7 +35,7 @@ const SIZE = 2;
 /** Przechył grupy w osi Z (legacy): prawy koniec napisu wyżej, więc napis jest wyższy o `baseW · sin`. */
 const TILT_Z = 0.06;
 
-/* Font ładowany raz na sesję (hero ↔ 404 bez ponownego pobierania). */
+/* Font ładowany raz na życie wątku (patrz cache w `envMap.ts`: w workerze to jeden montaż sceny). */
 let fontPromise: Promise<Font> | null = null;
 function loadFont(): Promise<Font> {
   if (!fontPromise) {
