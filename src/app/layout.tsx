@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
+import { CookieNotice } from "@/components/organisms/CookieNotice";
 import { Cursor } from "@/components/organisms/Cursor";
 import { Footer } from "@/components/organisms/Footer";
 import { GridOverlay } from "@/components/organisms/GridOverlay";
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
             {children}
           </main>
           <Footer />
+          <CookieNotice />
           <Cursor />
         </SmoothScroll>
         <JsonLd data={siteGraph()} />

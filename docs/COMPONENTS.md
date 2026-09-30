@@ -296,7 +296,7 @@ Przyciski zawijają się (odstęp 8 px). Dane tylko z `site.contact`.
 ### `ContactForm` — client
 ```ts
 interface ContactFormProps { className?: string }
-const CONTACT_FORM_COPY: { label; fields: { name; email; message }; messagePlaceholder; submit; pending; sent; failed; trap };
+const CONTACT_FORM_COPY: { label; fields: { name; email; message }; messagePlaceholder; submit; pending; sent; failed; trap; privacy };
 ```
 Formularz kontaktu w stopce (`Footer`, jedyne użycie): imię, e-mail, wiadomość (wszystkie wymagane) → Server Action
 `sendContactMessage` z `@/lib/contact/action` podana wprost do `useActionState`. SSR wystawia natywne `action` z ukrytymi
@@ -323,7 +323,8 @@ W trakcie wysyłki „Wysyłamy…”, `aria-disabled` (opacity .6, bez uniesien
 `sent` bez maila i loguje `[contact] honeypot hit` bez danych. Obok wysyłki ghost „Umów rozmowę ↗” (tylko z
 `calendarUrl`), pod spodem `responseNote` (bez placeholdera `[…]`). Pola: obrys 1 px `--ink` 18% (hover 40%, fokus
 2 px `--ink`), wypełnienie `--bg` drugim cieniem, karetka w akcencie; od 768 px imię | e-mail w dwóch kolumnach,
-wiadomość na całą szerokość (`data-lenis-prevent`, `resize: vertical`). Wymaga ciemnego rodzica z `--bg`.
+wiadomość na całą szerokość (`data-lenis-prevent`, `resize: vertical`). Pod `responseNote` notka mono-sm `privacy` („Dane z formularza
+służą tylko do odpowiedzi.”) z linkiem `ArrowLink` do `/polityka-prywatnosci`. Wymaga ciemnego rodzica z `--bg`.
 `next.config.ts`: Server Actions mają `bodySizeLimit: "64kb"`, a każda ścieżka nagłówki `X-Frame-Options: DENY`
 i `Content-Security-Policy: frame-ancestors 'none'`.
 
@@ -427,6 +428,15 @@ i bez transformacji, limonka natychmiast.
 
 ### Linki-placeholdery
 
+### `Tally` — server
+```ts
+interface TallyItem { label: ReactNode; value: ReactNode }   // `TallyRow` z treści (string, string) też pasuje
+interface TallyProps { rows: readonly TallyItem[]; ariaLabel?: string; className?: string }
+```
+„Paragon” w mono: `<dl>`, wiersz = etykieta `--muted`, kropkowany odstęp (`dt::after`, `currentColor` 60%) i wartość do prawej
+(maks. 60% szerokości, dłuższa się łamie). Działa na jasnym i ciemnym tle. Użycia: `CookieNotice` (liczniki) i „W skrócie”
+nad polityką prywatności.
+
 Placeholdery nie są klikalnymi linkami (bez `href="#"`, bez skoku na górę, poza kolejnością Tab). `href: null` w danych →
 
 | Gdzie | Zachowanie |
@@ -453,6 +463,8 @@ Wyjątek: kafle wydarzeń (`/wiedza` i zajawka `#wiedza` na `/`): placeholdery `
 (decyzja: układ do przeglądu), ale nie trafiają do JSON-LD ani na `/o-nas`.
 Helper dla prawdziwych adresów: `externalLinkProps(href)` z `@/lib/href` (`target="_blank" rel="noopener"`).
 `ScrambleLink` i `SmoothScroll` nadal obsługują `aria-disabled="true"` (dla linków spoza danych).
+Dokumenty prawne (`/regulamin`, `/polityka-prywatnosci`) nie mają placeholderów: brakujący adres współadministratora to `address: null`
+w `legal.ts` (dokument pokazuje wtedy samo imię i nazwisko).
 
 ---
 
@@ -469,7 +481,8 @@ Montowany w layoucie. Strony go nie renderują.
 | `GridOverlay` | client | 3 piony + 2 poziomy z krzyżykami, `mix-blend-mode: difference` |
 | `Cursor` | client | strzałka (lerp 0.18) + naklejki; tylko `pointer: fine`, off przy reduced motion. Jeden SVG 88 px (punkt wskaźnika w środku), stan w `data-state` bez re-renderów: `arrow`; `link` nad `a[href], button, [role="button"], label, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])` (bez `:disabled`) → limonkowy pierścień; `grab` nad `[data-cursor="grab"]` (ma pierwszeństwo; track `FilmStrip`, kula `DragBall`, naklejka `StickerBoard`) → mała kropka, `data-pressed` przy wciśnięciu ją ściska. `help` nad `[data-cursor="help"]` (`summary` w `FaqSection`) → pełny limonkowy krążek z „?”, przy `details[open]` z „−” (`data-open`, odświeża się przy ruchu); `calendar` nad `[data-cursor="calendar"]` (`Button` „Umów rozmowę ↗” w `ContactCta` i `ContactForm`) → krążek z ikoną kalendarza; wciśnięcie ściska oba do 0.8 jak `link`. Wartości `data-cursor`: `grab` \| `help` \| `calendar`; kolejność detekcji (`closest`): grab → help → calendar → link. Śledzi `pointermove` (działa też przy `preventDefault` na `pointerdown`). Nad `[data-native-cursor]` (żywa ramka `LiveFrame`, ekran `PhoneScroller`) i po wejściu do `iframe` / wyjściu z okna chowa się, zostaje kursor systemowy. Reguła w `globals.css`: `html[data-cursor="on"] :not([data-native-cursor], [data-native-cursor] *) { cursor: none !important }`, więc `cursor:` w modułach nie przebija się; element z `data-native-cursor` musi sam ustawić `cursor` (`auto` albo własny). Ton w `data-tone` (`base` / `accent`): hit-test `elementsFromPoint` przy zmianie celu (`pointermove` / `pointerover`), pierwsze nieprzezroczyste tło na stosie (i `::before` wierzchniego) równe `--accent` → ciemny wariant; `img` / `video` / `canvas` wyżej na stosie → `base`; przeliczany też na `transitionrun` / `transitionend` / `transitioncancel` `background-color` elementów ze stosu i raz po `pointerup` |
 | `SmoothScroll` | client | Lenis (lerp 0.1), kotwice, reset przy zmianie route |
-| `Footer` | server | `#kontakt` (cel „Porozmawiajmy →”), min. `100svh`, płaskie tło `--hero-sky` (bez smug, `--bg` = `--hero-sky`, `color-scheme: dark`), CTA display z revealem linii; na końcu limonka `Mark` „zamieszania” wjeżdża od prawej do lewej (własny `Reveal` słowa, opóźnienie `--reveal-duration` po jego `is-in`, tło w `::before`, kolor liter gradientem `background-clip: text` na tej samej krawędzi; reduced motion: od razu limonka). `.l3` ma `line-height: calc(1em + var(--gap))` i ujemne marginesy, więc złamane „bez / zamieszania” zachowuje rytm pozostałych linii. Pod nagłówkiem `ContactForm` widoczny od razu (od 768 px od kolumny 3, od 1024 px kolumny 3–10; w nim „Umów rozmowę ↗” i `responseNote`); nagłówek z formularzem stoją na środku wolnego miejsca (`.main`, `flex: 1`), niżej w przepływie wiersz z `CopyEmail` w `<address>` (`font-style: normal`), `SocialLinks` i copyrightem w `<small>` (`font-size: inherit`); jedyna strefa naklejek (`data-stickers`) na stronach treści |
+| `Footer` | server | `#kontakt` (cel „Porozmawiajmy →”), min. `100svh`, płaskie tło `--hero-sky` (bez smug, `--bg` = `--hero-sky`, `color-scheme: dark`), CTA display z revealem linii; na końcu limonka `Mark` „zamieszania” wjeżdża od prawej do lewej (własny `Reveal` słowa, opóźnienie `--reveal-duration` po jego `is-in`, tło w `::before`, kolor liter gradientem `background-clip: text` na tej samej krawędzi; reduced motion: od razu limonka). `.l3` ma `line-height: calc(1em + var(--gap))` i ujemne marginesy, więc złamane „bez / zamieszania” zachowuje rytm pozostałych linii. Pod nagłówkiem `ContactForm` widoczny od razu (od 768 px od kolumny 3, od 1024 px kolumny 3–10; w nim „Umów rozmowę ↗” i `responseNote`); nagłówek z formularzem stoją na środku wolnego miejsca (`.main`, `flex: 1`), niżej w przepływie wiersz z `CopyEmail` w `<address>` (`font-style: normal`), `SocialLinks`, `<nav aria-label="Dokumenty">` (Regulamin, Polityka prywatności) i copyrightem w `<small>` (`font-size: inherit`); jedyna strefa naklejek (`data-stickers`) na stronach treści |
+| `CookieNotice` | client | komunikat o ciasteczkach (informacja, nie zgoda: strona nie ustawia ciasteczek). Ciemna karta `tone-dark` (`--shade-900`, obrys `--alpha-200`, z-index 48: pod menu i HUD), od 640 px 384 px w lewym dolnym rogu, niżej na całą szerokość i bez etykiety i akapitu. Tytuł z `Mark` „Zero”, `Tally` z licznikami odliczającymi od `from` do 0 (zarejestrowane `@property --nf-count` + `counter()`, `aria-hidden`, wartość dla czytnika w `sr-only`), „Jasne” (`Button`) i link do polityki. Serwer i hydratacja: nic (`useSyncExternalStore`, server snapshot = zamknięty); pokazuje się `SHOW_DELAY_MS` (1,2 s) po starcie wejścia, gdy `localStorage["nf:cookie-notice"]` ≠ `cookieNotice.version` (`notice-store.ts`, zdarzenie `storage` między kartami, bez `localStorage` stan w pamięci). Zamknięcie: „Jasne” albo Esc w karcie → wpis w `localStorage`, wyjazd 300 ms, fokus na `<main>`, jeśli był w karcie. Nie łapie fokusu. Reduced motion: bez animacji |
 | `Reveal` | client | wrapper `data-reveal` |
 
 ### `Reveal` — client
@@ -865,6 +878,27 @@ Produkty (`/ourmoney`, `/aion-mind`): warianty `wide` / `split`. Strony WWW (`/b
 | `LiveFrame` | client | `.live` | Busy Bee, AH, OTB, Sassy |
 | `FilmStrip` | client | `.film` | Busy Bee |
 | `PhoneScroller` | client | `.scrollphone` | Busy Bee, AH, OTB |
+### Podstrony prawne `/regulamin` i `/polityka-prywatnosci`
+
+Nowe strony, bez wzorca w legacy. Kolejność: `PageHero` → `LegalDocument` → stopka. Treść: `src/content/terms.ts`,
+`src/content/privacy-policy.ts` (typ `LegalDocument`), wspólne dane w `src/content/legal.ts`. Linki do obu stron są w stopce
+(`<nav aria-label="Dokumenty">`), w HUD ich nie ma (`section: "legal"`).
+
+#### `LegalDocument` — server
+```ts
+interface LegalDocumentProps {
+  document: LegalDocument;          // hero, description, effectiveFrom (ISO), sections: { id, title, blocks }[]
+  numbering: "paragraph" | "index"; // „§ 1” (czytany) albo „01” (aria-hidden)
+  summary?: ReactNode;              // nad sekcjami, np. `Tally` „W skrócie”
+}
+type LegalBlock = LegalText | { list: readonly LegalText[]; ordered?: boolean };   // akapit albo lista
+type LegalText = string | readonly (string | { label; href })[];                  // tekst z linkami
+```
+Jasne `article.section` z obrysem u góry. Od 1024 px spis treści (`<nav>`, `<ol>` kotwic) przyklejony w kolumnach 1–3 (`top: 120px`),
+treść w 5–11; niżej jedna kolumna, spis nad treścią. Nad sekcjami „Obowiązuje od” (`<time>`). Sekcja: `<section id>` z `h2`
+(`--t-title`, numer mono w kolumnie 56 px), tekst body do 68ch wcięty pod tytuł, listy ze znacznikiem mono („—” albo „1.”).
+`scroll-margin-top: 96px` (czyta go też Lenis). Linki: `ArrowLink underline`, `https://` z „↗”, całe w jednej linii. Bez reveal.
+
 | `DragBall` | client | `.otb` | OTB |
 | `ToySwitcher` | client | `.sw2` | Sassy |
 | `SpecList` | server | `.spec`, `.facts` | Busy Bee, AH, OTB, Sassy |
@@ -1147,6 +1181,8 @@ Metadane case studies: `buildMetadata({ path, type: "article", description: case
 | `types.ts` | typy współdzielone (`CaseStudy`, `CaseStudySummary`, `CaseStudyStory`, `SocialLink`, `Person`…) |
 | `home.ts` | `hero` (lead, akapit o duecie), `about`, `work` (kafle), `servicesSection`, `testimonialsSection`, `publishedTestimonials()`; typy `WorkTile`, `SizedImage` (portrety w `#o-nas` biorą się z `personCards` w `about.ts`) |
 | `home-jsonld.ts` | węzły JSON-LD strony głównej (`workItemList`, `servicesCatalog`, `reviews`, `faqPage`). W `workItemList` `creator` = no-fuss zawsze (ten sam `@id` co `CreativeWork` na stronie case'u); `employment` (AION MIND, Automation House) dokłada `contributor` = Person z `employer.employee`, a `about` → `SoftwareApplication` (`softwareAppId`) tylko przy `softwareApp: true` (AION MIND; `publisher` = pracodawca jest na stronie case'u). Bez flagi `about` nie powstaje, więc nie ma wiszącego `@id` |
+| `/regulamin` | `app/regulamin/page.tsx` | — (nowa) | `PageHero` → `LegalDocument` (`numbering="paragraph"`) | `BreadcrumbList` |
+| `/polityka-prywatnosci` | `app/polityka-prywatnosci/page.tsx` | — (nowa) | `PageHero` → `LegalDocument` (`numbering="index"`, `summary` = `Tally` „W skrócie”) | `BreadcrumbList` |
 | `events.ts` | treść `/wiedza`: `eventsHero`, `eventsDescription`, `upcomingSection`, `pastSection`, `knowledgeTeaser` (zajawka na `/`), `events` (`KnowledgeEvent`: `id`, `title`, `format`, `date` `YYYY-MM-DD` (minione bez znanego dnia: `YYYY-MM` → „06.2026”), `endDate?` (wielodniowe), `time?`, `host?`, `place?` (miasto), `venue?` (obiekt, np. „PGE Narodowy”), `online?`, `people`, `text?`, `link?`, `logo?` (jasne, bez tła; nadchodzące: róg kafla, minione: róg zdjęcia), `photo?` (minione), `featured?` (zajawka na `/`)), `todayIso()` (Europe/Warsaw), `splitEvents()`, `teaserEvents()`, `isPublishedEvent()`, `eventDate()`, `eventPeople()`. Bez `host` / `place` / `text`: „Gdzie” z tego, co jest (pusty wiersz się nie renderuje), bez opisu. Łącznik, przy którym tytuł nie może się łamać: `WJ` (word joiner) po nim, JSON-LD go usuwa |
 | `events-jsonld.ts` | `eventsGraphNodes()`: `CollectionPage` + `Event` (tylko `isPublishedEvent` z `place` albo `online`: stacjonarne bez miejsca zostają tylko w UI, bo Google wymaga `location`; `endDate` u wielodniowych, `image` z `photo`, `Place.name` = `venue ?? place`, bez `host` bez `organizer`, bez `text` bez `description`) |
 | `process.ts` | `processSection` (label, 4 kroki `ProcessSectionStep`) dla `ProcessSection` |
@@ -1173,6 +1209,9 @@ Zasada: tylko fakty z `legacy/case-*.html` i repo. Bez danych (wynik, kod OTB) p
 | `cases/software-app.ts` | `softwareApplication()`, `softwareAppId()` — węzeł `SoftwareApplication` |
 
 Kafle `work.tiles` są wyprowadzone z `cases` (`tileLabel` → `title`, `title` → `name`, `years`, `kind`, `cover`):
+| `legal.ts` | wspólne dla dokumentów prawnych i `CookieNotice`: `LEGAL_EFFECTIVE_FROM` (data obu dokumentów i `cookieNotice.version`), `formatLegalDate()`, `LEGAL_DOMAIN`, `controllers` (współadministratorzy: Magdalena Nestorowicz i Jakub Fedoszczak, `address` = miejsce zamieszkania albo `null`), `controllersSentence`, `contactLink`, `privacyLink`, `termsLink`, `cookieNotice` (copy + `rows` z `from` do odliczania), `privacySummary`. Lekki (importuje go klient) |
+| `privacy-policy.ts` | `privacyPolicy: LegalDocument`; hosty `LiveFrame` wyprowadzone z `cases/*Live`. Nowe narzędzie (analityka, osadzenia) → nowa sekcja i nowa `LEGAL_EFFECTIVE_FROM` |
+| `terms.ts` | `terms: LegalDocument` (regulamin usług elektronicznych: strona i formularz) |
 w `home.ts` zostaje tylko układ (`size`, `offset`, `square`, `screens`) i okładka OurMoney (inny `alt` niż w case'ie).
 Kolejność kafli jest z legacy (inna niż `caseOrder`), poza Sassy przeniesionym na koniec.
 Wymiary obrazów to realne piksele (`sips`); helper `img()` w plikach case'ów

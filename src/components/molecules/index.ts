@@ -9,6 +9,7 @@ export * from "./NavList";
 export * from "./PersonCard";
 export * from "./PhoneFrame";
 export * from "./SocialLinks";
+export * from "./Tally";
 export * from "./TestimonialCard";
 export * from "./TileCaption";
 export * from "./WorkTile";

@@ -1,0 +1,159 @@
+/*
+ * Dokument prawny: jedna kolumna na telefonie (spis treści nad treścią), od 1024 px siatka 12 kolumn:
+ * spis treści przyklejony w 1–3, treść w 5–11. Linie 1 px jak w listach (`--ink` 18%).
+ */
+.doc {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gap);
+  row-gap: 48px;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.doc > * {
+  grid-column: 1 / -1;
+}
+
+/* ---------- spis treści ---------- */
+.tocLabel {
+  font: var(--t-mono-sm);
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.tocList {
+  list-style: none;
+  display: grid;
+  gap: 4px;
+}
+
+.tocLink {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 8px;
+  align-items: baseline;
+  padding: 4px 0;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+
+.tocLink > :first-child {
+  color: var(--ink);
+}
+
+@media (hover: hover) {
+  .tocLink:hover {
+    color: var(--ink);
+  }
+}
+
+.tocLink:focus-visible {
+  color: var(--ink);
+}
+
+/* ---------- treść ---------- */
+.meta {
+  color: var(--muted);
+}
+
+.summary {
+  margin-top: 32px;
+  padding: 24px;
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+/* Sekcja: kotwica z odstępem spod HUD (Lenis i przeglądarka czytają `scroll-margin-top`). */
+.part {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  scroll-margin-top: 96px;
+}
+
+.heading {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 8px;
+  align-items: baseline;
+  font: var(--t-title);
+  letter-spacing: -0.01em;
+}
+
+.number {
+  color: var(--muted);
+}
+
+/* Tekst prawny: body, długość wiersza do 68 znaków, wcięty pod tytuł (kolumna numeru). */
+.prose {
+  display: grid;
+  gap: 16px;
+  max-width: 68ch;
+  margin-top: 16px;
+  padding-left: 64px;
+}
+
+.list {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  counter-reset: item;
+}
+
+.list > li {
+  position: relative;
+  padding-left: 32px;
+  counter-increment: item;
+}
+
+/* Znacznik w mono: „—” dla punktów, „1.” dla ustępów; wyrównany do pierwszej linii tekstu. */
+.list > li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  font: var(--t-mono);
+  line-height: inherit;
+  color: var(--muted);
+}
+
+.ordered > li::before {
+  content: counter(item) ".";
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+@media (max-width: 639px) {
+  .heading {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .prose {
+    padding-left: 0;
+  }
+
+  .summary {
+    padding: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .toc {
+    grid-column: 1 / span 3;
+    position: sticky;
+    top: 120px;
+    align-self: start;
+  }
+
+  .body {
+    grid-column: 5 / span 7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tocLink {
+    transition: none;
+  }
+}

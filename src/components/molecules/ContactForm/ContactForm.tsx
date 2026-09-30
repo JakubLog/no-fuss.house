@@ -1,8 +1,10 @@
 "use client";
 
 import { useActionState, useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { ArrowLink } from "@/components/atoms/ArrowLink";
 import { Button } from "@/components/atoms/Button";
 import { CONTACT_CTA_LABELS } from "@/components/molecules/ContactCta";
+import { privacyLink } from "@/content/legal";
 import { isPlaceholder, site } from "@/content/site";
 import { sendContactMessage } from "@/lib/contact/action";
 import {
@@ -30,6 +32,7 @@ export const CONTACT_FORM_COPY = {
   sent: "Dzięki, wiadomość doszła. Odpiszemy na",
   failed: "Wiadomość nie doszła. Spróbuj jeszcze raz albo napisz na",
   trap: "Zostaw to pole puste",
+  privacy: "Dane z formularza służą tylko do odpowiedzi.",
 } as const;
 
 export interface ContactFormProps {
@@ -169,6 +172,12 @@ function ContactFormView({ className, initialState, onSubmitValues }: ContactFor
         ) : null}
       </div>
       {isPlaceholder(responseNote) ? null : <p className={cx("mono-sm", styles.note)}>{responseNote}</p>}
+      <p className={cx("mono-sm", styles.note)}>
+        {CONTACT_FORM_COPY.privacy}{" "}
+        <ArrowLink href={privacyLink.href} variant="underline">
+          {privacyLink.label}
+        </ArrowLink>
+      </p>
       {/* Po remoncie komunikat jest w regionie od początku: `status` mógłby przemilczeć, `alert` czytniki ogłaszają. */}
       <p role={remounted ? "alert" : "status"} className={styles.status}>
         {state.status === "sent" ? `${CONTACT_FORM_COPY.sent} ${state.email}.` : null}

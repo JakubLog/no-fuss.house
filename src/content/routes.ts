@@ -11,8 +11,8 @@ import type { InternalPath } from "./types";
 
 export type RouteKind = "home" | "page" | "case";
 
-/** Sekcja nawigacji, do której należy route (steruje `aria-current` w HUD). */
-export type NavSection = "home" | "about" | "work" | "events";
+/** Sekcja nawigacji, do której należy route (steruje `aria-current` w HUD). `legal`: bez pozycji w menu (linki w stopce). */
+export type NavSection = "home" | "about" | "work" | "events" | "legal";
 
 type ChangeFrequency = NonNullable<MetadataRoute.Sitemap[number]["changeFrequency"]>;
 
@@ -137,6 +137,28 @@ export const routes = [
     lastModified: "2026-09-25",
     changeFrequency: "weekly",
     priority: 0.6,
+  },
+  {
+    path: "/regulamin",
+    title: "Regulamin strony i formularza kontaktu",
+    kind: "page",
+    section: "legal",
+    legacy: [],
+    source: null,
+    lastModified: "2026-09-30",
+    changeFrequency: "yearly",
+    priority: 0.2,
+  },
+  {
+    path: "/polityka-prywatnosci",
+    title: "Polityka prywatności i ciasteczek",
+    kind: "page",
+    section: "legal",
+    legacy: [],
+    source: null,
+    lastModified: "2026-09-30",
+    changeFrequency: "yearly",
+    priority: 0.2,
   },
 ] as const satisfies readonly SiteRoute[];
 

@@ -53,6 +53,8 @@ AION MIND (https://aionmind.com, journaling z AI) nie jest produktem no-fuss: to
 - [Automation House — case study](https://no-fuss.house/automation-house): rebranding strony Automation House by Tigers, Warszawa, 06.2026. Etat Kuby (pracodawca: Automation House by Tigers), nie zlecenie no-fuss. Kod w Next.js: Kuba, design: Magda.
 - [OTB Ventures — case study](https://no-fuss.house/otb): strona funduszu VC OTB Ventures, Amsterdam / Warszawa, 06.2025. Rola no-fuss: design (Magda razem z Piotrem Chuchłą). Strona na WordPressie.
 - [Sassy — case study](https://no-fuss.house/sassy): eksperyment Magdy, 07.2026: strona bez celu w jednym pliku HTML. Projekt własny, nie zlecenie.
+- [Regulamin](https://no-fuss.house/regulamin): zasady korzystania ze strony i formularza kontaktu, reklamacje.
+- [Polityka prywatności](https://no-fuss.house/polityka-prywatnosci): współadministratorzy danych to Magda i Kuba; strona nie ustawia ciasteczek i nie ma analityki, dane z formularza służą tylko do odpowiedzi.
 
 ## Optional
 

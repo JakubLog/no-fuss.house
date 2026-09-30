@@ -323,6 +323,21 @@ do Góry Przeznaczenia 184 dni. Hero dostaje ghost „Droga do Mordoru ↓” ja
   z uczciwie opisaną metodą, nie deklaracja o tempie naszej pracy.
 - **Panel etapu** (od 1024 px 4 kolumny obok planszy, sticky): data, nazwa w roli title, co się działo (lead), „U nas” (lead), Wstecz / Dalej.
 
+## Komunikat o ciasteczkach i strony prawne
+
+Strona nie ustawia ciasteczek, więc zamiast banera zgody jest komunikat w tonie marki: „Zero ciasteczek. Serio.”
+
+- **Komunikat** (chrome, każda strona): ciemna karta `#15181D` z obrysem 1 px w bieli alpha, zero radius, bez cienia. Od 640 px
+  384 px w lewym dolnym rogu, niżej na całą szerokość (bez etykiety i akapitu, żeby nie zasłaniać pół ekranu). Etykieta mono,
+  tytuł w roli title z limonkowym `Mark` na „Zero”, pod nim paragon mono (etykieta, kropki, wartość) między przerywanymi kreskami:
+  Ciasteczka, Analityka, Reklamy i piksele, Zamieszanie. Wiersze „drukują się” po kolei, a liczniki odliczają do 0 (Zamieszanie od 404).
+  Na dole przycisk „Jasne” (accent) i link mono do polityki. Wjeżdża od dołu 1,2 s po starcie wejścia, wyjeżdża w 0,3 s;
+  przy reduced motion bez ruchu. Nie blokuje strony i nie łapie fokusu, Esc zamyka.
+- **Regulamin i polityka prywatności**: hero jak na „O nas”, pod nim jasny dokument. Od 1024 px spis treści mono przyklejony po lewej
+  (kolumny 1–3), treść w kolumnach 5–11, wiersz do 68 znaków. Sekcje oddzielone kreską 1 px, tytuł w roli title z numerem mono
+  („§ 1” w regulaminie, „01” w polityce). Nad polityką paragon „W skrócie” w ramce 1 px. Linki w tekście: podkreślenie, hover limonkowy.
+  Linki do obu stron w stopce, obok social.
+
 ## Komponenty case study
 
 Wspólny szkielet: ciemne hero (chip „Case study” + kicker mono, tytuł mega, lead statement, fakty w `dl` mono),

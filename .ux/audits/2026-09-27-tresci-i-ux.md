@@ -124,7 +124,7 @@ Szybkie S bez decyzji z 09-26: `WorkGrid` `ul`, `h3` w kaflach realizacji, stopk
 - P1.4: pętla sweepa w „Jak pracujemy” zostaje (świadome odstępstwo od WCAG 2.2.2).
 - P1.5: HUD bez zmian w tej iteracji (właściciel pracuje nad `MobileMenu`).
 - Domena: `https://no-fuss.house`. Hosting: Vercel; rate limit formularza = reguła Vercel Firewall na każdy POST (poza kodem).
-- P0.1: administrator danych = JDG Magdy (czekamy na dane do polityki prywatności).
+- P0.1: ~~administrator danych = JDG Magdy~~ → zmiana 2026-09-30: współadministratorzy Magdalena Nestorowicz i Jakub Fedoszczak jako osoby fizyczne (art. 26 RODO). Polityka `/polityka-prywatnosci`, regulamin `/regulamin` i klauzula przy formularzu są w kodzie; adres Kuby wpisany, brakuje miejsca zamieszkania Magdy (art. 5 ust. 2 pkt 2 UŚUDE, `src/content/legal.ts`).
 - Formularz ma działać bez JS (decyzja kierownika sesji): akcja wprost w `useActionState`, bez blokady nagłówka `next-action`.
 
 ### ✅ Wdrożone
@@ -143,4 +143,4 @@ Szybkie S bez decyzji z 09-26: `WorkGrid` `ul`, `h3` w kaflach realizacji, stopk
 - P2 LiveFrame: przycisk w rogu postera (48 px), fokus po załadowaniu na oknie ramki z widocznym obrysem, `role="group"`. P2 ToySwitcher: podgląd nad listą poniżej 1024, wyrównanie aktywnej pozycji. P2 stopka: `address`/`small`, odstęp „bez / zamieszania”. P2 FAQ: „na rozmowie” jako link. `[zweryfikowane]`
 - Domena `no-fuss.house` w kodzie, `.env.example`, README, `llms.txt`; `warn` przy złym `NEXT_PUBLIC_SITE_URL`. `[zweryfikowane]`
 
-Otwarte: P0.1 (dane do polityki prywatności), P0.3, P1.5, P1.7–1.9, P1.11 (treść/materiały), pozostałe P2 (m.in. drobne a11y z 09-26, priorytet LCP, pełne CSP, terminologia, kolejność „Następny projekt”).
+Otwarte: P0.1 (miejsce zamieszkania Magdy w `legal.ts`), P0.3, P1.5, P1.7–1.9, P1.11 (treść/materiały), pozostałe P2 (m.in. drobne a11y z 09-26, priorytet LCP, pełne CSP, terminologia, kolejność „Następny projekt”).

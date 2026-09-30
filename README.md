@@ -47,14 +47,15 @@ src/
     atoms/             Heading, Text, MonoLabel, Tag, Mark, Line, Fade, ScrambleLink, ArrowLink, Button, Logo, Icons,
                        GlowBackdrop, StickerLayer, PhotoPlaceholder, PartnerLogos, VisuallyHidden
     molecules/         NavList, MetaRow, TileCaption, FactRow, CopyEmail, SocialLinks, PhoneFrame,
-                       CaseProse, PersonCard, WorkTile, TestimonialCard, ContactCta, ContactForm, EventTile
-    organisms/         chrome (Hud, GridOverlay, Cursor, SmoothScroll, Footer, Reveal),
+                       CaseProse, PersonCard, WorkTile, TestimonialCard, ContactCta, ContactForm, EventTile, Tally
+    organisms/         chrome (Hud, GridOverlay, Cursor, SmoothScroll, Footer, CookieNotice, Reveal),
                        hero i 3D (HomeHero, HeroScene, NotFoundHero, PageHero), 404 (FellowshipMap), strona główna (+ KnowledgeTeaser),
-                       /o-nas, /wiedza (EventsSection), bloki case study
+                       /o-nas, /wiedza (EventsSection), /regulamin i /polityka-prywatnosci (LegalDocument), bloki case study
     templates/         CaseStudyLayout (fakty standardowe, blok CTA; + CaseStudySection: wide / split / lite)
   content/             site.ts (firma, osoby, produkty), routes.ts (lista stron), navigation.ts, types.ts,
                        home.ts + home-jsonld.ts, process.ts („Jak pracujemy”), faq.ts (FAQ strony głównej),
-                       about.ts, fellowship.ts (trasa Drużyny na 404), events.ts + events-jsonld.ts (/wiedza i zajawka na /), cases/ (index.ts + jeden plik na case study)
+                       about.ts, fellowship.ts (trasa Drużyny na 404), events.ts + events-jsonld.ts (/wiedza i zajawka na /), cases/ (index.ts + jeden plik na case study),
+                       legal.ts + terms.ts + privacy-policy.ts (regulamin, polityka prywatności, komunikat o ciasteczkach)
   lib/
     contact/           formularz kontaktu: walidacja i stany (form.ts), Server Action → Resend (action.ts)
     seo/               buildMetadata, JSON-LD, adres strony, znak do ikon
@@ -88,6 +89,8 @@ Jedno źródło prawdy: `src/content/routes.ts`. Stare adresy (`/no-fuss-v5`, `/
 | `/sassy` | `case-sassy-v2.html` |
 | `/wiedza` | — (nowa strona; wydarzenia w `src/content/events.ts`) |
 | 404 | `404.html` |
+| `/regulamin` | — (nowa strona; treść w `src/content/terms.ts`) |
+| `/polityka-prywatnosci` | — (nowa strona; treść w `src/content/privacy-policy.ts`) |
 
 ## legacy/
 
@@ -123,3 +126,12 @@ Nagłówki w `next.config.ts`: `X-Content-Type-Options`, `Referrer-Policy`, `Per
 i `Content-Security-Policy: frame-ancestors 'none'`; bez `X-Powered-By`. Pełne CSP jeszcze nieustawione (na razie tylko
 `frame-ancestors`; fonty są self-hostowane przez `next/font`, więc da się je wprowadzić bez wyjątków dla Google).
 Rate limit formularza kontaktu to reguła Vercel Firewall na każdy `POST` (poza kodem aplikacji).
+
+## Prywatność
+
+Strona nie ustawia ciasteczek i nie ma analityki. `CookieNotice` (chrome) to informacja, nie prośba o zgodę; jej zamknięcie
+zapisuje jeden wpis w `localStorage` (`nf:cookie-notice`). Dodajesz narzędzie, które zapisuje coś w przeglądarce albo wysyła
+dane na zewnątrz (analityka, osadzenia): zaktualizuj `src/content/privacy-policy.ts` i `LEGAL_EFFECTIVE_FROM` w `legal.ts`
+(komunikat pokaże się wtedy znowu), a dla ciasteczek wymagających zgody potrzebny jest baner zgody zamiast komunikatu.
+Adres Magdy (miejsce zamieszkania, art. 5 UŚUDE) jest jeszcze pusty (`address: null` w `legal.ts`); dokumenty pokazują wtedy samo nazwisko. Łańcuch poczty opisany w polityce:
+formularz → Resend, `general@no-fuss.house` → Cloudflare Email Routing (MX) → skrzynki Gmail; zmiana dostawcy = zmiana polityki.

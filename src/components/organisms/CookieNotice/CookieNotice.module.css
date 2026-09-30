@@ -1,0 +1,165 @@
+/*
+ * Komunikat o ciasteczkach: ciemna karta (`tone-dark`, tło `--shade-900` odcina się od ciemnego hero i stopki,
+ * obrys `--alpha-200`), zero radius, bez cienia. Telefon: na całą szerokość nad dolną krawędzią, kompaktowo
+ * (bez etykiety i akapitu: tytuł, paragon i link do polityki mówią to samo), żeby nie zasłaniać pół ekranu;
+ * od 640 px 384 px w lewym dolnym rogu. Warstwa 48: pod HUD (50) i menu mobilnym (49), pod kursorem (90).
+ */
+.notice {
+  position: fixed;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: 16px;
+  z-index: 48;
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+  background: var(--shade-900);
+  color: var(--ink);
+  color-scheme: dark;
+  box-shadow: inset 0 0 0 1px var(--alpha-200);
+  animation: rise var(--reveal-duration) var(--ease) both;
+}
+
+.leaving {
+  animation: sink 300ms ease-in both;
+}
+
+.label {
+  color: var(--muted);
+}
+
+.title {
+  font: var(--t-title);
+  letter-spacing: -0.01em;
+}
+
+/* ---------- paragon: wiersze „drukują się” po kolei, liczniki odliczają do 0 ---------- */
+.tally {
+  padding: 16px 0;
+  border-block: 1px dashed var(--alpha-400);
+}
+
+.tally > * {
+  animation: print 500ms var(--ease) both;
+}
+
+.tally > :nth-child(1) {
+  animation-delay: 350ms;
+}
+
+.tally > :nth-child(2) {
+  animation-delay: 450ms;
+}
+
+.tally > :nth-child(3) {
+  animation-delay: 550ms;
+}
+
+.tally > :nth-child(4) {
+  animation-delay: 650ms;
+}
+
+/*
+ * Licznik: zarejestrowana liczba całkowita `--nf-count` animuje się od `--from` do 0, a `counter()` ją wypisuje.
+ * Bez `@property` (starsze przeglądarki) wartość przeskakuje w połowie czasu, na końcu i tak jest 0.
+ * Czytnik czyta wartość z `sr-only` obok (licznik jest `aria-hidden`).
+ */
+@property --nf-count {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+
+.count {
+  counter-reset: nf-count var(--nf-count);
+  animation: countdown 1400ms var(--ease) 700ms both;
+}
+
+.count::after {
+  content: counter(nf-count);
+}
+
+.text {
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+}
+
+.more {
+  font: var(--t-mono);
+  text-transform: uppercase;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+@keyframes sink {
+  to {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+@keyframes print {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+  }
+
+  to {
+    opacity: 1;
+    clip-path: inset(0);
+  }
+}
+
+@keyframes countdown {
+  from {
+    --nf-count: var(--from);
+  }
+
+  to {
+    --nf-count: 0;
+  }
+}
+
+@media (max-width: 639px) {
+  .notice {
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .label,
+  .text {
+    display: none;
+  }
+
+  .tally {
+    padding: 12px 0;
+  }
+}
+
+@media (min-width: 640px) {
+  .notice {
+    right: auto;
+    bottom: 24px;
+    width: 384px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notice,
+  .leaving,
+  .tally > *,
+  .count {
+    animation: none;
+  }
+}

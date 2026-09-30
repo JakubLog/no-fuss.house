@@ -1,0 +1,33 @@
+/* Paragon: wiersze mono, etykieta przygaszona, kropki do wartości (legacy nie ma wzorca). */
+.tally {
+  display: grid;
+  gap: 8px;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.label {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  color: var(--muted);
+}
+
+/* Kropki od końca etykiety do wartości; na dole linii bazowej, jak na paragonie. */
+.label::after {
+  content: "";
+  flex: 1;
+  min-width: 16px;
+  border-bottom: 1px dotted color-mix(in srgb, currentColor 60%, transparent);
+}
+
+.value {
+  max-width: 60%;
+  text-align: right;
+}

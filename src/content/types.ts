@@ -189,3 +189,44 @@ export interface FaqMore {
   link: { label: string; href: string };
   after?: string;
 }
+
+/** Wiersz „paragonu” (`Tally`): etykieta, kropki, wartość. */
+export interface TallyRow {
+  label: string;
+  value: string;
+}
+
+/** Link w tekście dokumentu prawnego: `/…`, `mailto:` albo `https://…` (nowa karta, „↗”). */
+export interface LegalLink {
+  label: string;
+  href: string;
+}
+
+/** Akapit albo punkt listy: sam tekst albo przeplot tekstu i linków. */
+export type LegalText = string | readonly (string | LegalLink)[];
+
+/** Lista punktów w dokumencie prawnym (`ordered` → numerowana, np. ustępy paragrafu). */
+export interface LegalList {
+  list: readonly LegalText[];
+  ordered?: boolean;
+}
+
+/** Blok treści sekcji: akapit (`LegalText`) albo lista (`LegalList`). */
+export type LegalBlock = LegalText | LegalList;
+
+export interface LegalSection {
+  /** Kotwica sekcji (spis treści linkuje do `#id`). */
+  id: string;
+  title: string;
+  blocks: readonly LegalBlock[];
+}
+
+/** Dokument prawny (`/regulamin`, `/polityka-prywatnosci`): hero, opis do metadanych i sekcje. */
+export interface LegalDocument {
+  hero: { lines: readonly string[]; lead: string };
+  /** `<meta name="description">`, do 155 znaków. */
+  description: string;
+  /** Data wejścia w życie (ISO `YYYY-MM-DD`), pokazywana nad treścią. */
+  effectiveFrom: string;
+  sections: readonly LegalSection[];
+}
