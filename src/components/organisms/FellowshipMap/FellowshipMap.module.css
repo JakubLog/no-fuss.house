@@ -1,0 +1,453 @@
+/* Mapa trasy Drużyny pod hero 404: jasna sekcja, plansza `#15181D` (limonka tylko na ciemnym), panel etapu obok. */
+.head {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.label {
+  color: var(--muted);
+}
+
+.title {
+  font: var(--t-h2);
+  text-transform: uppercase;
+}
+
+.lead {
+  font: var(--t-lead);
+  color: var(--muted);
+  max-width: 44ch;
+}
+
+.layout {
+  display: grid;
+  gap: 32px var(--gap);
+}
+
+/* ---------- plansza ---------- */
+.board {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+  background: var(--shade-900);
+  color: var(--ink);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+}
+
+.toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+}
+
+.toggles button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 12px 16px;
+  color: var(--muted);
+  box-shadow: inset 0 0 0 1px var(--alpha-400);
+  text-transform: inherit;
+  cursor: pointer;
+  transition:
+    color 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
+}
+
+.toggles button[aria-pressed="true"] {
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+.toggles button[aria-pressed="false"] i {
+  opacity: 0.4;
+}
+
+.swatchFellowship,
+.swatchNofuss {
+  width: 24px;
+  border-top: 2px solid var(--ink);
+}
+
+.swatchNofuss {
+  border-top: 2px dashed var(--accent);
+}
+
+.play {
+  flex-shrink: 0;
+}
+
+/* ---------- mapa ---------- */
+.map {
+  position: relative; /* aspect-ratio z `VIEW_W / VIEW_H` (route.ts), inline */
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--alpha-200);
+}
+
+.map svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.map path {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.terrain path {
+  stroke: var(--alpha-400);
+  stroke-width: 1;
+}
+
+.hatch,
+.terrain .coastEcho {
+  stroke: var(--alpha-200);
+}
+
+.terrain .fort {
+  stroke: var(--alpha-700);
+}
+
+.terrain .mountains {
+  stroke: var(--alpha-600);
+  stroke-linejoin: miter;
+}
+
+.terrain .forest {
+  stroke-width: 2;
+  stroke-linecap: square;
+}
+
+.terrain .border {
+  stroke-dasharray: 4 4;
+}
+
+.terrain .road {
+  stroke-dasharray: 1 5;
+  stroke-linecap: square;
+}
+
+.terrain .doom {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  transition: stroke 0.3s var(--ease);
+}
+
+.terrain .doomTarget {
+  stroke: var(--accent);
+}
+
+.routePlan {
+  stroke: var(--alpha-600);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+}
+
+.routeWalked {
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: miter;
+}
+
+.nofussPlan {
+  stroke: var(--accent);
+  stroke-width: 1;
+  stroke-dasharray: 6 6;
+  opacity: 0.6;
+}
+
+.nofussWalked {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+/* Krainy: mono na tle planszy, żeby nie ginęły w kropkach lasów. */
+.region {
+  position: absolute;
+  translate: -50% -50%;
+  padding: 0 4px;
+  background: var(--shade-900);
+  color: var(--muted);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.regionWide {
+  display: none;
+}
+
+/* ---------- przystanki (przyciski nad rysunkiem) ---------- */
+.stops {
+  list-style: none;
+}
+
+.stops li {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.stop {
+  position: absolute;
+  left: -14px;
+  top: -14px;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.stop:focus-visible {
+  outline-offset: 0;
+}
+
+/* Romb jak w mierniku 404 i suwakach: przystanek przed nami = obrys, za nami = pełny, bieżący = limonka. */
+.stop i {
+  width: 10px;
+  height: 10px;
+  rotate: 45deg;
+  background: var(--shade-900);
+  box-shadow: inset 0 0 0 2px var(--alpha-600);
+  transition:
+    background-color 0.3s var(--ease),
+    scale 0.3s var(--ease);
+}
+
+.passed i {
+  background: var(--ink);
+  box-shadow: none;
+}
+
+.current i {
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--shade-900);
+  scale: 1.4;
+}
+
+.stop span {
+  position: absolute;
+  left: 26px;
+  top: 50%;
+  translate: 0 -50%;
+  padding: 4px 8px;
+  background: var(--shade-900);
+  color: var(--ink);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease);
+}
+
+.labelLeft span {
+  left: auto;
+  right: 26px;
+}
+
+.current span,
+.stop:focus-visible span {
+  opacity: 1;
+}
+
+.current span {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+@media (hover: hover) {
+  .stop:hover span {
+    opacity: 1;
+  }
+
+  .stop:hover i {
+    scale: 1.4;
+  }
+}
+
+/* Znaczniki: Drużyna biała, no-fuss limonkowa; nad przystankami, ale bez klikania. */
+.marker {
+  position: absolute;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  translate: -50% -50%;
+  rotate: 45deg;
+  background: var(--ink);
+  border: 2px solid var(--shade-900);
+  outline: 1px solid var(--ink);
+  pointer-events: none;
+}
+
+.markerNofuss {
+  background: var(--accent);
+  outline-color: var(--accent);
+}
+
+/* ---------- oś czasu (suwak jak w SplitCalculator) ---------- */
+.timeline {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 16px;
+  align-items: center;
+}
+
+.dayOut {
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline input[type="range"] {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 24px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.timeline input::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--alpha-400);
+}
+
+.timeline input::-moz-range-track {
+  height: 2px;
+  background: var(--alpha-400);
+}
+
+.timeline input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -7px;
+  background: var(--accent);
+  border: 2px solid var(--on-accent);
+  outline: 1px solid var(--accent);
+  rotate: 45deg;
+}
+
+.timeline input::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  border: 2px solid var(--on-accent);
+  outline: 1px solid var(--accent);
+  border-radius: 0;
+  rotate: 45deg;
+}
+
+.status {
+  min-height: 16px;
+  color: var(--muted);
+}
+
+/* ---------- panel etapu (na jasnym tle sekcji) ---------- */
+.panel {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.panelMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.panelTitle {
+  font: var(--t-title);
+  font-weight: 700;
+}
+
+.panelText {
+  font: var(--t-lead);
+}
+
+.panelNofuss {
+  display: grid;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.panelNofuss dt {
+  color: var(--muted);
+}
+
+.panelNofuss dd {
+  font: var(--t-lead);
+}
+
+.panelNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  margin-top: 8px;
+}
+
+.panelNav button:disabled {
+  opacity: 0.4;
+  cursor: default;
+  transform: none;
+}
+
+.note {
+  margin-top: 32px;
+  max-width: 72ch;
+  color: var(--muted);
+}
+
+@media (min-width: 768px) {
+  .board {
+    padding: 24px;
+  }
+
+  .regionWide {
+    display: block;
+  }
+
+  .pinned span {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .board {
+    grid-column: 1 / span 8;
+  }
+
+  .panel {
+    grid-column: 9 / -1;
+    position: sticky;
+    top: 96px;
+    align-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggles button,
+  .terrain .doom,
+  .stop i,
+  .stop span {
+    transition: none;
+  }
+}

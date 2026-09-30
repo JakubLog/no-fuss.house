@@ -304,6 +304,25 @@ Nie wymyślamy liczb, wyników ani cytatów: efekt to fakt (np. działająca str
   „Zobacz wszystko →” po prawej (od 768 px) i trzy kafle spośród wyróżnionych (`featured`): najbliższe nadchodzące i najnowsze minione.
   Kafle z tym samym hoverem co na `/wiedza`.
 
+## Strona 404: „Droga do Mordoru” (`#mordor`)
+
+Pod hero 404 jasna sekcja „Z no-fuss dotarliby szybciej”: zgubić się to nic wstydliwego, Drużyna Pierścienia szła
+do Góry Przeznaczenia 184 dni. Hero dostaje ghost „Droga do Mordoru ↓” jako czwarty przycisk.
+
+- **Plansza** `#15181D` (limonka tylko na ciemnym): własny rysunek Śródziemia w stylu rysunku technicznego, SVG, nie druga
+  scena 3D. Linie 1 px w bieli alpha (`vector-effect: non-scaling-stroke`), góry jako szewrony, lasy jako kwadratowe kropki,
+  morze kreskowane poziomo, Mordor ukośnie, miasta jako kwadraty 5 px. Geografia w milach od Hobbitonu, odczytana z ogólnej mapy
+  Śródziemia, rzutowana jednolitą skalą (proporcje odległości się zgadzają). Etykiety krain w HTML (mono 12 px), nie w SVG.
+- **Trasy**: Drużyna biała (przebyty odcinek 2 px, reszta kropkowana), no-fuss limonkowa prosta Hobbiton → Góra Przeznaczenia.
+  Przełączniki jak modele w `SplitCalculator` (obrys 1 px, włączony w kolorze tekstu). Znaczniki to romby 14 px jak w mierniku 404.
+- **Przystanki**: 13 przycisków-rombów nad rysunkiem (przed nami obrys, za nami biały, bieżący limonkowy z etykietą na limonce).
+  Etykieta celu widoczna stale od 768 px, reszta na hover / fokus.
+- **Czas**: „Wyruszamy →” odtwarza 184 dni w 12 s; postoje (Rivendell, Lórien) widać jako stojący znacznik przy biegnącym liczniku.
+  Suwak osi czasu jak w `SplitCalculator`, data w kalendarzu Shire'u. Przy reduced motion „Wyruszamy” skacze na koniec.
+- **no-fuss w liczbach**: średnie tempo marszu Drużyny bez postojów na prostej z tej samej mapy (przypis pod sekcją). To żart
+  z uczciwie opisaną metodą, nie deklaracja o tempie naszej pracy.
+- **Panel etapu** (od 1024 px 4 kolumny obok planszy, sticky): data, nazwa w roli title, co się działo (lead), „U nas” (lead), Wstecz / Dalej.
+
 ## Komponenty case study
 
 Wspólny szkielet: ciemne hero (chip „Case study” + kicker mono, tytuł mega, lead statement, fakty w `dl` mono),

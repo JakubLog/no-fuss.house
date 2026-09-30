@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { FellowshipMap } from "@/components/organisms/FellowshipMap";
 import { NotFoundHero } from "@/components/organisms/NotFoundHero";
 
 /**
@@ -20,7 +21,12 @@ export const metadata: Metadata = {
   robots: null,
 };
 
-/** Strona 404 (legacy/404.html). */
+/** Strona 404 (legacy/404.html) + mapa trasy Drużyny Pierścienia pod hero (`#mordor`). */
 export default function NotFound() {
-  return <NotFoundHero />;
+  return (
+    <>
+      <NotFoundHero />
+      <FellowshipMap />
+    </>
+  );
 }
