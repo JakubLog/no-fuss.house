@@ -7,51 +7,77 @@
   transition: background-color var(--theme-duration) ease-out;
 }
 
+/*
+ * Smuga = legacy pasek (wysokość `--h`, poziomo gradient 35–60%) rozmyty `filter: blur(64px)`, ale bez filtra:
+ * blur na animowanej warstwie to wieloprzebiegowe rozmycie GPU w każdej klatce, a gradient rasteryzuje się raz.
+ * Pasek rozmyty gaussem to w przybliżeniu gauss o σ = √(64² + h²/12), a gauss jest separowalny, więc elipsa
+ * `radial-gradient` z profilem exp(−4.5 r²) (σ = 1/3 promienia) daje iloczyn profilu poziomego i pionowego.
+ * Pionowo: pudełko wyższe o 2 × `--spread` (2.5 σ blura), promień = połowa pudełka, więc σ ≈ (h/2 + 160 px) / 3
+ * (dla pasków 12–26% przy 900 px wysokości zgodne z blurem do ~2 px). Poziomo: środek 47.5%, promień 80% szerokości
+ * (połowa wysokości profilu jak w legacy). `opacity` = legacy × szczyt rozmytego paska (niższy przy wąskich paskach).
+ */
 .backdrop i {
+  --spread: 160px;
   position: absolute;
   left: -30%;
+  top: calc(var(--top) - var(--spread));
   width: 160%;
-  height: 22%;
-  background: linear-gradient(90deg, transparent, var(--hero-glow) 35%, var(--hero-glow) 60%, transparent);
-  filter: blur(64px);
-  opacity: 0.22;
+  height: calc(var(--h) + 2 * var(--spread));
+  background: radial-gradient(
+    80% 50% at 47.5% 50%,
+    var(--hero-glow),
+    color-mix(in srgb, var(--hero-glow) 95.6%, transparent) 10%,
+    color-mix(in srgb, var(--hero-glow) 83.5%, transparent) 20%,
+    color-mix(in srgb, var(--hero-glow) 66.7%, transparent) 30%,
+    color-mix(in srgb, var(--hero-glow) 48.7%, transparent) 40%,
+    color-mix(in srgb, var(--hero-glow) 32.5%, transparent) 50%,
+    color-mix(in srgb, var(--hero-glow) 19.8%, transparent) 60%,
+    color-mix(in srgb, var(--hero-glow) 11%, transparent) 70%,
+    color-mix(in srgb, var(--hero-glow) 5.6%, transparent) 80%,
+    color-mix(in srgb, var(--hero-glow) 2.6%, transparent) 90%,
+    transparent
+  );
+  opacity: 0.193;
   transform: rotate(-32deg);
   animation: drift 18s ease-in-out infinite alternate;
 }
 
 .backdrop i:nth-child(1) {
-  top: -5%;
+  --top: -5%;
+  --h: 22%;
 }
 
 .backdrop i:nth-child(2) {
-  top: 32%;
-  height: 14%;
+  --top: 32%;
+  --h: 14%;
   animation-duration: 24s;
   animation-delay: -6s;
-  opacity: 0.14;
+  opacity: 0.095;
 }
 
 .backdrop i:nth-child(3) {
-  top: 62%;
-  height: 26%;
+  --top: 62%;
+  --h: 26%;
   animation-duration: 21s;
   animation-delay: -11s;
+  opacity: 0.205;
 }
 
 .backdrop i:nth-child(4) {
-  top: 98%;
-  height: 12%;
+  --top: 98%;
+  --h: 12%;
   animation-duration: 27s;
   animation-delay: -3s;
-  opacity: 0.12;
+  opacity: 0.072;
 }
 
+/* W pionie procenty liczone od wysokości legacy paska (pudełko − 2 × `--spread`), więc dryf ma tę samą amplitudę. */
 @keyframes drift {
   from {
-    translate: -6% -4%;
+    translate: -6% calc(-4% + 0.08 * var(--spread));
   }
   to {
-    translate: 6% 5%;
+    translate: 6% calc(5% - 0.1 * var(--spread));
   }
 }
 

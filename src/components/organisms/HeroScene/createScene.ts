@@ -6,42 +6,31 @@ import {
   Mesh,
   MeshPhysicalMaterial,
   PerspectiveCamera,
-  PMREMGenerator,
   Scene,
   WebGLRenderer,
   type Texture,
 } from "three";
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import { FontLoader, type Font } from "three/addons/loaders/FontLoader.js";
-import { LegacyRoomEnvironment } from "./legacyRoomEnvironment";
+import { createEnvMap, loadEnvMap } from "./envMap";
 import { createBody, FixedStepper, scatterBody, stepWorld, TICK_RATE, type Body, type World } from "./physics";
-import type { FussStore, SceneFit, SceneRepel } from "./types";
+import type { SceneFit, SceneRepel } from "./types";
 
 /**
  * Scena napisu 3D 1:1 z legacy (no-fuss-v5.html / 404.html, moduł „Obiekt 3D w hero”).
- * Czysty moduł imperatywny: React montuje go w `HeroScene` i woła `dispose()` przy unmount.
+ * Czysty moduł imperatywny bez DOM: działa w workerze na `OffscreenCanvas` (`scene.worker.ts`), a gdy
+ * przeglądarka nie ma WebGL w workerze, na głównym wątku. Stan strony (rozmiar, wskaźnik, zamieszanie,
+ * widoczność) podaje `mountHeroScene` przez `SceneHandle`.
  */
 
 export const FONT_URL = "/three/fonts/helvetiker_bold.typeface.json";
 
-/**
- * Dopasowanie hero `/`. Od 768 px napis wpisuje się w ramkę (`frame`: pas między h1 w lewym
- * górnym rogu a leadem z CTA w prawym dolnym): środek ramki, wysokość z przechyłem = wysokość
- * ramki (przechył podnosi prawy koniec, a h1 stoi z lewej, lead z prawej, więc rogi napisu mijają
- * tekst), szerokość do 62% kanwy. Telefon: bez ramki, napis nad tekstem (`offsetYMobile`).
- */
-export const DEFAULT_FIT: SceneFit = {
-  widthDesktop: 0.62,
-  widthMobile: 0.86,
-  heightDesktop: 1,
-  maxScale: 1.4,
-  offsetYDesktop: 0,
-  offsetYMobile: 0.12,
-};
-
-export const DEFAULT_REPEL: SceneRepel = { radius: 1.2, strength: 60 };
-
 const MOBILE_BREAKPOINT = 768;
+/*
+ * Kanwa zajmuje całe hero, a materiał (clearcoat + iryzacja) jest drogi na piksel: przy DPR 2
+ * i oknie 1440×900 to 2880×1800 px z MSAA co klatkę. 1.5 to −44% pikseli, na ekranie nieodróżnialne od 2.
+ */
+const MAX_PIXEL_RATIO = 1.5;
 const SIZE = 2;
 /** Przechył grupy w osi Z (legacy): prawy koniec napisu wyżej, więc napis jest wyższy o `baseW · sin`. */
 const TILT_Z = 0.06;
@@ -63,39 +52,108 @@ interface Letter {
   body: Body;
 }
 
-export interface CreateSceneOptions {
-  text: string;
-  fuss: FussStore;
-  fit: SceneFit;
-  repel: SceneRepel | false;
-  /**
-   * Ramka napisu od 768 px (element na stronie, np. pas między tekstami): napis na jej środku,
-   * wysokość ograniczona `fit.heightDesktop` × wysokość ramki. Kanwa zostaje na całe hero,
-   * więc odepchnięte litery nie ucinają się. Ramka o wysokości 0 (np. `display: none`) = brak ramki.
-   */
-  frame?: HTMLElement | null;
-  /** Pierwsza klatka z literami narysowana. */
-  onReady?: () => void;
-  /** Font się nie wczytał (WebGL działa, ale nie ma czego rysować). */
-  onError?: (error: unknown) => void;
+/** Bryła jednego znaku, wyśrodkowana w (x, y); wymiary z bounding boxa przed przesunięciem. */
+interface Glyph {
+  geometry: TextGeometry;
+  cx: number;
+  cy: number;
+  /** Promień kolizji. */
+  r: number;
+  minY: number;
+  maxY: number;
 }
 
-export interface SceneHandle {
+function buildGlyph(font: Font, ch: string): Glyph | null {
+  const geometry = new TextGeometry(ch, {
+    font,
+    size: SIZE,
+    depth: 0.5,
+    curveSegments: 16,
+    bevelEnabled: true,
+    bevelThickness: 0.34,
+    bevelSize: 0.2,
+    bevelSegments: 14,
+  });
+  geometry.computeBoundingBox();
+  const bb = geometry.boundingBox;
+  if (!bb) {
+    geometry.dispose();
+    return null;
+  }
+  const cx = (bb.max.x + bb.min.x) / 2;
+  const cy = (bb.max.y + bb.min.y) / 2;
+  geometry.translate(-cx, -cy, -0.25);
+  const r = Math.max(bb.max.x - bb.min.x, bb.max.y - bb.min.y) * 0.5 * 0.92;
+  return { geometry, cx, cy, r, minY: bb.min.y, maxY: bb.max.y };
+}
+
+/** Układ kanwy na stronie, mierzony na głównym wątku (`mountScene.ts`). */
+export interface SceneLayout {
+  /** Rozmiar kanwy w px CSS. */
+  width: number;
+  height: number;
+  /** `devicePixelRatio` okna; scena ogranicza go do 1.5. */
+  pixelRatio: number;
+  /**
+   * Ramka napisu (od 768 px): `offsetY` = środek kanwy − środek ramki w px (dodatnie: ramka wyżej),
+   * `height` = wysokość ramki. `null`: bez ramki albo ramka o wysokości 0 (`display: none`).
+   */
+  frame: { offsetY: number; height: number } | null;
+}
+
+export interface SceneInit {
+  text: string;
+  fit: SceneFit;
+  repel: SceneRepel | false;
+  /** Zamieszanie na starcie 0–1: litery startują w tej pozie. */
+  fuss: number;
+  /** Wskaźnik względem okna: clientX / innerWidth − 0.5 (legacy, 0 = środek ekranu). */
+  pointer: { x: number; y: number };
+  reduced: boolean;
+  /** Kanwa w viewporcie i karta widoczna. */
+  active: boolean;
+  layout: SceneLayout;
+}
+
+export interface SceneEvents {
+  /** Pierwsza klatka z literami narysowana. */
+  onReady(): void;
+  /** Start sceny się nie powiódł (font, mapa otoczenia, geometria): WebGL działa, ale nie ma czego rysować. */
+  onError(error: unknown): void;
+}
+
+/** Wejścia sceny; w workerze każda metoda to jedna wiadomość (`scene.worker.ts`). */
+export interface SceneInputs {
+  setFuss(value: number): void;
+  setPointer(x: number, y: number): void;
+  setLayout(layout: SceneLayout): void;
+  /** Pętla działa tylko, gdy kanwa jest w viewporcie i karta jest widoczna. */
+  setActive(active: boolean): void;
+  setReduced(reduced: boolean): void;
+}
+
+export interface SceneHandle extends SceneInputs {
   dispose(): void;
 }
 
 /**
  * Tworzy scenę na podanej kanwie. Rzuca wyjątek, gdy WebGL jest niedostępny.
- * Pętla działa tylko, gdy kanwa jest w viewporcie i karta jest widoczna.
+ * Start: font i zapieczona mapa otoczenia równolegle → każdy znak osobno (extrude z fazą w osobnym zadaniu)
+ * → kompilacja shaderów w tle (`compileAsync`) → pierwsza klatka.
  * Fizyka w `physics.ts` (stały krok jak legacy, sprawdzana symulacją).
  */
-export function createHeroScene(canvas: HTMLCanvasElement, options: CreateSceneOptions): SceneHandle {
-  const { text, fuss: fussStore, fit, repel, frame: frameEl, onReady, onError } = options;
-  const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-  let reduced = reducedQuery.matches;
+export function createHeroScene(
+  canvas: HTMLCanvasElement | OffscreenCanvas,
+  init: SceneInit,
+  events: SceneEvents,
+): SceneHandle {
+  const { text, fit, repel } = init;
+  let { reduced, active, layout } = init;
+  let fussTarget = init.fuss;
+  let mx = init.pointer.x;
+  let my = init.pointer.y;
 
   const renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.toneMapping = ACESFilmicToneMapping;
   /* legacy: 1.15 w konstruktorze, ale applyTheme() od razu ustawiał 0.8 */
   renderer.toneMappingExposure = 0.8;
@@ -103,12 +161,7 @@ export function createHeroScene(canvas: HTMLCanvasElement, options: CreateSceneO
   const scene = new Scene();
   const camera = new PerspectiveCamera(30, 1, 0.1, 100);
   camera.position.z = 12;
-
-  const pmrem = new PMREMGenerator(renderer);
-  /* legacy (r160): `new RoomEnvironment()` bez renderera → światło 5, nie 900 (patrz LegacyRoomEnvironment) */
-  const room = new LegacyRoomEnvironment();
-  const envMap: Texture = pmrem.fromScene(room, 0.04).texture;
-  scene.environment = envMap;
+  let envMap: Texture | null = null;
 
   const key = new DirectionalLight(0xffffff, 1.2);
   key.position.set(-4, 6, 8);
@@ -134,42 +187,37 @@ export function createHeroScene(canvas: HTMLCanvasElement, options: CreateSceneO
   scene.add(group);
 
   const letters: Letter[] = [];
+  /* Bryły znaków; powtórzone znaki (dwa „s”) dzielą geometrię. */
+  const glyphs = new Map<string, Glyph | null>();
   let baseW = 1;
   let baseH = 1;
   let disposed = false;
+  /* Litery zbudowane i shadery skompilowane: wolno rysować (pętla, zmiana układu). */
+  let live = false;
   let readySent = false;
   /* legacy: grupa startuje z obrotem 0 i dostaje (−0.12, 0, 0.06) po wczytaniu fontu */
-  const world: World = { bodies: [], fuss: fussStore.get(), rotX: 0, rotY: 0, posZ: 0 };
-
-  /* ---------- wskaźnik: 1:1 z legacy (mousemove na oknie, start = środek ekranu) ---------- */
-  let mx = 0;
-  let my = 0;
-  const onMouseMove = (event: MouseEvent) => {
-    mx = event.clientX / window.innerWidth - 0.5;
-    my = event.clientY / window.innerHeight - 0.5;
-  };
+  const world: World = { bodies: [], fuss: fussTarget, rotX: 0, rotY: 0, posZ: 0 };
 
   /* ---------- geometria ---------- */
   const visH = () => 2 * Math.tan(MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
   const visW = () => visH() * camera.aspect;
 
   const fitScene = () => {
-    const w = canvas.clientWidth;
-    const h = canvas.clientHeight;
+    const { width: w, height: h } = layout;
     if (!w || !h) return;
+    renderer.setPixelRatio(Math.min(layout.pixelRatio, MAX_PIXEL_RATIO));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     const mobile = w < MOBILE_BREAKPOINT;
     const byWidth = (visW() * (mobile ? fit.widthMobile : fit.widthDesktop)) / baseW;
     /* Ramka (desktop): środek i wysokość z prostokątów na stronie, px → jednostki świata na z = 0. */
-    const box = !mobile && frameEl ? frameEl.getBoundingClientRect() : null;
+    const frame = mobile ? null : layout.frame;
     const unit = visH() / h;
-    if (box && box.height > 0) {
-      const own = canvas.getBoundingClientRect();
-      const byHeight = fit.heightDesktop ? (box.height * unit * fit.heightDesktop) / baseH : Infinity;
+    if (frame) {
+      const byHeight = fit.heightDesktop ? (frame.height * unit * fit.heightDesktop) / baseH : Infinity;
       group.scale.setScalar(Math.min(byWidth, byHeight, fit.maxScale));
-      group.position.y = (own.top + h / 2 - (box.top + box.height / 2)) * unit;
+      group.position.y = frame.offsetY * unit;
       return;
     }
     group.scale.setScalar(Math.min(byWidth, fit.maxScale));
@@ -184,32 +232,13 @@ export function createHeroScene(canvas: HTMLCanvasElement, options: CreateSceneO
     Array.from(text).forEach((ch, i) => {
       const glyph = font.data.glyphs[ch] ?? font.data.glyphs.o;
       const advance = (glyph?.ha ?? 0) * k;
-      if (ch !== " ") {
-        const geometry = new TextGeometry(ch, {
-          font,
-          size: SIZE,
-          depth: 0.5,
-          curveSegments: 16,
-          bevelEnabled: true,
-          bevelThickness: 0.34,
-          bevelSize: 0.2,
-          bevelSegments: 14,
-        });
-        geometry.computeBoundingBox();
-        const bb = geometry.boundingBox;
-        if (bb) {
-          const cx = (bb.max.x + bb.min.x) / 2;
-          const cy = (bb.max.y + bb.min.y) / 2;
-          minY = Math.min(minY, bb.min.y);
-          maxY = Math.max(maxY, bb.max.y);
-          geometry.translate(-cx, -cy, -0.25);
-          const mesh = new Mesh(geometry, material);
-          group.add(mesh);
-          const r = Math.max(bb.max.x - bb.min.x, bb.max.y - bb.min.y) * 0.5 * 0.92;
-          letters.push({ mesh, body: createBody(x + cx, cy, i, r) });
-        } else {
-          geometry.dispose();
-        }
+      const shape = glyphs.get(ch);
+      if (shape) {
+        minY = Math.min(minY, shape.minY);
+        maxY = Math.max(maxY, shape.maxY);
+        const mesh = new Mesh(shape.geometry, material);
+        group.add(mesh);
+        letters.push({ mesh, body: createBody(x + shape.cx, shape.cy, i, shape.r) });
       }
       x += advance;
     });
@@ -245,7 +274,7 @@ export function createHeroScene(canvas: HTMLCanvasElement, options: CreateSceneO
   let ticks = 0;
   const tick = () => {
     stepWorld(world, {
-      fussTarget: fussStore.get(),
+      fussTarget,
       /* czas drgań i oddechu: jak legacy liczony w sekundach, 60 kroków = 1 s */
       t: ticks / TICK_RATE,
       mx,
@@ -265,7 +294,7 @@ export function createHeroScene(canvas: HTMLCanvasElement, options: CreateSceneO
     renderer.render(scene, camera);
     if (!readySent && letters.length) {
       readySent = true;
-      onReady?.();
+      events.onReady();
     }
   };
 
@@ -273,8 +302,6 @@ export function createHeroScene(canvas: HTMLCanvasElement, options: CreateSceneO
   let raf = 0;
   let running = false;
   let last = 0;
-  let inView = true;
-  let pageVisible = document.visibilityState !== "hidden";
 
   const stepper = new FixedStepper();
 
@@ -287,7 +314,7 @@ export function createHeroScene(canvas: HTMLCanvasElement, options: CreateSceneO
   };
 
   const syncLoop = () => {
-    const shouldRun = !disposed && inView && pageVisible && letters.length > 0;
+    const shouldRun = !disposed && active && live;
     if (shouldRun && !running) {
       running = true;
       /* wznowienie po pauzie: zegar od nowa, pierwsza klatka to zwykły krok (bez skoku dt) */
@@ -300,65 +327,65 @@ export function createHeroScene(canvas: HTMLCanvasElement, options: CreateSceneO
     }
   };
 
-  const onVisibility = () => {
-    pageVisible = document.visibilityState !== "hidden";
-    syncLoop();
-  };
-  const onReducedChange = (event: MediaQueryListEvent) => {
-    reduced = event.matches;
-  };
-
-  const intersection = new IntersectionObserver(([entry]) => {
-    inView = entry?.isIntersecting ?? true;
-    syncLoop();
-  });
-  intersection.observe(canvas);
-
-  const resize = new ResizeObserver(() => {
-    fitScene();
-    if (!running && letters.length) renderer.render(scene, camera);
-  });
-  resize.observe(canvas);
-  /* Ramka zmienia się bez zmiany kanwy (np. po wczytaniu fontu h1 rośnie, a pas maleje). */
-  if (frameEl) resize.observe(frameEl);
-
-  window.addEventListener("mousemove", onMouseMove, { passive: true });
-  document.addEventListener("visibilitychange", onVisibility);
-  reducedQuery.addEventListener("change", onReducedChange);
-
   fitScene();
 
-  loadFont().then(
-    (font) => {
+  const start = async () => {
+    const [font, env] = await Promise.all([loadFont(), loadEnvMap()]);
+    if (disposed) return;
+    envMap = createEnvMap(env);
+    scene.environment = envMap;
+    /*
+     * Extrude z fazą to najdroższa część startu: każdy znak w osobnym zadaniu (setTimeout 0), co liczy się
+     * na głównym wątku. Konstruktor zamiast `Promise.withResolvers`: to API jest od Safari 17.4, a cele Next
+     * sięgają Safari 16.4.
+     */
+    for (const ch of new Set(text)) {
+      await new Promise((resolve) => setTimeout(resolve, 0));
       if (disposed) return;
-      buildLetters(font);
-      syncLoop();
-    },
-    (error: unknown) => {
-      if (!disposed) onError?.(error);
-    },
-  );
+      if (ch !== " ") glyphs.set(ch, buildGlyph(font, ch));
+    }
+    buildLetters(font);
+    /* Kompilacja w tle (KHR_parallel_shader_compile): bez niej pierwsza klatka blokuje wątek na linkowaniu. */
+    await renderer.compileAsync(scene, camera);
+    if (disposed) return;
+    live = true;
+    syncLoop();
+  };
+  start().catch((error: unknown) => {
+    if (!disposed) events.onError(error);
+  });
 
   return {
+    setFuss(value) {
+      fussTarget = value;
+    },
+    setPointer(x, y) {
+      mx = x;
+      my = y;
+    },
+    setLayout(next) {
+      layout = next;
+      fitScene();
+      if (!running && live) renderer.render(scene, camera);
+    },
+    setActive(value) {
+      active = value;
+      syncLoop();
+    },
+    setReduced(value) {
+      reduced = value;
+    },
     dispose() {
       if (disposed) return;
       disposed = true;
       syncLoop();
       cancelAnimationFrame(raf);
-      intersection.disconnect();
-      resize.disconnect();
-      window.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("visibilitychange", onVisibility);
-      reducedQuery.removeEventListener("change", onReducedChange);
-      for (const letter of letters) {
-        group.remove(letter.mesh);
-        letter.mesh.geometry.dispose();
-      }
+      for (const letter of letters) group.remove(letter.mesh);
       letters.length = 0;
+      for (const glyph of glyphs.values()) glyph?.geometry.dispose();
+      glyphs.clear();
       material.dispose();
-      envMap.dispose();
-      pmrem.dispose();
-      room.dispose();
+      envMap?.dispose();
       renderer.dispose();
     },
   };

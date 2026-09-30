@@ -1,12 +1,15 @@
 import type { RefObject } from "react";
 
 /**
- * Kanał sklep → scena bez re-renderów React: scena czyta `get()` w każdej klatce, `set()` woła
- * przycisk „Posprzątaj” na 404 i ułożenie napisu po intro na `/`. Wartość 0–1 (0 = litery ułożone, 1 = rozrzucone).
+ * Kanał sklep → scena bez re-renderów React: `set()` woła przycisk „Posprzątaj” na 404 i ułożenie napisu
+ * po intro na `/`, a host sceny przekazuje każdą zmianę (`subscribe`) do workera albo sceny na głównym wątku.
+ * Wartość 0–1 (0 = litery ułożone, 1 = rozrzucone).
  */
 export interface FussStore {
   get(): number;
   set(value: number): void;
+  /** Słuchacz dostaje każdą zmianę wartości; zwraca funkcję wypisania. */
+  subscribe(listener: (value: number) => void): () => void;
 }
 
 /**
@@ -54,6 +57,6 @@ export interface HeroSceneProps {
   frame?: RefObject<HTMLElement | null>;
   /** Pierwsza klatka z literami narysowana (font wczytany, fizyka ruszyła). */
   onReady?: () => void;
-  /** Brak WebGL albo fontu: rodzic pokazuje fallback CSS (legacy `.no-webgl`). */
+  /** Brak WebGL albo nieudany start sceny (font, mapa otoczenia, geometria): rodzic pokazuje fallback CSS (legacy `.no-webgl`). */
   onUnsupported?: () => void;
 }

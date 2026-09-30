@@ -2,15 +2,16 @@
 
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { cx } from "@/lib/cx";
-import { createHeroScene, DEFAULT_FIT, DEFAULT_REPEL, type SceneHandle } from "./createScene";
+import { DEFAULT_FIT, DEFAULT_REPEL } from "./defaults";
+import { mountHeroScene } from "./mountScene";
 import type { HeroSceneProps } from "./types";
 import styles from "./HeroScene.module.css";
 
 /**
  * Kanwa WebGL z napisem 3D (legacy `.hero__canvas`). Ładuj przez `LazyHeroScene`
- * (next/dynamic, `ssr: false`), nigdy bezpośrednio: import ciągnie three.js.
+ * (next/dynamic, `ssr: false`), nie bezpośrednio.
  *
- * Scena powstaje od razu po hydratacji, bez dodatkowego wejścia opacity. Litery startują
+ * Scena rysuje w workerze (`mountScene.ts`), bez dodatkowego wejścia opacity. Litery startują
  * w pozie startowego zamieszania (`fuss.get()`), fizyka działa od pierwszej klatki. Kanwa jest
  * dekoracją (`aria-hidden`), tekstowy odpowiednik daje rodzic. Client Component.
  */
@@ -24,7 +25,7 @@ export default function HeroScene({
   onUnsupported,
   onReady,
 }: HeroSceneProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const hostRef = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
   const reportUnsupported = useEffectEvent(() => onUnsupported?.());
   const reportReady = useEffectEvent(() => onReady?.());
@@ -35,30 +36,26 @@ export default function HeroScene({
   const repelStrength = repel ? repel.strength : null;
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    let handle: SceneHandle | null = null;
-
-    try {
-      handle = createHeroScene(canvas, {
-        text,
-        fuss,
-        fit: { widthDesktop, widthMobile, heightDesktop, maxScale, offsetYDesktop, offsetYMobile },
-        frame: frame?.current ?? null,
-        repel: repelRadius !== null && repelStrength !== null ? { radius: repelRadius, strength: repelStrength } : false,
-        onReady: () => {
-          setReady(true);
-          reportReady();
-        },
-        onError: () => reportUnsupported(),
-      });
-    } catch {
-      reportUnsupported();
-    }
-
+    const host = hostRef.current;
+    if (!host) return;
+    /* Nowa kanwa przy każdym montażu: `transferControlToOffscreen` działa raz na element (Strict Mode, zmiana `fit`). */
+    const canvas = document.createElement("canvas");
+    host.append(canvas);
+    const unmount = mountHeroScene(canvas, {
+      text,
+      fuss,
+      fit: { widthDesktop, widthMobile, heightDesktop, maxScale, offsetYDesktop, offsetYMobile },
+      frame: frame?.current ?? null,
+      repel: repelRadius !== null && repelStrength !== null ? { radius: repelRadius, strength: repelStrength } : false,
+      onReady: () => {
+        setReady(true);
+        reportReady();
+      },
+      onError: () => reportUnsupported(),
+    });
     return () => {
-      handle?.dispose();
-      handle = null;
+      unmount();
+      canvas.remove();
     };
   }, [
     text,
@@ -75,8 +72,8 @@ export default function HeroScene({
   ]);
 
   return (
-    <canvas
-      ref={canvasRef}
+    <div
+      ref={hostRef}
       className={cx(styles.canvas, className)}
       data-ready={ready ? "true" : "false"}
       aria-hidden="true"

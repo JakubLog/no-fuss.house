@@ -5,6 +5,7 @@ import { BackSide, BoxGeometry, Mesh, MeshBasicMaterial, MeshStandardMaterial, P
  * W r160 oznaczało to światło główne o natężeniu 5 (nie 900), więc ściany pokoju są prawie czarne,
  * a odbicia w literach to jasne panele na ciemnym tle (kontrastowy połysk). r186 ma zawsze 900
  * i pokój przesunięty o y = −3.5, co spłaszcza i rozjaśnia odbicia. Geometria 1:1 z r160.
+ * Tylko do zapiekania mapy otoczenia (`bake-env.ts` → `public/three/env/room-pmrem.bin.gz`); runtime go nie ładuje.
  */
 export class LegacyRoomEnvironment extends Scene {
   constructor() {
@@ -24,7 +25,7 @@ export class LegacyRoomEnvironment extends Scene {
     room.scale.set(31.713, 28.305, 28.591);
     this.add(room);
 
-    const boxes: [number, number, number, number, number, number, number][] = [
+    const boxes = [
       [-10.906, 2.009, 1.846, -0.195, 2.328, 7.905, 4.651],
       [-5.607, -0.754, -0.758, 0.994, 1.97, 1.534, 3.955],
       [6.167, 0.857, 7.803, 0.561, 3.927, 6.285, 3.687],
@@ -40,7 +41,7 @@ export class LegacyRoomEnvironment extends Scene {
       this.add(box);
     }
 
-    const lights: [number, number, number, number, number, number, number][] = [
+    const lights = [
       [50, -16.116, 14.37, 8.208, 0.1, 2.428, 2.739],
       [50, -16.109, 18.021, -8.207, 0.1, 2.425, 2.751],
       [17, 14.904, 12.198, -1.832, 0.15, 4.265, 6.331],
@@ -56,16 +57,5 @@ export class LegacyRoomEnvironment extends Scene {
       light.scale.set(sx, sy, sz);
       this.add(light);
     }
-  }
-
-  dispose(): void {
-    const resources = new Set<{ dispose(): void }>();
-    this.traverse((object) => {
-      if (object instanceof Mesh) {
-        resources.add(object.geometry);
-        resources.add(object.material);
-      }
-    });
-    for (const resource of resources) resource.dispose();
   }
 }

@@ -1,6 +1,6 @@
 /*
  * `./HeroScene` eksportuje tylko `LazyHeroScene` (next/dynamic, ssr: false), `createFussStore` i typy.
- * `HeroScene.tsx` celowo poza barrelem: statyczny import wciągnąłby three.js do bundla strony.
+ * `HeroScene.tsx` celowo poza barrelem: scena tylko po stronie klienta, doładowywana po hydratacji (three.js w workerze).
  */
 export * from "./AboutSection";
 export * from "./CaseNumbers";

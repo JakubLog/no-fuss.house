@@ -190,6 +190,8 @@ Używają go `CaseStudySection` (etykieta `lite` jako `h2`, kicker `wide`/`split
 
 ### `GlowBackdrop` — server
 `<GlowBackdrop className? />` — ciemne tło z czterema smugami limonki (legacy `.hero__bg`). Rodzic: `position: relative; overflow: hidden`.
+Smugi to eliptyczne gradienty gaussowskie zamiast legacy `filter: blur(64px)` (blur na animowanej warstwie liczy się w każdej
+klatce, gradient rasteryzuje się raz); na zrzucie różnica ≤ 8/255. Dryf ma amplitudę legacy (procenty liczone od wysokości paska).
 
 ### `StickerLayer` — server
 ```tsx
@@ -521,20 +523,24 @@ Kotwice na tej samej stronie (także bez Lenis przy reduced motion) ustawiają n
 
 | Plik | Typ | Rola |
 |---|---|---|
-| `HeroScene/createScene.ts` | moduł (three) | cała scena imperatywnie: renderer, materiał, pętla z pauzą, `dispose()` |
+| `HeroScene/createScene.ts` | moduł (three, bez DOM) | cała scena imperatywnie: renderer, materiał, pętla z pauzą; wejścia przez `SceneHandle` (`setFuss`, `setPointer`, `setLayout`, `setActive`, `setReduced`, `dispose`) |
+| `HeroScene/scene.worker.ts` | worker | uruchamia `createScene` na `OffscreenCanvas`; protokół `ToWorker` / `FromWorker`, pierwsza wiadomość `probe` (WebGL2 w workerze) |
+| `HeroScene/mountScene.ts` | moduł (DOM, bez three) | host na głównym wątku: worker albo (bez WebGL w workerze) dynamiczny import `createScene`; mierzy stronę i przekazuje wejścia |
+| `HeroScene/envMap.ts` | moduł (three) | wczytanie zapieczonej mapy otoczenia (`public/three/env/room-pmrem.bin.gz`) jako tekstury CubeUV |
+| `HeroScene/defaults.ts` | moduł | `DEFAULT_FIT`, `DEFAULT_REPEL` (osobno, żeby `HeroScene.tsx` nie importował three) |
 | `HeroScene/physics.ts` | moduł (bez three/DOM) | fizyka liter 1:1 z legacy (`stepWorld`) + akumulator stałego kroku (`FixedStepper`) |
-| `HeroScene/legacyRoomEnvironment.ts` | moduł (three) | `RoomEnvironment` z r160 w wariancie legacy (światło 5, nie 900) |
-| `HeroScene/HeroScene.tsx` | client, default export | kanwa + montaż sceny od razu po hydratacji; **nie importuj bezpośrednio** |
+| `HeroScene/HeroScene.tsx` | client, default export | opakowanie + nowa `<canvas>` przy każdym montażu, `mountHeroScene`; **nie importuj bezpośrednio** |
 | `HeroScene/LazyHeroScene.tsx` | client | `next/dynamic(() => import("./HeroScene"), { ssr: false })` |
-| `HeroScene/fussStore.ts` | moduł | `createFussStore(initial)` — kanał zamieszania bez re-renderów |
+| `HeroScene/fussStore.ts` | moduł | `createFussStore(initial)` — kanał zamieszania bez re-renderów (`get`, `set`, `subscribe`) |
 | `HeroScene/types.ts` | typy | `FussStore`, `SceneFit`, `SceneRepel`, `HeroSceneProps` |
+| `scripts/bake-env.ts`, `scripts/legacyRoomEnvironment.js` | skrypt (`pnpm bake:env`) | zapieka PMREM pokoju z r160 (światło 5, nie 900) w Chrome headless do `public/three/env/room-pmrem.bin.gz` |
 | `HomeHero/HomeHero.tsx` | server, default export, bez propsów | `<section id="hero">` strony głównej |
 | `HomeHero/HomeHeroStage.tsx` | client | kanwa na całe hero + pusta ramka `.band` (`frame`: od 768 px pas między h1 a leadem z CTA; na telefonie miejsce na fallback CSS), sloty na serwerową treść (`headline` = h1 + lead + `ContactCta`, `sceneLabel`) |
 | `NotFoundHero/` | server + `NotFoundStage` (client) | hero 404, bez propsów; ghost „Droga do Mordoru ↓” do `#mordor` |
 | `FellowshipMap/` | server + `FellowshipBoard` (client) | sekcja `#mordor` pod hero 404: mapa trasy Drużyny Pierścienia (SVG, nie scena 3D); dane `content/fellowship.ts` (mile od Hobbitonu), rysunek `geography.ts`, czas i rzutowanie `route.ts` |
 
 Barrel `organisms/HeroScene/index.ts` (i barrel warstwy) eksportuje tylko `LazyHeroScene`, `createFussStore` i typy:
-statyczny import `HeroScene.tsx` wciągnąłby three.js do bundla strony.
+`HeroScene.tsx` to scena tylko po stronie klienta, doładowywana po hydratacji; three.js ładuje worker (`scene.worker.ts`).
 
 #### `LazyHeroScene` — client
 ```ts
@@ -546,7 +552,7 @@ interface HeroSceneProps {
   className?: string;
   frame?: RefObject<HTMLElement | null>; // od 768 px: napis na środku ramki, wysokość do fit.heightDesktop × ramka
   onReady?: () => void;         // pierwsza klatka z literami narysowana (hero `/`: start układania)
-  onUnsupported?: () => void;   // brak WebGL albo fontu → rodzic pokazuje fallback CSS
+  onUnsupported?: () => void;   // brak WebGL albo nieudany start sceny (font, env map, geometria) → rodzic pokazuje fallback CSS
 }
 interface SceneFit { widthDesktop; widthMobile; heightDesktop?; maxScale; offsetYDesktop; offsetYMobile } // próg 768 px
 ```
@@ -564,21 +570,37 @@ const band = useRef<HTMLDivElement>(null); // <div ref={band} className={styles.
 <LazyHeroScene text="no–fuss" fuss={fuss} frame={band} onReady={() => setSceneReady(true)} onUnsupported={() => setUnsupported(true)} />
 // 404: useState(() => createFussStore(1)), przycisk „Posprzątaj” woła fuss.set(0)
 ```
-Rodzic kanwy musi mieć `position: relative` (kanwa: `absolute; inset: 0; z-index: 2`, nad siatką overlay). Jedna scena na stronę.
+Rodzic sceny musi mieć `position: relative` (opakowanie kanwy: `absolute; inset: 0; z-index: 2`, nad siatką overlay). Jedna scena na stronę.
 
 #### Decyzje sceny
 - **Start:** scena powstaje od razu po hydratacji, bez wejścia `opacity`. Litery startują w pozie
   startowego zamieszania (`scatterBody` z `physics.ts`: ta sama poza, do której ciągnie `stepWorld` przy stałym `f`), więc przy
   `f = 1` od pierwszej klatki są rozrzucone, zamiast rozlatywać się z napisu.
-- **LCP:** h1 i copy renderuje serwer; three.js jest w osobnym chunku ładowanym po hydratacji.
-- **Sklep → scena:** mutowalny sklep; scena czyta `fuss.get()` w każdym kroku. Wygładzanie w scenie (lerp 0.12 na krok, jak legacy).
+- **LCP:** h1 i copy renderuje serwer; three.js ładuje worker (na głównym wątku tylko ścieżka awaryjna).
+- **Worker (`OffscreenCanvas`):** three.js, geometria, kompilacja shaderów, fizyka i rysowanie idą w workerze, więc na słabym
+  sprzęcie napis pojawia się później, a strona (scroll Lenis, reveal) nie czeka. Worker najpierw wysyła `probe` (WebGL2
+  w `OffscreenCanvas` i rAF w workerze); dopiero wtedy host oddaje kanwę (`transferControlToOffscreen`, raz na element,
+  stąd nowa `<canvas>` przy każdym montażu). Bez wsparcia (Safari 16.4–16.x, Safari 17 na macOS 13 / iOS 16) albo gdy workera
+  nie da się uruchomić: ta sama scena na głównym wątku (dynamiczny import). Zamknięcie workera zwalnia jego kontekst WebGL.
+  Pomiar (Chrome, SwiftShader jako słabe GPU, 2 przebiegi): laptop CPU ×4, najdłuższe zadanie głównego wątku 7.1–7.4 s → 125–146 ms,
+  TBT 7.9–8.3 s → 0.11–0.13 s; telefon CPU ×6 + Slow 4G: 2.6–2.7 s → 97–100 ms, TBT 2.9–3.1 s → 0.11–0.12 s, napis 7.0–7.1 s → 4.2–4.3 s.
+- **Koszt wejścia:** font i mapa otoczenia równolegle → każdy znak osobno (extrude z fazą w osobnym zadaniu; powtórzone
+  znaki dzielą geometrię) → `renderer.compileAsync` (shadery w tle przez `KHR_parallel_shader_compile`) → pierwsza klatka.
+  Segmentów fazy i krzywych nie zmniejszamy: przy 12/10 zamiast 16/14 widać schodki na fazie.
+- **Mapa otoczenia zapieczona:** PMREM pokoju (`scripts/legacyRoomEnvironment.js`, sigma 0.04, 256) liczy `pnpm bake:env`
+  (Chrome headless, SwiftShader, wynik deterministyczny); runtime ładuje gotową teksturę CubeUV 768×1024 half float
+  (226 KB gzip: RGB bez alfy, płaszczyzny bajtów, mantysa zaokrąglona do 6 bitów, błąd ≤ 0.8%), bez renderowania pokoju
+  i shaderów PMREM. Na zrzucie hero różnica z PMREM w runtime średnio 0.02/255. Po zmianie pokoju albo three.js: `pnpm bake:env`.
+- **Sklep → scena:** mutowalny sklep; host przekazuje każdą zmianę (`subscribe`) do sceny. Wygładzanie w scenie (lerp 0.12 na krok, jak legacy).
   404: „Posprzątaj” ustawia 0 od razu, licznik 1100 ms. Hero `/` (`HomeHeroStage`): po `onReady` i intro, z opóźnieniem
   `INTRO_REVEAL_DELAY_MS` (razem z reveal h1), sklep schodzi 1 → 0 w 1600 ms (ease-in-out, rAF): litery z chaosu układają się
   w napis. To samo przy nawigacji klienckiej na `/` (intro już było, start po `onReady`).
-- **Pętla:** działa tylko gdy kanwa jest w viewporcie (`IntersectionObserver`) i karta widoczna (`visibilitychange`);
-  po wznowieniu akumulator jest zerowany (bez skoku). `ResizeObserver` na kanwie i ramce (`frame`); pixel ratio ≤ 2.
-- **Ramka (`frame`, hero `/` od 768 px):** kanwa zostaje na całe hero (odepchnięte litery nie ucinają się), a `fitScene`
-  mierzy ramkę (`getBoundingClientRect`) i ustawia środek grupy na środku ramki, skalę do min(62% szerokości kanwy,
+- **Pętla:** działa tylko gdy kanwa jest w viewporcie (`IntersectionObserver`) i karta widoczna (`visibilitychange`), host
+  wysyła to jako `setActive`; po wznowieniu akumulator jest zerowany (bez skoku). `ResizeObserver` na kanwie i ramce (`frame`)
+  → `setLayout` (rozmiar, DPR, ramka względem kanwy); pixel ratio ≤ 1.5 (kanwa na całe hero z drogim materiałem: przy DPR 2
+  to −44% pikseli, wizualnie nieodróżnialne).
+- **Ramka (`frame`, hero `/` od 768 px):** kanwa zostaje na całe hero (odepchnięte litery nie ucinają się), host mierzy
+  ramkę (`getBoundingClientRect`), a `fitScene` ustawia środek grupy na środku ramki, skalę do min(62% szerokości kanwy,
   wysokość ramki / wysokość napisu). Wysokość napisu = glify + `baseW · sin(TILT_Z)` (przechył 0.06 podnosi prawy koniec),
   więc rogi napisu mijają h1 (z lewej u góry) i lead (z prawej u dołu). Ramka o wysokości 0 = zwykłe `offsetYDesktop`.
 - **Krok czasu (1:1 z legacy):** legacy wołał `getElapsedTime()` a potem `getDelta()` → delta 0 → `|| .016`, czyli stałe
@@ -597,12 +619,12 @@ Rodzic kanwy musi mieć `position: relative` (kanwa: `absolute; inset: 0; z-inde
   odpychanie działa od pierwszej klatki. Dotyk: tylko emulowany `mousemove` po tapnięciu (jak legacy).
 - **Reduced motion (jak legacy):** bez drgań, obrotu, „oddechu” i odpychania; rozrzut ze sklepu (404) zostaje. Hero `/` bez układania:
   sklep od 0, napis ułożony od pierwszej klatki.
-- **Fallback:** wyjątek WebGL albo błąd fontu → napis CSS z gradientem (legacy `.hero__fallback`).
+- **Fallback:** wyjątek WebGL albo błąd startu sceny (font, env map, geometria) → napis CSS z gradientem (legacy `.hero__fallback`).
 - **Ekspozycja 0.8:** legacy ustawiał 1.15, ale `applyTheme()` natychmiast nadpisywał na 0.8 (efektywnie 0.8).
 - **Środowisko (r160 → r186):** legacy wołał `new RoomEnvironment()` bez renderera, co w r160 dawało światło główne 5
   zamiast 900 (ciemny pokój, jasne panele → kontrastowe odbicia). r186 ma zawsze 900 i pokój przesunięty o y −3.5,
-  więc używamy kopii z r160 (`LegacyRoomEnvironment`).
-- **Sprzątanie:** geometrie, materiał, env map, PMREM, `RoomEnvironment`, renderer, obserwatory, listenery. Font cache'owany w module.
+  więc zapiekamy kopię z r160 (`scripts/legacyRoomEnvironment.js`).
+- **Sprzątanie:** geometrie, materiał, env map, renderer (albo zamknięcie workera), obserwatory, listenery. Font i dane mapy cache'owane w module.
 - **Warstwy:** tło `z-index: 0` pod siatką (1); kanwa, ramka `.band` (z fallbackiem CSS) i treść `z-index: 2` nad siatką,
   bo napis 3D to obiekt, nie tło (legacy: kanwa −1, linie siatki przecinały litery). Treść nad kanwą przez kolejność w DOM
   (kanwa pierwsza w `HomeHeroStage`).
