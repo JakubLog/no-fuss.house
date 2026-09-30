@@ -4,7 +4,7 @@ import type { InternalPath } from "./types";
 /**
  * Jedno źródło prawdy dla wszystkich route'ów strony.
  *
- * Z tej listy korzystają: `app/sitemap.ts`, `next.config.ts` (przekierowania 301
+ * Z tej listy korzystają: `app/sitemap.ts`, `next.config.ts` (przekierowania 308
  * ze starych plików HTML), `Hud` (aktywny link) i `public/llms.txt` (ręcznie).
  * Dodajesz stronę → dopisz ją tutaj. Sitemap i redirecty zaktualizują się same.
  */
@@ -19,13 +19,14 @@ type ChangeFrequency = NonNullable<MetadataRoute.Sitemap[number]["changeFrequenc
 export interface SiteRoute {
   path: InternalPath;
   /**
-   * Tytuł strony BEZ sufiksu (sufiks „ — NO-FUSS©2026” dokleja template w layout).
-   * Copy 1:1 z `<title>` legacy. `null` = strona główna (`site.homeTitle`).
+   * Tytuł strony BEZ sufiksu (sufiks „ — no-fuss” dokleja template w layout).
+   * Mówi, czym jest strona, nie tylko jak się nazywa: z sufiksem do ~60 znaków.
+   * `null` = strona główna (`site.homeTitle`).
    */
   title: string | null;
   kind: RouteKind;
   section: NavSection;
-  /** Pliki legacy (bez `.html`), z których przekierowujemy 301 na `path`. */
+  /** Pliki legacy (bez `.html`), z których przekierowujemy 308 (stałe) na `path`. */
   legacy: readonly string[];
   /** Plik legacy, który jest wzorcem treści tej strony; `null` = nowa strona bez wzorca. */
   source: string | null;
@@ -51,7 +52,7 @@ export const routes = [
   },
   {
     path: "/o-nas",
-    title: "O NAS",
+    title: "O nas: Magda Nestorowicz i Kuba Fedoszczak",
     kind: "page",
     section: "about",
     legacy: ["o-nas-v1", "o-nas-v2", "o-nas-v3", "o-nas-v4", "o-nas-v5"],
@@ -62,7 +63,7 @@ export const routes = [
   },
   {
     path: "/ourmoney",
-    title: "OURMONEY — CASE STUDY",
+    title: "OurMoney: wspólny budżet dla par, case study",
     kind: "case",
     section: "work",
     legacy: ["case-ourmoney-v1", "case-ourmoney-v2"],
@@ -73,7 +74,7 @@ export const routes = [
   },
   {
     path: "/aion-mind",
-    title: "AION MIND — CASE STUDY",
+    title: "AION MIND: journaling z AI, case study",
     kind: "case",
     section: "work",
     legacy: ["case-aion-mind-v1"],
@@ -84,7 +85,7 @@ export const routes = [
   },
   {
     path: "/busy-bee",
-    title: "BUSY BEE — CASE STUDY",
+    title: "Busy Bee: strona domu produkcyjnego, case study",
     kind: "case",
     section: "work",
     legacy: ["case-busybee-v1", "case-busybee-v2", "case-busybee-v3"],
@@ -95,7 +96,7 @@ export const routes = [
   },
   {
     path: "/automation-house",
-    title: "AUTOMATION HOUSE — CASE STUDY",
+    title: "Automation House: rebranding strony, case study",
     kind: "case",
     section: "work",
     legacy: ["case-automation-house-v1"],
@@ -106,7 +107,7 @@ export const routes = [
   },
   {
     path: "/otb",
-    title: "OTB VENTURES — CASE STUDY",
+    title: "OTB Ventures: strona funduszu VC, case study",
     kind: "case",
     section: "work",
     legacy: ["case-otb-v1", "case-otb-v2"],
@@ -117,7 +118,7 @@ export const routes = [
   },
   {
     path: "/sassy",
-    title: "SASSY — CASE STUDY",
+    title: "Sassy: warsztat interakcji, case study",
     kind: "case",
     section: "work",
     legacy: ["case-sassy-v1", "case-sassy-v2"],
@@ -128,7 +129,7 @@ export const routes = [
   },
   {
     path: "/wiedza",
-    title: "WIEDZA",
+    title: "Wiedza: warsztaty, prelekcje i meetupy",
     kind: "page",
     section: "events",
     legacy: [],
