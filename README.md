@@ -29,7 +29,7 @@ Skopiuj `.env.example` do `.env.local`.
 
 | Zmienna | Opis |
 |---|---|
-| `NEXT_PUBLIC_SITE_URL` | Publiczny adres (canonical, OG, sitemap, JSON-LD). Domena nieustalona, fallback w kodzie: `https://no-fuss.pl`. |
+| `NEXT_PUBLIC_SITE_URL` | Publiczny adres (canonical, OG, sitemap, JSON-LD). Domena: `https://no-fuss.house` (ten sam fallback w kodzie). `public/llms.txt` ma adresy wpisane ręcznie, zmienna go nie zmienia. |
 
 ## Struktura
 

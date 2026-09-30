@@ -1,8 +1,8 @@
 /**
  * Publiczny adres strony. Źródło: `NEXT_PUBLIC_SITE_URL` (patrz `.env.example`).
- * Domena nie jest jeszcze ustalona, więc zawsze mamy bezpieczny fallback.
+ * Domena: no-fuss.house. Fallback działa, gdy zmiennej nie ustawiono.
  */
-export const FALLBACK_SITE_URL = "https://no-fuss.pl";
+export const FALLBACK_SITE_URL = "https://no-fuss.house";
 
 function resolveSiteUrl(): URL {
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
