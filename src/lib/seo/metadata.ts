@@ -3,8 +3,8 @@ import { getRoute } from "@/content/routes";
 import { site } from "@/content/site";
 import { siteUrl } from "./site-url";
 
-/** Sufiks tytułów podstron: „O nas: Magda Nestorowicz i Kuba Fedoszczak — no-fuss”. */
-export const TITLE_TEMPLATE = `%s — ${site.name}`;
+/** Separator i sufiks tytułów 1:1 z legacy: „O NAS — NO-FUSS©2026”. */
+export const TITLE_TEMPLATE = `%s — ${site.brandTitle}`;
 
 /** Obraz OG/Twitter; `url` względny względem `metadataBase` albo absolutny. */
 export interface SeoImage {
@@ -38,7 +38,7 @@ export const rootMetadata: Metadata = {
   metadataBase: siteUrl,
   applicationName: site.name,
   title: {
-    default: site.homeTitle,
+    default: site.brandTitle,
     template: TITLE_TEMPLATE,
   },
   description: site.description,
@@ -51,12 +51,12 @@ export const rootMetadata: Metadata = {
     type: "website",
     locale: site.locale,
     siteName: site.name,
-    title: site.homeTitle,
+    title: site.brandTitle,
     description: site.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: site.homeTitle,
+    title: site.brandTitle,
     description: site.description,
   },
   robots: ROBOTS_INDEX,
@@ -115,7 +115,7 @@ export function buildMetadata({
 }: BuildMetadataInput): Metadata {
   const route = getRoute(path);
   const pageTitle = title ?? route?.title ?? null;
-  /* Strona główna: `homeTitle` bez template'u (marka już w nim jest). */
+  /* Strona główna: własny `homeTitle` (marka + opis), bez template'u, żeby marka się nie dublowała. */
   const fullTitle = pageTitle ? TITLE_TEMPLATE.replace("%s", pageTitle) : site.homeTitle;
   const desc = description ?? (path === "/" ? site.description : site.shortDescription);
 

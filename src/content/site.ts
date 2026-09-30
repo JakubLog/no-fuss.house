@@ -33,15 +33,12 @@ export const site = {
   /** Zapis z logotypu HUD: „no–fuss” (półpauza). */
   wordmark: "no–fuss",
   /**
-   * Zapis marki z legacy (`no-fuss-v5.html`): podpis na obrazie OG i nazwa w manifeście.
-   * Do `<title>` już nie trafia: nie mówił, czym się zajmujemy, a rok zestarzałby się w 2027.
+   * Marka z legacy (`no-fuss-v5.html`): sufiks tytułów podstron
+   * („O NAS — NO-FUSS©2026”, „OTB VENTURES — CASE STUDY — NO-FUSS©2026”, „404 — NO-FUSS©2026”).
    */
   brandTitle: "NO-FUSS©2026",
-  /**
-   * `<title>` i `og:title` strony głównej (do ~60 znaków, dłuższe Google ucina).
-   * Podstrony: tytuł z `routes.ts` + sufiks „ — no-fuss” (`TITLE_TEMPLATE`).
-   */
-  homeTitle: "no-fuss — aplikacje mobilne, strony i produkty z AI",
+  /** `<title>` strony głównej: marka + krótki opis oferty (do ~60 znaków, żeby Google nie ucinał). */
+  homeTitle: "NO-FUSS©2026 | Studio produktowe: aplikacje, strony i AI",
   /**
    * Opis strony głównej (`<meta name="description">`, manifest, Organization w JSON-LD), do 155 znaków.
    * Nowe copy o usługach (decyzja Kuby, audyt B2B); opis z legacy był o duecie i OurMoney.

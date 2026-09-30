@@ -19,9 +19,8 @@ type ChangeFrequency = NonNullable<MetadataRoute.Sitemap[number]["changeFrequenc
 export interface SiteRoute {
   path: InternalPath;
   /**
-   * Tytuł strony BEZ sufiksu (sufiks „ — no-fuss” dokleja template w layout).
-   * Mówi, czym jest strona, nie tylko jak się nazywa: z sufiksem do ~60 znaków.
-   * `null` = strona główna (`site.homeTitle`).
+   * Tytuł strony BEZ sufiksu (sufiks „ — NO-FUSS©2026” dokleja template w layout).
+   * Copy 1:1 z `<title>` legacy. `null` = strona główna (`site.homeTitle`).
    */
   title: string | null;
   kind: RouteKind;
@@ -52,7 +51,7 @@ export const routes = [
   },
   {
     path: "/o-nas",
-    title: "O nas: Magda Nestorowicz i Kuba Fedoszczak",
+    title: "O NAS",
     kind: "page",
     section: "about",
     legacy: ["o-nas-v1", "o-nas-v2", "o-nas-v3", "o-nas-v4", "o-nas-v5"],
@@ -63,7 +62,7 @@ export const routes = [
   },
   {
     path: "/ourmoney",
-    title: "OurMoney: wspólny budżet dla par, case study",
+    title: "OURMONEY — CASE STUDY",
     kind: "case",
     section: "work",
     legacy: ["case-ourmoney-v1", "case-ourmoney-v2"],
@@ -74,7 +73,7 @@ export const routes = [
   },
   {
     path: "/aion-mind",
-    title: "AION MIND: journaling z AI, case study",
+    title: "AION MIND — CASE STUDY",
     kind: "case",
     section: "work",
     legacy: ["case-aion-mind-v1"],
@@ -85,7 +84,7 @@ export const routes = [
   },
   {
     path: "/busy-bee",
-    title: "Busy Bee: strona domu produkcyjnego, case study",
+    title: "BUSY BEE — CASE STUDY",
     kind: "case",
     section: "work",
     legacy: ["case-busybee-v1", "case-busybee-v2", "case-busybee-v3"],
@@ -96,7 +95,7 @@ export const routes = [
   },
   {
     path: "/automation-house",
-    title: "Automation House: rebranding strony, case study",
+    title: "AUTOMATION HOUSE — CASE STUDY",
     kind: "case",
     section: "work",
     legacy: ["case-automation-house-v1"],
@@ -107,7 +106,7 @@ export const routes = [
   },
   {
     path: "/otb",
-    title: "OTB Ventures: strona funduszu VC, case study",
+    title: "OTB VENTURES — CASE STUDY",
     kind: "case",
     section: "work",
     legacy: ["case-otb-v1", "case-otb-v2"],
@@ -118,7 +117,7 @@ export const routes = [
   },
   {
     path: "/sassy",
-    title: "Sassy: warsztat interakcji, case study",
+    title: "SASSY — CASE STUDY",
     kind: "case",
     section: "work",
     legacy: ["case-sassy-v1", "case-sassy-v2"],
@@ -129,7 +128,7 @@ export const routes = [
   },
   {
     path: "/wiedza",
-    title: "Wiedza: warsztaty, prelekcje i meetupy",
+    title: "WIEDZA",
     kind: "page",
     section: "events",
     legacy: [],
@@ -140,7 +139,7 @@ export const routes = [
   },
   {
     path: "/regulamin",
-    title: "Regulamin strony i formularza kontaktu",
+    title: "REGULAMIN",
     kind: "page",
     section: "legal",
     legacy: [],
@@ -151,7 +150,7 @@ export const routes = [
   },
   {
     path: "/polityka-prywatnosci",
-    title: "Polityka prywatności i ciasteczek",
+    title: "POLITYKA PRYWATNOŚCI",
     kind: "page",
     section: "legal",
     legacy: [],
