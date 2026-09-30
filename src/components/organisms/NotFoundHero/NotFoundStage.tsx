@@ -88,6 +88,9 @@ export function NotFoundStage() {
           <Button variant="ghost" href="/#realizacje">
             Realizacje
           </Button>
+          <Button variant="ghost" href="#mordor">
+            Droga do Mordoru ↓
+          </Button>
         </div>
       </div>
     </>

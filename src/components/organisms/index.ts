@@ -12,6 +12,7 @@ export * from "./Cursor";
 export * from "./DragBall";
 export * from "./EventsSection";
 export * from "./FaqSection";
+export * from "./FellowshipMap";
 export * from "./FilmStrip";
 export * from "./FindSection";
 export * from "./Footer";

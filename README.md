@@ -46,12 +46,12 @@ src/
     molecules/         NavList, MetaRow, TileCaption, FactRow, CopyEmail, SocialLinks, PhoneFrame,
                        CaseProse, PersonCard, WorkTile, TestimonialCard, ContactCta, EventTile
     organisms/         chrome (Preloader, Hud, GridOverlay, Cursor, SmoothScroll, Footer, Reveal),
-                       hero i 3D (HomeHero, HeroScene, NotFoundHero, PageHero), strona główna (+ KnowledgeTeaser),
+                       hero i 3D (HomeHero, HeroScene, NotFoundHero, PageHero), 404 (FellowshipMap), strona główna (+ KnowledgeTeaser),
                        /o-nas, /wiedza (EventsSection), bloki case study
     templates/         CaseStudyLayout (fakty standardowe, blok CTA; + CaseStudySection: wide / split / lite)
   content/             site.ts (firma, osoby, produkty), routes.ts (lista stron), navigation.ts, types.ts,
                        home.ts + home-jsonld.ts, process.ts („Jak pracujemy”), faq.ts (FAQ strony głównej),
-                       about.ts, events.ts + events-jsonld.ts (/wiedza i zajawka na /), cases/ (index.ts + jeden plik na case study)
+                       about.ts, fellowship.ts (trasa Drużyny na 404), events.ts + events-jsonld.ts (/wiedza i zajawka na /), cases/ (index.ts + jeden plik na case study)
   lib/
     seo/               buildMetadata, JSON-LD, adres strony, znak do ikon
     hooks/             useReducedMotion, usePointerFine, useReveal, useScramble, …

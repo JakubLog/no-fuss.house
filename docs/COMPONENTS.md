@@ -466,7 +466,8 @@ Kotwice na tej samej stronie (także bez Lenis przy reduced motion) ustawiają n
 | `HeroScene/types.ts` | typy | `FussStore`, `SceneFit`, `SceneRepel`, `HeroSceneProps` |
 | `HomeHero/HomeHero.tsx` | server, default export, bez propsów | `<section id="hero">` strony głównej |
 | `HomeHero/HomeHeroStage.tsx` | client | kanwa na całe hero + pusta ramka `.band` (`frame`: od 768 px pas między h1 a leadem z CTA; na telefonie miejsce na fallback CSS), sloty na serwerową treść (`headline` = h1 + lead + `ContactCta`, `sceneLabel`) |
-| `NotFoundHero/` | server + `NotFoundStage` (client) | hero 404, bez propsów |
+| `NotFoundHero/` | server + `NotFoundStage` (client) | hero 404, bez propsów; ghost „Droga do Mordoru ↓” do `#mordor` |
+| `FellowshipMap/` | server + `FellowshipBoard` (client) | sekcja `#mordor` pod hero 404: mapa trasy Drużyny Pierścienia (SVG, nie scena 3D); dane `content/fellowship.ts` (mile od Hobbitonu), rysunek `geography.ts`, czas i rzutowanie `route.ts` |
 
 Barrel `organisms/HeroScene/index.ts` (i barrel warstwy) eksportuje tylko `LazyHeroScene`, `createFussStore` i typy:
 statyczny import `HeroScene.tsx` wciągnąłby three.js do bundla strony.
@@ -1023,7 +1024,7 @@ Wszystkie `page.tsx` to Server Components: `buildMetadata` + `<JsonLd>` + organi
 | `/automation-house` | `app/automation-house/page.tsx` | `case-automation-house-v1` | `LiveFrame` → lite: `CaseStory`, `ProcessSteps`, `PhoneScroller`, `SpecList` | jak Busy Bee |
 | `/otb` | `app/otb/` | `case-otb-v2` | `LiveFrame` → lite: `CaseStory`, `DragBall`, `PhoneScroller`, `SpecList` | jak Busy Bee |
 | `/sassy` | `app/sassy/` | `case-sassy-v2` | `LiveFrame` → lite: `CaseStory`, `ToySwitcher`, 2 × `PhoneFrame`, `SpecList tiles` | jak Busy Bee, `WebSite.author` = Magda |
-| 404 | `app/not-found.tsx` | `404` | `NotFoundHero` | — |
+| 404 | `app/not-found.tsx` | `404` | `NotFoundHero`, `FellowshipMap` | — |
 
 Każdy case kończy się blokiem CTA z szablonu, potem „Następny projekt”.
 Metadane case studies: `buildMetadata({ path, type: "article", description: caseDescription(c), images: [cover] })`.
