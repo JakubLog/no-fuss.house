@@ -550,7 +550,7 @@ Rodzic kanwy musi mieć `position: relative` (kanwa: `absolute; inset: 0; z-inde
   lewy górny róg), ramka `.band` w wierszu 2 (1/-1), lead z CTA (`.aside`) w wierszu 3 (7/-1, od 1024 px 9/span 4,
   prawy dolny róg). Hero ma `min-height`, nie stałą wysokość (treść nie jest obcinana), kanwa wypełnia całe hero.
 - **Metadane 404:** `app/not-found.tsx` eksportuje `metadata = { title: "404", description: "404: tej strony nie ma.", robots: null }`:
-  template z layoutu daje „404 — NO-FUSS©2026” (1:1 z legacy), `robots: null` kasuje odziedziczone `index, follow`, więc zostaje
+  template z layoutu daje „404 — no-fuss”, `robots: null` kasuje odziedziczone `index, follow`, więc zostaje
   jeden tag `noindex` wstawiany przez Next przy 404. Docs Next 16 opisują `metadata` tylko dla `global-not-found.js`, ale resolver
   16.3 czyta `metadata` z `not-found` (sprawdzić przy aktualizacji Next). React `<title>` nie wystarcza, bo tytuł z layoutu stoi
   w `<head>` pierwszy.
@@ -1101,7 +1101,7 @@ Poza Reactem: `@/lib/intro` → `isIntroDone()`, `subscribeIntro(fn)`, zdarzenie
 ## Nowa strona: checklista
 
 1. **Route:** dopisz wpis do `src/content/routes.ts` (`path`, `title` 1:1 z `<title>` legacy bez sufiksu,
-   `kind`, `section`, `legacy` — stare pliki do przekierowań 301, `source` (`null` bez wzorca), `lastModified`, `changeFrequency`, `priority`).
+   `kind`, `section`, `legacy` — stare pliki do przekierowań 308, `source` (`null` bez wzorca), `lastModified`, `changeFrequency`, `priority`).
    Sitemap i redirecty zaktualizują się same. Dopisz stronę do `public/llms.txt`.
    Case study: `CaseStudy` w `src/content/cases/<slug>.ts` (z `summary`, `description`, dla stron WWW też `story`),
    wpis w `caseOrder` i w `byPath` w `src/content/cases/index.ts`.
@@ -1111,8 +1111,8 @@ Poza Reactem: `@/lib/intro` → `isIntroDone()`, `subscribeIntro(fn)`, zdarzenie
    import { buildMetadata } from "@/lib/seo/metadata";
    export const metadata = buildMetadata({ path: "/otb", type: "article" });
    ```
-   Tytuł z `routes.ts` + template „%s — NO-FUSS©2026”. Wyjątek: `/` (tytuł `null` w routes) dostaje sam
-   `site.brandTitle` „NO-FUSS©2026” jako `absolute` (1:1 z legacy), opis `site.description`. Canonical, OG, Twitter, robots składa helper.
+   Tytuł z `routes.ts` + template „%s — no-fuss” (z sufiksem do ~60 znaków, tytuł mówi, czym jest strona).
+   Wyjątek: `/` (tytuł `null` w routes) dostaje `site.homeTitle` jako `absolute`, opis `site.description`. Canonical, OG, Twitter, robots składa helper.
    Obraz OG dziedziczy się z `app/opengraph-image.tsx`; własny: `app/<slug>/opengraph-image.tsx`.
 4. **JSON-LD:**
    ```tsx

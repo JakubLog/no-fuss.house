@@ -7,7 +7,6 @@ import { StickerBoard } from "@/components/organisms/StickerBoard";
 import { TeamSheets } from "@/components/organisms/TeamSheets";
 import { aboutHero, findUs, marqueeItems, publishedEventsTeaser, publishedLinkedinPosts } from "@/content/about";
 import { todayIso } from "@/content/events";
-import { getRoute } from "@/content/routes";
 import { people, site } from "@/content/site";
 import { JsonLd, breadcrumb, graph, ids, type JsonLdNode } from "@/lib/seo/jsonld";
 import { buildMetadata } from "@/lib/seo/metadata";
@@ -15,7 +14,7 @@ import { absoluteUrl } from "@/lib/seo/site-url";
 
 const PATH = "/o-nas";
 
-/* Tytuł z routes.ts („O NAS”), opis = site.shortDescription (1:1 z meta o-nas-v5). */
+/* Tytuł z routes.ts, opis = site.shortDescription (1:1 z meta o-nas-v5). */
 export const metadata = buildMetadata({ path: PATH });
 
 /** Zajawka `#wydarzenia` pokazuje nadchodzące wydarzenia wg dzisiejszej daty: odświeżanie co godzinę (ISR). */
@@ -27,7 +26,7 @@ function aboutPage(): JsonLdNode {
     "@type": "AboutPage",
     "@id": `${absoluteUrl(PATH)}#webpage`,
     url: absoluteUrl(PATH),
-    name: getRoute(PATH)?.title ?? "O nas",
+    name: "O nas",
     description: site.shortDescription,
     inLanguage: "pl-PL",
     isPartOf: { "@id": ids.website },

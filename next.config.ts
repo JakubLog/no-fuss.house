@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 import { routes } from "./src/content/routes";
 
 /**
- * Przekierowania 301 ze starych adresów statycznej strony (legacy/*.html).
+ * Przekierowania stałe (`permanent: true`, Next zwraca 308) ze starych adresów statycznej strony (legacy/*.html).
  * Na Vercelu działał `cleanUrls`, więc obsługujemy obie formy: `/o-nas-v5` i `/o-nas-v5.html`.
  * Lista plików pochodzi z `src/content/routes.ts` (pole `legacy`).
  */

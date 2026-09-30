@@ -70,7 +70,7 @@ Kontrakt komponentów, tokeny i checklista dodawania strony: [docs/COMPONENTS.md
 
 ## Route'y
 
-Jedno źródło prawdy: `src/content/routes.ts`. Stare adresy (`/no-fuss-v5`, `/case-otb-v2.html`…) przekierowują 301 na nowe (`next.config.ts`).
+Jedno źródło prawdy: `src/content/routes.ts`. Stare adresy (`/no-fuss-v5`, `/case-otb-v2.html`…) przekierowują na nowe kodem 308 (stałe, `permanent: true`) (`next.config.ts`).
 
 | Route | Wzorzec w `legacy/` |
 |---|---|
