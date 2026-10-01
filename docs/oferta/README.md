@@ -16,7 +16,7 @@ i renderowane do A4 przez Chrome. Tu leży wzór i oferty już wysłane.
 - **Dla kogo:** Zuza z BNA (Brand New Attitude, bna.pl). Magda zapytała ją na Instagramie, czy BNA szuka
   wykonawców i wdrożeniowców, i zaproponowała zostawienie namiaru w ich bazie. Odpowiedź: „Biorę to!!!!".
 - **Cel:** wizytówka no-fuss do bazy wykonawców agencji, nie wycena konkretnego projektu. Cen nie ma.
-- **Status:** v6 zatwierdzona przez Magdę 2026-10-01, do wysłania Zuzie.
+- **Status:** v6 wysłana Zuzie przez Magdę 2026-10-01. Czekamy na odpowiedź.
 - **Układ, 5 stron A4:**
   1. okładka z ramką „Już się znamy" (wspólna praca Magdy i BNA nad nową stroną BNA, propozycja
      odświeżenia projektu, wdrożenie do 2 tygodni),
@@ -32,8 +32,8 @@ i renderowane do A4 przez Chrome. Tu leży wzór i oferty już wysłane.
   - przy OTB Ventures: „Magda razem z Wami i Piotrem Chuchłą", bo BNA pracowało przy tym projekcie.
     We wzorze zostaje wersja ogólna, bez „z Wami",
   - bio Magdy bez listy zaprojektowanych stron, bio Kuby: „Developer i człowiek orkiestra".
-- **Do potwierdzenia przed wysyłką:** termin „maksymalnie 2 tygodnie" na wdrożenie z Kubą; opis szkoleń AI
-  (napisany na potrzeby oferty, na stronie go nie ma).
+- **Poszło bez osobnego potwierdzenia:** termin „maksymalnie 2 tygodnie" na wdrożenie (do uzgodnienia z Kubą,
+  bo jest już obietnicą wobec BNA) i opis szkoleń AI (napisany na potrzeby oferty, na stronie go nie ma).
 
 ## Jak zrobić nową ofertę
 
