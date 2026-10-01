@@ -29,6 +29,9 @@ import styles from "./FellowshipMap.module.css";
 const PLAY_MS = 12000;
 
 const NOFUSS_DAY = Math.round(NOFUSS_DAYS);
+
+/** Jaka część planszy musi być widoczna, żeby trasa ruszyła sama. */
+const AUTOPLAY_VISIBLE = 0.6;
 const pct = (v: number, of: number) => `${(v / of) * 100}%`;
 /** Pozycja w % planszy dla punktu w jednostkach `viewBox`. */
 const at = (p: { x: number; y: number }) => ({ left: pct(p.x, VIEW_W), top: pct(p.y, VIEW_H) });
@@ -39,7 +42,8 @@ const pad3 = (n: number) => String(Math.floor(n)).padStart(3, "0");
 /**
  * Interaktywna mapa trasy Drużyny (Client Component): przełączniki tras, „Wyruszamy”, suwak dnia,
  * przystanki jako przyciski nad rysunkiem SVG i panel etapu z komentarzem no-fuss.
- * Stan to tylko `day` (0–184) i `playing`; bieżący przystanek wynika z dnia.
+ * Stan to tylko `day` (0–184) i `playing`; bieżący przystanek wynika z dnia. Trasa rusza sama raz,
+ * gdy plansza wejdzie w kadr (o ile nikt wcześniej nie kliknął mapy i nie ma reduced motion).
  */
 export function FellowshipBoard() {
   const uid = useId();
@@ -50,6 +54,28 @@ export function FellowshipBoard() {
   const [showNofuss, setShowNofuss] = useState(true);
   /* Dzień, od którego rusza odtwarzanie (ustawiany w `play`, czytany w efekcie). */
   const fromRef = useRef(0);
+  /* Plansza i flaga „ktoś już ruszył mapę” (ręcznie albo autostartem): autostart tylko raz i nie po interakcji. */
+  const boardRef = useRef<HTMLDivElement>(null);
+  const touchedRef = useRef(false);
+
+  /* Autostart: trasa rusza sama, gdy plansza w większości wejdzie w kadr. Bez autostartu przy reduced motion. */
+  useEffect(() => {
+    const board = boardRef.current;
+    if (!board || reduced) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting || touchedRef.current) return;
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        touchedRef.current = true;
+        fromRef.current = 0;
+        setPlaying(true);
+        io.disconnect();
+      },
+      { threshold: AUTOPLAY_VISIBLE },
+    );
+    io.observe(board);
+    return () => io.disconnect();
+  }, [reduced]);
 
   useEffect(() => {
     if (!playing) return;
@@ -74,11 +100,13 @@ export function FellowshipBoard() {
   const done = day >= TOTAL_DAYS;
 
   const goTo = (d: number) => {
+    touchedRef.current = true;
     setPlaying(false);
     setDay(Math.max(0, Math.min(TOTAL_DAYS, d)));
   };
 
   const play = () => {
+    touchedRef.current = true;
     if (playing) {
       setPlaying(false);
       return;
@@ -96,7 +124,7 @@ export function FellowshipBoard() {
 
   return (
     <div className={styles.layout}>
-      <div className={cx("tone-dark", styles.board)}>
+      <div ref={boardRef} className={cx("tone-dark", styles.board)}>
         <div className={cx("mono-sm", styles.controls)}>
           <div className={styles.toggles} role="group" aria-label="Trasy na mapie">
             <button type="button" aria-pressed={showFellowship} onClick={() => setShowFellowship((v) => !v)}>

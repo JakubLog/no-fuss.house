@@ -301,7 +301,8 @@ do Góry Przeznaczenia 184 dni.
   Przełączniki jak modele w `SplitCalculator` (obrys 1 px, włączony w kolorze tekstu). Znaczniki to romby 14 px jak w mierniku 404.
 - **Przystanki**: 13 przycisków-rombów nad rysunkiem (przed nami obrys, za nami biały, bieżący limonkowy z etykietą na limonce).
   Etykieta celu widoczna stale od 768 px, reszta na hover / fokus.
-- **Czas**: „Wyruszamy →” odtwarza 184 dni w 12 s; postoje (Rivendell, Lórien) widać jako stojący znacznik przy biegnącym liczniku.
+- **Czas**: trasa rusza sama raz, gdy 60% planszy wejdzie w kadr (nie po wcześniejszym kliknięciu mapy, nie przy reduced motion);
+  „Pauza” zatrzymuje, „Wyruszamy →” / „Dalej →” odtwarza 184 dni w 12 s; postoje (Rivendell, Lórien) widać jako stojący znacznik przy biegnącym liczniku.
   Suwak osi czasu jak w `SplitCalculator`, data w kalendarzu Shire'u. Przy reduced motion „Wyruszamy” skacze na koniec.
 - **no-fuss w liczbach**: średnie tempo marszu Drużyny bez postojów na prostej z tej samej mapy (metoda opisana w `route.ts`,
   bez przypisu na stronie). To żart, nie deklaracja o tempie naszej pracy.
