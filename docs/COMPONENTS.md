@@ -641,7 +641,7 @@ Rodzic sceny musi mieć `position: relative` (opakowanie kanwy: `absolute; inset
   lewy górny róg), ramka `.band` w wierszu 2 (1/-1), lead z CTA (`.aside`) w wierszu 3 (7/-1, od 1024 px 9/span 4,
   prawy dolny róg). Hero ma `min-height`, nie stałą wysokość (treść nie jest obcinana), kanwa wypełnia całe hero.
 - **Metadane 404:** `app/not-found.tsx` eksportuje `metadata = { title: "404", description: "404: tej strony nie ma.", robots: null }`:
-  template z layoutu daje „404 — no-fuss”, `robots: null` kasuje odziedziczone `index, follow`, więc zostaje
+  template z layoutu daje „404 — NO-FUSS©2026” (1:1 z legacy), `robots: null` kasuje odziedziczone `index, follow`, więc zostaje
   jeden tag `noindex` wstawiany przez Next przy 404. Docs Next 16 opisują `metadata` tylko dla `global-not-found.js`, ale resolver
   16.3 czyta `metadata` z `not-found` (sprawdzić przy aktualizacji Next). React `<title>` nie wystarcza, bo tytuł z layoutu stoi
   w `<head>` pierwszy.
@@ -1200,7 +1200,7 @@ Metadane case studies: `buildMetadata({ path, type: "article", description: case
 
 | Plik | Co |
 |---|---|
-| `site.ts` | `site` (w tym `contact: SiteContact` = `{ email, calendarUrl, responseNote }`, `homeTitle` = tytuł `/`, `brandTitle` = podpis OG i nazwa w manifeście, `description`), `people`, `products` (tylko produkty własne no-fuss: OurMoney; AION MIND to etat Magdy, adres w `cases/aion-mind.ts`), `isPlaceholder()` |
+| `site.ts` | `site` (w tym `contact: SiteContact` = `{ email, calendarUrl, responseNote }`, `homeTitle` = tytuł `/`, `brandTitle` = sufiks tytułów podstron, podpis OG i nazwa w manifeście, `description`), `people`, `products` (tylko produkty własne no-fuss: OurMoney; AION MIND to etat Magdy, adres w `cases/aion-mind.ts`), `isPlaceholder()` |
 | `routes.ts` | `routes` (`source: null` = strona bez wzorca w legacy, np. `/wiedza`), `caseOrder`, `getRoute`, `getNextCase`, `getNavSection` |
 | `navigation.ts` | `mainNav` (Usługi, Realizacje, O nas, Wiedza, Kontakt): od 768 px w wierszu HUD, niżej w `MobileMenu` |
 | `types.ts` | typy współdzielone (`CaseStudy`, `CaseStudySummary`, `CaseStudyStory`, `SocialLink`, `Person`…) |
@@ -1282,8 +1282,8 @@ Poza Reactem: `@/lib/intro` → `isIntroDone()`, `subscribeIntro(fn)`, zdarzenie
    import { buildMetadata } from "@/lib/seo/metadata";
    export const metadata = buildMetadata({ path: "/otb", type: "article" });
    ```
-   Tytuł z `routes.ts` + template „%s — no-fuss” (z sufiksem do ~60 znaków, tytuł mówi, czym jest strona).
-   Wyjątek: `/` (tytuł `null` w routes) dostaje `site.homeTitle` jako `absolute`, opis `site.description`. Canonical, OG, Twitter, robots składa helper.
+   Tytuł z `routes.ts` + template „%s — NO-FUSS©2026”. Wyjątek: `/` (tytuł `null` w routes) dostaje
+   `site.homeTitle` („NO-FUSS©2026 | Studio produktowe…”) jako `absolute`, opis `site.description`. Canonical, OG, Twitter, robots składa helper.
    Obraz OG dziedziczy się z `app/opengraph-image.tsx`; własny: `app/<slug>/opengraph-image.tsx`.
 4. **JSON-LD:**
    ```tsx
