@@ -270,11 +270,31 @@ export function FellowshipBoard() {
           </span>
           <span>{stop.date}</span>
         </p>
-        <h3 className={styles.panelTitle}>{stop.name}</h3>
-        <p className={styles.panelText}>{stop.what}</p>
+        {/* Wszystkie etapy w jednej komórce siatki (widoczny tylko bieżący): pola mają wysokość najdłuższego
+            tekstu, więc Wstecz / Dalej stoją w tym samym miejscu na każdym etapie i każdej szerokości. */}
+        <h3 className={cx(styles.panelTitle, styles.stack)}>
+          {FELLOWSHIP_STOPS.map((s, i) => (
+            <span key={s.id} aria-hidden={i !== index || undefined}>
+              {s.name}
+            </span>
+          ))}
+        </h3>
+        <p className={cx(styles.panelText, styles.stack)}>
+          {FELLOWSHIP_STOPS.map((s, i) => (
+            <span key={s.id} aria-hidden={i !== index || undefined}>
+              {s.what}
+            </span>
+          ))}
+        </p>
         <dl className={styles.panelNofuss}>
           <dt className="mono-sm">U nas</dt>
-          <dd>{stop.nofuss}</dd>
+          <dd className={styles.stack}>
+            {FELLOWSHIP_STOPS.map((s, i) => (
+              <span key={s.id} aria-hidden={i !== index || undefined}>
+                {s.nofuss}
+              </span>
+            ))}
+          </dd>
         </dl>
         <div className={styles.panelNav}>
           <Button

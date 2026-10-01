@@ -306,7 +306,9 @@ do Góry Przeznaczenia 184 dni.
   Suwak osi czasu jak w `SplitCalculator`, data w kalendarzu Shire'u. Przy reduced motion „Wyruszamy” skacze na koniec.
 - **no-fuss w liczbach**: średnie tempo marszu Drużyny bez postojów na prostej z tej samej mapy (metoda opisana w `route.ts`,
   bez przypisu na stronie). To żart, nie deklaracja o tempie naszej pracy.
-- **Panel etapu** (od 1024 px 4 kolumny obok planszy, sticky): data, nazwa w roli title, co się działo (lead), „U nas” (lead), Wstecz / Dalej.
+- **Panel etapu** (od 1024 px 4 kolumny obok planszy, sticky): data, nazwa w roli title, co się działo (lead), „U nas” (lead), Wstecz / Dalej
+  na stałej wysokości: teksty wszystkich etapów leżą w jednej komórce siatki (widoczny bieżący), więc pola mają wysokość
+  najdłuższego tekstu i przyciski nie skaczą między etapami.
 
 ## Komponenty case study
 
