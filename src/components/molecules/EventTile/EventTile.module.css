@@ -126,21 +126,20 @@
   height: 16px;
 }
 
-/* Hover: powolne powiększenie do 1.2 w masce 16:10 (2 s `ease-out`, łagodniej niż `--ease`, które większość ruchu
-   robi na starcie). */
+/* Hover: delikatne powiększenie do 1.03 w masce 16:10, jak kafel realizacji (0,9 s `--ease`). */
 .photo {
   display: block;
   width: 100%;
   height: auto;
   aspect-ratio: 16 / 10;
   object-fit: cover;
-  transition: scale 2s ease-out;
+  transition: scale 0.9s var(--ease);
 }
 
 /* `PhotoPlaceholder` sam centruje podpis; tu tylko proporcje. */
 .placeholder {
   aspect-ratio: 16 / 10;
-  transition: scale 2s ease-out;
+  transition: scale 0.9s var(--ease);
 }
 
 .meta {
@@ -176,7 +175,7 @@
  * Hover kafla: kafel nie jest linkiem, więc bez strzałki i bez zmiany kursora (strzałki mają tylko
  * `ArrowLink` / `Button` w środku, z własnym hoverem). Reaguje główny obraz kafla: nadchodzące — dzień
  * dostaje limonkowe tło (`--on-accent`, 15,44:1) i wcięcie 12 px jak wiersze FAQ / usług; minione — zdjęcie
- * powoli powiększa się do 1.2 w masce. Tylko przy prawdziwym hoverze (dotyk bez „przyklejenia”).
+ * delikatnie powiększa się do 1.03 w masce (jak kafel realizacji). Tylko przy prawdziwym hoverze (dotyk bez „przyklejenia”).
  * Kafel ma `.fade` (reveal), więc animujemy dzieci, nie kafel.
  */
 @media (hover: hover) {
@@ -190,7 +189,7 @@
   }
 
   .past:hover :is(.photo, .placeholder) {
-    scale: 1.2;
+    scale: 1.03;
   }
 }
 
@@ -205,7 +204,7 @@
 }
 
 .past:has(:focus-visible) :is(.photo, .placeholder) {
-  scale: 1.2;
+  scale: 1.03;
 }
 
 /* Bez ruchu: limonka pojawia się od razu, dzień bez wcięcia (tło i tak mieści się w paddingu kafla),

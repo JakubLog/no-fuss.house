@@ -422,8 +422,8 @@ i opcjonalnym `logo` w lewym górnym rogu (bez tła, wprost na zdjęciu, 7 px od
 Reveal robi rodzic (`className="fade"` w `Reveal as="li"`). `sizes` stałe: zdjęcie minionego — siatka 1 → 2 (640 px) → 3 kolumny (1024 px);
 logo — `200px` (górna granica przy stałej wysokości; `.svg` idzie bez optymalizacji).
 Hover (`@media (hover: hover)`), bez strzałki i kursora-linku, bo kafel nie jest linkiem: `upcoming` — dzień dostaje limonkowe tło
-(`::before`, 12 px z obu stron) i `translateX(12px)`, 0.4 s `--ease`; `past` — zdjęcie / `PhotoPlaceholder` `scale: 1.2` w masce `.media`
-(`overflow: hidden`), 2 s `ease-out` (powoli; `--ease` robi większość ruchu na starcie). Z `logo` `.media` dostaje `.shade`: `::after` z cieniem
+(`::before`, 12 px z obu stron) i `translateX(12px)`, 0.4 s `--ease`; `past` — zdjęcie / `PhotoPlaceholder` `scale: 1.03` w masce `.media`
+(`overflow: hidden`), 0.9 s `--ease` (jak `WorkTile`). Z `logo` `.media` dostaje `.shade`: `::after` z cieniem
 `inset 0 48px 40px -24px` (czerń 60%) nad zdjęciem, pod logo i tagiem; nie skaluje się. Ten sam stan przy `:has(:focus-visible)` (fokus z klawiatury na `Button` / `ArrowLink` w kaflu;
 bez `:focus-within`, żeby tap na dotyku go nie przyklejał). Animowane są dzieci, nie `article` (ma `.fade`). Reduced motion: bez przejść
 i bez transformacji, limonka natychmiast.

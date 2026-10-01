@@ -214,8 +214,8 @@ stałe (Hud, kursor, siatka) poza revealem. Smooth scroll przez Lenis. Przy
 a kotwice skaczą natychmiast.
 
 Hover w sekcjach treści mówi jednym językiem (wzór: FAQ): limonkowe tło i wcięcie 12 px transformem, 0,4 s `--ease`
-(„Co robimy”, „Jak pracujemy”, dzień w kaflu nadchodzącego wydarzenia), albo obraz 1.03 w masce (kafel realizacji, 0,9 s `--ease`;
-kafel minionego wydarzenia: powolne powiększenie do 1.2, 2 s `ease-out`). Działa tylko przy `(hover: hover)`, więc tap na dotyku go nie przykleja;
+(„Co robimy”, „Jak pracujemy”, dzień w kaflu nadchodzącego wydarzenia), albo obraz 1.03 w masce (kafel realizacji i kafel minionego
+wydarzenia, 0,9 s `--ease`). Działa tylko przy `(hover: hover)`, więc tap na dotyku go nie przykleja;
 przy reduced motion bez przejść i bez ruchu (limonka od razu). FAQ wcina tak samo: `translateX` pytania i `translate` „+”, 0,4 s `--ease`.
 
 ## Do's and Don'ts
@@ -298,7 +298,7 @@ Nie wymyślamy liczb, wyników ani cytatów: efekt to fakt (np. działająca str
   data | gdzie (bez znanego dnia sam miesiąc „06.2026”), tytuł w roli title 700, opis, osoby w mono 12 px, opcjonalny link do nagrania „↗”. Kolumny 1 → 2 (640 px) → 3 (1024 px),
   odstęp 56 px pion / 16 px poziom (`--event-gap`, kafle wydarzeń luźniej niż `--gap` 8 px). Bez zdjęcia placeholder w ukośne kreski („Zdjęcie z wydarzenia 16:10”).
   Z logo: wewnętrzny cień od górnej krawędzi zdjęcia (logo czytelne także na jasnym zdjęciu). Hover: zdjęcie (albo placeholder)
-  powoli powiększa się do 1.2 w masce 16:10 (2 s `ease-out`); kafel nie jest linkiem, strzałka tylko w linku do nagrania.
+  delikatnie powiększa się do 1.03 w masce 16:10 (0,9 s `--ease`, jak kafel realizacji); kafel nie jest linkiem, strzałka tylko w linku do nagrania.
 - Wydarzenie przechodzi z nadchodzących do minionych samo, następnego dnia po dacie (wielodniowe: po ostatnim dniu; czas warszawski).
 - **Zajawka na stronie głównej** (`#wiedza`, po „O nas”, ciemna): etykieta mono „Wiedza”, nagłówek h2 „Przekazujemy wiedzę dalej”,
   „Zobacz wszystko →” po prawej (od 768 px) i trzy kafle spośród wyróżnionych (`featured`): najbliższe nadchodzące i najnowsze minione.
