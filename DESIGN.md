@@ -304,7 +304,15 @@ do Góry Przeznaczenia 184 dni.
   Kliknięcie myszą lub stuknięcie wybiera przystanek najbliższy wskaźnikowi (na telefonie przystanki leżą bliżej niż szerokość
   palca), z klawiatury ten z fokusem.
 - **Telefon (< 768 px)**: kadr mapy przycięty do trasy (od Shire'u po Mordor, ok. 1,2× większy niż pełna mapa), przełączniki
-  tras i przycisk w jednym rzędzie (liczba dni w przełącznikach dopiero od 480 px).
+  tras i przycisk w jednym rzędzie od 360 px (liczba dni w przełącznikach od 480 px, krótsze etykiety przycisku: „W drogę →”,
+  „Pauza ‖”, „Dalej →”, „Od nowa ↺”). Przebieg trwa 8 s zamiast 12 s. W trakcie przebiegu kamera: scena przybliżona 1,8×
+  i przesuwana za Drużyną (przejście 0,6 s `--ease`, przycięte do krawędzi mapy); po pauzie i na końcu wraca do całej trasy.
+  Przy reduced motion bez kamery. Status ma zarezerwowane dwie linie, więc plansza nie zmienia wysokości.
+- **Skrót etapu w planszy (< 1024 px)**: panel jest wtedy pod mapą, poza ekranem, więc pod osią czasu kreska 1 px,
+  „Etap 05/13” i data w mono, nazwa (700) i opis w roli body; wysokość najdłuższego opisu (teksty nałożone w jednej komórce).
+  Dla czytników `aria-hidden` (pełny panel niżej). Na dotyku podpis „← Przesuń, żeby zmienić etap →”.
+- **Gest**: przesunięcie palcem w poziomie (≥ 48 px, wyraźnie bardziej w poziomie niż w pionie) po skrócie etapu albo po panelu:
+  w lewo następny etap, w prawo poprzedni. `touch-action: pan-y`, pionowe przewijanie strony działa jak zwykle.
 - **Czas**: trasa rusza sama raz, gdy 60% planszy wejdzie w kadr (nie po wcześniejszym kliknięciu mapy, nie przy reduced motion);
   „Pauza” zatrzymuje, „Wyruszamy →” / „Dalej →” odtwarza 184 dni w 12 s; postoje (Rivendell, Lórien) widać jako stojący znacznik przy biegnącym liczniku.
   Suwak osi czasu jak w `SplitCalculator`, data w kalendarzu Shire'u. Przy reduced motion „Wyruszamy” skacze na koniec.

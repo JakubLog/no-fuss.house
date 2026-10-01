@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties, type MouseEvent, type TouchEvent } from "react";
 import { Button } from "@/components/atoms/Button";
 import { FELLOWSHIP_REGIONS, FELLOWSHIP_STOPS } from "@/content/fellowship";
 import { cx } from "@/lib/cx";
@@ -28,6 +28,15 @@ import styles from "./FellowshipMap.module.css";
 
 /** 184 dni drogi w 12 s: postoje w Rivendell i Lórien widać jako stojący znacznik przy biegnącym liczniku. */
 const PLAY_MS = 12000;
+/** Na telefonie krócej: autostart przy przewijaniu nie może trzymać człowieka 12 s. */
+const PLAY_MS_NARROW = 8000;
+const NARROW_QUERY = "(max-width: 767px)";
+
+/** Kamera na telefonie w trakcie przebiegu: przybliżenie i podążanie za Drużyną. */
+const FOLLOW_ZOOM = 1.8;
+
+/** Minimalne przesunięcie palcem (px), które przełącza etap. */
+const SWIPE_PX = 48;
 
 const NOFUSS_DAY = Math.round(NOFUSS_DAYS);
 
@@ -67,7 +76,7 @@ const pad3 = (n: number) => String(Math.floor(n)).padStart(3, "0");
 export function FellowshipBoard() {
   const uid = useId();
   const reduced = useReducedMotion();
-  const narrow = useMediaQuery("(max-width: 767px)");
+  const narrow = useMediaQuery(NARROW_QUERY);
   const view = narrow ? NARROW_VIEW : FULL_VIEW;
   const mapRef = useRef<HTMLDivElement>(null);
   const [day, setDay] = useState(0);
@@ -76,6 +85,9 @@ export function FellowshipBoard() {
   const [showNofuss, setShowNofuss] = useState(true);
   /* Dzień, od którego rusza odtwarzanie (ustawiany w `play`, czytany w efekcie). */
   const fromRef = useRef(0);
+  /* Czas całego przebiegu dla bieżącego odtwarzania (ustalany przy starcie: telefon krócej). */
+  const durationRef = useRef(PLAY_MS);
+  const swipeRef = useRef<{ x: number; y: number } | null>(null);
   /* Plansza i flaga „ktoś już ruszył mapę” (ręcznie albo autostartem): autostart tylko raz i nie po interakcji. */
   const boardRef = useRef<HTMLDivElement>(null);
   const touchedRef = useRef(false);
@@ -90,6 +102,7 @@ export function FellowshipBoard() {
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         touchedRef.current = true;
         fromRef.current = 0;
+        durationRef.current = window.matchMedia(NARROW_QUERY).matches ? PLAY_MS_NARROW : PLAY_MS;
         setPlaying(true);
         io.disconnect();
       },
@@ -101,10 +114,11 @@ export function FellowshipBoard() {
 
   useEffect(() => {
     if (!playing) return;
-    const start = performance.now() - (fromRef.current / TOTAL_DAYS) * PLAY_MS;
+    const duration = durationRef.current;
+    const start = performance.now() - (fromRef.current / TOTAL_DAYS) * duration;
     let raf = 0;
     const tick = (now: number) => {
-      const next = Math.min(TOTAL_DAYS, ((now - start) / PLAY_MS) * TOTAL_DAYS);
+      const next = Math.min(TOTAL_DAYS, ((now - start) / duration) * TOTAL_DAYS);
       setDay(next);
       if (next < TOTAL_DAYS) raf = requestAnimationFrame(tick);
       else setPlaying(false);
@@ -138,22 +152,55 @@ export function FellowshipBoard() {
       return;
     }
     fromRef.current = done ? 0 : day;
+    durationRef.current = narrow ? PLAY_MS_NARROW : PLAY_MS;
     setPlaying(true);
   };
+
+  /** Etap wstecz / dalej (przyciski panelu i gest przesunięcia). */
+  const step = (dir: -1 | 1) => goTo(FELLOWSHIP_STOPS[index + dir]?.day ?? (dir > 0 ? TOTAL_DAYS : 0));
+
+  /* Przesunięcie palcem w poziomie: w lewo następny etap, w prawo poprzedni; pionowe zostaje przewijaniem strony. */
+  const swipe = {
+    onTouchStart: (e: TouchEvent<HTMLElement>) => {
+      const t = e.touches[0];
+      swipeRef.current = { x: t.clientX, y: t.clientY };
+    },
+    onTouchEnd: (e: TouchEvent<HTMLElement>) => {
+      const from = swipeRef.current;
+      swipeRef.current = null;
+      const t = e.changedTouches[0];
+      if (!from || !t) return;
+      const dx = t.clientX - from.x;
+      const dy = t.clientY - from.y;
+      if (Math.abs(dx) < SWIPE_PX || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+      step(dx < 0 ? 1 : -1);
+    },
+  };
+
+  /* Kamera (telefon, w trakcie przebiegu): scena przybliżona i przesunięta tak, żeby Drużyna była na środku,
+     przycięta do krawędzi mapy. Przejście CSS wygładza podążanie i powrót do całej trasy po pauzie. */
+  const following = narrow && playing && !reduced;
+  const camera: CSSProperties = (() => {
+    if (!following) return {};
+    const u = (marker.x - view.x) / view.w;
+    const v = (marker.y - view.y) / view.h;
+    const clamp = (k: number) => Math.min(0, Math.max((1 - FOLLOW_ZOOM) * 100, (0.5 - FOLLOW_ZOOM * k) * 100));
+    return { transform: `translate(${clamp(u)}%, ${clamp(v)}%) scale(${FOLLOW_ZOOM})` };
+  })();
 
   /**
    * Przystanek dla kliknięcia: z myszy / dotyku najbliższy wskaźnikowi (na telefonie przystanki leżą bliżej
    * niż szerokość palca, a przycisk na wierzchu przejmowałby stuknięcie sąsiada); z klawiatury ten z fokusem.
    */
   const pick = (e: MouseEvent<HTMLButtonElement>, own: number) => {
-    const rect = mapRef.current?.getBoundingClientRect();
-    if (e.detail === 0 || !rect) return own;
+    const points = mapRef.current?.querySelectorAll("ol > li");
+    if (e.detail === 0 || !points) return own;
     let best = own;
     let bestDist = Infinity;
-    STOPS.forEach((s, i) => {
-      const x = rect.left + ((s.pos.x - view.x) / view.w) * rect.width;
-      const y = rect.top + ((s.pos.y - view.y) / view.h) * rect.height;
-      const d = Math.hypot(e.clientX - x, e.clientY - y);
+    /* `li` ma rozmiar 0 × 0 w punkcie przystanku, więc jego prostokąt to pozycja na ekranie (także pod kamerą). */
+    points.forEach((li, i) => {
+      const r = li.getBoundingClientRect();
+      const d = Math.hypot(e.clientX - r.left, e.clientY - r.top);
       if (d < bestDist) {
         best = i;
         bestDist = d;
@@ -180,104 +227,112 @@ export function FellowshipBoard() {
             </button>
           </div>
           <Button onClick={play} className={styles.play}>
-            {playing ? "Pauza ‖" : done ? "Jeszcze raz ↺" : day > 0 ? "Dalej →" : "Wyruszamy →"}
+            {/* Na telefonie krótsze etykiety: przełączniki i przycisk mieszczą się w jednym rzędzie (od 360 px). */}
+            <span className={styles.long}>
+              {playing ? "Pauza ‖" : done ? "Jeszcze raz ↺" : day > 0 ? "Dalej →" : "Wyruszamy →"}
+            </span>
+            <span className={styles.short}>
+              {playing ? "Pauza ‖" : done ? "Od nowa ↺" : day > 0 ? "Dalej →" : "W drogę →"}
+            </span>
           </Button>
         </div>
 
         <div ref={mapRef} className={styles.map} style={{ aspectRatio: `${view.w} / ${view.h}` }}>
-          <svg viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`} aria-hidden="true" focusable="false">
-            <defs>
-              <clipPath id={`${uid}-sea`}>
-                <path d={OUTLINES.sea} />
-              </clipPath>
-              <clipPath id={`${uid}-mordor`}>
-                <path d={OUTLINES.mordor} />
-              </clipPath>
-            </defs>
-            <g className={styles.terrain}>
-              <path className={styles.hatch} d={GEOGRAPHY.seaHatch} clipPath={`url(#${uid}-sea)`} />
-              <path className={styles.hatch} d={GEOGRAPHY.mordorHatch} clipPath={`url(#${uid}-mordor)`} />
-              {GEOGRAPHY.coast.map((d, i) => (
-                <path key={d} className={i === 0 ? styles.coast : styles.coastEcho} d={d} />
-              ))}
-              {GEOGRAPHY.rivers.map((d) => (
-                <path key={d} className={styles.river} d={d} />
-              ))}
-              <path className={styles.border} d={GEOGRAPHY.shire} />
-              <path className={styles.road} d={GEOGRAPHY.roads} />
-              <path className={styles.forest} d={GEOGRAPHY.forests} />
-              <path className={styles.marsh} d={GEOGRAPHY.marsh} />
-              <path className={styles.mountains} d={GEOGRAPHY.mountains} />
-              <path className={styles.fort} d={GEOGRAPHY.forts} />
-              <path className={cx(styles.doom, showNofuss && styles.doomTarget)} d={GEOGRAPHY.doom} />
-            </g>
-
-            {showFellowship ? (
-              <g>
-                <path className={styles.routePlan} d={FULL_ROUTE_PATH} />
-                <path className={styles.routeWalked} d={toPath(walked)} />
+          <div className={styles.stage} style={camera}>
+            <svg viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`} aria-hidden="true" focusable="false">
+              <defs>
+                <clipPath id={`${uid}-sea`}>
+                  <path d={OUTLINES.sea} />
+                </clipPath>
+                <clipPath id={`${uid}-mordor`}>
+                  <path d={OUTLINES.mordor} />
+                </clipPath>
+              </defs>
+              <g className={styles.terrain}>
+                <path className={styles.hatch} d={GEOGRAPHY.seaHatch} clipPath={`url(#${uid}-sea)`} />
+                <path className={styles.hatch} d={GEOGRAPHY.mordorHatch} clipPath={`url(#${uid}-mordor)`} />
+                {GEOGRAPHY.coast.map((d, i) => (
+                  <path key={d} className={i === 0 ? styles.coast : styles.coastEcho} d={d} />
+                ))}
+                {GEOGRAPHY.rivers.map((d) => (
+                  <path key={d} className={styles.river} d={d} />
+                ))}
+                <path className={styles.border} d={GEOGRAPHY.shire} />
+                <path className={styles.road} d={GEOGRAPHY.roads} />
+                <path className={styles.forest} d={GEOGRAPHY.forests} />
+                <path className={styles.marsh} d={GEOGRAPHY.marsh} />
+                <path className={styles.mountains} d={GEOGRAPHY.mountains} />
+                <path className={styles.fort} d={GEOGRAPHY.forts} />
+                <path className={cx(styles.doom, showNofuss && styles.doomTarget)} d={GEOGRAPHY.doom} />
               </g>
-            ) : null}
 
-            {showNofuss ? (
-              <g>
-                <path className={styles.nofussPlan} d={`M${START.x} ${START.y}L${FINISH.x} ${FINISH.y}`} />
-                <path className={styles.nofussWalked} d={`M${START.x} ${START.y}L${nofuss.x} ${nofuss.y}`} />
-              </g>
-            ) : null}
-          </svg>
+              {showFellowship ? (
+                <g>
+                  <path className={styles.routePlan} d={FULL_ROUTE_PATH} />
+                  <path className={styles.routeWalked} d={toPath(walked)} />
+                </g>
+              ) : null}
 
-          {REGIONS.map((r) => (
-            <span
-              key={r.name}
-              className={cx("mono-sm", styles.region, r.wide && styles.regionWide)}
-              style={at(r.pos, view)}
-              aria-hidden="true"
-            >
-              {r.name}
-            </span>
-          ))}
+              {showNofuss ? (
+                <g>
+                  <path className={styles.nofussPlan} d={`M${START.x} ${START.y}L${FINISH.x} ${FINISH.y}`} />
+                  <path className={styles.nofussWalked} d={`M${START.x} ${START.y}L${nofuss.x} ${nofuss.y}`} />
+                </g>
+              ) : null}
+            </svg>
 
-          <ol className={styles.stops} aria-label="Przystanki Drużyny">
-            {STOPS.map((s, i) => (
-              <li key={s.id} style={at(s.pos, view)}>
-                <button
-                  type="button"
-                  className={cx(
-                    styles.stop,
-                    i < index && styles.passed,
-                    i === index && styles.current,
-                    s.pos.x > 480 && styles.labelLeft,
-                    i === STOPS.length - 1 && styles.pinned,
-                  )}
-                  aria-current={i === index ? "step" : undefined}
-                  aria-label={`${s.name}, ${s.date}`}
-                  onClick={(e) => goTo(STOPS[pick(e, i)].day)}
-                >
-                  <i aria-hidden="true" />
-                  <span className="mono-sm" aria-hidden="true">
-                    {s.name}
-                  </span>
-                </button>
-              </li>
+            {REGIONS.map((r) => (
+              <span
+                key={r.name}
+                className={cx("mono-sm", styles.region, r.wide && styles.regionWide)}
+                style={at(r.pos, view)}
+                aria-hidden="true"
+              >
+                {r.name}
+              </span>
             ))}
-          </ol>
 
-          {/* Znaczniki w HTML, nie w SVG: stały rozmiar w px niezależnie od skali mapy. */}
-          {showNofuss ? (
-            <i
-              className={cx(styles.marker, styles.markerNofuss)}
-              style={at(nofuss, view)}
-              aria-hidden="true"
-            />
-          ) : null}
-          {showFellowship ? (
-            <i
-              className={styles.marker}
-              style={at(marker, view)}
-              aria-hidden="true"
-            />
-          ) : null}
+            <ol className={styles.stops} aria-label="Przystanki Drużyny">
+              {STOPS.map((s, i) => (
+                <li key={s.id} style={at(s.pos, view)}>
+                  <button
+                    type="button"
+                    className={cx(
+                      styles.stop,
+                      i < index && styles.passed,
+                      i === index && styles.current,
+                      s.pos.x > 480 && styles.labelLeft,
+                      i === STOPS.length - 1 && styles.pinned,
+                    )}
+                    aria-current={i === index ? "step" : undefined}
+                    aria-label={`${s.name}, ${s.date}`}
+                    onClick={(e) => goTo(STOPS[pick(e, i)].day)}
+                  >
+                    <i aria-hidden="true" />
+                    <span className="mono-sm" aria-hidden="true">
+                      {s.name}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ol>
+
+            {/* Znaczniki w HTML, nie w SVG: stały rozmiar w px niezależnie od skali mapy. */}
+            {showNofuss ? (
+              <i
+                className={cx(styles.marker, styles.markerNofuss)}
+                style={at(nofuss, view)}
+                aria-hidden="true"
+              />
+            ) : null}
+            {showFellowship ? (
+              <i
+                className={styles.marker}
+                style={at(marker, view)}
+                aria-hidden="true"
+              />
+            ) : null}
+          </div>
         </div>
 
         <div className={cx("mono-sm", styles.timeline)}>
@@ -297,16 +352,35 @@ export function FellowshipBoard() {
           />
         </div>
 
+        {/* Poniżej 1024 px panel jest pod mapą, poza ekranem: tu skrót bieżącego etapu (stała wysokość jak w panelu).
+            Dla czytników pełny panel niżej, więc tu `aria-hidden`. */}
+        <div className={styles.stopLine} aria-hidden="true" {...swipe}>
+          <p className={cx("mono-sm", styles.stopMeta)}>
+            <span>
+              Etap {String(index + 1).padStart(2, "0")}/{FELLOWSHIP_STOPS.length}
+            </span>
+            <span>{stop.date}</span>
+          </p>
+          <p className={cx(styles.stopWhat, styles.stack)}>
+            {FELLOWSHIP_STOPS.map((s, i) => (
+              <span key={s.id} aria-hidden={i !== index || undefined}>
+                <b>{s.name}.</b> {s.what}
+              </span>
+            ))}
+          </p>
+          <p className={cx("mono-sm", styles.swipeHint)}>← Przesuń, żeby zmienić etap →</p>
+        </div>
+
         <p className={cx("mono-sm", styles.status)} aria-live="polite">
           {!playing && nofussArrived && showNofuss
             ? done
-              ? `no-fuss na miejscu od dnia ${NOFUSS_DAY}. Drużyna dotarła w dniu ${TOTAL_DAYS}.`
-              : `no-fuss na miejscu od dnia ${NOFUSS_DAY}. Drużyna w tym czasie: ${stop.name}.`
+              ? `no-fuss na miejscu w dniu ${NOFUSS_DAY}, Drużyna w dniu ${TOTAL_DAYS}.`
+              : `no-fuss na miejscu od dnia ${NOFUSS_DAY}. Drużyna: ${stop.name}.`
             :" "}
         </p>
       </div>
 
-      <article className={styles.panel} aria-live={playing ? "off" : "polite"}>
+      <article className={styles.panel} aria-live={playing ? "off" : "polite"} {...swipe}>
         <p className={cx("mono-sm", styles.panelMeta)}>
           <span>
             Etap {String(index + 1).padStart(2, "0")}/{FELLOWSHIP_STOPS.length}
@@ -342,7 +416,7 @@ export function FellowshipBoard() {
         <div className={styles.panelNav}>
           <Button
             variant="ghost"
-            onClick={() => goTo(FELLOWSHIP_STOPS[index - 1]?.day ?? 0)}
+            onClick={() => step(-1)}
             disabled={index === 0}
             aria-label="Poprzedni przystanek"
           >
@@ -350,7 +424,7 @@ export function FellowshipBoard() {
           </Button>
           <Button
             variant="ghost"
-            onClick={() => goTo(FELLOWSHIP_STOPS[index + 1]?.day ?? TOTAL_DAYS)}
+            onClick={() => step(1)}
             disabled={index === FELLOWSHIP_STOPS.length - 1}
             aria-label="Następny przystanek"
           >
