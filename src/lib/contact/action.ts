@@ -1,6 +1,5 @@
 "use server";
 
-import { site } from "@/content/site";
 import {
   CONTACT_HONEYPOT,
   CONTACT_INITIAL_STATE,
@@ -29,16 +28,28 @@ async function describeResendError(response: Response): Promise<string> {
 }
 
 /**
- * Wysyła wiadomość przez Resend API na `site.contact.email`; Reply-To = adres z formularza,
- * więc „Odpowiedz” w skrzynce trafia do nadawcy. Nadawca (`CONTACT_FROM`) musi być w domenie
- * zweryfikowanej w Resend. Bez `RESEND_API_KEY` / `CONTACT_FROM` albo przy błędzie API: `failed`
- * (formularz pokazuje adres e-mail), szczegóły tylko w logu serwera.
+ * Adresy zespołu z `CONTACT_TO` (po przecinku). Tylko w env, nie w kodzie: repozytorium jest publiczne,
+ * a ten moduł nie trafia do klienta, więc adresy nie wychodzą poza serwer.
+ */
+function readRecipients(): string[] {
+  return (process.env.CONTACT_TO ?? "")
+    .split(",")
+    .map((address) => address.trim())
+    .filter(Boolean);
+}
+
+/**
+ * Powiadamia zespół o nowym zgłoszeniu przez Resend API (adresy z `CONTACT_TO`); Reply-To = adres
+ * z formularza, więc „Odpowiedz” w skrzynce trafia do nadawcy. Nadawca (`CONTACT_FROM`) musi być
+ * w domenie zweryfikowanej w Resend. Bez `RESEND_API_KEY` / `CONTACT_FROM` / `CONTACT_TO` albo przy
+ * błędzie API: `failed` (formularz pokazuje adres e-mail), szczegóły tylko w logu serwera.
  */
 async function deliver(values: ContactValues): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.CONTACT_FROM;
-  if (!apiKey || !from) {
-    console.error("[contact] Brak RESEND_API_KEY albo CONTACT_FROM: wiadomość nie została wysłana.");
+  const to = readRecipients();
+  if (!apiKey || !from || to.length === 0) {
+    console.error("[contact] Brak RESEND_API_KEY, CONTACT_FROM albo CONTACT_TO: wiadomość nie została wysłana.");
     return false;
   }
 
@@ -48,7 +59,7 @@ async function deliver(values: ContactValues): Promise<boolean> {
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         from,
-        to: [site.contact.email],
+        to,
         reply_to: values.email,
         subject: SUBJECT,
         text: `Imię: ${values.name}\nE-mail: ${values.email}\n\n${values.message}\n`,

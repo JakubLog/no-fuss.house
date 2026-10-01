@@ -31,7 +31,8 @@ Skopiuj `.env.example` do `.env.local`.
 |---|---|
 | `NEXT_PUBLIC_SITE_URL` | Publiczny adres (canonical, OG, sitemap, JSON-LD). Domena: `https://no-fuss.house` (też fallback w kodzie, gdy zmiennej brak albo ma zły format; wtedy ostrzeżenie w logu). `public/llms.txt` ma adresy wpisane ręcznie, zmienna go nie zmienia. |
 | `RESEND_API_KEY` | Klucz [Resend](https://resend.com) dla formularza kontaktu w stopce (Server Action `src/lib/contact/action.ts`). Bez niego formularz pokazuje błąd z adresem e-mail. |
-| `CONTACT_FROM` | Nadawca maili z formularza, np. `no-fuss <formularz@no-fuss.house>`; domena musi być zweryfikowana w Resend. Odbiorca to `site.contact.email`, Reply-To = adres z formularza. |
+| `CONTACT_FROM` | Nadawca maili z formularza, np. `no-fuss <formularz@mailing.no-fuss.house>`; domena musi być zweryfikowana w Resend (zweryfikowana jest subdomena `mailing.no-fuss.house`). Reply-To = adres z formularza. |
+| `CONTACT_TO` | Odbiorcy powiadomień o nowych zgłoszeniach z formularza (zespół), adresy po przecinku. Tylko w env (repozytorium jest publiczne); bez niej formularz pokazuje błąd z adresem e-mail. |
 
 ## Struktura
 

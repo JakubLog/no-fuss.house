@@ -55,7 +55,7 @@ export const site = {
   timeZone: "Europe/Warsaw",
   foundingYear: 2026,
   /**
-   * Kontakt: jedno źródło prawdy dla stopki (formularz wysyła na `email`), CTA („Porozmawiajmy →”, „Umów rozmowę ↗”),
+   * Kontakt: jedno źródło prawdy dla stopki (adres pokazywany przy błędzie formularza; zgłoszenia idą na `CONTACT_TO`), CTA („Porozmawiajmy →”, „Umów rozmowę ↗”),
    * `/o-nas#social`, JSON-LD i `public/llms.txt`. Placeholdery `[…]` do podmiany.
    */
   contact: {

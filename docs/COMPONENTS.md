@@ -303,9 +303,9 @@ const CONTACT_FORM_COPY: { label; fields: { name; email; message }; messagePlace
 Formularz kontaktu w stopce (`Footer`, jedyne użycie): imię, e-mail, wiadomość (wszystkie wymagane) → Server Action
 `sendContactMessage` z `@/lib/contact/action` podana wprost do `useActionState`. SSR wystawia natywne `action` z ukrytymi
 polami `$ACTION_REF_…`, więc wysyłka działa bez JS i przed hydratacją. Akcja na wejściu sprawdza
-`formData instanceof FormData`, potem wysyła przez Resend API (`fetch`, bez SDK) na `site.contact.email` z Reply-To =
-adres z formularza; temat jest stały („Kontakt ze strony no-fuss”), imię trafia do treści. W logu błędu Resend zostają
-tylko status oraz `name` / `message` z JSON-a. Wymaga `RESEND_API_KEY` i `CONTACT_FROM` (README).
+`formData instanceof FormData`, potem wysyła przez Resend API (`fetch`, bez SDK) na adresy zespołu z `CONTACT_TO` z
+Reply-To = adres z formularza; temat jest stały („Kontakt ze strony no-fuss”), imię trafia do treści. W logu błędu Resend
+zostają tylko status oraz `name` / `message` z JSON-a. Wymaga `RESEND_API_KEY`, `CONTACT_FROM` i `CONTACT_TO` (README).
 
 Walidacja i limity (`CONTACT_LIMITS`: 120 / 254 / 5000 znaków, te same w `maxLength`) są w
 `@/lib/contact/form` (`parseContactForm`, czysty moduł). E-mail jest wyłącznie ASCII (domena IDN jako punycode `xn--`);

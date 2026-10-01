@@ -211,7 +211,7 @@ function ContactFormAttempt({ className, initialState }: ContactFormAttemptProps
 
 /**
  * Formularz kontaktu w stopce `#kontakt` (cel „Porozmawiajmy →”): imię, e-mail, wiadomość → Server Action
- * `sendContactMessage` (Resend na `site.contact.email`) wprost w `useActionState`, więc działa też bez JS i przed
+ * `sendContactMessage` (Resend na adresy zespołu z `CONTACT_TO`) wprost w `useActionState`, więc działa też bez JS i przed
  * hydratacją. Obok wysyłki „Umów rozmowę ↗” (tylko z `calendarUrl`), pod spodem `responseNote` (placeholder `[…]`
  * się nie renderuje). Walidacja natywna (`required`, `type="email"`, `maxLength` = limity serwera) + serwerowa: błąd
  * pod polem, fokus na pierwsze błędne pole, wpisane wartości zostają. Po wysłaniu pola się czyszczą, wynik
