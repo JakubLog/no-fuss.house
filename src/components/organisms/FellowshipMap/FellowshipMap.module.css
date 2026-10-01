@@ -86,6 +86,40 @@
   flex-shrink: 0;
 }
 
+/* Telefon: przełączniki i przycisk w jednym rzędzie (liczba dni jest w statusie i na osi czasu). */
+.days {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .controls {
+    flex-wrap: wrap;
+  }
+
+  .toggles {
+    flex-wrap: nowrap;
+  }
+
+  .toggles button {
+    padding: 12px 10px;
+  }
+
+  .swatchFellowship,
+  .swatchNofuss {
+    width: 16px;
+  }
+
+  .play {
+    padding-inline: 16px;
+  }
+}
+
+@media (min-width: 480px) {
+  .days {
+    display: inline;
+  }
+}
+
 /* ---------- mapa ---------- */
 .map {
   position: relative; /* aspect-ratio z `VIEW_W / VIEW_H` (route.ts), inline */

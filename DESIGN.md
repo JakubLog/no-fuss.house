@@ -301,6 +301,10 @@ do Góry Przeznaczenia 184 dni.
   Przełączniki jak modele w `SplitCalculator` (obrys 1 px, włączony w kolorze tekstu). Znaczniki to romby 14 px jak w mierniku 404.
 - **Przystanki**: 13 przycisków-rombów nad rysunkiem (przed nami obrys, za nami biały, bieżący limonkowy z etykietą na limonce).
   Etykieta celu widoczna stale od 768 px, reszta na hover / fokus.
+  Kliknięcie myszą lub stuknięcie wybiera przystanek najbliższy wskaźnikowi (na telefonie przystanki leżą bliżej niż szerokość
+  palca), z klawiatury ten z fokusem.
+- **Telefon (< 768 px)**: kadr mapy przycięty do trasy (od Shire'u po Mordor, ok. 1,2× większy niż pełna mapa), przełączniki
+  tras i przycisk w jednym rzędzie (liczba dni w przełącznikach dopiero od 480 px).
 - **Czas**: trasa rusza sama raz, gdy 60% planszy wejdzie w kadr (nie po wcześniejszym kliknięciu mapy, nie przy reduced motion);
   „Pauza” zatrzymuje, „Wyruszamy →” / „Dalej →” odtwarza 184 dni w 12 s; postoje (Rivendell, Lórien) widać jako stojący znacznik przy biegnącym liczniku.
   Suwak osi czasu jak w `SplitCalculator`, data w kalendarzu Shire'u. Przy reduced motion „Wyruszamy” skacze na koniec.

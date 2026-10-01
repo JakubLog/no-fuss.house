@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, type MouseEvent } from "react";
 import { Button } from "@/components/atoms/Button";
 import { FELLOWSHIP_REGIONS, FELLOWSHIP_STOPS } from "@/content/fellowship";
 import { cx } from "@/lib/cx";
+import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 import { GEOGRAPHY, OUTLINES } from "./geography";
 import {
@@ -32,9 +33,27 @@ const NOFUSS_DAY = Math.round(NOFUSS_DAYS);
 
 /** Jaka część planszy musi być widoczna, żeby trasa ruszyła sama. */
 const AUTOPLAY_VISIBLE = 0.6;
-const pct = (v: number, of: number) => `${(v / of) * 100}%`;
-/** Pozycja w % planszy dla punktu w jednostkach `viewBox`. */
-const at = (p: { x: number; y: number }) => ({ left: pct(p.x, VIEW_W), top: pct(p.y, VIEW_H) });
+
+interface View {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/** Kadr pełny i kadr na telefon (< 768 px): przycięty do trasy, od Shire'u po Mordor (mile od Hobbitonu). */
+const FULL_VIEW: View = { x: 0, y: 0, w: VIEW_W, h: VIEW_H };
+const NARROW_VIEW: View = (() => {
+  const a = project({ x: -100, y: -90 });
+  const b = project({ x: 1000, y: 760 });
+  return { x: a.x, y: a.y, w: b.x - a.x, h: b.y - a.y };
+})();
+
+/** Pozycja w % kadru dla punktu w jednostkach `viewBox`. */
+const at = (p: { x: number; y: number }, v: View) => ({
+  left: `${((p.x - v.x) / v.w) * 100}%`,
+  top: `${((p.y - v.y) / v.h) * 100}%`,
+});
 const STOPS = FELLOWSHIP_STOPS.map((s) => ({ ...s, pos: project(s) }));
 const REGIONS = FELLOWSHIP_REGIONS.map((r) => ({ ...r, pos: project(r) }));
 const pad3 = (n: number) => String(Math.floor(n)).padStart(3, "0");
@@ -48,6 +67,9 @@ const pad3 = (n: number) => String(Math.floor(n)).padStart(3, "0");
 export function FellowshipBoard() {
   const uid = useId();
   const reduced = useReducedMotion();
+  const narrow = useMediaQuery("(max-width: 767px)");
+  const view = narrow ? NARROW_VIEW : FULL_VIEW;
+  const mapRef = useRef<HTMLDivElement>(null);
   const [day, setDay] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [showFellowship, setShowFellowship] = useState(true);
@@ -119,6 +141,27 @@ export function FellowshipBoard() {
     setPlaying(true);
   };
 
+  /**
+   * Przystanek dla kliknięcia: z myszy / dotyku najbliższy wskaźnikowi (na telefonie przystanki leżą bliżej
+   * niż szerokość palca, a przycisk na wierzchu przejmowałby stuknięcie sąsiada); z klawiatury ten z fokusem.
+   */
+  const pick = (e: MouseEvent<HTMLButtonElement>, own: number) => {
+    const rect = mapRef.current?.getBoundingClientRect();
+    if (e.detail === 0 || !rect) return own;
+    let best = own;
+    let bestDist = Infinity;
+    STOPS.forEach((s, i) => {
+      const x = rect.left + ((s.pos.x - view.x) / view.w) * rect.width;
+      const y = rect.top + ((s.pos.y - view.y) / view.h) * rect.height;
+      const d = Math.hypot(e.clientX - x, e.clientY - y);
+      if (d < bestDist) {
+        best = i;
+        bestDist = d;
+      }
+    });
+    return best;
+  };
+
   const sliderId = `${uid}-day`;
   const dayText = `Dzień ${pad3(day)} · ${shireDate(day)}`;
 
@@ -129,11 +172,11 @@ export function FellowshipBoard() {
           <div className={styles.toggles} role="group" aria-label="Trasy na mapie">
             <button type="button" aria-pressed={showFellowship} onClick={() => setShowFellowship((v) => !v)}>
               <i className={styles.swatchFellowship} aria-hidden="true" />
-              Drużyna · {TOTAL_DAYS} dni
+              Drużyna<span className={styles.days}> · {TOTAL_DAYS} dni</span>
             </button>
             <button type="button" aria-pressed={showNofuss} onClick={() => setShowNofuss((v) => !v)}>
               <i className={styles.swatchNofuss} aria-hidden="true" />
-              no-fuss · {NOFUSS_DAY} dni
+              no-fuss<span className={styles.days}> · {NOFUSS_DAY} dni</span>
             </button>
           </div>
           <Button onClick={play} className={styles.play}>
@@ -141,8 +184,8 @@ export function FellowshipBoard() {
           </Button>
         </div>
 
-        <div className={styles.map} style={{ aspectRatio: `${VIEW_W} / ${VIEW_H}` }}>
-          <svg viewBox={`0 0 ${VIEW_W} ${VIEW_H}`} aria-hidden="true" focusable="false">
+        <div ref={mapRef} className={styles.map} style={{ aspectRatio: `${view.w} / ${view.h}` }}>
+          <svg viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`} aria-hidden="true" focusable="false">
             <defs>
               <clipPath id={`${uid}-sea`}>
                 <path d={OUTLINES.sea} />
@@ -188,7 +231,7 @@ export function FellowshipBoard() {
             <span
               key={r.name}
               className={cx("mono-sm", styles.region, r.wide && styles.regionWide)}
-              style={at(r.pos)}
+              style={at(r.pos, view)}
               aria-hidden="true"
             >
               {r.name}
@@ -197,7 +240,7 @@ export function FellowshipBoard() {
 
           <ol className={styles.stops} aria-label="Przystanki Drużyny">
             {STOPS.map((s, i) => (
-              <li key={s.id} style={at(s.pos)}>
+              <li key={s.id} style={at(s.pos, view)}>
                 <button
                   type="button"
                   className={cx(
@@ -209,7 +252,7 @@ export function FellowshipBoard() {
                   )}
                   aria-current={i === index ? "step" : undefined}
                   aria-label={`${s.name}, ${s.date}`}
-                  onClick={() => goTo(s.day)}
+                  onClick={(e) => goTo(STOPS[pick(e, i)].day)}
                 >
                   <i aria-hidden="true" />
                   <span className="mono-sm" aria-hidden="true">
@@ -224,14 +267,14 @@ export function FellowshipBoard() {
           {showNofuss ? (
             <i
               className={cx(styles.marker, styles.markerNofuss)}
-              style={at(nofuss)}
+              style={at(nofuss, view)}
               aria-hidden="true"
             />
           ) : null}
           {showFellowship ? (
             <i
               className={styles.marker}
-              style={at(marker)}
+              style={at(marker, view)}
               aria-hidden="true"
             />
           ) : null}
