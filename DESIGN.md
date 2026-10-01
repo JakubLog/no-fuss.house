@@ -285,7 +285,13 @@ Nie wymyślamy liczb, wyników ani cytatów: efekt to fakt (np. działająca str
 ## Strona 404: „Droga do Mordoru” (`#mordor`)
 
 Pod hero 404 jasna sekcja „Z no-fuss dotarliby szybciej”: zgubić się to nic wstydliwego, Drużyna Pierścienia szła
-do Góry Przeznaczenia 184 dni. Hero dostaje ghost „Droga do Mordoru ↓” jako czwarty przycisk.
+do Góry Przeznaczenia 184 dni.
+
+- **Hero 404**: jeden przycisk, „Wróć na stronę główną →” (accent). „Posprzątaj” i „Realizacje” usunięte (za dużo CTA).
+  Zamiast nich zachęta do przewinięcia: link do `#mordor` z podpisem mono („Przewiń, posprzątamy po drodze”, po sprzątaniu
+  „Posprzątane. Teraz w drogę”), tytułem „Droga do Mordoru ↓” w roli title (hover: limonkowe tło) i pionowym torem 2 px,
+  po którym romb 14 px zjeżdża w pętli 1,8 s. Telefon: pod przyciskiem; od 1024 px w prawym dolnym rogu hero, do prawej.
+  Pierwsze przewinięcie (24 px) sprząta napis 3D i odlicza zamieszanie do 000%. Przy reduced motion romb stoi w połowie toru.
 
 - **Plansza** `#15181D` (limonka tylko na ciemnym): własny rysunek Śródziemia w stylu rysunku technicznego, SVG, nie druga
   scena 3D. Linie 1 px w bieli alpha (`vector-effect: non-scaling-stroke`), góry jako szewrony, lasy jako kwadratowe kropki,

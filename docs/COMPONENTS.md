@@ -466,7 +466,7 @@ Kotwice na tej samej stronie (także bez Lenis przy reduced motion) ustawiają n
 | `HeroScene/types.ts` | typy | `FussStore`, `SceneFit`, `SceneRepel`, `HeroSceneProps` |
 | `HomeHero/HomeHero.tsx` | server, default export, bez propsów | `<section id="hero">` strony głównej |
 | `HomeHero/HomeHeroStage.tsx` | client | kanwa na całe hero + pusta ramka `.band` (`frame`: od 768 px pas między h1 a leadem z CTA; na telefonie miejsce na fallback CSS), sloty na serwerową treść (`headline` = h1 + lead + `ContactCta`, `sceneLabel`) |
-| `NotFoundHero/` | server + `NotFoundStage` (client) | hero 404, bez propsów; ghost „Droga do Mordoru ↓” do `#mordor` |
+| `NotFoundHero/` | server + `NotFoundStage` (client) | hero 404, bez propsów; jeden przycisk powrotu + zachęta do przewinięcia do `#mordor` |
 | `FellowshipMap/` | server + `FellowshipBoard` (client) | sekcja `#mordor` pod hero 404: mapa trasy Drużyny Pierścienia (SVG, nie scena 3D); dane `content/fellowship.ts` (mile od Hobbitonu), rysunek `geography.ts`, czas i rzutowanie `route.ts` |
 
 Barrel `organisms/HeroScene/index.ts` (i barrel warstwy) eksportuje tylko `LazyHeroScene`, `createFussStore` i typy:
@@ -498,7 +498,7 @@ interface SceneFit { widthDesktop; widthMobile; heightDesktop?; maxScale; offset
 const [fuss] = useState(() => createFussStore(prefersReducedMotion ? 0 : 1));
 const band = useRef<HTMLDivElement>(null); // <div ref={band} className={styles.band} /> w siatce hero
 <LazyHeroScene text="no–fuss" fuss={fuss} frame={band} onReady={() => setSceneReady(true)} onUnsupported={() => setUnsupported(true)} />
-// 404: useState(() => createFussStore(1)), przycisk „Posprzątaj” woła fuss.set(0)
+// 404: useState(() => createFussStore(1)), pierwsze przewinięcie (> 24 px) woła fuss.set(0)
 ```
 Rodzic kanwy musi mieć `position: relative` (kanwa: `absolute; inset: 0; z-index: 0`). Jedna scena na stronę.
 
@@ -508,7 +508,7 @@ Rodzic kanwy musi mieć `position: relative` (kanwa: `absolute; inset: 0; z-inde
   `f = 1` od pierwszej klatki są rozrzucone, zamiast rozlatywać się z napisu. Budowa geometrii i kompilacja shaderów nie trafia na animację kurtyny.
 - **LCP:** h1 i copy renderuje serwer; three.js jest w osobnym chunku ładowanym po hydratacji.
 - **Sklep → scena:** mutowalny sklep; scena czyta `fuss.get()` w każdym kroku. Wygładzanie w scenie (lerp 0.12 na krok, jak legacy).
-  404: „Posprzątaj” ustawia 0 od razu, licznik 1100 ms. Hero `/` (`HomeHeroStage`): po `onReady` i intro, z opóźnieniem
+  404: pierwsze przewinięcie ustawia 0 od razu, licznik 1100 ms. Hero `/` (`HomeHeroStage`): po `onReady` i intro, z opóźnieniem
   `INTRO_REVEAL_DELAY_MS` (razem z reveal h1), sklep schodzi 1 → 0 w 1600 ms (ease-in-out, rAF): litery z chaosu układają się
   w napis. To samo przy nawigacji klienckiej na `/` (intro już było, start po `onReady`).
 - **Pętla:** działa tylko gdy kanwa jest w viewporcie (`IntersectionObserver`) i karta widoczna (`visibilitychange`);
@@ -541,8 +541,8 @@ Rodzic kanwy musi mieć `position: relative` (kanwa: `absolute; inset: 0; z-inde
 - **Sprzątanie:** geometrie, materiał, env map, PMREM, `RoomEnvironment`, renderer, obserwatory, listenery. Font cache'owany w module.
 - **Warstwy:** tło i kanwa `z-index: 0` pod siatką (1), ramka `.band` też 0, treść `z-index: 2`; stąd sloty w `HomeHeroStage`.
 - **Dostępność:** kanwa `aria-hidden`; na `/` `VisuallyHidden` „W tle trójwymiarowy napis no–fuss.” (nowe zdanie);
-  na 404 `h1.sr-only` 1:1 z legacy, tekst `aria-live="polite"`. „Wróć na stronę główną →” (accent) widoczny od początku,
-  obok „Posprzątaj ↓” (ghost) i „Realizacje”; po „Posprzątaj” przycisk znika, a fokus idzie na „Wróć na stronę główną →”.
+  na 404 `h1.sr-only` 1:1 z legacy, tekst `aria-live="polite"`. Jedyny przycisk to „Wróć na stronę główną →” (accent);
+  obok zwykły link „Droga do Mordoru ↓” do `#mordor` (zachęta do przewinięcia). Sprząta pierwsze przewinięcie, nie przycisk.
 - **Nagłówki `/`:** jedyny `h1` to hasło. Rola „Design & Development”, dwa akapity, suwak „Zamieszanie” i naklejki
   z legacy usunięte (odciążenie pierwszego ekranu); kto co robi w duecie mówi podpis zdjęcia w `AboutSection`.
 - **Hero `/` pod usługi:** telefon (< 768 px): h1, lead (`hero.lead` z `home.ts`, `--t-lead`) i `ContactCta` dosunięte do dołu
