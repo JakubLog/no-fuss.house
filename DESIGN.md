@@ -305,7 +305,7 @@ do Góry Przeznaczenia 184 dni.
   palca), z klawiatury ten z fokusem.
 - **Telefon (< 768 px)**: kadr mapy przycięty do trasy (od Shire'u po Mordor, ok. 1,2× większy niż pełna mapa), przełączniki
   tras i przycisk w jednym rzędzie od 360 px (liczba dni w przełącznikach od 480 px, krótsze etykiety przycisku: „W drogę →”,
-  „Pauza ‖”, „Dalej →”, „Od nowa ↺”). Przebieg trwa 8 s zamiast 12 s. W trakcie przebiegu kamera: scena przybliżona 1,8×
+  „Pauza ‖”, „Wznów →”, „Od nowa ↺”). W trakcie opowieści kamera: scena przybliżona 1,8×
   i przesuwana za Drużyną (przejście 0,6 s `--ease`, przycięte do krawędzi mapy); po pauzie i na końcu wraca do całej trasy.
   Przy reduced motion bez kamery. Status ma zarezerwowane dwie linie, więc plansza nie zmienia wysokości.
 - **Skrót etapu w planszy (< 1024 px)**: panel jest wtedy pod mapą, poza ekranem, więc pod osią czasu kreska 1 px,
@@ -313,9 +313,15 @@ do Góry Przeznaczenia 184 dni.
   Dla czytników `aria-hidden` (pełny panel niżej). Na dotyku podpis „← Przesuń, żeby zmienić etap →”.
 - **Gest**: przesunięcie palcem w poziomie (≥ 48 px, wyraźnie bardziej w poziomie niż w pionie) po skrócie etapu albo po panelu:
   w lewo następny etap, w prawo poprzedni. `touch-action: pan-y`, pionowe przewijanie strony działa jak zwykle.
-- **Czas**: trasa rusza sama raz, gdy 60% planszy wejdzie w kadr (nie po wcześniejszym kliknięciu mapy, nie przy reduced motion);
-  „Pauza” zatrzymuje, „Wyruszamy →” / „Dalej →” odtwarza 184 dni w 12 s; postoje (Rivendell, Lórien) widać jako stojący znacznik przy biegnącym liczniku.
-  Suwak osi czasu jak w `SplitCalculator`, data w kalendarzu Shire'u. Przy reduced motion „Wyruszamy” skacze na koniec.
+- **Czas: tryb opowieści** (`story.ts`): mapa nie jedzie płynnie przez 184 dni, tylko od przystanku do przystanku. Przejazd
+  0,45–1,4 s (dni postoju liczą się kilka razy szybciej niż dni marszu), potem postój na czas czytania: 1,2 s + 30 ms na znak
+  opisu (desktop: opis + „U nas”, telefon: sam opis widoczny w planszy), w widełkach 2,2–6,5 s. Kreska nad opisem (panel
+  i skrót w planszy) wypełnia się w trakcie postoju. Osobny takt na puentę: dzień 58, status na limonce „Dzień 58: no-fuss już
+  na miejscu. Drużyna wciąż na naradzie w Rivendell.” (3,2 s). Opowieść rusza sama raz, gdy 60% planszy wejdzie w kadr
+  (nie po wcześniejszym kliknięciu mapy, nie przy reduced motion). „Pauza” zatrzymuje, „Wznów →” rusza od miejsca pauzy;
+  „Wstecz” / „Dalej” i gest w trakcie opowieści przeskakują takt bez zatrzymania. Kursor myszy nad opisem wstrzymuje
+  odliczanie postoju. Klik w przystanek albo suwak kończy opowieść. Przy reduced motion przejazdy są natychmiastowe.
+  Całość: ok. 70 s na desktopie, ok. 50 s na telefonie.
 - **no-fuss w liczbach**: średnie tempo marszu Drużyny bez postojów na prostej z tej samej mapy (metoda opisana w `route.ts`,
   bez przypisu na stronie). To żart, nie deklaracja o tempie naszej pracy.
 - **Panel etapu** (od 1024 px 4 kolumny obok planszy, sticky): data, nazwa w roli title, co się działo (lead), „U nas” (lead), Wstecz / Dalej

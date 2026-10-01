@@ -1,6 +1,15 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type CSSProperties, type MouseEvent, type TouchEvent } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent,
+  type PointerEvent,
+  type TouchEvent,
+} from "react";
 import { Button } from "@/components/atoms/Button";
 import { FELLOWSHIP_REGIONS, FELLOWSHIP_STOPS } from "@/content/fellowship";
 import { cx } from "@/lib/cx";
@@ -23,13 +32,9 @@ import {
   VIEW_H,
   VIEW_W,
 } from "./route";
+import { BEATS, beatFrom, PUNCHLINE_DAY, travelMs } from "./story";
 import styles from "./FellowshipMap.module.css";
 
-
-/** 184 dni drogi w 12 s: postoje w Rivendell i Lórien widać jako stojący znacznik przy biegnącym liczniku. */
-const PLAY_MS = 12000;
-/** Na telefonie krócej: autostart przy przewijaniu nie może trzymać człowieka 12 s. */
-const PLAY_MS_NARROW = 8000;
 const NARROW_QUERY = "(max-width: 767px)";
 
 /** Kamera na telefonie w trakcie przebiegu: przybliżenie i podążanie za Drużyną. */
@@ -66,12 +71,23 @@ const at = (p: { x: number; y: number }, v: View) => ({
 const STOPS = FELLOWSHIP_STOPS.map((s) => ({ ...s, pos: project(s) }));
 const REGIONS = FELLOWSHIP_REGIONS.map((r) => ({ ...r, pos: project(r) }));
 const pad3 = (n: number) => String(Math.floor(n)).padStart(3, "0");
+const easeInOut = (k: number) => (k < 0.5 ? 2 * k * k : 1 - (-2 * k + 2) ** 2 / 2);
+
+interface Story {
+  beat: number;
+  phase: "travel" | "hold";
+  /** Czas w bieżącej fazie (ms); w postoju stoi, gdy kursor jest nad opisem. */
+  elapsed: number;
+  /** Dzień, z którego trwa przejazd. */
+  from: number;
+}
 
 /**
  * Interaktywna mapa trasy Drużyny (Client Component): przełączniki tras, „Wyruszamy”, suwak dnia,
  * przystanki jako przyciski nad rysunkiem SVG i panel etapu z komentarzem no-fuss.
- * Stan to tylko `day` (0–184) i `playing`; bieżący przystanek wynika z dnia. Trasa rusza sama raz,
- * gdy plansza wejdzie w kadr (o ile nikt wcześniej nie kliknął mapy i nie ma reduced motion).
+ * Odtwarzanie to opowieść (`story.ts`): krótki przejazd do przystanku, postój na czas czytania (pasek pod
+ * opisem), puenta w dniu 58. Bieżący przystanek wynika z `day`. Opowieść rusza sama raz, gdy plansza
+ * wejdzie w kadr (o ile nikt wcześniej nie kliknął mapy i nie ma reduced motion).
  */
 export function FellowshipBoard() {
   const uid = useId();
@@ -83,10 +99,11 @@ export function FellowshipBoard() {
   const [playing, setPlaying] = useState(false);
   const [showFellowship, setShowFellowship] = useState(true);
   const [showNofuss, setShowNofuss] = useState(true);
-  /* Dzień, od którego rusza odtwarzanie (ustawiany w `play`, czytany w efekcie). */
-  const fromRef = useRef(0);
-  /* Czas całego przebiegu dla bieżącego odtwarzania (ustalany przy starcie: telefon krócej). */
-  const durationRef = useRef(PLAY_MS);
+  /* Postęp postoju 0–1 (pasek pod opisem). */
+  const [holdK, setHoldK] = useState(0);
+  /* Stan opowieści (ustawiany w handlerach, czytany w pętli rAF) i kontekst pętli: telefon, reduced motion, kursor nad opisem. */
+  const storyRef = useRef<Story>({ beat: 0, phase: "hold", elapsed: 0, from: 0 });
+  const envRef = useRef({ narrow: false, reduced: false, hover: false });
   const swipeRef = useRef<{ x: number; y: number } | null>(null);
   /* Plansza i flaga „ktoś już ruszył mapę” (ręcznie albo autostartem): autostart tylko raz i nie po interakcji. */
   const boardRef = useRef<HTMLDivElement>(null);
@@ -101,8 +118,7 @@ export function FellowshipBoard() {
         if (!entry.isIntersecting || touchedRef.current) return;
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         touchedRef.current = true;
-        fromRef.current = 0;
-        durationRef.current = window.matchMedia(NARROW_QUERY).matches ? PLAY_MS_NARROW : PLAY_MS;
+        storyRef.current = { ...beatFrom(0), elapsed: 0, from: 0 };
         setPlaying(true);
         io.disconnect();
       },
@@ -113,15 +129,44 @@ export function FellowshipBoard() {
   }, [reduced]);
 
   useEffect(() => {
+    envRef.current.narrow = narrow;
+    envRef.current.reduced = reduced;
+  }, [narrow, reduced]);
+
+  /* Pętla opowieści: przejazd (dzień z easingiem) → postój (pasek czytania) → następny takt; po ostatnim koniec. */
+  useEffect(() => {
     if (!playing) return;
-    const duration = durationRef.current;
-    const start = performance.now() - (fromRef.current / TOTAL_DAYS) * duration;
     let raf = 0;
+    let last = performance.now();
     const tick = (now: number) => {
-      const next = Math.min(TOTAL_DAYS, ((now - start) / duration) * TOTAL_DAYS);
-      setDay(next);
-      if (next < TOTAL_DAYS) raf = requestAnimationFrame(tick);
-      else setPlaying(false);
+      const dt = Math.min(100, now - last);
+      last = now;
+      const st = storyRef.current;
+      const beat = BEATS[st.beat];
+      const env = envRef.current;
+      if (st.phase === "travel") {
+        st.elapsed += dt;
+        const k = env.reduced ? 1 : Math.min(1, st.elapsed / travelMs(st.from, beat.day));
+        setDay(st.from + (beat.day - st.from) * easeInOut(k));
+        setHoldK(0);
+        if (k >= 1) {
+          st.phase = "hold";
+          st.elapsed = 0;
+        }
+      } else {
+        if (!env.hover) st.elapsed += dt;
+        const holdMs = env.narrow ? beat.holdNarrowMs : beat.holdMs;
+        setHoldK(Math.min(1, st.elapsed / holdMs));
+        if (st.elapsed >= holdMs) {
+          if (st.beat === BEATS.length - 1) {
+            setHoldK(0);
+            setPlaying(false);
+            return;
+          }
+          storyRef.current = { beat: st.beat + 1, phase: "travel", elapsed: 0, from: beat.day };
+        }
+      }
+      raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
@@ -138,6 +183,7 @@ export function FellowshipBoard() {
   const goTo = (d: number) => {
     touchedRef.current = true;
     setPlaying(false);
+    setHoldK(0);
     setDay(Math.max(0, Math.min(TOTAL_DAYS, d)));
   };
 
@@ -147,17 +193,39 @@ export function FellowshipBoard() {
       setPlaying(false);
       return;
     }
-    if (reduced) {
-      setDay(TOTAL_DAYS);
-      return;
-    }
-    fromRef.current = done ? 0 : day;
-    durationRef.current = narrow ? PLAY_MS_NARROW : PLAY_MS;
+    const from = done ? 0 : day;
+    if (done) setDay(0);
+    /* Wznowienie w środku postoju nie zaczyna czytania od zera. */
+    const resume = storyRef.current.phase === "hold" && Math.abs(BEATS[storyRef.current.beat].day - from) < 0.5;
+    if (!resume) storyRef.current = { ...beatFrom(from), elapsed: 0, from };
     setPlaying(true);
   };
 
-  /** Etap wstecz / dalej (przyciski panelu i gest przesunięcia). */
-  const step = (dir: -1 | 1) => goTo(FELLOWSHIP_STOPS[index + dir]?.day ?? (dir > 0 ? TOTAL_DAYS : 0));
+  /** Etap wstecz / dalej (przyciski panelu i gest). W trakcie opowieści przeskok do sąsiedniego taktu bez zatrzymania. */
+  const step = (dir: -1 | 1) => {
+    if (!playing) {
+      goTo(FELLOWSHIP_STOPS[index + dir]?.day ?? (dir > 0 ? TOTAL_DAYS : 0));
+      return;
+    }
+    const st = storyRef.current;
+    const target = Math.max(0, Math.min(BEATS.length - 1, st.phase === "hold" ? st.beat + dir : dir > 0 ? st.beat : st.beat - 1));
+    storyRef.current = { beat: target, phase: "hold", elapsed: 0, from: BEATS[target].day };
+    setDay(BEATS[target].day);
+    setHoldK(0);
+  };
+
+  /* Kursor nad opisem wstrzymuje odliczanie postoju (doczytanie bez pośpiechu). Tylko mysz. */
+  const holdOnHover = {
+    onPointerEnter: (e: PointerEvent<HTMLElement>) => {
+      if (e.pointerType === "mouse") envRef.current.hover = true;
+    },
+    onPointerLeave: () => {
+      envRef.current.hover = false;
+    },
+  };
+
+  /* Puenta: opowieść stoi dokładnie na dniu 58 (przejazd kończy się równo na dniu taktu). */
+  const punchline = playing && day === PUNCHLINE_DAY;
 
   /* Przesunięcie palcem w poziomie: w lewo następny etap, w prawo poprzedni; pionowe zostaje przewijaniem strony. */
   const swipe = {
@@ -229,10 +297,10 @@ export function FellowshipBoard() {
           <Button onClick={play} className={styles.play}>
             {/* Na telefonie krótsze etykiety: przełączniki i przycisk mieszczą się w jednym rzędzie (od 360 px). */}
             <span className={styles.long}>
-              {playing ? "Pauza ‖" : done ? "Jeszcze raz ↺" : day > 0 ? "Dalej →" : "Wyruszamy →"}
+              {playing ? "Pauza ‖" : done ? "Jeszcze raz ↺" : day > 0 ? "Wznów →" : "Wyruszamy →"}
             </span>
             <span className={styles.short}>
-              {playing ? "Pauza ‖" : done ? "Od nowa ↺" : day > 0 ? "Dalej →" : "W drogę →"}
+              {playing ? "Pauza ‖" : done ? "Od nowa ↺" : day > 0 ? "Wznów →" : "W drogę →"}
             </span>
           </Button>
         </div>
@@ -354,7 +422,7 @@ export function FellowshipBoard() {
 
         {/* Poniżej 1024 px panel jest pod mapą, poza ekranem: tu skrót bieżącego etapu (stała wysokość jak w panelu).
             Dla czytników pełny panel niżej, więc tu `aria-hidden`. */}
-        <div className={styles.stopLine} aria-hidden="true" {...swipe}>
+        <div className={styles.stopLine} style={{ "--k": holdK }} aria-hidden="true" {...swipe} {...holdOnHover}>
           <p className={cx("mono-sm", styles.stopMeta)}>
             <span>
               Etap {String(index + 1).padStart(2, "0")}/{FELLOWSHIP_STOPS.length}
@@ -372,15 +440,29 @@ export function FellowshipBoard() {
         </div>
 
         <p className={cx("mono-sm", styles.status)} aria-live="polite">
-          {!playing && nofussArrived && showNofuss
-            ? done
-              ? `no-fuss na miejscu w dniu ${NOFUSS_DAY}, Drużyna w dniu ${TOTAL_DAYS}.`
-              : `no-fuss na miejscu od dnia ${NOFUSS_DAY}. Drużyna: ${stop.name}.`
-            :" "}
+          {punchline && showNofuss ? (
+            <span className={styles.statusHot}>
+              Dzień {NOFUSS_DAY}: no-fuss już na miejscu. Drużyna wciąż na naradzie w {stop.name}.
+            </span>
+          ) : nofussArrived && showNofuss ? (
+            done ? (
+              `no-fuss na miejscu w dniu ${NOFUSS_DAY}, Drużyna w dniu ${TOTAL_DAYS}.`
+            ) : (
+              `no-fuss na miejscu od dnia ${NOFUSS_DAY}. Drużyna: ${stop.name}.`
+            )
+          ) : (
+            "\u00a0"
+          )}
         </p>
       </div>
 
-      <article className={styles.panel} aria-live={playing ? "off" : "polite"} {...swipe}>
+      <article
+        className={styles.panel}
+        style={{ "--k": holdK }}
+        aria-live={playing ? "off" : "polite"}
+        {...swipe}
+        {...holdOnHover}
+      >
         <p className={cx("mono-sm", styles.panelMeta)}>
           <span>
             Etap {String(index + 1).padStart(2, "0")}/{FELLOWSHIP_STOPS.length}

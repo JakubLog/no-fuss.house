@@ -406,6 +406,31 @@
   color: var(--muted);
 }
 
+/* Puenta (dzień 58 w trakcie opowieści): limonkowe tło jak tag, ciemny tekst. */
+.statusHot {
+  padding: 2px 6px;
+  background: var(--accent);
+  color: var(--on-accent);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Pasek czytania: kreska nad opisem etapu wypełnia się w trakcie postoju (`--k` 0–1). */
+.panel::before,
+.stopLine::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: calc(var(--k, 0) * 100%);
+  height: 2px;
+  background: var(--ink);
+}
+
+.stopLine::before {
+  background: var(--accent);
+}
+
 /* Telefon: status ma zarezerwowane dwie linie, tekst po dotarciu nie przesuwa strony pod planszą. */
 @media (max-width: 767px) {
   .status {
@@ -415,6 +440,7 @@
 
 /* Skrót etapu w planszy (poniżej 1024 px, gdy panel jest pod mapą); przesunięcie palcem zmienia etap. */
 .stopLine {
+  position: relative;
   display: grid;
   gap: 8px;
   padding-top: 16px;
@@ -457,6 +483,7 @@
 
 /* ---------- panel etapu (na jasnym tle sekcji) ---------- */
 .panel {
+  position: relative;
   touch-action: pan-y;
   display: grid;
   align-content: start;
