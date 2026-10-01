@@ -406,11 +406,6 @@
   transform: none;
 }
 
-.note {
-  margin-top: 32px;
-  max-width: 72ch;
-  color: var(--muted);
-}
 
 @media (min-width: 768px) {
   .board {

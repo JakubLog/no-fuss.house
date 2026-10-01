@@ -105,7 +105,7 @@ export function FellowshipBoard() {
             </button>
             <button type="button" aria-pressed={showNofuss} onClick={() => setShowNofuss((v) => !v)}>
               <i className={styles.swatchNofuss} aria-hidden="true" />
-              no-fuss · {NOFUSS_DAY} dni*
+              no-fuss · {NOFUSS_DAY} dni
             </button>
           </div>
           <Button onClick={play} className={styles.play}>
