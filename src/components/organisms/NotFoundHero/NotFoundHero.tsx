@@ -6,8 +6,8 @@ import styles from "./NotFoundHero.module.css";
 
 /**
  * Hero strony 404 1:1 z legacy/404.html: napis 3D „404” startuje z zamieszaniem 100%,
- * litery uciekają przed kursorem, „Posprzątaj ↓” układa cyfry i podmienia tekst.
- * Link „Wróć na stronę główną →” jest widoczny od początku (audyt UX), „Posprzątaj” obok jako ghost.
+ * litery uciekają przed kursorem, pierwsze przewinięcie (> 24 px) układa cyfry i podmienia tekst.
+ * Jedyny przycisk to „Wróć na stronę główną →”, obok zachęta do przewinięcia do `#mordor`.
  * Server Component (interakcja w `NotFoundStage`).
  */
 export function NotFoundHero() {

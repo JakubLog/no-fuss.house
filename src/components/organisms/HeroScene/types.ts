@@ -1,7 +1,7 @@
 import type { RefObject } from "react";
 
 /**
- * Kanał sklep → scena bez re-renderów React: `set()` woła przycisk „Posprzątaj” na 404 i ułożenie napisu
+ * Kanał sklep → scena bez re-renderów React: `set()` woła pierwsze przewinięcie na 404 i ułożenie napisu
  * po intro na `/`, a host sceny przekazuje każdą zmianę (`subscribe`) do workera albo sceny na głównym wątku.
  * Wartość 0–1 (0 = litery ułożone, 1 = rozrzucone).
  */
