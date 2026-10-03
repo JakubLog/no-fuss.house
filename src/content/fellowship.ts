@@ -214,12 +214,12 @@ export const FELLOWSHIP_ROUTE: readonly FellowshipPoint[] = [
 
 /** Etykiety krain (mile jak wyżej). `wide`: widoczna dopiero od 768 px. */
 export const FELLOWSHIP_REGIONS = [
-  { name: "Shire", x: -40, y: -38, wide: false },
+  { name: "Shire", x: -5, y: -48, wide: false },
   { name: "Eriador", x: 190, y: 180, wide: true },
   { name: "Wielkie Morze", x: -110, y: 600, wide: true },
   { name: "Góry Mgliste", x: 468, y: 120, wide: true },
   { name: "Mroczna Puszcza", x: 690, y: 110, wide: true },
   { name: "Rohan", x: 480, y: 575, wide: true },
   { name: "Gondor", x: 520, y: 735, wide: true },
-  { name: "Mordor", x: 960, y: 690, wide: false },
+  { name: "Mordor", x: 880, y: 712, wide: false },
 ] as const;

@@ -307,7 +307,13 @@ Nie wymyślamy liczb, wyników ani cytatów: efekt to fakt (np. działająca str
 ## Strona 404: „Droga do Mordoru” (`#mordor`)
 
 Pod hero 404 jasna sekcja „Z no-fuss dotarliby szybciej”: zgubić się to nic wstydliwego, Drużyna Pierścienia szła
-do Góry Przeznaczenia 184 dni. Hero dostaje ghost „Droga do Mordoru ↓” jako czwarty przycisk.
+do Góry Przeznaczenia 184 dni.
+
+- **Hero 404**: jeden przycisk, „Wróć na stronę główną →” (accent). „Posprzątaj” i „Realizacje” usunięte (za dużo CTA).
+  Zamiast nich zachęta do przewinięcia: link do `#mordor` z podpisem mono („Przewiń, posprzątamy po drodze”, po sprzątaniu
+  „Posprzątane. Teraz w drogę”), tytułem „Droga do Mordoru ↓” w roli title (hover: limonkowe tło) i pionowym torem 2 px,
+  po którym romb 14 px zjeżdża w pętli 1,8 s. Telefon: pod przyciskiem; od 1024 px w prawym dolnym rogu hero, do prawej.
+  Pierwsze przewinięcie (24 px) sprząta napis 3D i odlicza zamieszanie do 000%. Przy reduced motion romb stoi w połowie toru.
 
 - **Plansza** `#15181D` (limonka tylko na ciemnym): własny rysunek Śródziemia w stylu rysunku technicznego, SVG, nie druga
   scena 3D. Linie 1 px w bieli alpha (`vector-effect: non-scaling-stroke`), góry jako szewrony, lasy jako kwadratowe kropki,
@@ -317,11 +323,32 @@ do Góry Przeznaczenia 184 dni. Hero dostaje ghost „Droga do Mordoru ↓” ja
   Przełączniki jak modele w `SplitCalculator` (obrys 1 px, włączony w kolorze tekstu). Znaczniki to romby 14 px jak w mierniku 404.
 - **Przystanki**: 13 przycisków-rombów nad rysunkiem (przed nami obrys, za nami biały, bieżący limonkowy z etykietą na limonce).
   Etykieta celu widoczna stale od 768 px, reszta na hover / fokus.
-- **Czas**: „Wyruszamy →” odtwarza 184 dni w 12 s; postoje (Rivendell, Lórien) widać jako stojący znacznik przy biegnącym liczniku.
-  Suwak osi czasu jak w `SplitCalculator`, data w kalendarzu Shire'u. Przy reduced motion „Wyruszamy” skacze na koniec.
-- **no-fuss w liczbach**: średnie tempo marszu Drużyny bez postojów na prostej z tej samej mapy (przypis pod sekcją). To żart
-  z uczciwie opisaną metodą, nie deklaracja o tempie naszej pracy.
-- **Panel etapu** (od 1024 px 4 kolumny obok planszy, sticky): data, nazwa w roli title, co się działo (lead), „U nas” (lead), Wstecz / Dalej.
+  Kliknięcie myszą lub stuknięcie wybiera przystanek najbliższy wskaźnikowi (na telefonie przystanki leżą bliżej niż szerokość
+  palca), z klawiatury ten z fokusem.
+- **Telefon (< 768 px)**: kadr mapy przycięty do trasy (od Shire'u po Mordor, ok. 1,2× większy niż pełna mapa), przełączniki
+  tras i przycisk w jednym rzędzie od 360 px (liczba dni w przełącznikach od 480 px, krótsze etykiety przycisku: „W drogę →”,
+  „Pauza ‖”, „Wznów →”, „Od nowa ↺”). W trakcie opowieści kamera: scena przybliżona 1,8×
+  i przesuwana za Drużyną (przejście 0,6 s `--ease`, przycięte do krawędzi mapy); po pauzie i na końcu wraca do całej trasy.
+  Przy reduced motion bez kamery. Status ma zarezerwowane dwie linie, więc plansza nie zmienia wysokości.
+- **Skrót etapu w planszy (< 1024 px)**: panel jest wtedy pod mapą, poza ekranem, więc pod osią czasu kreska 1 px,
+  „Etap 05/13” i data w mono, nazwa (700) i opis w roli body; wysokość najdłuższego opisu (teksty nałożone w jednej komórce).
+  Dla czytników `aria-hidden` (pełny panel niżej). Na dotyku podpis „← Przesuń, żeby zmienić etap →”.
+- **Gest**: przesunięcie palcem w poziomie (≥ 48 px, wyraźnie bardziej w poziomie niż w pionie) po skrócie etapu albo po panelu:
+  w lewo następny etap, w prawo poprzedni. `touch-action: pan-y`, pionowe przewijanie strony działa jak zwykle.
+- **Czas: tryb opowieści** (`story.ts`): mapa nie jedzie płynnie przez 184 dni, tylko od przystanku do przystanku. Przejazd
+  0,45–1,4 s (dni postoju liczą się kilka razy szybciej niż dni marszu), potem postój na czas czytania: 1,2 s + 30 ms na znak
+  opisu (desktop: opis + „U nas”, telefon: sam opis widoczny w planszy), w widełkach 2,2–6,5 s. Kreska nad opisem (panel
+  i skrót w planszy) wypełnia się w trakcie postoju. Osobny takt na puentę: dzień 58, status na limonce „Dzień 58: no-fuss już
+  na miejscu. Drużyna wciąż na naradzie w Rivendell.” (3,2 s). Opowieść rusza sama raz, gdy 60% planszy wejdzie w kadr
+  (nie po wcześniejszym kliknięciu mapy, nie przy reduced motion). „Pauza” zatrzymuje, „Wznów →” rusza od miejsca pauzy;
+  „Wstecz” / „Dalej” i gest w trakcie opowieści przeskakują takt bez zatrzymania. Kursor myszy nad opisem wstrzymuje
+  odliczanie postoju. Klik w przystanek albo suwak kończy opowieść. Przy reduced motion przejazdy są natychmiastowe.
+  Całość: ok. 70 s na desktopie, ok. 50 s na telefonie.
+- **no-fuss w liczbach**: średnie tempo marszu Drużyny bez postojów na prostej z tej samej mapy (metoda opisana w `route.ts`,
+  bez przypisu na stronie). To żart, nie deklaracja o tempie naszej pracy.
+- **Panel etapu** (od 1024 px 4 kolumny obok planszy, sticky): data, nazwa w roli title, co się działo (lead), „U nas” (lead), Wstecz / Dalej
+  na stałej wysokości: teksty wszystkich etapów leżą w jednej komórce siatki (widoczny bieżący), więc pola mają wysokość
+  najdłuższego tekstu i przyciski nie skaczą między etapami.
 
 ## Komunikat o ciasteczkach i strony prawne
 

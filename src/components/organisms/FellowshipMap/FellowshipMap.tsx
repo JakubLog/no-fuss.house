@@ -5,8 +5,8 @@ import styles from "./FellowshipMap.module.css";
 
 /**
  * Sekcja pod hero 404 (`#mordor`): „Z no-fuss dotarliby szybciej”. Nagłówek w `Reveal`,
- * pod nim interaktywna mapa trasy Drużyny Pierścienia (`FellowshipBoard`, klient) i przypis
- * o źródle dat. Mapa to SVG, nie druga scena 3D (DESIGN.md: jedna scena na stronę). Server Component.
+ * pod nim interaktywna mapa trasy Drużyny Pierścienia (`FellowshipBoard`, klient).
+ * Mapa to SVG, nie druga scena 3D (DESIGN.md: jedna scena na stronę). Server Component.
  */
 export function FellowshipMap() {
   return (
@@ -22,10 +22,6 @@ export function FellowshipMap() {
         </p>
       </Reveal>
       <FellowshipBoard />
-      <p className={cx("mono-sm", styles.note)}>
-        * Tempo marszu Drużyny bez postojów, w linii prostej na tej mapie. Mapa poglądowa, rysowana od ręki. Daty
-        z Kroniki Lat („Władca Pierścieni”, Dodatek B), kalendarz Shire’u. Pytanie o orły zostawiamy fandomowi.
-      </p>
     </section>
   );
 }

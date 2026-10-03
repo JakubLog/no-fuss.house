@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/atoms/Button";
 import { StickerLayer } from "@/components/atoms/StickerLayer";
 import { Tag } from "@/components/atoms/Tag";
@@ -17,25 +17,39 @@ const FIT_404: SceneFit = {
   offsetYMobile: 0.16,
 };
 
-/** Odliczanie 100% → 000% po „Posprzątaj” (legacy: 1100 ms). */
+/** Odliczanie 100% → 000% po sprzątaniu (legacy: 1100 ms). */
 const COUNTDOWN_MS = 1100;
+
+/** Ile pikseli przewinięcia wystarczy, żeby posprzątać napis. */
+const SCROLL_CLEAN_PX = 24;
 
 const format = (value: number) => `${String(value).padStart(3, "0")}%`;
 
-/** Część kliencka 404: scena, miernik zamieszania, tekst i przyciski. Client Component. */
+/**
+ * Część kliencka 404: scena, miernik zamieszania, tekst, powrót na stronę główną i zachęta do przewinięcia
+ * w stronę mapy (`#mordor`). Pierwsze przewinięcie sprząta napis (zamiast dawnego „Posprzątaj”). Client Component.
+ */
 export function NotFoundStage() {
   const [fuss] = useState(() => createFussStore(1));
   const [unsupported, setUnsupported] = useState(false);
   const [cleaned, setCleaned] = useState(false);
   const [percent, setPercent] = useState(100);
-  const ctaRef = useRef<HTMLDivElement>(null);
+
+  /* Sprzątanie przy pierwszym przewinięciu w stronę mapy (Lenis też wysyła natywne `scroll`). */
+  useEffect(() => {
+    if (cleaned) return;
+    const onScroll = () => {
+      if (window.scrollY > SCROLL_CLEAN_PX) {
+        fuss.set(0);
+        setCleaned(true);
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [cleaned, fuss]);
 
   useEffect(() => {
     if (!cleaned) return;
-    /* Przycisk znika, więc fokus idzie na link powrotny (pierwszy w rzędzie, nie gubi się na <body>). */
-    const hadFocus = document.activeElement === document.body || ctaRef.current?.contains(document.activeElement);
-    if (hadFocus) ctaRef.current?.querySelector<HTMLAnchorElement>("a")?.focus();
-
     const start = performance.now();
     let raf = 0;
     const tick = (now: number) => {
@@ -46,12 +60,6 @@ export function NotFoundStage() {
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [cleaned]);
-
-  const clean = () => {
-    if (cleaned) return;
-    fuss.set(0);
-    setCleaned(true);
-  };
 
   return (
     <>
@@ -78,21 +86,17 @@ export function NotFoundStage() {
             ? "Zero zamieszania. Teraz wracaj tam, gdzie coś jest."
             : "Ktoś tu narobił zamieszania. Adres nie istnieje, ale my tak."}
         </p>
-        <div ref={ctaRef} className={cx("fade", styles.cta)} style={{ "--i": 3 }}>
+        <div className={cx("fade", styles.cta)} style={{ "--i": 3 }}>
           <Button href="/">Wróć na stronę główną →</Button>
-          {cleaned ? null : (
-            <Button variant="ghost" onClick={clean}>
-              Posprzątaj ↓
-            </Button>
-          )}
-          <Button variant="ghost" href="/#realizacje">
-            Realizacje
-          </Button>
-          <Button variant="ghost" href="#mordor">
-            Droga do Mordoru ↓
-          </Button>
         </div>
       </div>
+      <a href="#mordor" className={cx("fade", styles.scroll)} style={{ "--i": 4 }}>
+        <span className={styles.scrollText}>
+          <span className="mono-sm">{cleaned ? "Posprzątane. Teraz w drogę" : "Przewiń, posprzątamy po drodze"}</span>
+          <span className={styles.scrollTitle}>Droga do Mordoru ↓</span>
+        </span>
+        <i className={styles.scrollTrack} aria-hidden="true" />
+      </a>
     </>
   );
 }

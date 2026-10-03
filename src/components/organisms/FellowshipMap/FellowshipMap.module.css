@@ -86,11 +86,65 @@
   flex-shrink: 0;
 }
 
+/* Telefon: przełączniki i przycisk w jednym rzędzie (liczba dni jest w statusie i na osi czasu). */
+.days {
+  display: none;
+}
+
+.short {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .controls {
+    flex-wrap: wrap;
+  }
+
+  .toggles {
+    flex-wrap: nowrap;
+  }
+
+  .toggles button {
+    padding: 12px 8px;
+  }
+
+  .swatchFellowship,
+  .swatchNofuss {
+    width: 12px;
+  }
+
+  .play {
+    padding-inline: 12px;
+  }
+
+  .long {
+    display: none;
+  }
+
+  .short {
+    display: inline;
+  }
+}
+
+@media (min-width: 480px) {
+  .days {
+    display: inline;
+  }
+}
+
 /* ---------- mapa ---------- */
 .map {
   position: relative; /* aspect-ratio z `VIEW_W / VIEW_H` (route.ts), inline */
   overflow: hidden;
   box-shadow: inset 0 0 0 1px var(--alpha-200);
+}
+
+/* Scena mapy (rysunek, etykiety, przystanki, znaczniki): na telefonie w trakcie przebiegu przybliżana kamerą. */
+.stage {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 0;
+  transition: transform 0.6s var(--ease);
 }
 
 .map svg {
@@ -352,8 +406,85 @@
   color: var(--muted);
 }
 
+/* Puenta (dzień 58 w trakcie opowieści): limonkowe tło jak tag, ciemny tekst. */
+.statusHot {
+  padding: 2px 6px;
+  background: var(--accent);
+  color: var(--on-accent);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Pasek czytania: kreska nad opisem etapu wypełnia się w trakcie postoju (`--k` 0–1). */
+.panel::before,
+.stopLine::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: calc(var(--k, 0) * 100%);
+  height: 2px;
+  background: var(--ink);
+}
+
+.stopLine::before {
+  background: var(--accent);
+}
+
+/* Telefon: status ma zarezerwowane dwie linie, tekst po dotarciu nie przesuwa strony pod planszą. */
+@media (max-width: 767px) {
+  .status {
+    min-height: 32px;
+  }
+}
+
+/* Skrót etapu w planszy (poniżej 1024 px, gdy panel jest pod mapą); przesunięcie palcem zmienia etap. */
+.stopLine {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--alpha-200);
+  touch-action: pan-y;
+}
+
+.stopMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.stopWhat {
+  font: var(--t-body);
+}
+
+.stopWhat b {
+  font-weight: 700;
+}
+
+.swipeHint {
+  display: none;
+  color: var(--muted);
+}
+
+@media (pointer: coarse) {
+  .swipeHint {
+    display: block;
+  }
+}
+
+@media (min-width: 1024px) {
+  .stopLine {
+    display: none;
+  }
+}
+
 /* ---------- panel etapu (na jasnym tle sekcji) ---------- */
 .panel {
+  position: relative;
+  touch-action: pan-y;
   display: grid;
   align-content: start;
   gap: 16px;
@@ -367,6 +498,19 @@
   gap: 16px;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
+}
+
+/* Teksty wszystkich etapów nałożone w jednej komórce: wysokość = najdłuższy, ukryte poza drzewem dostępności. */
+.stack {
+  display: grid;
+}
+
+.stack > * {
+  grid-area: 1 / 1;
+}
+
+.stack > [aria-hidden="true"] {
+  visibility: hidden;
 }
 
 .panelTitle {
@@ -406,11 +550,6 @@
   transform: none;
 }
 
-.note {
-  margin-top: 32px;
-  max-width: 72ch;
-  color: var(--muted);
-}
 
 @media (min-width: 768px) {
   .board {
@@ -444,6 +583,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .stage,
   .toggles button,
   .terrain .doom,
   .stop i,

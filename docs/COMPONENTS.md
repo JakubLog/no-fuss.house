@@ -536,7 +536,7 @@ Kotwice na tej samej stronie (także bez Lenis przy reduced motion) ustawiają n
 | `scripts/bake-env.ts`, `scripts/legacyRoomEnvironment.js` | skrypt (`pnpm bake:env`) | zapieka PMREM pokoju z r160 (światło 5, nie 900) w Chrome headless do `public/three/env/room-pmrem.bin.gz` |
 | `HomeHero/HomeHero.tsx` | server, default export, bez propsów | `<section id="hero">` strony głównej |
 | `HomeHero/HomeHeroStage.tsx` | client | kanwa na całe hero + pusta ramka `.band` (`frame`: od 768 px pas między h1 a leadem z CTA; na telefonie miejsce na fallback CSS), sloty na serwerową treść (`headline` = h1 + lead + `ContactCta`, `sceneLabel`) |
-| `NotFoundHero/` | server + `NotFoundStage` (client) | hero 404, bez propsów; ghost „Droga do Mordoru ↓” do `#mordor` |
+| `NotFoundHero/` | server + `NotFoundStage` (client) | hero 404, bez propsów; jeden przycisk powrotu + zachęta do przewinięcia do `#mordor` |
 | `FellowshipMap/` | server + `FellowshipBoard` (client) | sekcja `#mordor` pod hero 404: mapa trasy Drużyny Pierścienia (SVG, nie scena 3D); dane `content/fellowship.ts` (mile od Hobbitonu), rysunek `geography.ts`, czas i rzutowanie `route.ts` |
 
 Barrel `organisms/HeroScene/index.ts` (i barrel warstwy) eksportuje tylko `LazyHeroScene`, `createFussStore` i typy:
@@ -568,7 +568,7 @@ interface SceneFit { widthDesktop; widthMobile; heightDesktop?; maxScale; offset
 const [fuss] = useState(() => createFussStore(prefersReducedMotion ? 0 : 1));
 const band = useRef<HTMLDivElement>(null); // <div ref={band} className={styles.band} /> w siatce hero
 <LazyHeroScene text="no–fuss" fuss={fuss} frame={band} onReady={() => setSceneReady(true)} onUnsupported={() => setUnsupported(true)} />
-// 404: useState(() => createFussStore(1)), przycisk „Posprzątaj” woła fuss.set(0)
+// 404: useState(() => createFussStore(1)), pierwsze przewinięcie (> 24 px) woła fuss.set(0)
 ```
 Rodzic sceny musi mieć `position: relative` (opakowanie kanwy: `absolute; inset: 0; z-index: 2`, nad siatką overlay). Jedna scena na stronę.
 
@@ -592,7 +592,7 @@ Rodzic sceny musi mieć `position: relative` (opakowanie kanwy: `absolute; inset
   (226 KB gzip: RGB bez alfy, płaszczyzny bajtów, mantysa zaokrąglona do 6 bitów, błąd ≤ 0.8%), bez renderowania pokoju
   i shaderów PMREM. Na zrzucie hero różnica z PMREM w runtime średnio 0.02/255. Po zmianie pokoju albo three.js: `pnpm bake:env`.
 - **Sklep → scena:** mutowalny sklep; host przekazuje każdą zmianę (`subscribe`) do sceny. Wygładzanie w scenie (lerp 0.12 na krok, jak legacy).
-  404: „Posprzątaj” ustawia 0 od razu, licznik 1100 ms. Hero `/` (`HomeHeroStage`): po `onReady` i intro, z opóźnieniem
+  404: pierwsze przewinięcie ustawia 0 od razu, licznik 1100 ms. Hero `/` (`HomeHeroStage`): po `onReady` i intro, z opóźnieniem
   `INTRO_REVEAL_DELAY_MS` (razem z reveal h1), sklep schodzi 1 → 0 w 1600 ms (ease-in-out, rAF): litery z chaosu układają się
   w napis. To samo przy nawigacji klienckiej na `/` (intro już było, start po `onReady`).
 - **Pętla:** działa tylko gdy kanwa jest w viewporcie (`IntersectionObserver`) i karta widoczna (`visibilitychange`), host
@@ -630,9 +630,8 @@ Rodzic sceny musi mieć `position: relative` (opakowanie kanwy: `absolute; inset
   bo napis 3D to obiekt, nie tło (legacy: kanwa −1, linie siatki przecinały litery). Treść nad kanwą przez kolejność w DOM
   (kanwa pierwsza w `HomeHeroStage`).
 - **Dostępność:** kanwa `aria-hidden`; na `/` `VisuallyHidden` „W tle trójwymiarowy napis no–fuss.” (nowe zdanie);
-  na 404 `h1.sr-only` 1:1 z legacy, tekst `aria-live="polite"`. „Wróć na stronę główną →” (accent) widoczny od początku,
-  obok „Posprzątaj ↓” (ghost), „Realizacje” i „Droga do Mordoru ↓” (ghost, kotwica `#mordor` do `FellowshipMap`); po „Posprzątaj”
-  przycisk znika, a fokus idzie na „Wróć na stronę główną →”.
+  na 404 `h1.sr-only` 1:1 z legacy, tekst `aria-live="polite"`. Jedyny przycisk to „Wróć na stronę główną →” (accent);
+  obok zwykły link „Droga do Mordoru ↓” do `#mordor` (zachęta do przewinięcia). Sprząta pierwsze przewinięcie, nie przycisk.
 - **Nagłówki `/`:** jedyny `h1` to hasło. Rola „Design & Development”, dwa akapity, suwak „Zamieszanie” i naklejki
   z legacy usunięte (odciążenie pierwszego ekranu); kto co robi w duecie mówi podpis zdjęcia w `AboutSection`.
 - **Hero `/` pod usługi:** telefon (< 768 px): h1, lead (`hero.lead` z `home.ts`, `--t-lead`) i `ContactCta` dosunięte do dołu
