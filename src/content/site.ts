@@ -66,7 +66,7 @@ export const site = {
   } as SiteContact,
   /** Linki social ze stopki (placeholdery 1:1 z legacy; `href: null` się nie renderuje). */
   social: [
-    { network: "instagram", label: "[Instagram]", href: null },
+    { network: "instagram", label: "Instagram", href: "https://www.instagram.com/nofuss.house" },
     { network: "linkedin", label: "[LinkedIn]", href: null },
     { network: "behance", label: "[Behance]", href: null },
   ] as const satisfies readonly SocialLink[],
