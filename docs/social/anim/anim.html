@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>no-fuss social</title>
+<style>
+@font-face{font-family:"Geist Mono";font-weight:400;src:url(../fonts/f1.ttf)}
+@font-face{font-family:"TikTok Sans";font-weight:400;src:url(../fonts/f2.ttf)}
+@font-face{font-family:"TikTok Sans";font-weight:500;src:url(../fonts/f3.ttf)}
+@font-face{font-family:"TikTok Sans";font-weight:700;src:url(../fonts/f4.ttf)}
+:root{
+  --dark:#101318;--light:#FCFCFB;--shade:#15181D;--shade7:#272A2F;--accent:#BBFF00;--on-accent:#101318;
+  --muted-l:#5F6369;--muted-d:#A9ABAD;--sans:"TikTok Sans",Arial,sans-serif;--mono:"Geist Mono",monospace;
+  --G:64px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#000}
+#stage{position:relative;overflow:hidden;background:var(--dark);font-family:var(--sans);color:#fff}
+#page{position:absolute;left:0;top:0;width:100%;will-change:transform}
+section{position:relative;width:100%;overflow:hidden}
+.dark{background:var(--dark);color:#fff;--ink:#fff;--muted:var(--muted-d);--line:rgba(255,255,255,.18)}
+.light{background:var(--light);color:var(--dark);--ink:var(--dark);--muted:var(--muted-l);--line:rgba(16,19,24,.18)}
+.lime{background:var(--accent);color:var(--on-accent);--ink:var(--on-accent);--muted:#3F4A12;--line:rgba(16,19,24,.25)}
+.inner{position:absolute;left:var(--G);right:var(--G);display:flex;flex-direction:column}
+.mono{font-family:var(--mono);font-size:24px;line-height:32px;text-transform:uppercase;letter-spacing:normal}
+.mono-sm{font-family:var(--mono);font-size:20px;line-height:28px;text-transform:uppercase}
+.mega{font-weight:700;font-size:168px;line-height:.9;text-transform:uppercase;white-space:nowrap}
+.display{font-weight:700;font-size:112px;line-height:1;text-transform:uppercase}
+.h2{font-weight:700;font-size:76px;line-height:1;text-transform:uppercase}
+.statement{font-weight:400;font-size:54px;line-height:1.1}
+.title{font-weight:500;font-size:44px;line-height:1.15}
+.lead{font-weight:400;font-size:33px;line-height:1.35}
+.muted{color:var(--muted)}
+.tag{display:inline-block;background:var(--accent);color:var(--on-accent);font-family:var(--mono);font-size:20px;line-height:28px;padding:4px 12px;text-transform:uppercase}
+.mask{overflow:hidden;display:block}
+.mask>span{display:block;will-change:transform}
+mark{background:none;color:inherit;position:relative;display:inline-block;padding:0 .06em}
+mark i{position:absolute;inset:.04em 0 .02em 0;background:var(--accent);transform-origin:right center;z-index:0}
+mark b{position:relative;z-index:1;font-weight:inherit}
+.fact{display:grid;grid-template-columns:34% 1fr;gap:16px;border-top:1px solid var(--line);padding:14px 0 16px}
+.fact dt{color:var(--muted)}
+.row{border-top:1px solid var(--line);padding:18px 0 22px;position:relative}
+.row:last-child{border-bottom:1px solid var(--line)}
+.row .hl{position:absolute;inset:0;background:var(--accent);opacity:0}
+.row .txt{position:relative}
+.btn{display:inline-flex;align-items:center;height:96px;padding:0 40px;background:var(--accent);color:var(--on-accent);font-family:var(--sans);font-weight:500;font-size:36px}
+/* fixed layers */
+#grid{position:absolute;inset:0;pointer-events:none;mix-blend-mode:difference;z-index:5}
+#hud{position:absolute;left:0;right:0;mix-blend-mode:difference;color:#fff;z-index:6;display:flex;justify-content:space-between;align-items:center;padding:0 var(--G)}
+#hud .wm{font-family:var(--sans);font-weight:700;font-size:36px;line-height:1}
+#prog{position:absolute;right:20px;width:4px;background:rgba(255,255,255,.18);mix-blend-mode:difference;z-index:6}
+#prog i{position:absolute;left:0;top:0;width:100%;background:#fff}
+#foot{position:absolute;left:0;right:0;mix-blend-mode:difference;color:#fff;z-index:6;display:flex;justify-content:space-between;padding:0 var(--G)}
+#curtain{position:absolute;inset:0;background:var(--dark);z-index:9;display:flex;align-items:center;justify-content:center}
+#curtain .bar{width:220px;height:8px;background:rgba(255,255,255,.25);position:relative}
+#curtain .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--accent)}
+/* devices */
+.browser{background:var(--dark);position:relative;overflow:hidden}
+.browser .chrome{height:64px;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid rgba(255,255,255,.08)}
+.browser .dot{width:14px;height:14px;background:#3a3f47}
+.browser .url{margin-left:16px;flex:1;height:36px;background:#1d2127;color:var(--muted-d);font-family:var(--mono);font-size:18px;line-height:36px;padding:0 14px;text-transform:lowercase}
+.browser .view{position:relative;overflow:hidden}
+.browser .view img{position:absolute;left:0;top:0;width:100%;display:block}
+.phone{position:absolute;background:#0b0d10;border:3px solid #3a3f47;border-radius:58px;padding:14px;box-shadow:0 30px 60px rgba(16,19,24,.35)}
+.phone .scr{position:relative;width:100%;height:100%;overflow:hidden;border-radius:44px;background:#fff}
+.phone .scr img{position:absolute;left:0;top:0;width:100%;display:block}
+.phone .island{position:absolute;left:50%;top:26px;width:30%;height:30px;margin-left:-15%;background:#000;border-radius:20px;z-index:2}
+.phone .side{position:absolute;right:-7px;top:22%;width:4px;height:12%;background:#3a3f47;border-radius:2px}
+.ball-field{position:relative;overflow:hidden;color:#fff}
+.ball{position:absolute;border-radius:50%;background:linear-gradient(160deg,#E24A2C,#2A3BD8)}
+.sticker{position:absolute;border-radius:50%;background:var(--accent);border:6px solid #fff;color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:22px;text-transform:uppercase;text-align:center;line-height:1.1}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="page"></div>
+  <svg id="grid"></svg>
+  <div id="hud"><span class="wm">no–fuss</span><span class="mono" id="hudr"></span></div>
+  <div id="prog"><i></i></div>
+  <div id="foot" class="mono-sm"><span>no-fuss.house</span><span id="footr"></span></div>
+  <div id="curtain"><div class="bar"><i></i></div></div>
+</div>
+<script>
+// ---------- params ----------
+const Q = new URLSearchParams(location.search);
+const SCENE = Q.get('scene') || 'ah';
+const FMT = Q.get('fmt') || 'feed';
+const W = 1080, H = FMT === 'story' ? 1920 : 1350;
+// story = Reels / Stories: górne ~250 px i dolne ~420 px zasłania UI aplikacji
+const SAFE_T = FMT === 'story' ? 250 : 64, SAFE_B = FMT === 'story' ? 420 : 116;
+const HUD_Y = FMT === 'story' ? 170 : 48;
+const A = '../../../public/assets/';
+const stage = document.getElementById('stage');
+stage.style.width = W + 'px'; stage.style.height = H + 'px';
+
+// ---------- easing ----------
+function bez(x1, y1, x2, y2) {
+  return function (x) {
+    if (x <= 0) return 0; if (x >= 1) return 1;
+    let t = x;
+    for (let i = 0; i < 8; i++) {
+      const cx = 3 * x1 * t * (1 - t) ** 2 + 3 * x2 * t * t * (1 - t) + t ** 3 - x;
+      const d = 3 * x1 * (1 - t) ** 2 + 6 * (x2 - x1) * t * (1 - t) + 3 * (1 - x2) * t * t;
+      if (Math.abs(d) < 1e-6) break; t -= cx / d; t = Math.min(1, Math.max(0, t));
+    }
+    return 3 * y1 * t * (1 - t) ** 2 + 3 * y2 * t * t * (1 - t) + t ** 3;
+  };
+}
+const ease = bez(0.16, 1, 0.3, 1);        // --ease z DESIGN.md
+const inout = bez(0.65, 0, 0.35, 1);
+const cl = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, a, d) => cl((t - a) / d);
+const lerp = (a, b, p) => a + (b - a) * p;
+
+// ---------- scramble (420 ms, znaki z DESIGN.md) ----------
+const SCR = '!<>-_\\/[]{}=+*^?#%';
+function scramble(txt, p, t) {
+  const n = txt.length, k = Math.floor(p * n);
+  let o = '';
+  for (let i = 0; i < n; i++) {
+    if (i < k || txt[i] === ' ') o += txt[i];
+    else o += SCR[(Math.floor(t * 30) * 7 + i * 13) % SCR.length];
+  }
+  return p >= 1 ? txt : o;
+}
+
+// ---------- content ----------
+const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const lines = (arr, cls, t0, extra = '') =>
+  arr.map((l, i) => `<span class="mask ${cls}" ${extra}><span data-k="line" data-t="${t0 + i * 0.08}">${l}</span></span>`).join('');
+const fade = (html, t0, tag = 'div', cls = '') => `<${tag} class="${cls}" data-k="fade" data-t="${t0}">${html}</${tag}>`;
+const facts = (rows, t0) => `<dl>${rows.map((r, i) =>
+  `<div class="fact mono-sm" data-k="fade" data-t="${t0 + i * 0.08}"><dt>${r[0]}</dt><dd>${r[1]}</dd></div>`).join('')}</dl>`;
+
+const CASES = {
+  ah: {
+    no: '01', kicker: 'Strona WWW · 06.2026', title: 'Automation House',
+    lead: 'Rebranding strony: od discovery do wdrożenia.',
+    facts: [['Rola no-fuss', 'Design: Magda · kod: Kuba'], ['Klient', 'Automation House by Tigers'], ['Stack', 'Next.js'], ['Wynik', 'Strona działa ↗']],
+    stageLabel: ['01 / Strona na żywo', 'automation.house'], visual: 'browserPhone',
+    shot: 'automation-house/d-00.webp', shotRatio: 875 / 1400, phone: 'automation-house/m-full.webp', phoneRatio: 16000 / 518, url: 'www.automation.house',
+    story: [['Zadanie', 'Ustalić, co firma robi naprawdę i komu to sprzedaje, i pokazać to na nowej stronie.'],
+            ['Co zrobiliśmy', 'Warsztaty z zespołem, architektura treści, system wizualny i ekrany (Magda), kod w Next.js (Kuba).'],
+            ['Efekt', 'Nowa strona działa pod automation.house. Discovery, projekt i kod zrobił jeden zespół.']],
+    path: 'no-fuss.house/automation-house'
+  },
+  otb: {
+    no: '02', kicker: 'Strona WWW · 06.2025', title: 'OTB Ventures',
+    lead: 'Strona funduszu VC: poważna jak fundusz, odważna jak jego portfolio.',
+    facts: [['Rola no-fuss', 'Design: Magda z Piotrem Chuchłą'], ['Klient', 'OTB Ventures, fundusz VC'], ['Stack', 'WordPress'], ['Wynik', 'Strona działa: otb.vc ↗']],
+    stageLabel: ['01 / Open to beyond', 'rekonstrukcja w HTML'], visual: 'ball',
+    phone: 'otb/m-full.webp', phoneRatio: 13756 / 720,
+    story: [['Zadanie', 'OTB inwestuje w europejskie startupy z AI, SpaceTech i Physical AI. Strona ma to unieść.'],
+            ['Co zrobiliśmy', 'Projekt wokół jednego elementu: gradientu czerwień–błękit i kuli, która przecina nagłówek „Open to beyond”.'],
+            ['Efekt', 'Strona działa pod adresem otb.vc, na WordPressie.']],
+    path: 'no-fuss.house/otb'
+  },
+  busybee: {
+    no: '03', kicker: 'Strona WWW · 2024', title: 'Busy Bee',
+    lead: 'Strona domu produkcyjnego, która robi jedno: pokazuje prace i prowadzi do kontaktu.',
+    facts: [['Rola no-fuss', 'Design: Magda'], ['Kod', 'Michał Gabryelewicz · Webflow'], ['Klient', 'Busy Bee Film, Warszawa'], ['Wynik', 'Strona działa ↗']],
+    stageLabel: ['01 / Strona na żywo', 'Reklamy: prace Busy Bee Film'], visual: 'browserStrip',
+    shots: ['busybee/d-00.webp', 'busybee/d-02.webp', 'busybee/d-03.webp', 'busybee/d-06.webp'], shotRatio: 1000 / 1600, url: 'www.busybeefilm.pl',
+    story: [['Zadanie', 'Pokazać prace i doprowadzić do kontaktu, bez zakładek, których nikt nie czyta.'],
+            ['Co zrobiliśmy', 'Kadr z produkcji na pierwszym ekranie, realizacje w rytmie zamiast siatki kafelków, na końcu konkretne osoby z kontaktem.'],
+            ['Efekt', 'Strona działa pod busybeefilm.pl, na komputerze i na telefonie.']],
+    path: 'no-fuss.house/busy-bee'
+  },
+  ourmoney: {
+    no: '04', kicker: 'Aplikacja mobilna · 12.2025 → teraz', title: 'OurMoney',
+    lead: 'Aplikacja, która odpowiada parze na jedno pytanie: czy to jest fair?',
+    facts: [['Rola no-fuss', 'Produkt własny Magdy i Kuby'], ['Zakres', 'Design i produkt: Magda · kod: Kuba'], ['Dla kogo', 'Pary 25–40'], ['Status', 'Przed premierą w sklepach']],
+    stageLabel: ['01 / Aplikacja', 'ourmoney.pl'], visual: 'phones',
+    screens: ['ourmoney/koperty.png', 'ourmoney/ekran-glowny-rownowaga.webp', 'ourmoney/wspolne-cele-finansowe.webp'],
+    models: ['Po równo', 'Proporcjonalnie', 'Tylko śledzenie'],
+    path: 'no-fuss.house/ourmoney'
+  },
+  sassy: {
+    no: '05', kicker: 'Eksperyment · 07.2026', title: 'Sassy',
+    lead: 'Strona bez celu w jednym pliku HTML. Wszystko da się złapać i przesunąć.',
+    facts: [['Rola', 'Koncept, design i kod: Magda'], ['Typ', 'Projekt własny, eksperyment'], ['Stack', 'Jeden plik HTML'], ['Wynik', 'Strona działa ↗']],
+    stageLabel: ['01 / Wszystko da się złapać', 'sassy-tan.vercel.app'], visual: 'toys',
+    toys: [['Pulpit', 'kamera', 'sassy/d-00.webp'], ['Biurko', 'bento', 'sassy/d-01.webp'], ['Business case', 'suwak', 'sassy/d-02.webp'],
+           ['Waga', 'SERIOUS', 'sassy/d-04.webp'], ['Karteczki', 'tablica', 'sassy/d-06.webp'], ['Koniec', 'gra', 'sassy/d-09.webp']],
+    story: [['Zadanie', 'Warsztat, nie zlecenie: ile zabawy i interakcji udźwignie jedna strona bez frameworków.'],
+            ['Co powstało', 'Retro pulpit z aparatem, biurko z zadaniami, suwak godzin, waga SERIOUS, tablica z kredą i gra Snack Run.'],
+            ['Efekt', 'Strona działa, także dotykiem. Kamera startuje tylko po kliknięciu.']],
+    path: 'no-fuss.house/sassy'
+  }
+};
+
+// ---------- timeline ----------
+// arrive[i] = moment, w którym kamera stoi na sekcji i; scroll trwa 0.9 s przed nim
+const T0 = 1.3; // po kurtynie
+let ARR, DUR;
+const sections = [];
+
+function sec(cls, html, h = H) { sections.push({ cls, html, h }); }
+function inner(html, justify = 'space-between') {
+  return `<div class="inner" style="top:${SAFE_T + 92}px;bottom:${SAFE_B}px;justify-content:${justify}">${html}</div>`;
+}
+function ctaSection(i, title, text, path) {
+  const a = ARR[i];
+  sec('dark', inner(`
+    <div>${fade(`<span class="mono muted">Kontakt</span>`, a - 0.2)}</div>
+    <div>
+      ${lines(title, 'h2', a - 0.1)}
+      ${fade(`<p class="lead muted" style="margin-top:28px;max-width:16em">${text}</p>`, a + 0.15)}
+      ${fade(`<div style="margin-top:44px;display:flex;gap:16px;flex-wrap:wrap"><span class="btn" id="cta">Porozmawiajmy →</span></div>`, a + 0.3)}
+    </div>
+    <div>${fade(`<div class="fact mono-sm"><dt>Mail</dt><dd>general@no-fuss.house</dd></div><div class="fact mono-sm"><dt>Zobacz</dt><dd>${path} ↗</dd></div>`, a + 0.45)}</div>`));
+}
+
+function buildCase(c) {
+  ARR = [T0, 7.4, 13.4, 21.4]; DUR = 25;
+  const a = ARR;
+  // 1. hero
+  sec('dark', inner(`
+    <div>
+      <div style="display:flex;gap:16px;align-items:center" data-k="fade" data-t="${a[0] - 0.1}"><span class="tag">Case study</span><span class="mono" data-k="scr" data-t="${a[0]}" data-txt="${c.kicker}"></span></div>
+      <div style="margin-top:40px">${lines([c.title], 'mega fit', a[0] + 0.05)}</div>
+      ${fade(`<p class="statement" style="margin-top:36px;max-width:17em">${c.lead}</p>`, a[0] + 0.45)}
+    </div>
+    ${facts(c.facts, a[0] + 0.7)}`));
+  // 2. scena limonkowa
+  sec('lime', `<div class="inner" style="top:${SAFE_T + 92}px;bottom:${SAFE_B}px">
+      <div class="mono" style="display:flex;justify-content:space-between" data-k="fade" data-t="${a[1] - 0.5}"><span>${c.stageLabel[0]}</span><span class="muted">${c.stageLabel[1]}</span></div>
+      <div id="vis" style="position:relative;flex:1;margin-top:40px"></div></div>`);
+  // 3. w skrócie
+  if (c.story) {
+    sec('light', inner(`
+      <div>${fade(`<span class="mono muted">W skrócie</span>`, a[2] - 0.3)}</div>
+      <dl>${c.story.map((r, i) => `<div class="row" data-k="fade" data-t="${a[2] - 0.15 + i * 0.12}"><dt class="mono muted" style="margin-bottom:10px">${r[0]}</dt><dd class="lead">${r[1]}</dd></div>`).join('')}</dl>`));
+  } else { // OurMoney: modele podziału
+    sec('light', inner(`
+      <div>${fade(`<span class="mono muted">Zasady podziału</span>`, a[2] - 0.3)}</div>
+      <div>${lines(['Trzy modele', 'podziału zamiast', 'jednego „po połowie”.'], 'statement', a[2] - 0.2)}</div>
+      <div>${c.models.map((m, i) => `<div class="row model" data-k="fade" data-t="${a[2] + i * 0.08}"><div class="hl"></div><div class="txt title">${m}</div></div>`).join('')}</div>`));
+  }
+  ctaSection(3, ['Chcesz podobny', 'projekt?'], 'Opowiedz, co chcesz zbudować, a powiemy, od czego zacząć.', c.path);
+}
+
+function buildIntro() {
+  ARR = [T0, 7.2, 12.4, 19.0]; DUR = 22.6;
+  const a = ARR;
+  sec('dark', inner(`
+    <div class="mono" data-k="scr" data-t="${a[0]}" data-txt="Studio produktowe · Magda + Kuba"></div>
+    <div>
+      <span class="mask display"><span data-k="line" data-t="${a[0] + 0.05}">Budujemy</span></span>
+      <span class="mask display"><span data-k="line" data-t="${a[0] + 0.13}">produkty bez</span></span>
+      <span class="mask display"><span data-k="line" data-t="${a[0] + 0.21}"><mark><i data-k="wipe" data-t="${a[0] + 1.3}"></i><b>zamieszania</b></mark></span></span>
+      ${fade(`<p class="lead muted" style="margin-top:40px;max-width:24em">Aplikacje mobilne, strony i produkty z AI dla firm, które chcą wydać produkt, a nie zarządzać agencją.</p>`, a[0] + 0.6)}
+    </div>
+    <div class="mono-sm" style="display:flex;justify-content:space-between" data-k="fade" data-t="${a[0] + 0.8}"><span>Design i produkt: Magda</span><span>Kod: Kuba</span></div>`));
+  sec('light', inner(`
+    <div>${fade(`<span class="mono muted">O nas</span>`, a[1] - 0.3)}</div>
+    <div>${lines(['Dwie osoby,', 'agenci AI,', 'zero zamieszania.'], 'display', a[1] - 0.2)}</div>
+    <div>${lines(['Projektujemy i kodujemy', 'produkty, które', 'załatwiają sprawę.'], 'statement', a[1] + 0.2)}</div>`));
+  sec('dark', inner(`
+    <div>${fade(`<span class="mono muted">Co robimy</span>`, a[2] - 0.3)}</div>
+    <div>${['Aplikacje mobilne', 'Produkty z AI', 'Strony i landingi', 'Design produktu', 'Audyt i porządki'].map((m, i) =>
+      `<div class="row svc" data-k="fade" data-t="${a[2] - 0.2 + i * 0.06}"><div class="hl"></div><div class="txt title">${m}</div></div>`).join('')}</div>`));
+  ctaSection(3, ['Masz produkt', 'do zbudowania?'], 'Opowiedz, co chcesz zbudować, a powiemy, od czego zacząć.', 'no-fuss.house');
+}
+
+function buildProcess() {
+  ARR = [T0, 7.2, 15.8]; DUR = 19.6;
+  const a = ARR;
+  const steps = [['01', 'Rozmowa i brief', 'Co chcecie zbudować, dla kogo i po co. Z tego brief i wycena.'],
+                 ['02', 'Discovery i prototyp', 'Zanim powstanie kod, klikacie działający prototyp.'],
+                 ['03', 'Budowa w iteracjach', 'Design i kod w jednym zespole. Działająca wersja co krok.'],
+                 ['04', 'Wdrożenie i wsparcie', 'Publikujemy i zostajemy: poprawki, metryki, kolejne wersje.']];
+  sec('dark', inner(`
+    <div class="mono" data-k="scr" data-t="${a[0]}" data-txt="Jak pracujemy · 4 kroki"></div>
+    <div>${lines(['Od rozmowy', 'do wdrożenia.'], 'display', a[0] + 0.05)}
+      ${fade(`<p class="statement" style="margin-top:36px;max-width:16em">Design i kod w jednym zespole. Bez agencyjnego pośrednika.</p>`, a[0] + 0.5)}</div>
+    <div class="mono-sm" style="display:flex;justify-content:space-between" data-k="fade" data-t="${a[0] + 0.8}"><span>Magda: design i produkt</span><span>Kuba: kod</span></div>`));
+  sec('light', inner(`
+    <div>${fade(`<span class="mono muted">Jak pracujemy</span>`, a[1] - 0.3)}</div>
+    <div>${steps.map((s, i) => `<div class="row step" data-k="fade" data-t="${a[1] - 0.2 + i * 0.08}"><div class="hl"></div>
+      <div class="txt" style="display:grid;grid-template-columns:96px 1fr;gap:8px"><span class="mono muted" style="padding-top:8px">${s[0]}</span>
+      <div><div class="title">${s[1]}</div><div class="lead muted" style="font-size:28px;margin-top:6px">${s[2]}</div></div></div></div>`).join('')}</div>`));
+  ctaSection(2, ['Zacznijmy', 'od rozmowy.'], 'Pierwszy krok to brief. Opowiedz, co chcesz zbudować.', 'no-fuss.house');
+}
+
+const CASE = CASES[SCENE];
+if (CASE) buildCase(CASE); else if (SCENE === 'intro') buildIntro(); else buildProcess();
+const SEC_NAMES = { intro: 'Studio', process: 'Proces' };
+document.getElementById('hudr').textContent = CASE ? `Case ${CASE.no}/05` : SEC_NAMES[SCENE];
+document.getElementById('footr').textContent = CASE ? CASE.kicker.split(' · ')[1] : '2026';
+
+// ---------- render DOM ----------
+const page = document.getElementById('page');
+let yAcc = 0; const secTop = [];
+page.innerHTML = sections.map(s => { secTop.push(yAcc); yAcc += s.h; return `<section class="${s.cls}" style="height:${s.h}px">${s.html}</section>`; }).join('');
+const totalH = yAcc;
+
+// HUD / foot / prog pozycje
+const hud = document.getElementById('hud'); hud.style.top = HUD_Y + 'px';
+const foot = document.getElementById('foot'); foot.style.bottom = (FMT === 'story' ? SAFE_B - 70 : 40) + 'px';
+const pr = document.getElementById('prog'); pr.style.top = (HUD_Y + 60) + 'px'; pr.style.height = (H - HUD_Y - 60 - (FMT === 'story' ? SAFE_B : 100)) + 'px';
+
+// siatka: 3 piony, 2 poziomy, przerwa wokół przecięć, krzyżyki
+(function grid() {
+  const g = document.getElementById('grid'); g.setAttribute('width', W); g.setAttribute('height', H);
+  const xs = [64, W / 2, W - 64], ys = [H / 3, 2 * H / 3], gap = 18, cr = 14;
+  let s = '';
+  const L = 'stroke="rgba(255,255,255,.10)" stroke-width="1.5"', C = 'stroke="rgba(255,255,255,.4)" stroke-width="2"';
+  xs.forEach(x => { let y0 = 0; ys.forEach(y => { s += `<line x1="${x}" y1="${y0}" x2="${x}" y2="${y - gap}" ${L}/>`; y0 = y + gap; }); s += `<line x1="${x}" y1="${y0}" x2="${x}" y2="${H}" ${L}/>`; });
+  ys.forEach(y => { let x0 = 0; xs.forEach(x => { s += `<line x1="${x0}" y1="${y}" x2="${x - gap}" y2="${y}" ${L}/>`; x0 = x + gap; }); s += `<line x1="${x0}" y1="${y}" x2="${W}" y2="${y}" ${L}/>`; });
+  xs.forEach(x => ys.forEach(y => { s += `<line x1="${x - cr}" y1="${y}" x2="${x + cr}" y2="${y}" ${C}/><line x1="${x}" y1="${y - cr}" x2="${x}" y2="${y + cr}" ${C}/>`; }));
+  g.innerHTML = s;
+})();
+
+// ---------- wizualizacje sceny ----------
+let visUpdate = () => {};
+function buildVisual(c) {
+  const vis = document.getElementById('vis'); if (!vis) return;
+  const vw = vis.clientWidth, vh = vis.clientHeight, a = ARR[1];
+  if (c.visual === 'browserPhone' || c.visual === 'browserStrip') {
+    const bw = vw, viewH = Math.round(bw * c.shotRatio), bh = viewH + 64;
+    const by = c.visual === 'browserPhone' ? Math.max(0, (vh - bh) * 0.12) : (vh - bh) / 2;
+    const imgs = c.visual === 'browserStrip' ? c.shots : [c.shot];
+    vis.innerHTML = `<div class="browser" id="br" style="position:absolute;left:0;top:${by}px;width:${bw}px;height:${bh}px">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">${c.url}</span></div>
+      <div class="view" style="height:${viewH}px" id="brv">${imgs.map((s, i) => `<img src="${A + s}" style="left:${i * 100}%">`).join('')}</div></div>`;
+    let ph = null, pw = 0, phH = 0;
+    if (c.visual === 'browserPhone') {
+      pw = Math.round(Math.min(400, vw * 0.42)); phH = Math.round(Math.min(pw * 2.05, vh - by - 40));
+      vis.insertAdjacentHTML('beforeend', `<div class="phone" id="ph" style="width:${pw}px;height:${phH}px;right:${vw * 0.04}px;bottom:0"><div class="island"></div><div class="side"></div><div class="scr"><img id="phi" src="${A + c.phone}"></div></div>`);
+      ph = document.getElementById('ph');
+    }
+    const br = document.getElementById('br'), brv = document.getElementById('brv'), phi = document.getElementById('phi');
+    visUpdate = t => {
+      const p = ease(prog(t, a - 0.6, 1.0));
+      br.style.transform = `translateY(${(1 - p) * 120}px)`; br.style.opacity = p;
+      if (c.visual === 'browserStrip') {
+        // klatki przesuwają się co 0,8 s jak taśma
+        const k = cl((t - (a + 0.3)) / 1.2, 0, imgs.length - 1);
+        const idx = Math.floor(k), f = ease(cl((k - idx) / 0.55 * 1.0));
+        const pos = Math.min(imgs.length - 1, idx + (k - idx > 0.45 ? ease(cl((k - idx - 0.45) / 0.55)) : 0));
+        [...brv.children].forEach((im, i) => im.style.transform = `translateX(${-pos * 100}%)`);
+      }
+      if (ph) {
+        const q = ease(prog(t, a - 0.1, 0.9));
+        ph.style.transform = `translateY(${(1 - q) * (phH + 80)}px)`;
+        const scrW = pw - 28, imgH = scrW * c.phoneRatio, scrH = phH - 28;
+        const s = inout(prog(t, a + 0.7, 3.8));
+        phi.style.transform = `translateY(${-s * Math.min(imgH - scrH, scrH * 3.2)}px)`;
+      }
+    };
+  }
+  if (c.visual === 'ball') {
+    const fw = vw, fh = Math.round(fw * 9 / 16);
+    const fy = Math.max(0, (vh - fh) * 0.08);
+    const pw = Math.round(Math.min(360, vw * 0.38)), phH = Math.round(Math.min(pw * 2.05, vh - fy - fh * 0.55));
+    vis.innerHTML = `<div class="ball-field" id="bf" style="position:absolute;left:0;top:${fy}px;width:${fw}px;height:${fh}px">
+        <div style="position:absolute;left:7%;top:16%;font-weight:400;font-size:${fw * 0.12}px;line-height:1">Open to</div>
+        <div style="position:absolute;right:7%;bottom:14%;font-weight:400;font-size:${fw * 0.12}px;line-height:1">beyond</div>
+        <div class="ball" id="ball" style="width:${fw * 0.22}px;height:${fw * 0.22}px"></div></div>
+      <div class="mono-sm muted" id="bcap" style="position:absolute;right:0;top:${fy + fh + 16}px">Open to beyond · rekonstrukcja w HTML</div>
+      <div class="phone" id="ph" style="width:${pw}px;height:${phH}px;left:${vw * 0.04}px;bottom:0"><div class="island"></div><div class="side"></div><div class="scr"><img id="phi" src="${A + c.phone}"></div></div>`;
+    const bf = document.getElementById('bf'), ball = document.getElementById('ball'), ph = document.getElementById('ph'), phi = document.getElementById('phi');
+    const bd = fw * 0.22;
+    visUpdate = t => {
+      const p = ease(prog(t, a - 0.6, 1.0));
+      bf.style.opacity = p; bf.style.transform = `translateY(${(1 - p) * 100}px)`;
+      const u = (t - a + 0.6) * 0.9;
+      const bx = 0.5 + 0.34 * Math.sin(u * 1.3), byy = 0.5 + 0.28 * Math.sin(u * 2.1 + 0.6);
+      ball.style.left = (bx * fw - bd / 2) + 'px'; ball.style.top = (byy * fh - bd / 2) + 'px';
+      const gx = (1 - bx) * 100, gy = (1 - byy) * 100;
+      bf.style.background = `radial-gradient(60% 80% at ${gx}% ${gy}%, #E24A2C 0%, rgba(226,74,44,0) 70%), radial-gradient(70% 90% at ${bx * 100}% ${100 - gy}%, #2A3BD8 0%, rgba(42,59,216,0) 70%), #CFD6FF`;
+      const q = ease(prog(t, a + 0.6, 0.9));
+      ph.style.transform = `translateY(${(1 - q) * (phH + 80)}px)`;
+      const scrW = pw - 28, imgH = scrW * c.phoneRatio, scrH = phH - 28;
+      phi.style.transform = `translateY(${-inout(prog(t, a + 1.3, 3.2)) * Math.min(imgH - scrH, scrH * 2.4)}px)`;
+    };
+  }
+  if (c.visual === 'phones') {
+    const pw = Math.round(Math.min(vw / 3.25, (vh + 120) / 2.15)), phH = Math.round(pw * 2.16), gap = (vw - pw * 3) / 2;
+    vis.innerHTML = c.screens.map((s, i) => `<div class="phone pp" style="width:${pw}px;height:${phH}px;left:${i * (pw + gap)}px;top:${(vh - phH) / 2 + (i === 1 ? -50 : 60)}px;padding:10px;border-radius:44px"><div class="island" style="top:20px;height:22px"></div><div class="side"></div><div class="scr" style="border-radius:34px"><img src="${A + s}"></div></div>`).join('');
+    const pp = [...vis.querySelectorAll('.pp')];
+    visUpdate = t => pp.forEach((el, i) => {
+      const p = ease(prog(t, a - 0.6 + i * 0.12, 1.2));
+      const fl = Math.sin((t - a) * 1.6 + i) * 8;
+      el.style.transform = `translateY(${(1 - p) * (phH + 200) + fl}px)`;
+    });
+  }
+  if (c.visual === 'toys') {
+    const iw = vw, ih = Math.round(iw * 10 / 16);
+    vis.innerHTML = `<div style="position:absolute;left:0;top:0;width:${iw}px;height:${ih}px;overflow:hidden;background:#101318" id="tv">
+      ${c.toys.map(s => `<img src="${A + s[2]}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0">`).join('')}</div>
+      <div class="mono-sm" id="tcap" style="position:absolute;left:0;top:${ih + 14}px"></div>
+      <div id="tl" style="position:absolute;left:0;right:0;top:${ih + 64}px">${c.toys.map(s => `<div class="row toy" style="padding:10px 0 12px;display:flex;justify-content:space-between;align-items:center"><span class="title txt" style="font-size:40px">${s[0]}</span><span class="tag" style="opacity:0">${s[1]}</span></div>`).join('')}</div>`;
+    const imgs = [...vis.querySelectorAll('#tv img')], rows = [...vis.querySelectorAll('.toy')], tv = document.getElementById('tv');
+    const room = vh - ih - 64; const rowH = rows[0].offsetHeight; const fitN = Math.max(3, Math.floor(room / rowH));
+    rows.forEach((r, i) => { if (i >= fitN) r.style.display = 'none'; });
+    const n = Math.min(fitN, c.toys.length);
+    visUpdate = t => {
+      const p = ease(prog(t, a - 0.6, 1.0)); tv.style.opacity = p; tv.style.transform = `translateY(${(1 - p) * 100}px)`;
+      const k = cl((t - a + 0.2) / ((4.8) / n), 0, n - 0.001), idx = Math.floor(k);
+      imgs.forEach((im, i) => { const o = i === idx ? cl((k - idx) / 0.25) : (i === idx - 1 ? 1 - cl((k - idx) / 0.25) : 0); im.style.opacity = i === 0 && idx === 0 ? 1 : o; });
+      rows.forEach((r, i) => {
+        const on = i === idx; r.querySelector('.txt').style.transform = `translateX(${on ? 12 : 0}px)`;
+        r.querySelector('.txt').style.color = on ? '#101318' : '#3F4A12';
+        r.querySelector('.txt').textContent = c.toys[i][0] + (on ? ' →' : '');
+        r.querySelector('.tag').style.opacity = on ? 1 : 0;
+        r.querySelector('.tag').style.background = '#101318'; r.querySelector('.tag').style.color = '#BBFF00';
+      });
+      document.getElementById('tcap').textContent = c.toys[idx][0] + ' · ' + c.toys[idx][1];
+    };
+  }
+}
+
+// ---------- kamera ----------
+function camY(t) {
+  let y = 0;
+  for (let i = 1; i < ARR.length; i++) {
+    const from = secTop[i - 1], to = secTop[i];
+    const p = inout(prog(t, ARR[i] - 1.1, 1.1));
+    if (t >= ARR[i] - 1.1) y = lerp(from, to, p);
+  }
+  return y;
+}
+
+// ---------- highlight w listach (hover jak w FAQ: limonka + wcięcie 12 px) ----------
+function rowCycle(sel, t, start, step) {
+  const rows = [...document.querySelectorAll(sel)];
+  rows.forEach((r, i) => {
+    const s = start + i * step;
+    const on = ease(prog(t, s, 0.4)) * (1 - ease(prog(t, s + step, 0.4)));
+    const last = i === rows.length - 1 ? ease(prog(t, s, 0.4)) : on;
+    const v = last;
+    r.querySelector('.hl').style.opacity = v;
+    const tx = r.querySelector('.txt'); tx.style.transform = `translateX(${12 * v}px)`;
+    tx.style.color = v > 0.5 ? '#101318' : '';
+    r.querySelectorAll('.muted').forEach(m => m.style.color = v > 0.5 ? '#3F4A12' : '');
+  });
+}
+
+// ---------- render(t) ----------
+let animEls = [];
+window.render = function (t) {
+  // kurtyna z paskiem preloadera
+  const cur = document.getElementById('curtain');
+  cur.querySelector('i').style.width = (ease(prog(t, 0, 0.7)) * 100) + '%';
+  cur.style.transform = `translateY(${-inout(prog(t, 0.65, 0.75)) * 100}%)`;
+  // kamera
+  const y = camY(t);
+  page.style.transform = `translateY(${-y}px)`;
+  document.querySelector('#prog i').style.height = (cl(y / (totalH - H)) * 100) + '%';
+  // reveal
+  for (const el of animEls) {
+    const t0 = +el.dataset.t, k = el.dataset.k;
+    if (k === 'line') { const p = ease(prog(t, t0, 0.9)); el.style.transform = `translateY(${(1 - p) * 105}%)`; }
+    else if (k === 'fade') { const p = ease(prog(t, t0, 0.9)); el.style.opacity = p; el.style.transform = `translateY(${(1 - p) * 16}px)`; }
+    else if (k === 'scr') { el.textContent = scramble(el.dataset.txt, prog(t, t0, 0.42), t); }
+    else if (k === 'wipe') { const p = ease(prog(t, t0, 0.9)); el.style.transform = `scaleX(${p})`; }
+  }
+  visUpdate(t);
+  if (CASE && !CASE.story) rowCycle('.model', t, ARR[2] + 0.6, 1.8);
+  if (SCENE === 'intro') rowCycle('.svc', t, ARR[2] + 0.4, 0.9);
+  if (SCENE === 'process') rowCycle('.step', t, ARR[1] + 0.5, 1.6);
+  // CTA: przycisk pulsuje limonkowym obrysem na końcu
+  return true;
+};
+
+window.DUR = DUR;
+window.ready = (async () => {
+  await document.fonts.load('700 100px "TikTok Sans"'); await document.fonts.load('400 20px "Geist Mono"');
+  await document.fonts.load('500 20px "TikTok Sans"'); await document.fonts.load('400 20px "TikTok Sans"');
+  await document.fonts.ready;
+  // dopasuj tytuł mega do szerokości kolumny
+  document.querySelectorAll('.fit').forEach(el => {
+    let fs = 168; el.style.fontSize = fs + 'px';
+    const max = W - 128;
+    while (el.firstElementChild.scrollWidth > max && fs > 60) { fs -= 4; el.style.fontSize = fs + 'px'; }
+  });
+  buildVisual(CASE || {});
+  await Promise.all([...document.images].map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })));
+  animEls = [...document.querySelectorAll('[data-k]')];
+  window.render(0);
+  return DUR;
+})();
+</script>
+</body>
+</html>

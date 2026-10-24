@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>no-fuss stills</title>
+<style>
+@font-face{font-family:"Geist Mono";font-weight:400;src:url(../fonts/f1.ttf)}
+@font-face{font-family:"TikTok Sans";font-weight:400;src:url(../fonts/f2.ttf)}
+@font-face{font-family:"TikTok Sans";font-weight:500;src:url(../fonts/f3.ttf)}
+@font-face{font-family:"TikTok Sans";font-weight:700;src:url(../fonts/f4.ttf)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#000}
+#s{position:relative;width:1080px;height:1350px;overflow:hidden;font-family:"TikTok Sans",sans-serif}
+.lime{background:#BBFF00;color:#101318;--muted:#3F4A12;--line:rgba(16,19,24,.25)}
+.dark{background:#101318;color:#fff;--muted:#A9ABAD;--line:rgba(255,255,255,.18)}
+.light{background:#FCFCFB;color:#101318;--muted:#5F6369;--line:rgba(16,19,24,.18)}
+.top,.bot{position:absolute;left:64px;right:64px;display:flex;justify-content:space-between;align-items:baseline}
+.top{top:56px}.bot{bottom:56px;flex-direction:column;align-items:stretch;gap:14px}
+.wm{font-weight:700;font-size:36px;line-height:1}
+.mono{font-family:"Geist Mono",monospace;font-size:22px;line-height:30px;text-transform:uppercase}
+.title{font-weight:500;font-size:56px;line-height:1.05}
+.meta{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:14px;color:var(--muted)}
+#vis{position:absolute;left:64px;right:64px;top:150px;bottom:230px}
+.browser{position:absolute;background:#101318;overflow:hidden}
+.dark .browser{outline:1px solid rgba(255,255,255,.12)}
+.chrome{height:52px;display:flex;align-items:center;gap:10px;padding:0 18px}
+.dot{width:12px;height:12px;background:#3a3f47}
+.url{margin-left:14px;flex:1;height:30px;background:#1d2127;color:#A9ABAD;font-family:"Geist Mono",monospace;font-size:16px;line-height:30px;padding:0 12px}
+.browser img{display:block;width:100%}
+.phone{position:absolute;background:#0b0d10;border:3px solid #3a3f47;border-radius:52px;padding:12px}
+.light .phone,.lime .phone{box-shadow:0 30px 60px rgba(16,19,24,.28)}
+.scr{position:relative;width:100%;height:100%;overflow:hidden;border-radius:40px;background:#fff}
+.scr img{position:absolute;left:0;width:100%;display:block}
+.island{position:absolute;left:50%;top:22px;width:30%;height:28px;margin-left:-15%;background:#000;border-radius:20px;z-index:2}
+.tag{background:#BBFF00;color:#101318;padding:2px 10px}
+.lime .tag{background:#101318;color:#BBFF00}
+</style>
+</head>
+<body>
+<div id="s"><div class="top"><span class="wm">no–fuss</span><span class="mono" id="tr"></span></div><div id="vis"></div>
+<div class="bot"><div class="title" id="ti"></div><div class="meta mono"><span id="ml"></span><span id="mr"></span></div></div></div>
+<script>
+const A = '../../../public/assets/';
+const Q = new URLSearchParams(location.search), id = Q.get('id'), v = +Q.get('v');
+// [tło, typ, dane]
+const P = {
+  ah: { no: '01', kind: 'Strona WWW', title: 'Automation House', role: 'Design: Magda · kod: Kuba', year: '06.2026', url: 'www.automation.house',
+    v: [['lime', 'browser', 'automation-house/d-00.webp'], ['dark', 'phones', ['automation-house/m-full.webp', 0], ['automation-house/m-full.webp', 2600]], ['light', 'browserPhone', 'automation-house/d-00.webp', ['automation-house/m-full.webp', 5200]]] },
+  otb: { no: '02', kind: 'Strona WWW', title: 'OTB Ventures', role: 'Design: Magda z Piotrem Chuchłą', year: '06.2025', url: 'otb.vc',
+    v: [['lime', 'browser', 'otb/d-00.webp'], ['dark', 'phones', ['otb/m-00.webp', 0], ['otb/m-03.webp', 0]], ['light', 'browser', 'otb/d-02.webp']] },
+  busybee: { no: '03', kind: 'Strona WWW', title: 'Busy Bee Film', role: 'Design: Magda · kod: M. Gabryelewicz', year: '2024', url: 'www.busybeefilm.pl', note: 'Reklamy: prace Busy Bee Film',
+    v: [['lime', 'browser', 'busybee/d-00.webp'], ['dark', 'phones', ['busybee/m-00.webp', 0], ['busybee/m-02.webp', 0]], ['light', 'browser', 'busybee/d-06.webp']] },
+  ourmoney: { no: '04', kind: 'Aplikacja mobilna', title: 'OurMoney', role: 'Produkt własny Magdy i Kuby', year: '2025–2026',
+    v: [['lime', 'three', ['ourmoney/koperty.png', 'ourmoney/ekran-glowny-rownowaga.webp', 'ourmoney/wspolne-cele-finansowe.webp']],
+        ['dark', 'phones', ['ourmoney/dodawaj-prosto-wydatki.png', 0], ['ourmoney/strona-glowna.png', 0]],
+        ['light', 'phones', ['ourmoney/wspolne-cele.png', 0], ['ourmoney/ekran-glowny-rownowaga.webp', 0]]] },
+  sassy: { no: '05', kind: 'Eksperyment', title: 'Sassy', role: 'Koncept, design i kod: Magda', year: '07.2026', url: 'sassy-tan.vercel.app',
+    v: [['lime', 'browser', 'sassy/d-00.webp'], ['dark', 'phones', ['sassy/m-00.webp', 0], ['sassy/m-03.webp', 0]], ['light', 'browser', 'sassy/d-04.webp']] }
+};
+const p = P[id], [tone, type, ...d] = p.v[v];
+document.getElementById('s').className = tone;
+document.getElementById('tr').innerHTML = `Case ${p.no} · ${p.kind}`;
+document.getElementById('ti').textContent = p.title;
+document.getElementById('ml').textContent = p.role;
+document.getElementById('mr').textContent = p.note ? p.note : p.year;
+const vis = document.getElementById('vis'), vw = 952, vh = 1350 - 150 - 230;
+const browser = (src, w, x, y) => `<div class="browser" style="left:${x}px;top:${y}px;width:${w}px"><div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">${p.url}</span></div><img src="${A + src}"></div>`;
+const phone = (src, off, w, x, y, h = Math.round(w * 2.16)) => `<div class="phone" style="width:${w}px;height:${h}px;left:${x}px;top:${y}px"><div class="island"></div><div class="scr"><img src="${A + src}" style="top:${-off * (w - 30) / 720}px"></div></div>`;
+if (type === 'browser') { const h = vw * 0.625 + 52; vis.innerHTML = browser(d[0], vw, 0, (vh - h) / 2); }
+if (type === 'browserPhone') { const bw = vw * 0.86, h = bw * 0.625 + 52; const pw = 300; vis.innerHTML = browser(d[0], bw, 0, 40) + phone(d[1][0], d[1][1], pw, vw - pw, vh - pw * 2.16); }
+if (type === 'phones') { const pw = Math.min(400, (vh) / 2.16), gap = 48; const x0 = (vw - 2 * pw - gap) / 2;
+  vis.innerHTML = phone(d[0][0], d[0][1], pw, x0, (vh - pw * 2.16) / 2 + 40) + phone(d[1][0], d[1][1], pw, x0 + pw + gap, (vh - pw * 2.16) / 2 - 40); }
+if (type === 'three') { const pw = 290, gap = (vw - 3 * pw) / 2;
+  vis.innerHTML = d[0].map((s, i) => phone(s, 0, pw, i * (pw + gap), (vh - pw * 2.16) / 2 + (i === 1 ? -50 : 50))).join(''); }
+window.ready = (async () => { await document.fonts.ready; await Promise.all([...document.images].map(im => im.complete ? 0 : new Promise(r => im.onload = im.onerror = r))); return true; })();
+</script>
+</body>
+</html>
