@@ -45,7 +45,8 @@ mark b{position:relative;z-index:1;font-weight:inherit}
 .row .txt{position:relative}
 .btn{display:inline-flex;align-items:center;height:96px;padding:0 40px;background:var(--accent);color:var(--on-accent);font-family:var(--sans);font-weight:500;font-size:36px}
 /* fixed layers */
-#grid{position:absolute;inset:0;pointer-events:none;mix-blend-mode:difference;z-index:5}
+.sgrid{position:absolute;inset:0;pointer-events:none;z-index:0}
+section>.inner{z-index:1}
 #hud{position:absolute;left:0;right:0;mix-blend-mode:difference;color:#fff;z-index:6;display:flex;justify-content:space-between;align-items:center;padding:0 var(--G)}
 #hud .wm{font-family:var(--sans);font-weight:700;font-size:36px;line-height:1}
 #prog{position:absolute;right:20px;width:4px;background:rgba(255,255,255,.18);mix-blend-mode:difference;z-index:6}
@@ -74,7 +75,6 @@ mark b{position:relative;z-index:1;font-weight:inherit}
 <body>
 <div id="stage">
   <div id="page"></div>
-  <svg id="grid"></svg>
   <div id="hud"><span class="wm">no–fuss</span><span class="mono" id="hudr"></span></div>
   <div id="prog"><i></i></div>
   <div id="foot" class="mono-sm"><span>no-fuss.house</span><span id="footr"></span></div>
@@ -137,8 +137,8 @@ const CASES = {
     no: '01', kicker: 'Strona WWW · 06.2026', title: 'Automation House',
     lead: 'Rebranding strony: od discovery do wdrożenia.',
     facts: [['Rola no-fuss', 'Design: Magda · kod: Kuba'], ['Klient', 'Automation House by Tigers'], ['Stack', 'Next.js'], ['Wynik', 'Strona działa ↗']],
-    stageLabel: ['01 / Strona na żywo', 'automation.house'], visual: 'browserPhone',
-    shot: 'automation-house/d-00.webp', shotRatio: 875 / 1400, phone: 'automation-house/m-full.webp', phoneRatio: 16000 / 518, url: 'www.automation.house',
+    stageLabel: ['01 / Strona na żywo', 'automation.house'], visual: 'site',
+    desk: ['automation-house/d-00.webp'], shotRatio: 875 / 1400, phone: 'automation-house/m-full.webp', phoneRatio: 16000 / 518, url: 'www.automation.house',
     story: [['Zadanie', 'Ustalić, co firma robi naprawdę i komu to sprzedaje, i pokazać to na nowej stronie.'],
             ['Co zrobiliśmy', 'Warsztaty z zespołem, architektura treści, system wizualny i ekrany (Magda), kod w Next.js (Kuba).'],
             ['Efekt', 'Nowa strona działa pod automation.house. Discovery, projekt i kod zrobił jeden zespół.']],
@@ -148,7 +148,8 @@ const CASES = {
     no: '02', kicker: 'Strona WWW · 06.2025', title: 'OTB Ventures',
     lead: 'Strona funduszu VC: poważna jak fundusz, odważna jak jego portfolio.',
     facts: [['Rola no-fuss', 'Design: Magda z Piotrem Chuchłą'], ['Klient', 'OTB Ventures, fundusz VC'], ['Stack', 'WordPress'], ['Wynik', 'Strona działa: otb.vc ↗']],
-    stageLabel: ['01 / Open to beyond', 'rekonstrukcja w HTML'], visual: 'ball',
+    stageLabel: ['01 / Strona na żywo', 'otb.vc'], visual: 'site', url: 'otb.vc',
+    desk: ['otb/d-00.webp', 'otb/d-01.webp', 'otb/d-02.webp', 'otb/d-03.webp', 'otb/d-04.webp', 'otb/d-05.webp'], crop: 0.07, shotRatio: 1000 / 1600,
     phone: 'otb/m-full.webp', phoneRatio: 13756 / 720,
     story: [['Zadanie', 'OTB inwestuje w europejskie startupy z AI, SpaceTech i Physical AI. Strona ma to unieść.'],
             ['Co zrobiliśmy', 'Projekt wokół jednego elementu: gradientu czerwień–błękit i kuli, która przecina nagłówek „Open to beyond”.'],
@@ -159,8 +160,9 @@ const CASES = {
     no: '03', kicker: 'Strona WWW · 2024', title: 'Busy Bee',
     lead: 'Strona domu produkcyjnego, która robi jedno: pokazuje prace i prowadzi do kontaktu.',
     facts: [['Rola no-fuss', 'Design: Magda'], ['Kod', 'Michał Gabryelewicz · Webflow'], ['Klient', 'Busy Bee Film, Warszawa'], ['Wynik', 'Strona działa ↗']],
-    stageLabel: ['01 / Strona na żywo', 'Reklamy: prace Busy Bee Film'], visual: 'browserStrip',
-    shots: ['busybee/d-00.webp', 'busybee/d-02.webp', 'busybee/d-03.webp', 'busybee/d-06.webp'], shotRatio: 1000 / 1600, url: 'www.busybeefilm.pl',
+    stageLabel: ['01 / Strona na żywo', 'Reklamy: prace Busy Bee Film'], visual: 'site',
+    desk: ['busybee/d-00.webp', 'busybee/d-02.webp', 'busybee/d-03.webp', 'busybee/d-05.webp', 'busybee/d-06.webp'], crop: 0.05, shotRatio: 1000 / 1600, url: 'www.busybeefilm.pl',
+    phone: 'busybee/m-full.webp', phoneRatio: 11699 / 720,
     story: [['Zadanie', 'Pokazać prace i doprowadzić do kontaktu, bez zakładek, których nikt nie czyta.'],
             ['Co zrobiliśmy', 'Kadr z produkcji na pierwszym ekranie, realizacje w rytmie zamiast siatki kafelków, na końcu konkretne osoby z kontaktem.'],
             ['Efekt', 'Strona działa pod busybeefilm.pl, na komputerze i na telefonie.']],
@@ -172,6 +174,7 @@ const CASES = {
     facts: [['Rola no-fuss', 'Produkt własny Magdy i Kuby'], ['Zakres', 'Design i produkt: Magda · kod: Kuba'], ['Dla kogo', 'Pary 25–40'], ['Status', 'Przed premierą w sklepach']],
     stageLabel: ['01 / Aplikacja', 'ourmoney.pl'], visual: 'phones',
     screens: ['ourmoney/koperty.png', 'ourmoney/ekran-glowny-rownowaga.webp', 'ourmoney/wspolne-cele-finansowe.webp'],
+    flow: ['ourmoney/ekran-glowny-rownowaga.webp', 'ourmoney/dodawaj-prosto-wydatki.png', 'ourmoney/koperty.png', 'ourmoney/wspolne-cele.png'],
     models: ['Po równo', 'Proporcjonalnie', 'Tylko śledzenie'],
     path: 'no-fuss.house/ourmoney'
   },
@@ -179,7 +182,9 @@ const CASES = {
     no: '05', kicker: 'Eksperyment · 07.2026', title: 'Sassy',
     lead: 'Strona bez celu w jednym pliku HTML. Wszystko da się złapać i przesunąć.',
     facts: [['Rola', 'Koncept, design i kod: Magda'], ['Typ', 'Projekt własny, eksperyment'], ['Stack', 'Jeden plik HTML'], ['Wynik', 'Strona działa ↗']],
-    stageLabel: ['01 / Wszystko da się złapać', 'sassy-tan.vercel.app'], visual: 'toys',
+    stageLabel: ['01 / Strona na żywo', 'sassy-tan.vercel.app'], visual: 'site', url: 'sassy-tan.vercel.app',
+    desk: ['sassy/d-00.webp', 'sassy/d-01.webp', 'sassy/d-02.webp', 'sassy/d-03.webp', 'sassy/d-04.webp', 'sassy/d-06.webp', 'sassy/d-07.webp', 'sassy/d-09.webp'], crop: 0.05, shotRatio: 1000 / 1600,
+    phoneShots: ['sassy/m-00.webp', 'sassy/m-03.webp'],
     toys: [['Pulpit', 'kamera', 'sassy/d-00.webp'], ['Biurko', 'bento', 'sassy/d-01.webp'], ['Business case', 'suwak', 'sassy/d-02.webp'],
            ['Waga', 'SERIOUS', 'sassy/d-04.webp'], ['Karteczki', 'tablica', 'sassy/d-06.webp'], ['Koniec', 'gra', 'sassy/d-09.webp']],
     story: [['Zadanie', 'Warsztat, nie zlecenie: ile zabawy i interakcji udźwignie jedna strona bez frameworków.'],
@@ -208,11 +213,11 @@ function ctaSection(i, title, text, path) {
       ${fade(`<p class="lead muted" style="margin-top:28px;max-width:16em">${text}</p>`, a + 0.15)}
       ${fade(`<div style="margin-top:44px;display:flex;gap:16px;flex-wrap:wrap"><span class="btn" id="cta">Porozmawiajmy →</span></div>`, a + 0.3)}
     </div>
-    <div>${fade(`<div class="fact mono-sm"><dt>Mail</dt><dd>general@no-fuss.house</dd></div><div class="fact mono-sm"><dt>Zobacz</dt><dd>${path} ↗</dd></div>`, a + 0.45)}</div>`));
+    <div>${fade(`<div class="fact mono-sm"><dt>Mail</dt><dd>magdanestor@gmail.com</dd></div><div class="fact mono-sm"><dt>Zobacz</dt><dd>${path} ↗</dd></div>`, a + 0.45)}</div>`));
 }
 
 function buildCase(c) {
-  ARR = [T0, 7.4, 13.4, 21.4]; DUR = 25;
+  ARR = [T0, 7.4, 15.4, 23.4]; DUR = 27;
   const a = ARR;
   // 1. hero
   sec('dark', inner(`
@@ -292,7 +297,8 @@ document.getElementById('footr').textContent = CASE ? CASE.kicker.split(' · ')[
 // ---------- render DOM ----------
 const page = document.getElementById('page');
 let yAcc = 0; const secTop = [];
-page.innerHTML = sections.map(s => { secTop.push(yAcc); yAcc += s.h; return `<section class="${s.cls}" style="height:${s.h}px">${s.html}</section>`; }).join('');
+const GRID = h => `<svg class="sgrid" width="${W}" height="${h}">${[64, W / 2, W - 64].map(x => `<line x1="${x}" y1="0" x2="${x}" y2="${h}" stroke="currentColor" stroke-opacity=".07" stroke-width="1.5"/>`).join('')}</svg>`;
+page.innerHTML = sections.map(s => { secTop.push(yAcc); yAcc += s.h; return `<section class="${s.cls}" style="height:${s.h}px">${GRID(s.h)}${s.html}</section>`; }).join('');
 const totalH = yAcc;
 
 // HUD / foot / prog pozycje
@@ -300,91 +306,66 @@ const hud = document.getElementById('hud'); hud.style.top = HUD_Y + 'px';
 const foot = document.getElementById('foot'); foot.style.bottom = (FMT === 'story' ? SAFE_B - 70 : 40) + 'px';
 const pr = document.getElementById('prog'); pr.style.top = (HUD_Y + 60) + 'px'; pr.style.height = (H - HUD_Y - 60 - (FMT === 'story' ? SAFE_B : 100)) + 'px';
 
-// siatka: 3 piony, 2 poziomy, przerwa wokół przecięć, krzyżyki
-(function grid() {
-  const g = document.getElementById('grid'); g.setAttribute('width', W); g.setAttribute('height', H);
-  const xs = [64, W / 2, W - 64], ys = [H / 3, 2 * H / 3], gap = 18, cr = 14;
-  let s = '';
-  const L = 'stroke="rgba(255,255,255,.10)" stroke-width="1.5"', C = 'stroke="rgba(255,255,255,.4)" stroke-width="2"';
-  xs.forEach(x => { let y0 = 0; ys.forEach(y => { s += `<line x1="${x}" y1="${y0}" x2="${x}" y2="${y - gap}" ${L}/>`; y0 = y + gap; }); s += `<line x1="${x}" y1="${y0}" x2="${x}" y2="${H}" ${L}/>`; });
-  ys.forEach(y => { let x0 = 0; xs.forEach(x => { s += `<line x1="${x0}" y1="${y}" x2="${x - gap}" y2="${y}" ${L}/>`; x0 = x + gap; }); s += `<line x1="${x0}" y1="${y}" x2="${W}" y2="${y}" ${L}/>`; });
-  xs.forEach(x => ys.forEach(y => { s += `<line x1="${x - cr}" y1="${y}" x2="${x + cr}" y2="${y}" ${C}/><line x1="${x}" y1="${y - cr}" x2="${x}" y2="${y + cr}" ${C}/>`; }));
-  g.innerHTML = s;
-})();
+// siatka: tylko 3 piony, w każdej sekcji pod treścią (decyzja Magdy 2026-10-26: mniej linii, nic nie zasłaniają)
+
 
 // ---------- wizualizacje sceny ----------
 let visUpdate = () => {};
 function buildVisual(c) {
   const vis = document.getElementById('vis'); if (!vis) return;
   const vw = vis.clientWidth, vh = vis.clientHeight, a = ARR[1];
-  if (c.visual === 'browserPhone' || c.visual === 'browserStrip') {
-    const bw = vw, viewH = Math.round(bw * c.shotRatio), bh = viewH + 64;
-    const by = c.visual === 'browserPhone' ? Math.max(0, (vh - bh) * 0.12) : (vh - bh) / 2;
-    const imgs = c.visual === 'browserStrip' ? c.shots : [c.shot];
-    vis.innerHTML = `<div class="browser" id="br" style="position:absolute;left:0;top:${by}px;width:${bw}px;height:${bh}px">
+  if (c.visual === 'site') {
+    // przeglądarka: zrzuty kolejnych sekcji sklejone w jedną stronę (od drugiego obcięty powtarzający się nagłówek)
+    const bw = vw, viewH = Math.round(bw * c.shotRatio), bh = viewH + 64, crop = c.crop || 0;
+    const hs = c.desk.map((_, i) => i === 0 ? viewH : viewH * (1 - crop));
+    const tops = hs.map((_, i) => hs.slice(0, i).reduce((x, y) => x + y, 0));
+    vis.innerHTML = `<div class="browser" id="br" style="position:absolute;left:0;top:0;width:${bw}px;height:${bh}px">
       <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">${c.url}</span></div>
-      <div class="view" style="height:${viewH}px" id="brv">${imgs.map((s, i) => `<img src="${A + s}" style="left:${i * 100}%">`).join('')}</div></div>`;
-    let ph = null, pw = 0, phH = 0;
-    if (c.visual === 'browserPhone') {
-      pw = Math.round(Math.min(400, vw * 0.42)); phH = Math.round(Math.min(pw * 2.05, vh - by - 40));
-      vis.insertAdjacentHTML('beforeend', `<div class="phone" id="ph" style="width:${pw}px;height:${phH}px;right:${vw * 0.04}px;bottom:0"><div class="island"></div><div class="side"></div><div class="scr"><img id="phi" src="${A + c.phone}"></div></div>`);
-      ph = document.getElementById('ph');
-    }
-    const br = document.getElementById('br'), brv = document.getElementById('brv'), phi = document.getElementById('phi');
+      <div class="view" style="height:${viewH}px"><div id="strip" style="position:absolute;left:0;top:0;width:100%">${c.desk.map((src, i) =>
+        `<div style="position:relative;height:${hs[i]}px;overflow:hidden"><img src="${A + src}" style="position:absolute;left:0;top:${i === 0 ? 0 : -viewH * crop}px;width:100%"></div>`).join('')}</div></div></div>`;
+    const pw = Math.round(Math.min(310, vw * 0.31)), phH = Math.round(Math.min(pw * 2.05, vh - viewH * 0.68));
+    const shots = c.phoneShots || [c.phone];
+    vis.insertAdjacentHTML('beforeend', `<div class="phone" id="ph" style="width:${pw}px;height:${phH}px;right:${vw * 0.03}px;bottom:0"><div class="island"></div><div class="side"></div><div class="scr" id="phs">${shots.map((src, i) =>
+      `<img src="${A + src}" style="left:${i * 100}%">`).join('')}</div></div>`);
+    const br = document.getElementById('br'), strip = document.getElementById('strip'), ph = document.getElementById('ph'), phs = [...document.querySelectorAll('#phs img')];
+    const hold0 = a + 0.5, hold1 = ARR[2] - 1.4, n = c.desk.length;
     visUpdate = t => {
       const p = ease(prog(t, a - 0.6, 1.0));
       br.style.transform = `translateY(${(1 - p) * 120}px)`; br.style.opacity = p;
-      if (c.visual === 'browserStrip') {
-        // klatki przesuwają się co 0,8 s jak taśma
-        const k = cl((t - (a + 0.3)) / 1.2, 0, imgs.length - 1);
-        const idx = Math.floor(k), f = ease(cl((k - idx) / 0.55 * 1.0));
-        const pos = Math.min(imgs.length - 1, idx + (k - idx > 0.45 ? ease(cl((k - idx - 0.45) / 0.55)) : 0));
-        [...brv.children].forEach((im, i) => im.style.transform = `translateX(${-pos * 100}%)`);
+      if (n > 1) {
+        // przewijanie sekcja po sekcji: 0,9 s ruchu, potem pauza na przeczytanie
+        const seg = (hold1 - hold0) / (n - 1), k = cl((t - hold0) / seg, 0, n - 1), i = Math.floor(k);
+        const y = i >= n - 1 ? tops[n - 1] : lerp(tops[i], tops[i + 1], inout(cl((k - i) * seg / 0.9)));
+        strip.style.transform = `translateY(${-y}px)`;
+      } else {
+        strip.style.transform = `scale(${1 + 0.06 * inout(prog(t, hold0, hold1 - hold0))})`; strip.style.transformOrigin = '30% 20%';
       }
-      if (ph) {
-        const q = ease(prog(t, a - 0.1, 0.9));
-        ph.style.transform = `translateY(${(1 - q) * (phH + 80)}px)`;
-        const scrW = pw - 28, imgH = scrW * c.phoneRatio, scrH = phH - 28;
-        const s = inout(prog(t, a + 0.7, 3.8));
-        phi.style.transform = `translateY(${-s * Math.min(imgH - scrH, scrH * 3.2)}px)`;
-      }
-    };
-  }
-  if (c.visual === 'ball') {
-    const fw = vw, fh = Math.round(fw * 9 / 16);
-    const fy = Math.max(0, (vh - fh) * 0.08);
-    const pw = Math.round(Math.min(360, vw * 0.38)), phH = Math.round(Math.min(pw * 2.05, vh - fy - fh * 0.55));
-    vis.innerHTML = `<div class="ball-field" id="bf" style="position:absolute;left:0;top:${fy}px;width:${fw}px;height:${fh}px">
-        <div style="position:absolute;left:7%;top:16%;font-weight:400;font-size:${fw * 0.12}px;line-height:1">Open to</div>
-        <div style="position:absolute;right:7%;bottom:14%;font-weight:400;font-size:${fw * 0.12}px;line-height:1">beyond</div>
-        <div class="ball" id="ball" style="width:${fw * 0.22}px;height:${fw * 0.22}px"></div></div>
-      <div class="mono-sm muted" id="bcap" style="position:absolute;right:0;top:${fy + fh + 16}px">Open to beyond · rekonstrukcja w HTML</div>
-      <div class="phone" id="ph" style="width:${pw}px;height:${phH}px;left:${vw * 0.04}px;bottom:0"><div class="island"></div><div class="side"></div><div class="scr"><img id="phi" src="${A + c.phone}"></div></div>`;
-    const bf = document.getElementById('bf'), ball = document.getElementById('ball'), ph = document.getElementById('ph'), phi = document.getElementById('phi');
-    const bd = fw * 0.22;
-    visUpdate = t => {
-      const p = ease(prog(t, a - 0.6, 1.0));
-      bf.style.opacity = p; bf.style.transform = `translateY(${(1 - p) * 100}px)`;
-      const u = (t - a + 0.6) * 0.9;
-      const bx = 0.5 + 0.34 * Math.sin(u * 1.3), byy = 0.5 + 0.28 * Math.sin(u * 2.1 + 0.6);
-      ball.style.left = (bx * fw - bd / 2) + 'px'; ball.style.top = (byy * fh - bd / 2) + 'px';
-      const gx = (1 - bx) * 100, gy = (1 - byy) * 100;
-      bf.style.background = `radial-gradient(60% 80% at ${gx}% ${gy}%, #E24A2C 0%, rgba(226,74,44,0) 70%), radial-gradient(70% 90% at ${bx * 100}% ${100 - gy}%, #2A3BD8 0%, rgba(42,59,216,0) 70%), #CFD6FF`;
-      const q = ease(prog(t, a + 0.6, 0.9));
+      const q = ease(prog(t, a - 0.1, 0.9));
       ph.style.transform = `translateY(${(1 - q) * (phH + 80)}px)`;
-      const scrW = pw - 28, imgH = scrW * c.phoneRatio, scrH = phH - 28;
-      phi.style.transform = `translateY(${-inout(prog(t, a + 1.3, 3.2)) * Math.min(imgH - scrH, scrH * 2.4)}px)`;
+      const scrW = pw - 28, scrH = phH - 28;
+      if (c.phoneShots) {
+        const m = shots.length, seg = (hold1 - hold0) / m, k = cl((t - hold0 - seg * 0.6) / seg, 0, m - 1), i = Math.floor(k);
+        const x = i >= m - 1 ? m - 1 : i + inout(cl((k - i) * seg / 0.8));
+        phs.forEach(im => im.style.transform = `translateX(${-x * 100}%)`);
+      } else {
+        const imgH = scrW * c.phoneRatio;
+        phs[0].style.transform = `translateY(${-inout(prog(t, hold0 + 0.3, hold1 - hold0)) * Math.min(imgH - scrH, scrH * 5)}px)`;
+      }
     };
   }
   if (c.visual === 'phones') {
     const pw = Math.round(Math.min(vw / 3.25, (vh + 120) / 2.15)), phH = Math.round(pw * 2.16), gap = (vw - pw * 3) / 2;
     vis.innerHTML = c.screens.map((s, i) => `<div class="phone pp" style="width:${pw}px;height:${phH}px;left:${i * (pw + gap)}px;top:${(vh - phH) / 2 + (i === 1 ? -50 : 60)}px;padding:10px;border-radius:44px"><div class="island" style="top:20px;height:22px"></div><div class="side"></div><div class="scr" style="border-radius:34px"><img src="${A + s}"></div></div>`).join('');
     const pp = [...vis.querySelectorAll('.pp')];
-    visUpdate = t => pp.forEach((el, i) => {
+    const mid = pp[1].querySelector('.scr'); mid.innerHTML = c.flow.map((src, i) => `<img src="${A + src}" style="left:${i * 100}%">`).join('');
+    const fl = [...mid.querySelectorAll('img')], hold0 = a + 0.6, seg = (ARR[2] - 1.4 - hold0) / (c.flow.length - 1);
+    visUpdate = t => { const k = cl((t - hold0) / seg, 0, c.flow.length - 1), i = Math.floor(k);
+      const x = i >= c.flow.length - 1 ? i : i + inout(cl((k - i) * seg / 0.7));
+      fl.forEach(im => im.style.transform = `translateX(${-x * 100}%)`); pp.forEach((el, i) => {
       const p = ease(prog(t, a - 0.6 + i * 0.12, 1.2));
       const fl = Math.sin((t - a) * 1.6 + i) * 8;
       el.style.transform = `translateY(${(1 - p) * (phH + 200) + fl}px)`;
-    });
+    }); };
   }
   if (c.visual === 'toys') {
     const iw = vw, ih = Math.round(iw * 10 / 16);

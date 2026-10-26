@@ -9,14 +9,14 @@ Siedem postów w cztery tygodnie, od wtorku 2026-10-27 do wtorku 2026-11-17. Do 
 3. **AION MIND celowo pominięty.** To etat Magdy, nie projekt no-fuss, i strona studia sama to zaznacza. Post o nim jako „showcase no-fuss” przeczyłby tej zasadzie. Do tego potrzebna byłaby zgoda AION.
 4. **Uczciwe role zostają w każdym poście:** OTB to projekt Magdy razem z Piotrem Chuchłą (oznacz go), w Busy Bee kodował Michał Gabryelewicz (oznacz go), a marki na stronie Busy Bee to klienci Busy Bee Film. Animacje mają to wpisane w fakty i podpisy.
 5. **Liczby:** w animacjach i tekstach nie ma liczb ani wyników, których nie ma na stronie no-fuss. Pominąłem „152 polityki bezpieczeństwa” z case'u OurMoney: wiki nie ma tej liczby sprawdzonej w kodzie.
-6. **Brak kalendarza w CTA.** W kodzie strony nadal nie ma linku do umawiania rozmowy (`calendarUrl: null`), więc CTA w animacjach to „Porozmawiajmy →” i mail `general@no-fuss.house`.
+6. **Brak kalendarza w CTA.** W kodzie strony nadal nie ma linku do umawiania rozmowy (`calendarUrl: null`), więc CTA w animacjach to „Porozmawiajmy →” i mail `magdanestor@gmail.com`.
 
 ## Formaty
 
 | Plik | Wymiar | Gdzie |
 |---|---|---|
-| `<scena>-feed.mp4` | 1080×1350 (4:5), 20–25 s | post wideo na LinkedInie, post w feedzie na Instagramie |
-| `<scena>-story.mp4` | 1080×1920 (9:16), 20–25 s | Instagram Reels i Stories (górne ~250 px i dolne ~420 px trzymam puste pod interfejs aplikacji) |
+| `<scena>-feed.mp4` | 1080×1350 (4:5), 20–27 s | post wideo na LinkedInie, post w feedzie na Instagramie |
+| `<scena>-story.mp4` | 1080×1920 (9:16), 20–27 s | Instagram Reels i Stories (górne ~250 px i dolne ~420 px trzymam puste pod interfejs aplikacji) |
 | `<scena>-feed-cover.png`, `<scena>-story-cover.png` | jak wyżej | miniatura na LinkedInie, okładka Reelsa (inaczej pierwszą klatką byłby ekran ładowania) |
 
 **Stille** (`stille/<projekt>-1..3.png`, 1080×1350): po trzy kadry na projekt. Pierwszy to przeglądarka na limonce, drugi telefony na ciemnym tle, trzeci drugi widok na jasnym. Tekstu jest minimum: nazwa, rola i rok. Każda trójka to gotowa karuzela: post z wieloma zdjęciami na LinkedInie, karuzela na Instagramie. Proponuję wrzucać je jako drugi post tego samego projektu, tydzień po filmie (np. w poniedziałek), albo pierwszy kadr jako post, a resztę w Stories. Na stillach Busy Bee stoi podpis „Reklamy: prace Busy Bee Film”, bo zrzuty pokazują reklamy marek, dla których pracował Busy Bee Film.
@@ -53,7 +53,7 @@ Rytm: wtorek i czwartek, rano. [Guessing] Godzinę dopasuj po dwóch tygodniach 
 >
 > Przez najbliższe tygodnie pokażę tu nasze realizacje: co było zadaniem, co zrobiliśmy i co z tego wyszło.
 >
-> Jeśli macie produkt do zbudowania: general@no-fuss.house
+> Jeśli macie produkt do zbudowania: magdanestor@gmail.com
 > no-fuss.house
 
 **Instagram**
@@ -110,7 +110,7 @@ Rytm: wtorek i czwartek, rano. [Guessing] Godzinę dopasuj po dwóch tygodniach 
 > 03 Budowa w iteracjach. Design i kod w jednym zespole, małymi krokami, z działającą wersją po drodze.
 > 04 Wdrożenie i wsparcie. Publikujemy stronę albo wydajemy aplikację i zostajemy: poprawki, metryki, kolejne wersje.
 >
-> Zaczynamy zawsze od rozmowy: general@no-fuss.house
+> Zaczynamy zawsze od rozmowy: magdanestor@gmail.com
 
 **Instagram**
 
