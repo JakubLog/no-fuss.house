@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Skrypty renderujące posty social (Node + Playwright), poza aplikacją.
+    "docs/**",
   ]),
 ]);
 
