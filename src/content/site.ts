@@ -57,8 +57,8 @@ export const site = {
    * `/o-nas#social`, JSON-LD i `public/llms.txt`. Placeholdery `[…]` do podmiany.
    */
   contact: {
-    /** Wspólna skrzynka studia (stopka, `/o-nas#social`, JSON-LD `Organization.email`, `llms.txt`). */
-    email: "general@no-fuss.house",
+    /** Adres kontaktowy studia (stopka, `/o-nas#social`, JSON-LD `Organization.email`, `llms.txt`). Skrzynka Magdy, decyzja z 2026-10-26. */
+    email: "magdanestor@gmail.com",
     // link do Google Calendar appointment schedule, poda Kuba
     calendarUrl: null,
     /** Zdanie pod CTA. Placeholder (`[…]`) się nie renderuje (`isPlaceholder`). */
