@@ -29,3 +29,6 @@ pnpm-debug.log*
 
 # makiety i surowe eksporty wideo (źródła poza Next.js, kilkadziesiąt MB)
 mockups/
+
+# rendery postów social (MP4 odtwarzalne z docs/social)
+docs/social/out/

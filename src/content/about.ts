@@ -200,8 +200,8 @@ export const findUs = {
   lead: "Wspólne konta studia. Profile osobiste są przy kartach wyżej.",
   ariaLabel: "Social media no-fuss",
   items: [
-    { title: "Instagram", meta: "↗", href: null },
-    { title: "LinkedIn", meta: "↗", href: null },
+    { title: "Instagram", meta: "↗", href: "https://www.instagram.com/nofuss.house" },
+    { title: "LinkedIn", meta: "↗", href: "https://www.linkedin.com/company/no-fuss" },
     { title: "Behance", meta: "↗", href: null },
     { title: "GitHub", meta: "↗", href: null },
   ],

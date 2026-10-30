@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>no-fuss social</title>
+<style>
+@font-face{font-family:"Geist Mono";font-weight:400;src:url(../fonts/f1.ttf)}
+@font-face{font-family:"TikTok Sans";font-weight:400;src:url(../fonts/f2.ttf)}
+@font-face{font-family:"TikTok Sans";font-weight:500;src:url(../fonts/f3.ttf)}
+@font-face{font-family:"TikTok Sans";font-weight:700;src:url(../fonts/f4.ttf)}
+:root{
+  --dark:#101318;--light:#FCFCFB;--shade:#15181D;--shade7:#272A2F;--accent:#BBFF00;--on-accent:#101318;
+  --muted-l:#5F6369;--muted-d:#A9ABAD;--sans:"TikTok Sans",Arial,sans-serif;--mono:"Geist Mono",monospace;
+  --G:64px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#000}
+#stage{position:relative;overflow:hidden;background:var(--dark);font-family:var(--sans);color:#fff}
+#page{position:absolute;left:0;top:0;width:100%;will-change:transform}
+section{position:relative;width:100%;overflow:hidden}
+.dark{background:var(--dark);color:#fff;--ink:#fff;--muted:var(--muted-d);--line:rgba(255,255,255,.18)}
+.light{background:var(--light);color:var(--dark);--ink:var(--dark);--muted:var(--muted-l);--line:rgba(16,19,24,.18)}
+.lime{background:var(--accent);color:var(--on-accent);--ink:var(--on-accent);--muted:#3F4A12;--line:rgba(16,19,24,.25)}
+.inner{position:absolute;left:var(--G);right:var(--G);display:flex;flex-direction:column}
+.mono{font-family:var(--mono);font-size:24px;line-height:32px;text-transform:uppercase;letter-spacing:normal}
+.mono-sm{font-family:var(--mono);font-size:20px;line-height:28px;text-transform:uppercase}
+.mega{font-weight:700;font-size:168px;line-height:.9;text-transform:uppercase;white-space:nowrap}
+.display{font-weight:700;font-size:112px;line-height:1;text-transform:uppercase}
+.h2{font-weight:700;font-size:76px;line-height:1;text-transform:uppercase}
+.statement{font-weight:400;font-size:54px;line-height:1.1}
+.title{font-weight:500;font-size:44px;line-height:1.15}
+.lead{font-weight:400;font-size:33px;line-height:1.35}
+.muted{color:var(--muted)}
+.tag{display:inline-block;background:var(--accent);color:var(--on-accent);font-family:var(--mono);font-size:20px;line-height:28px;padding:4px 12px;text-transform:uppercase}
+.mask{overflow:hidden;display:block}
+.mask>span{display:block;will-change:transform}
+mark{background:none;color:inherit;position:relative;display:inline-block;padding:0 .06em}
+mark i{position:absolute;inset:.04em 0 .02em 0;background:var(--accent);transform-origin:right center;z-index:0}
+mark b{position:relative;z-index:1;font-weight:inherit}
+.fact{display:grid;grid-template-columns:34% 1fr;gap:16px;border-top:1px solid var(--line);padding:14px 0 16px}
+.fact dt{color:var(--muted)}
+.row{border-top:1px solid var(--line);padding:18px 0 22px;position:relative}
+.row:last-child{border-bottom:1px solid var(--line)}
+.row .hl{position:absolute;inset:0;background:var(--accent);opacity:0}
+.row .txt{position:relative}
+.btn{display:inline-flex;align-items:center;height:96px;padding:0 40px;background:var(--accent);color:var(--on-accent);font-family:var(--sans);font-weight:500;font-size:36px}
+/* fixed layers */
+.sgrid{position:absolute;inset:0;pointer-events:none;z-index:0}
+section>.inner{z-index:1}
+#hud{position:absolute;left:0;right:0;mix-blend-mode:difference;color:#fff;z-index:6;display:flex;justify-content:space-between;align-items:center;padding:0 var(--G)}
+#hud .wm{font-family:var(--sans);font-weight:700;font-size:36px;line-height:1}
+#prog{position:absolute;right:20px;width:4px;background:rgba(255,255,255,.18);mix-blend-mode:difference;z-index:6}
+#prog i{position:absolute;left:0;top:0;width:100%;background:#fff}
+#foot{position:absolute;left:0;right:0;mix-blend-mode:difference;color:#fff;z-index:6;display:flex;justify-content:space-between;padding:0 var(--G)}
+#curtain{position:absolute;inset:0;background:var(--dark);z-index:9;display:flex;align-items:center;justify-content:center}
+#curtain .bar{width:220px;height:8px;background:rgba(255,255,255,.25);position:relative}
+#curtain .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--accent)}
+/* devices */
+.browser{background:var(--dark);position:relative;overflow:hidden}
+.browser .chrome{height:64px;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid rgba(255,255,255,.08)}
+.browser .dot{width:14px;height:14px;background:#3a3f47}
+.browser .url{margin-left:16px;flex:1;height:36px;background:#1d2127;color:var(--muted-d);font-family:var(--mono);font-size:18px;line-height:36px;padding:0 14px;text-transform:lowercase}
+.browser .view{position:relative;overflow:hidden}
+.browser .view img{position:absolute;left:0;top:0;width:100%;display:block}
+.phone{position:absolute;background:#0b0d10;border:3px solid #3a3f47;border-radius:58px;padding:14px;box-shadow:0 30px 60px rgba(16,19,24,.35)}
+.phone .scr{position:relative;width:100%;height:100%;overflow:hidden;border-radius:44px;background:#fff}
+.phone .scr img{position:absolute;left:0;top:0;width:100%;display:block}
+.phone .island{position:absolute;left:50%;top:26px;width:30%;height:30px;margin-left:-15%;background:#000;border-radius:20px;z-index:2}
+.phone .side{position:absolute;right:-7px;top:22%;width:4px;height:12%;background:#3a3f47;border-radius:2px}
+.ball-field{position:relative;overflow:hidden;color:#fff}
+.ball{position:absolute;border-radius:50%;background:linear-gradient(160deg,#E24A2C,#2A3BD8)}
+.sticker{position:absolute;border-radius:50%;background:var(--accent);border:6px solid #fff;color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:22px;text-transform:uppercase;text-align:center;line-height:1.1}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="page"></div>
+  <div id="hud"><span class="wm">no–fuss</span><span class="mono" id="hudr"></span></div>
+  <div id="prog"><i></i></div>
+  <div id="foot" class="mono-sm"><span>no-fuss.house</span><span id="footr"></span></div>
+  <div id="curtain"><div class="bar"><i></i></div></div>
+</div>
+<script>
+// ---------- params ----------
+const Q = new URLSearchParams(location.search);
+const SCENE = Q.get('scene') || 'ah';
+const FMT = Q.get('fmt') || 'feed';
+const W = 1080, H = FMT === 'story' ? 1920 : 1350;
+// story = Reels / Stories: górne ~250 px i dolne ~420 px zasłania UI aplikacji
+const SAFE_T = FMT === 'story' ? 250 : 64, SAFE_B = FMT === 'story' ? 420 : 116;
+const HUD_Y = FMT === 'story' ? 170 : 48;
+const A = '../../../public/assets/';
+const stage = document.getElementById('stage');
+stage.style.width = W + 'px'; stage.style.height = H + 'px';
+
+// ---------- easing ----------
+function bez(x1, y1, x2, y2) {
+  return function (x) {
+    if (x <= 0) return 0; if (x >= 1) return 1;
+    let t = x;
+    for (let i = 0; i < 8; i++) {
+      const cx = 3 * x1 * t * (1 - t) ** 2 + 3 * x2 * t * t * (1 - t) + t ** 3 - x;
+      const d = 3 * x1 * (1 - t) ** 2 + 6 * (x2 - x1) * t * (1 - t) + 3 * (1 - x2) * t * t;
+      if (Math.abs(d) < 1e-6) break; t -= cx / d; t = Math.min(1, Math.max(0, t));
+    }
+    return 3 * y1 * t * (1 - t) ** 2 + 3 * y2 * t * t * (1 - t) + t ** 3;
+  };
+}
+const ease = bez(0.16, 1, 0.3, 1);        // --ease z DESIGN.md
+const inout = bez(0.65, 0, 0.35, 1);
+const cl = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, a, d) => cl((t - a) / d);
+const lerp = (a, b, p) => a + (b - a) * p;
+
+// ---------- scramble (420 ms, znaki z DESIGN.md) ----------
+const SCR = '!<>-_\\/[]{}=+*^?#%';
+function scramble(txt, p, t) {
+  const n = txt.length, k = Math.floor(p * n);
+  let o = '';
+  for (let i = 0; i < n; i++) {
+    if (i < k || txt[i] === ' ') o += txt[i];
+    else o += SCR[(Math.floor(t * 30) * 7 + i * 13) % SCR.length];
+  }
+  return p >= 1 ? txt : o;
+}
+
+// ---------- content ----------
+const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const lines = (arr, cls, t0, extra = '') =>
+  arr.map((l, i) => `<span class="mask ${cls}" ${extra}><span data-k="line" data-t="${t0 + i * 0.08}">${l}</span></span>`).join('');
+const fade = (html, t0, tag = 'div', cls = '') => `<${tag} class="${cls}" data-k="fade" data-t="${t0}">${html}</${tag}>`;
+const facts = (rows, t0) => `<dl>${rows.map((r, i) =>
+  `<div class="fact mono-sm" data-k="fade" data-t="${t0 + i * 0.08}"><dt>${r[0]}</dt><dd>${r[1]}</dd></div>`).join('')}</dl>`;
+
+const CASES = {
+  ah: {
+    no: '01', kicker: 'Strona WWW · 06.2026', title: 'Automation House',
+    lead: 'Rebranding strony: od discovery do wdrożenia.',
+    facts: [['Rola no-fuss', 'Design: Magda · kod: Kuba'], ['Klient', 'Automation House by Tigers'], ['Stack', 'Next.js'], ['Wynik', 'Strona działa ↗']],
+    stageLabel: ['01 / Strona na żywo', 'automation.house'], visual: 'site',
+    desk: ['automation-house/d-00.webp'], shotRatio: 875 / 1400, phone: 'automation-house/m-full.webp', phoneRatio: 16000 / 518, url: 'www.automation.house',
+    story: [['Zadanie', 'Ustalić, co firma robi naprawdę i komu to sprzedaje, i pokazać to na nowej stronie.'],
+            ['Co zrobiliśmy', 'Warsztaty z zespołem, architektura treści, system wizualny i ekrany (Magda), kod w Next.js (Kuba).'],
+            ['Efekt', 'Nowa strona działa pod automation.house. Discovery, projekt i kod zrobił jeden zespół.']],
+    path: 'no-fuss.house/automation-house'
+  },
+  otb: {
+    no: '02', kicker: 'Strona WWW · 06.2025', title: 'OTB Ventures',
+    lead: 'Strona funduszu VC: poważna jak fundusz, odważna jak jego portfolio.',
+    facts: [['Rola no-fuss', 'Design: Magda z Piotrem Chuchłą'], ['Klient', 'OTB Ventures, fundusz VC'], ['Stack', 'WordPress'], ['Wynik', 'Strona działa: otb.vc ↗']],
+    stageLabel: ['01 / Strona na żywo', 'otb.vc'], visual: 'site', url: 'otb.vc',
+    desk: ['otb/d-00.webp', 'otb/d-01.webp', 'otb/d-02.webp', 'otb/d-03.webp', 'otb/d-04.webp', 'otb/d-05.webp'], crop: 0.07, shotRatio: 1000 / 1600,
+    phone: 'otb/m-full.webp', phoneRatio: 13756 / 720,
+    story: [['Zadanie', 'OTB inwestuje w europejskie startupy z AI, SpaceTech i Physical AI. Strona ma to unieść.'],
+            ['Co zrobiliśmy', 'Projekt wokół jednego elementu: gradientu czerwień–błękit i kuli, która przecina nagłówek „Open to beyond”.'],
+            ['Efekt', 'Strona działa pod adresem otb.vc, na WordPressie.']],
+    path: 'no-fuss.house/otb'
+  },
+  busybee: {
+    no: '03', kicker: 'Strona WWW · 2024', title: 'Busy Bee',
+    lead: 'Strona domu produkcyjnego, która robi jedno: pokazuje prace i prowadzi do kontaktu.',
+    facts: [['Rola no-fuss', 'Design: Magda'], ['Kod', 'Michał Gabryelewicz · Webflow'], ['Klient', 'Busy Bee Film, Warszawa'], ['Wynik', 'Strona działa ↗']],
+    stageLabel: ['01 / Strona na żywo', 'Reklamy: prace Busy Bee Film'], visual: 'site',
+    desk: ['busybee/d-00.webp', 'busybee/d-02.webp', 'busybee/d-03.webp', 'busybee/d-05.webp', 'busybee/d-06.webp'], crop: 0.05, shotRatio: 1000 / 1600, url: 'www.busybeefilm.pl',
+    phone: 'busybee/m-full.webp', phoneRatio: 11699 / 720,
+    story: [['Zadanie', 'Pokazać prace i doprowadzić do kontaktu, bez zakładek, których nikt nie czyta.'],
+            ['Co zrobiliśmy', 'Kadr z produkcji na pierwszym ekranie, realizacje w rytmie zamiast siatki kafelków, na końcu konkretne osoby z kontaktem.'],
+            ['Efekt', 'Strona działa pod busybeefilm.pl, na komputerze i na telefonie.']],
+    path: 'no-fuss.house/busy-bee'
+  },
+  ourmoney: {
+    no: '04', kicker: 'Aplikacja mobilna · 12.2025 → teraz', title: 'OurMoney',
+    lead: 'Aplikacja, która odpowiada parze na jedno pytanie: czy to jest fair?',
+    facts: [['Rola no-fuss', 'Produkt własny Magdy i Kuby'], ['Zakres', 'Design i produkt: Magda · kod: Kuba'], ['Dla kogo', 'Pary 25–40'], ['Status', 'Przed premierą w sklepach']],
+    stageLabel: ['01 / Aplikacja', 'ourmoney.pl'], visual: 'phones',
+    screens: ['ourmoney/koperty.png', 'ourmoney/ekran-glowny-rownowaga.webp', 'ourmoney/wspolne-cele-finansowe.webp'],
+    flow: ['ourmoney/ekran-glowny-rownowaga.webp', 'ourmoney/dodawaj-prosto-wydatki.png', 'ourmoney/koperty.png', 'ourmoney/wspolne-cele.png'],
+    models: ['Po równo', 'Proporcjonalnie', 'Tylko śledzenie'],
+    path: 'no-fuss.house/ourmoney'
+  },
+  sassy: {
+    no: '05', kicker: 'Eksperyment · 07.2026', title: 'Sassy',
+    lead: 'Strona bez celu w jednym pliku HTML. Wszystko da się złapać i przesunąć.',
+    facts: [['Rola', 'Koncept, design i kod: Magda'], ['Typ', 'Projekt własny, eksperyment'], ['Stack', 'Jeden plik HTML'], ['Wynik', 'Strona działa ↗']],
+    stageLabel: ['01 / Strona na żywo', 'sassy-tan.vercel.app'], visual: 'site', url: 'sassy-tan.vercel.app',
+    desk: ['sassy/d-00.webp', 'sassy/d-01.webp', 'sassy/d-02.webp', 'sassy/d-03.webp', 'sassy/d-04.webp', 'sassy/d-06.webp', 'sassy/d-07.webp', 'sassy/d-09.webp'], crop: 0.05, shotRatio: 1000 / 1600,
+    phoneShots: ['sassy/m-00.webp', 'sassy/m-03.webp'],
+    toys: [['Pulpit', 'kamera', 'sassy/d-00.webp'], ['Biurko', 'bento', 'sassy/d-01.webp'], ['Business case', 'suwak', 'sassy/d-02.webp'],
+           ['Waga', 'SERIOUS', 'sassy/d-04.webp'], ['Karteczki', 'tablica', 'sassy/d-06.webp'], ['Koniec', 'gra', 'sassy/d-09.webp']],
+    story: [['Zadanie', 'Warsztat, nie zlecenie: ile zabawy i interakcji udźwignie jedna strona bez frameworków.'],
+            ['Co powstało', 'Retro pulpit z aparatem, biurko z zadaniami, suwak godzin, waga SERIOUS, tablica z kredą i gra Snack Run.'],
+            ['Efekt', 'Strona działa, także dotykiem. Kamera startuje tylko po kliknięciu.']],
+    path: 'no-fuss.house/sassy'
+  }
+};
+
+// ---------- timeline ----------
+// arrive[i] = moment, w którym kamera stoi na sekcji i; scroll trwa 0.9 s przed nim
+const T0 = 1.3; // po kurtynie
+let ARR, DUR;
+const sections = [];
+
+function sec(cls, html, h = H) { sections.push({ cls, html, h }); }
+function inner(html, justify = 'space-between') {
+  return `<div class="inner" style="top:${SAFE_T + 92}px;bottom:${SAFE_B}px;justify-content:${justify}">${html}</div>`;
+}
+function ctaSection(i, title, text, path) {
+  const a = ARR[i];
+  sec('dark', inner(`
+    <div>${fade(`<span class="mono muted">Kontakt</span>`, a - 0.2)}</div>
+    <div>
+      ${lines(title, 'h2', a - 0.1)}
+      ${fade(`<p class="lead muted" style="margin-top:28px;max-width:16em">${text}</p>`, a + 0.15)}
+      ${fade(`<div style="margin-top:44px;display:flex;gap:16px;flex-wrap:wrap"><span class="btn" id="cta">Porozmawiajmy →</span></div>`, a + 0.3)}
+    </div>
+    <div>${fade(`<div class="fact mono-sm"><dt>Mail</dt><dd>general@no-fuss.house</dd></div><div class="fact mono-sm"><dt>Zobacz</dt><dd>${path} ↗</dd></div>`, a + 0.45)}</div>`));
+}
+
+function buildCase(c) {
+  ARR = [T0, 7.4, 15.4, 23.4]; DUR = 27;
+  const a = ARR;
+  // 1. hero
+  sec('dark', inner(`
+    <div>
+      <div style="display:flex;gap:16px;align-items:center" data-k="fade" data-t="${a[0] - 0.1}"><span class="tag">Case study</span><span class="mono" data-k="scr" data-t="${a[0]}" data-txt="${c.kicker}"></span></div>
+      <div style="margin-top:40px">${lines([c.title], 'mega fit', a[0] + 0.05)}</div>
+      ${fade(`<p class="statement" style="margin-top:36px;max-width:17em">${c.lead}</p>`, a[0] + 0.45)}
+    </div>
+    ${facts(c.facts, a[0] + 0.7)}`));
+  // 2. scena limonkowa
+  sec('lime', `<div class="inner" style="top:${SAFE_T + 92}px;bottom:${SAFE_B}px">
+      <div class="mono" style="display:flex;justify-content:space-between" data-k="fade" data-t="${a[1] - 0.5}"><span>${c.stageLabel[0]}</span><span class="muted">${c.stageLabel[1]}</span></div>
+      <div id="vis" style="position:relative;flex:1;margin-top:40px"></div></div>`);
+  // 3. w skrócie
+  if (c.story) {
+    sec('light', inner(`
+      <div>${fade(`<span class="mono muted">W skrócie</span>`, a[2] - 0.3)}</div>
+      <dl>${c.story.map((r, i) => `<div class="row" data-k="fade" data-t="${a[2] - 0.15 + i * 0.12}"><dt class="mono muted" style="margin-bottom:10px">${r[0]}</dt><dd class="lead">${r[1]}</dd></div>`).join('')}</dl>`));
+  } else { // OurMoney: modele podziału
+    sec('light', inner(`
+      <div>${fade(`<span class="mono muted">Zasady podziału</span>`, a[2] - 0.3)}</div>
+      <div>${lines(['Trzy modele', 'podziału zamiast', 'jednego „po połowie”.'], 'statement', a[2] - 0.2)}</div>
+      <div>${c.models.map((m, i) => `<div class="row model" data-k="fade" data-t="${a[2] + i * 0.08}"><div class="hl"></div><div class="txt title">${m}</div></div>`).join('')}</div>`));
+  }
+  ctaSection(3, ['Chcesz podobny', 'projekt?'], 'Opowiedz, co chcesz zbudować, a powiemy, od czego zacząć.', c.path);
+}
+
+function buildIntro() {
+  ARR = [T0, 7.2, 12.4, 19.0]; DUR = 22.6;
+  const a = ARR;
+  sec('dark', inner(`
+    <div class="mono" data-k="scr" data-t="${a[0]}" data-txt="Studio produktowe · Magda + Kuba"></div>
+    <div>
+      <span class="mask display"><span data-k="line" data-t="${a[0] + 0.05}">Budujemy</span></span>
+      <span class="mask display"><span data-k="line" data-t="${a[0] + 0.13}">produkty bez</span></span>
+      <span class="mask display"><span data-k="line" data-t="${a[0] + 0.21}"><mark><i data-k="wipe" data-t="${a[0] + 1.3}"></i><b>zamieszania</b></mark></span></span>
+      ${fade(`<p class="lead muted" style="margin-top:40px;max-width:24em">Aplikacje mobilne, strony i produkty z AI dla firm, które chcą wydać produkt, a nie zarządzać agencją.</p>`, a[0] + 0.6)}
+    </div>
+    <div class="mono-sm" style="display:flex;justify-content:space-between" data-k="fade" data-t="${a[0] + 0.8}"><span>Design i produkt: Magda</span><span>Kod: Kuba</span></div>`));
+  sec('light', inner(`
+    <div>${fade(`<span class="mono muted">O nas</span>`, a[1] - 0.3)}</div>
+    <div>${lines(['Dwie osoby,', 'agenci AI,', 'zero zamieszania.'], 'display', a[1] - 0.2)}</div>
+    <div>${lines(['Projektujemy i kodujemy', 'produkty, które', 'załatwiają sprawę.'], 'statement', a[1] + 0.2)}</div>`));
+  sec('dark', inner(`
+    <div>${fade(`<span class="mono muted">Co robimy</span>`, a[2] - 0.3)}</div>
+    <div>${['Aplikacje mobilne', 'Produkty z AI', 'Strony i landingi', 'Design produktu', 'Audyt i porządki'].map((m, i) =>
+      `<div class="row svc" data-k="fade" data-t="${a[2] - 0.2 + i * 0.06}"><div class="hl"></div><div class="txt title">${m}</div></div>`).join('')}</div>`));
+  ctaSection(3, ['Masz produkt', 'do zbudowania?'], 'Opowiedz, co chcesz zbudować, a powiemy, od czego zacząć.', 'no-fuss.house');
+}
+
+function buildProcess() {
+  ARR = [T0, 7.2, 15.8]; DUR = 19.6;
+  const a = ARR;
+  const steps = [['01', 'Rozmowa i brief', 'Co chcecie zbudować, dla kogo i po co. Z tego brief i wycena.'],
+                 ['02', 'Discovery i prototyp', 'Zanim powstanie kod, klikacie działający prototyp.'],
+                 ['03', 'Budowa w iteracjach', 'Design i kod w jednym zespole. Działająca wersja co krok.'],
+                 ['04', 'Wdrożenie i wsparcie', 'Publikujemy i zostajemy: poprawki, metryki, kolejne wersje.']];
+  sec('dark', inner(`
+    <div class="mono" data-k="scr" data-t="${a[0]}" data-txt="Jak pracujemy · 4 kroki"></div>
+    <div>${lines(['Od rozmowy', 'do wdrożenia.'], 'display', a[0] + 0.05)}
+      ${fade(`<p class="statement" style="margin-top:36px;max-width:16em">Design i kod w jednym zespole. Bez agencyjnego pośrednika.</p>`, a[0] + 0.5)}</div>
+    <div class="mono-sm" style="display:flex;justify-content:space-between" data-k="fade" data-t="${a[0] + 0.8}"><span>Magda: design i produkt</span><span>Kuba: kod</span></div>`));
+  sec('light', inner(`
+    <div>${fade(`<span class="mono muted">Jak pracujemy</span>`, a[1] - 0.3)}</div>
+    <div>${steps.map((s, i) => `<div class="row step" data-k="fade" data-t="${a[1] - 0.2 + i * 0.08}"><div class="hl"></div>
+      <div class="txt" style="display:grid;grid-template-columns:96px 1fr;gap:8px"><span class="mono muted" style="padding-top:8px">${s[0]}</span>
+      <div><div class="title">${s[1]}</div><div class="lead muted" style="font-size:28px;margin-top:6px">${s[2]}</div></div></div></div>`).join('')}</div>`));
+  ctaSection(2, ['Zacznijmy', 'od rozmowy.'], 'Pierwszy krok to brief. Opowiedz, co chcesz zbudować.', 'no-fuss.house');
+}
+
+const CASE = CASES[SCENE];
+if (CASE) buildCase(CASE); else if (SCENE === 'intro') buildIntro(); else buildProcess();
+const SEC_NAMES = { intro: 'Studio', process: 'Proces' };
+document.getElementById('hudr').textContent = CASE ? `Case ${CASE.no}/05` : SEC_NAMES[SCENE];
+document.getElementById('footr').textContent = CASE ? CASE.kicker.split(' · ')[1] : '2026';
+
+// ---------- render DOM ----------
+const page = document.getElementById('page');
+let yAcc = 0; const secTop = [];
+const GRID = h => `<svg class="sgrid" width="${W}" height="${h}">${[64, W / 2, W - 64].map(x => `<line x1="${x}" y1="0" x2="${x}" y2="${h}" stroke="currentColor" stroke-opacity=".07" stroke-width="1.5"/>`).join('')}</svg>`;
+page.innerHTML = sections.map(s => { secTop.push(yAcc); yAcc += s.h; return `<section class="${s.cls}" style="height:${s.h}px">${GRID(s.h)}${s.html}</section>`; }).join('');
+const totalH = yAcc;
+
+// HUD / foot / prog pozycje
+const hud = document.getElementById('hud'); hud.style.top = HUD_Y + 'px';
+const foot = document.getElementById('foot'); foot.style.bottom = (FMT === 'story' ? SAFE_B - 70 : 40) + 'px';
+const pr = document.getElementById('prog'); pr.style.top = (HUD_Y + 60) + 'px'; pr.style.height = (H - HUD_Y - 60 - (FMT === 'story' ? SAFE_B : 100)) + 'px';
+
+// siatka: tylko 3 piony, w każdej sekcji pod treścią (decyzja Magdy 2026-10-26: mniej linii, nic nie zasłaniają)
+
+
+// ---------- wizualizacje sceny ----------
+let visUpdate = () => {};
+function buildVisual(c) {
+  const vis = document.getElementById('vis'); if (!vis) return;
+  const vw = vis.clientWidth, vh = vis.clientHeight, a = ARR[1];
+  if (c.visual === 'site') {
+    // przeglądarka: zrzuty kolejnych sekcji sklejone w jedną stronę (od drugiego obcięty powtarzający się nagłówek)
+    const bw = vw, viewH = Math.round(bw * c.shotRatio), bh = viewH + 64, crop = c.crop || 0;
+    const hs = c.desk.map((_, i) => i === 0 ? viewH : viewH * (1 - crop));
+    const tops = hs.map((_, i) => hs.slice(0, i).reduce((x, y) => x + y, 0));
+    vis.innerHTML = `<div class="browser" id="br" style="position:absolute;left:0;top:0;width:${bw}px;height:${bh}px">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">${c.url}</span></div>
+      <div class="view" style="height:${viewH}px"><div id="strip" style="position:absolute;left:0;top:0;width:100%">${c.desk.map((src, i) =>
+        `<div style="position:relative;height:${hs[i]}px;overflow:hidden"><img src="${A + src}" style="position:absolute;left:0;top:${i === 0 ? 0 : -viewH * crop}px;width:100%"></div>`).join('')}</div></div></div>`;
+    const pw = Math.round(Math.min(310, vw * 0.31)), phH = Math.round(Math.min(pw * 2.05, vh - viewH * 0.68));
+    const shots = c.phoneShots || [c.phone];
+    vis.insertAdjacentHTML('beforeend', `<div class="phone" id="ph" style="width:${pw}px;height:${phH}px;right:${vw * 0.03}px;bottom:0"><div class="island"></div><div class="side"></div><div class="scr" id="phs">${shots.map((src, i) =>
+      `<img src="${A + src}" style="left:${i * 100}%">`).join('')}</div></div>`);
+    const br = document.getElementById('br'), strip = document.getElementById('strip'), ph = document.getElementById('ph'), phs = [...document.querySelectorAll('#phs img')];
+    const hold0 = a + 0.5, hold1 = ARR[2] - 1.4, n = c.desk.length;
+    visUpdate = t => {
+      const p = ease(prog(t, a - 0.6, 1.0));
+      br.style.transform = `translateY(${(1 - p) * 120}px)`; br.style.opacity = p;
+      if (n > 1) {
+        // przewijanie sekcja po sekcji: 0,9 s ruchu, potem pauza na przeczytanie
+        const seg = (hold1 - hold0) / (n - 1), k = cl((t - hold0) / seg, 0, n - 1), i = Math.floor(k);
+        const y = i >= n - 1 ? tops[n - 1] : lerp(tops[i], tops[i + 1], inout(cl((k - i) * seg / 0.9)));
+        strip.style.transform = `translateY(${-y}px)`;
+      } else {
+        strip.style.transform = `scale(${1 + 0.06 * inout(prog(t, hold0, hold1 - hold0))})`; strip.style.transformOrigin = '30% 20%';
+      }
+      const q = ease(prog(t, a - 0.1, 0.9));
+      ph.style.transform = `translateY(${(1 - q) * (phH + 80)}px)`;
+      const scrW = pw - 28, scrH = phH - 28;
+      if (c.phoneShots) {
+        const m = shots.length, seg = (hold1 - hold0) / m, k = cl((t - hold0 - seg * 0.6) / seg, 0, m - 1), i = Math.floor(k);
+        const x = i >= m - 1 ? m - 1 : i + inout(cl((k - i) * seg / 0.8));
+        phs.forEach(im => im.style.transform = `translateX(${-x * 100}%)`);
+      } else {
+        const imgH = scrW * c.phoneRatio;
+        phs[0].style.transform = `translateY(${-inout(prog(t, hold0 + 0.3, hold1 - hold0)) * Math.min(imgH - scrH, scrH * 5)}px)`;
+      }
+    };
+  }
+  if (c.visual === 'phones') {
+    const pw = Math.round(Math.min(vw / 3.25, (vh + 120) / 2.15)), phH = Math.round(pw * 2.16), gap = (vw - pw * 3) / 2;
+    vis.innerHTML = c.screens.map((s, i) => `<div class="phone pp" style="width:${pw}px;height:${phH}px;left:${i * (pw + gap)}px;top:${(vh - phH) / 2 + (i === 1 ? -50 : 60)}px;padding:10px;border-radius:44px"><div class="island" style="top:20px;height:22px"></div><div class="side"></div><div class="scr" style="border-radius:34px"><img src="${A + s}"></div></div>`).join('');
+    const pp = [...vis.querySelectorAll('.pp')];
+    const mid = pp[1].querySelector('.scr'); mid.innerHTML = c.flow.map((src, i) => `<img src="${A + src}" style="left:${i * 100}%">`).join('');
+    const fl = [...mid.querySelectorAll('img')], hold0 = a + 0.6, seg = (ARR[2] - 1.4 - hold0) / (c.flow.length - 1);
+    visUpdate = t => { const k = cl((t - hold0) / seg, 0, c.flow.length - 1), i = Math.floor(k);
+      const x = i >= c.flow.length - 1 ? i : i + inout(cl((k - i) * seg / 0.7));
+      fl.forEach(im => im.style.transform = `translateX(${-x * 100}%)`); pp.forEach((el, i) => {
+      const p = ease(prog(t, a - 0.6 + i * 0.12, 1.2));
+      const fl = Math.sin((t - a) * 1.6 + i) * 8;
+      el.style.transform = `translateY(${(1 - p) * (phH + 200) + fl}px)`;
+    }); };
+  }
+  if (c.visual === 'toys') {
+    const iw = vw, ih = Math.round(iw * 10 / 16);
+    vis.innerHTML = `<div style="position:absolute;left:0;top:0;width:${iw}px;height:${ih}px;overflow:hidden;background:#101318" id="tv">
+      ${c.toys.map(s => `<img src="${A + s[2]}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0">`).join('')}</div>
+      <div class="mono-sm" id="tcap" style="position:absolute;left:0;top:${ih + 14}px"></div>
+      <div id="tl" style="position:absolute;left:0;right:0;top:${ih + 64}px">${c.toys.map(s => `<div class="row toy" style="padding:10px 0 12px;display:flex;justify-content:space-between;align-items:center"><span class="title txt" style="font-size:40px">${s[0]}</span><span class="tag" style="opacity:0">${s[1]}</span></div>`).join('')}</div>`;
+    const imgs = [...vis.querySelectorAll('#tv img')], rows = [...vis.querySelectorAll('.toy')], tv = document.getElementById('tv');
+    const room = vh - ih - 64; const rowH = rows[0].offsetHeight; const fitN = Math.max(3, Math.floor(room / rowH));
+    rows.forEach((r, i) => { if (i >= fitN) r.style.display = 'none'; });
+    const n = Math.min(fitN, c.toys.length);
+    visUpdate = t => {
+      const p = ease(prog(t, a - 0.6, 1.0)); tv.style.opacity = p; tv.style.transform = `translateY(${(1 - p) * 100}px)`;
+      const k = cl((t - a + 0.2) / ((4.8) / n), 0, n - 0.001), idx = Math.floor(k);
+      imgs.forEach((im, i) => { const o = i === idx ? cl((k - idx) / 0.25) : (i === idx - 1 ? 1 - cl((k - idx) / 0.25) : 0); im.style.opacity = i === 0 && idx === 0 ? 1 : o; });
+      rows.forEach((r, i) => {
+        const on = i === idx; r.querySelector('.txt').style.transform = `translateX(${on ? 12 : 0}px)`;
+        r.querySelector('.txt').style.color = on ? '#101318' : '#3F4A12';
+        r.querySelector('.txt').textContent = c.toys[i][0] + (on ? ' →' : '');
+        r.querySelector('.tag').style.opacity = on ? 1 : 0;
+        r.querySelector('.tag').style.background = '#101318'; r.querySelector('.tag').style.color = '#BBFF00';
+      });
+      document.getElementById('tcap').textContent = c.toys[idx][0] + ' · ' + c.toys[idx][1];
+    };
+  }
+}
+
+// ---------- kamera ----------
+function camY(t) {
+  let y = 0;
+  for (let i = 1; i < ARR.length; i++) {
+    const from = secTop[i - 1], to = secTop[i];
+    const p = inout(prog(t, ARR[i] - 1.1, 1.1));
+    if (t >= ARR[i] - 1.1) y = lerp(from, to, p);
+  }
+  return y;
+}
+
+// ---------- highlight w listach (hover jak w FAQ: limonka + wcięcie 12 px) ----------
+function rowCycle(sel, t, start, step) {
+  const rows = [...document.querySelectorAll(sel)];
+  rows.forEach((r, i) => {
+    const s = start + i * step;
+    const on = ease(prog(t, s, 0.4)) * (1 - ease(prog(t, s + step, 0.4)));
+    const last = i === rows.length - 1 ? ease(prog(t, s, 0.4)) : on;
+    const v = last;
+    r.querySelector('.hl').style.opacity = v;
+    const tx = r.querySelector('.txt'); tx.style.transform = `translateX(${12 * v}px)`;
+    tx.style.color = v > 0.5 ? '#101318' : '';
+    r.querySelectorAll('.muted').forEach(m => m.style.color = v > 0.5 ? '#3F4A12' : '');
+  });
+}
+
+// ---------- render(t) ----------
+let animEls = [];
+window.render = function (t) {
+  // kurtyna z paskiem preloadera
+  const cur = document.getElementById('curtain');
+  cur.querySelector('i').style.width = (ease(prog(t, 0, 0.7)) * 100) + '%';
+  cur.style.transform = `translateY(${-inout(prog(t, 0.65, 0.75)) * 100}%)`;
+  // kamera
+  const y = camY(t);
+  page.style.transform = `translateY(${-y}px)`;
+  document.querySelector('#prog i').style.height = (cl(y / (totalH - H)) * 100) + '%';
+  // reveal
+  for (const el of animEls) {
+    const t0 = +el.dataset.t, k = el.dataset.k;
+    if (k === 'line') { const p = ease(prog(t, t0, 0.9)); el.style.transform = `translateY(${(1 - p) * 105}%)`; }
+    else if (k === 'fade') { const p = ease(prog(t, t0, 0.9)); el.style.opacity = p; el.style.transform = `translateY(${(1 - p) * 16}px)`; }
+    else if (k === 'scr') { el.textContent = scramble(el.dataset.txt, prog(t, t0, 0.42), t); }
+    else if (k === 'wipe') { const p = ease(prog(t, t0, 0.9)); el.style.transform = `scaleX(${p})`; }
+  }
+  visUpdate(t);
+  if (CASE && !CASE.story) rowCycle('.model', t, ARR[2] + 0.6, 1.8);
+  if (SCENE === 'intro') rowCycle('.svc', t, ARR[2] + 0.4, 0.9);
+  if (SCENE === 'process') rowCycle('.step', t, ARR[1] + 0.5, 1.6);
+  // CTA: przycisk pulsuje limonkowym obrysem na końcu
+  return true;
+};
+
+window.DUR = DUR;
+window.ready = (async () => {
+  await document.fonts.load('700 100px "TikTok Sans"'); await document.fonts.load('400 20px "Geist Mono"');
+  await document.fonts.load('500 20px "TikTok Sans"'); await document.fonts.load('400 20px "TikTok Sans"');
+  await document.fonts.ready;
+  // dopasuj tytuł mega do szerokości kolumny
+  document.querySelectorAll('.fit').forEach(el => {
+    let fs = 168; el.style.fontSize = fs + 'px';
+    const max = W - 128;
+    while (el.firstElementChild.scrollWidth > max && fs > 60) { fs -= 4; el.style.fontSize = fs + 'px'; }
+  });
+  buildVisual(CASE || {});
+  await Promise.all([...document.images].map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })));
+  animEls = [...document.querySelectorAll('[data-k]')];
+  window.render(0);
+  return DUR;
+})();
+</script>
+</body>
+</html>
