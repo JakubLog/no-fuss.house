@@ -14,9 +14,16 @@
   margin-top: 16px;
 }
 
+/* Bez etykiety mono (`label`) nagłówek otwiera sekcję. */
+.title:first-child {
+  margin-top: 0;
+}
+
+/* Lead jak w `PageHero` (30ch). Obok listy (≥ 1024 px) kolumna nagłówka ma tylko `--gap` odstępu od wierszy,
+   więc lead kończy się min. 48 px przed nimi, także przy 1024 px, gdzie 30ch jest szersze od kolumny. */
 .lead {
   font: var(--t-lead);
-  max-width: 44ch;
+  max-width: 30ch;
   margin-top: 16px;
 }
 
@@ -131,6 +138,21 @@
   color: var(--muted);
 }
 
+/* Logo nad tytułem (i `kicker`), np. konferencji: logotypy wydarzeń są jasne na przezroczystym tle, więc filtr
+   barwi je na monochrom w kolorze tonu (czarny na jasnym, biały na ciemnym), jak paski logotypów partnerów. */
+.logo {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: 32px;
+  margin-bottom: 12px;
+  filter: brightness(0);
+}
+
+.dark .logo {
+  filter: brightness(0) invert(1);
+}
+
 /* E-mail (CopyEmail): tekst linku podmienia komponent, „⧉” (kopiuj) dokleja CSS tylko przy myszy;
    na dotyku CopyEmail otwiera `mailto:`, więc strzałka. */
 .copy::after {
@@ -174,6 +196,10 @@
 
   .find > .list {
     grid-column: 5 / span 8;
+  }
+
+  .lead {
+    max-width: min(30ch, 100% - 48px);
   }
 }
 

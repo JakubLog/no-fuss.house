@@ -1,6 +1,6 @@
 import { eventDate, events, isPublishedEvent, splitEvents } from "./events";
 import { hasPlaceholder } from "./site";
-import type { InternalPath, Person } from "./types";
+import type { CaseStudyImage, InternalPath, Person } from "./types";
 
 /**
  * Treść podstrony `/o-nas`, copy 1:1 z `legacy/o-nas-v5.html`.
@@ -186,6 +186,8 @@ export interface FindItem {
   title: string;
   /** Linia mono nad tytułem, np. data i miasto wydarzenia. */
   kicker?: string;
+  /** Logo nad tytułem (i nad `kicker`), np. konferencji; jasne logo na przezroczystym tle, sekcja barwi je na monochrom. */
+  logo?: Required<CaseStudyImage>;
   /** Tekst po prawej (nie łamie się): strzałka „↗” / „→” albo metadane posta. */
   meta: string;
   /** Metadane w mono 12 px (posty). */
@@ -195,7 +197,6 @@ export interface FindItem {
 
 export const findUs = {
   id: "social",
-  label: "Znajdź nas / 03",
   title: `no-fuss w${NBSP}sieci`,
   lead: "Wspólne konta studia. Profile osobiste są przy kartach wyżej.",
   ariaLabel: "Social media no-fuss",
@@ -207,7 +208,6 @@ export const findUs = {
   ],
 } as const satisfies {
   id: string;
-  label: string;
   title: string;
   lead: string;
   ariaLabel: string;
@@ -255,7 +255,6 @@ export function publishedLinkedinPosts(): (Omit<typeof linkedinPosts, "note" | "
 
 export const eventsTeaser = {
   id: "wydarzenia",
-  label: "Na żywo / 05",
   title: "Przekazujemy wiedzę dalej",
   lead: `Warsztaty, prelekcje i${NBSP}meetupy z${NBSP}naszym udziałem: nadchodzące z${NBSP}zapisami, minione ze zdjęciami.`,
   ariaLabel: "Wydarzenia no-fuss",
@@ -264,7 +263,6 @@ export const eventsTeaser = {
   all: { title: "Wszystkie wydarzenia", meta: "→", href: "/wiedza" },
 } as const satisfies {
   id: string;
-  label: string;
   title: string;
   lead: string;
   ariaLabel: string;
@@ -285,6 +283,7 @@ export function publishedEventsTeaser(
   const items: FindItem[] = upcoming.slice(0, limit).map((e) => ({
     title: e.title,
     kicker: [eventDate(e).label, e.place].filter(Boolean).join(" · "),
+    logo: e.logo,
     meta: "→",
     href: `/wiedza#${e.id}`,
   }));

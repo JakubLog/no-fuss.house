@@ -818,15 +818,18 @@ Cały pasek jest w `Reveal` z `.fade` (fade-in on-scroll); pętla używa `transl
 #### `FindSection` — server
 ```ts
 interface FindSectionProps {
-  id: string; label: string; title: string; lead: string; note?: string;
+  id: string; label?: string; title: string; lead: string; note?: string;
   ariaLabel: string; items: readonly FindItem[];
   extra?: ReactNode;          // np. CopyEmail z klasą findCopyClassName (dokleja „⧉”)
   tone?: "light" | "dark";
 }
 ```
-Legacy `.find`: nagłówek (sticky ≥ 1024 px) + lista wierszy. Hover (`@media (hover: hover)`) i `:focus-visible`
+Legacy `.find`: nagłówek (sticky ≥ 1024 px) + lista wierszy. Lead `max-width: 30ch` (jak `PageHero`), od 1024 px
+`min(30ch, 100% - 48px)`, żeby kończył się min. 48 px przed wierszami. Hover (`@media (hover: hover)`) i `:focus-visible`
 dają limonkowe tło (`--muted: #3F4A12`) oraz przesuwają tytuł o 12 px przez `translateX` bez reflow; e-mail
-(`findCopyClassName`) dostaje `text-indent: 12px`. Wiersz (`FindItem`) ma tytuł, opcjonalny `kicker` (linia mono nad
+(`findCopyClassName`) dostaje `text-indent: 12px`. Bez `label` nagłówek otwiera sekcję (bez etykiety mono). Wiersz (`FindItem`)
+ma tytuł, opcjonalne `logo` nad nim (`next/image`, wysokość 32 px; logotypy wydarzeń są jasne na przezroczystym tle, więc filtr
+CSS barwi je na monochrom: czarne w tonie jasnym, białe w ciemnym), opcjonalny `kicker` (linia mono nad
 tytułem, `--muted`) i `meta` po prawej bez łamania i kurczenia (`white-space: nowrap`, `flex-shrink: 0`;
 `metaMono` → mono 12 px). Strzałki jadą do środka wiersza: zewnętrzne i „⧉” `translate(-8px, -4px)`, wewnętrzne
 „→” `translateX(-8px)`.
@@ -838,9 +841,10 @@ Linki zewnętrzne przez `externalLinkProps` (nowa karta), wewnętrzne (`/…`) p
 {posts ? <FindSection {...posts} tone="dark" /> : null}
 <FindSection {...publishedEventsTeaser(todayIso())} tone="light" />
 ```
-`#wydarzenia` (`publishedEventsTeaser` z `about.ts`) jest zawsze jasne: do 3 najbliższych wydarzeń bez `[…]`
-(wiersz: kicker „17–18.11.2026 · Katowice” nad tytułem, „→” po prawej → `/wiedza#<id>`) + „Wszystkie wydarzenia →”
-(`/wiedza`). `#posty` jest ciemne; `#social` ciemne bez postów, jasne z postami. Strona ma `revalidate = 3600`.
+`#wydarzenia` (`publishedEventsTeaser` z `about.ts`) jest zawsze jasne i nie ma etykiety mono nad nagłówkiem: do 3 najbliższych
+wydarzeń bez `[…]` (wiersz: logo wydarzenia z `logo`, pod nim kicker „17–18.11.2026 · Katowice”, tytuł, „→” po prawej
+→ `/wiedza#<id>`) + „Wszystkie wydarzenia →” (`/wiedza`). `#posty` jest ciemne; `#social` (też bez etykiety mono) ciemne
+bez postów, jasne z postami. Strona ma `revalidate = 3600`.
 
 #### `DragSticker` — client
 ```ts
