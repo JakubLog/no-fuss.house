@@ -2,7 +2,7 @@ import Image from "next/image";
 import { PhotoPlaceholder } from "@/components/atoms/PhotoPlaceholder";
 import { PersonCard } from "@/components/molecules/PersonCard";
 import { Reveal } from "@/components/organisms/Reveal";
-import { aiCard, personCards, publishedFacts } from "@/content/about";
+import { aiCard, personCards } from "@/content/about";
 import { people } from "@/content/site";
 import styles from "./TeamSheets.module.css";
 
@@ -50,8 +50,7 @@ export function TeamSheets() {
           <Reveal key={person.id} className={styles.cell}>
             <PersonCard
               id={person.id}
-              name={person.name}
-              code={card.code}
+              name={card.name ?? person.name}
               photo={
                 card.photo ? (
                   <Image
@@ -69,7 +68,6 @@ export function TeamSheets() {
               }
               roles={card.roles}
               bio={card.bio}
-              facts={publishedFacts(card.facts)}
               social={person.social}
               linksLabel={`Social media: ${person.name}`}
               className={styles.card}
@@ -81,7 +79,6 @@ export function TeamSheets() {
         <PersonCard
           id={aiCard.id}
           name={aiCard.name}
-          code={aiCard.code}
           variant="ai"
           photo={
             <PhotoPlaceholder ariaLabel={aiCard.photoLabel}>
@@ -90,7 +87,6 @@ export function TeamSheets() {
           }
           roles={aiCard.roles}
           bio={aiCard.bio}
-          facts={publishedFacts(aiCard.facts)}
           internalLinks={aiCard.links}
           linksLabel={aiCard.linksLabel}
           className={styles.card}

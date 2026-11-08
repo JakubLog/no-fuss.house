@@ -6,10 +6,10 @@ import type { CaseStudyImage, InternalPath, Person } from "./types";
  * Treść podstrony `/o-nas`, copy 1:1 z `legacy/o-nas-v5.html`.
  * Imiona, nazwiska i linki social osób są w `site.ts` (`people`); tu tylko to,
  * czego tam nie ma. Placeholdery `[…]` zostają w danych, ale się nie renderują
- * (`publishedFacts()`, `publishedLinkedinPosts()`); linki-placeholdery mają `href: null`.
+ * (`publishedLinkedinPosts()`); linki-placeholdery mają `href: null`.
  */
 
-/** Link wewnętrzny w treści (np. „Buduje: OurMoney”). */
+/** Link wewnętrzny w treści (np. „Produkty z AI” na karcie agentów). */
 export interface AboutInternalLink {
   label: string;
   href: InternalPath;
@@ -19,17 +19,6 @@ export interface AboutInternalLink {
 export interface AboutExternalLink {
   label: string;
   href: string | null;
-}
-
-/** Wartość wiersza w karcie postaci. */
-export type AboutFactValue =
-  | { kind: "text"; text: string }
-  | { kind: "links"; links: readonly AboutInternalLink[] }
-  | { kind: "meter"; /** Wypełnienie paska 0–1 (legacy `--v`). */ value: number; label: string };
-
-export interface AboutFact {
-  term: string;
-  value: AboutFactValue;
 }
 
 /** Zdjęcie z `public/` dla `next/image` (wymiary źródła, nie wyświetlane). */
@@ -46,38 +35,17 @@ export interface AboutPhoto {
 }
 
 export interface AboutCard {
-  /** Numer z chipa w nagłówku karty: „P1”… */
-  code: string;
+  /** Imię i nazwisko w nagłówku karty, gdy inne niż `Person.name` z `site.ts` (JSON-LD, alt zdjęcia zostają przy `Person.name`). */
+  name?: string;
   /** Podpis placeholdera zdjęcia (1:1 z legacy). */
   photoLabel: string;
   /** Prawdziwe zdjęcie; bez niego karta pokazuje placeholder z `photoLabel`. */
   photo?: AboutPhoto;
   roles: readonly string[];
   bio: string;
-  facts: readonly AboutFact[];
 }
 
 const NBSP = " ";
-
-/** Usuwa fragmenty `[…]` z tekstu razem z przecinkiem / kropką / spacjami wokół. */
-function stripPlaceholders(text: string): string {
-  return text.replace(/\s*[,·]?\s*\[[^\]]*\]/g, "").replace(/^[\s,·]+|[\s,·]+$/g, "");
-}
-
-/**
- * Wiersze karty postaci gotowe do publikacji: tekst bez placeholderów `[…]`
- * („Claude Code, [placeholder]” → „Claude Code”); wiersz z samym placeholderem znika.
- */
-export function publishedFacts(facts: readonly AboutFact[]): AboutFact[] {
-  return facts.flatMap((fact): AboutFact[] => {
-    if (fact.value.kind !== "text" || !hasPlaceholder(fact.value.text)) return [fact];
-    const text = stripPlaceholders(fact.value.text);
-    return text ? [{ ...fact, value: { kind: "text", text } }] : [];
-  });
-}
-
-/** Wskaźnik „Zamieszanie 0%” (identyczny na wszystkich kartach). */
-const FUSS_METER: AboutFact = { term: "Zamieszanie", value: { kind: "meter", value: 0.02, label: "0%" } };
 
 export const aboutHero = {
   lines: ["Dwie osoby,", "agenci AI,", "zero zamieszania"],
@@ -91,7 +59,6 @@ export const aboutHero = {
  */
 export const personCards: Record<Person["id"], AboutCard> = {
   magda: {
-    code: "P1",
     photoLabel: "Zdjęcie Magdy 3:4",
     /* Twarz na ~33% szerokości źródła: x 0% daje ją na ~44% kadru 3:4 (bliżej się nie da bez ucinania głowy). */
     photo: {
@@ -104,17 +71,9 @@ export const personCards: Record<Person["id"], AboutCard> = {
     roles: ["Design", "Produkt"],
     /* AION MIND to etat Magdy, nie produkt no-fuss (decyzja Kuby); daty z case'u AION MIND. */
     bio: `Product Designerka. Buduje OurMoney razem z${NBSP}Kubą. Na etacie w${NBSP}AION MIND od pierwszego ekranu doszła do prowadzenia całego produktu: od czerwca 2026 jest Head of Operations.`,
-    facts: [
-      { term: "Buduje", value: { kind: "links", links: [{ label: "OurMoney", href: "/ourmoney" }] } },
-      { term: "Etat", value: { kind: "links", links: [{ label: "AION MIND", href: "/aion-mind" }] } },
-      { term: "Supermoc", value: { kind: "text", text: "[placeholder: jedno zdanie]" } },
-      { term: "Narzędzia", value: { kind: "text", text: "[placeholder]" } },
-      { term: "Po godzinach", value: { kind: "text", text: "[placeholder]" } },
-      FUSS_METER,
-    ],
   },
   kuba: {
-    code: "P2",
+    name: "Jakub M. Fedoszczak",
     photoLabel: "Zdjęcie Kuby 3:4",
     photo: {
       src: "/assets/team/kuba-v2.avif",
@@ -125,14 +84,6 @@ export const personCards: Record<Person["id"], AboutCard> = {
     },
     roles: ["Architektura", "Procesy", "Oprogramowanie"],
     bio: `Developer. Odpowiada za produkcję aplikacji, jej bezpieczeństwo i${NBSP}całą stronę technologiczną OurMoney.`,
-    facts: [
-      { term: "Buduje", value: { kind: "links", links: [{ label: "OurMoney", href: "/ourmoney" }] } },
-      { term: "Etat", value: { kind: "links", links: [{ label: "Automation House", href: "/automation-house" }] } },
-      { term: "Supermoc", value: { kind: "text", text: "[placeholder: jedno zdanie]" } },
-      { term: "Stack", value: { kind: "text", text: "[placeholder]" } },
-      { term: "Po godzinach", value: { kind: "text", text: "[placeholder]" } },
-      FUSS_METER,
-    ],
   },
 };
 
@@ -140,16 +91,9 @@ export const personCards: Record<Person["id"], AboutCard> = {
 export const aiCard = {
   id: "agenci-ai",
   name: "Agenci AI",
-  code: "P3",
   photoLabel: "Agenci AI",
   roles: ["Research", "Kod", "Copy", "QA"],
   bio: `Pracują z${NBSP}nami ramię w${NBSP}ramię, od researchu po code review. Jesteśmy AI native: nie dokładamy AI do procesu, tylko projektujemy proces z${NBSP}AI w${NBSP}środku.`,
-  facts: [
-    { term: "Rola", value: { kind: "text", text: `Trzecia para rąk w${NBSP}każdym projekcie` } },
-    { term: "Narzędzia", value: { kind: "text", text: "Claude Code, [placeholder]" } },
-    { term: "Nadzór", value: { kind: "text", text: "Zawsze człowiek. Magda lub Kuba" } },
-    FUSS_METER,
-  ],
   linksLabel: "Więcej o pracy z AI",
   links: [{ label: `Produkty z${NBSP}AI`, href: "/#uslugi" }],
 } as const satisfies AboutCard & {

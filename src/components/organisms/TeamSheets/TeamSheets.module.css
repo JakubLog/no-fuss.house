@@ -25,8 +25,8 @@
 
 /*
  * Karty w rzędzie dzielą wiersze siatki (subgrid przez `.cell` i kartę), więc dwuliniowa nazwa
- * obniża zdjęcia całego rzędu, a role, bio, fakty i linki stoją w jednej linii. Liczba wierszy =
- * wiersze `PersonCard`: 900–1199 px pięć (nagłówek, trzy obok zdjęcia, linki), od 1200 px sześć.
+ * obniża zdjęcia całego rzędu, a role, bio i linki stoją w jednej linii. Liczba wierszy =
+ * wiersze `PersonCard`: 900–1199 px cztery (nagłówek, dwa obok zdjęcia, linki), od 1200 px pięć.
  */
 @media (min-width: 900px) {
   .sheets {
@@ -36,7 +36,7 @@
   .cell,
   .card {
     display: grid;
-    grid-row: span 5;
+    grid-row: span 4;
     grid-template-rows: subgrid;
   }
 }
@@ -56,6 +56,6 @@
 
   .cell,
   .card {
-    grid-row: span 6;
+    grid-row: span 5;
   }
 }

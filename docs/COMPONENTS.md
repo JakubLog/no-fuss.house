@@ -367,19 +367,18 @@ Nagłówek sekcji case study + akapity (legacy `.cs-txt` / `.cs-wide`). Składa 
 ```ts
 interface PersonCardProps {
   id?: string;                  // kotwica; dla osób = Person["id"] → zgodne z @id Person w JSON-LD (/o-nas#magda)
-  name: string; code: string;   // „P1”…
+  name: string;
   photo: ReactNode;
   roles: readonly string[]; bio: string;
-  facts: readonly AboutFact[];  // text | links (wewnętrzne) | meter („Zamieszanie 0%”)
   social?: readonly SocialLink[];               // → SocialLinks
   internalLinks?: readonly AboutInternalLink[]; // zamiast social (karta agentów AI)
   linksLabel: string; variant?: "person" | "ai"; className?: string;
 }
 ```
-Legacy `.sheet`: obrys 1 px (`box-shadow inset`), `dl` mono z `FactRow` (układ dt | dd w jednym wierszu),
-wskaźnik „Zamieszanie” wypełnia się do `--v`, gdy przodek dostanie `is-in`, a `.roles` ma
+Legacy `.sheet`: obrys 1 px (`box-shadow inset`): nagłówek, zdjęcie, role, bio, linki (bez listy faktów „Buduje”, „Etat”…
+ani wskaźnika „Zamieszanie”, usuniętych ze wszystkich kart), a `.roles` ma
 `align-content: flex-start`. Siatka 6 kolumn: < 900 px wszystko w kolumnie, kadr zdjęcia 3:4 ma `max-height: 60svh`
-(`object-fit: cover`, `object-position` z `photo.focus`); 900–1199 px zdjęcie z lewej (2/6); ≥ 1200 px karta pionowa
+(`object-fit: cover`, `object-position` z `photo.focus`); 900–1199 px zdjęcie z lewej (2/6, obok ról i bio); ≥ 1200 px karta pionowa
 ze zdjęciem 4:3. `variant="ai"`: ciemny kadr (`--dark`) 16:9 na każdej szerokości, bez kresek placeholdera,
 ilustracja w `--accent` (`currentColor`). Hover linków tylko w `@media (hover: hover)`. Karta nie zawiera `Reveal` —
 owija ją `TeamSheets`.
@@ -457,7 +456,6 @@ Tekstowe placeholdery `[…]` się nie renderują (dane zostają w plikach do po
 | `publishedFaq()` | `faq.ts` | FAQ i `FAQPage` |
 | `publishedNumbers(items)` + `MIN_CASE_NUMBERS` (2) | `cases/index.ts` | „W liczbach”; mniej niż 2 → strona nie renderuje `CaseStrip` |
 | `publishedSpec(items)` | `cases/index.ts` | wiersze `SpecList` (OTB „Kod”) |
-| `publishedFacts(facts)` | `about.ts` | wiersze kart postaci (`[…]` wycinane, pusty wiersz znika) |
 | `publishedLinkedinPosts()` | `about.ts` | `#posty`; bez wiersza z prawdziwym linkiem → `null`, sekcji nie ma |
 | `isPublishedEvent(e)` | `events.ts` | wydarzenia w JSON-LD (`Event`) i w zajawce `/o-nas#wydarzenia` |
 
@@ -780,10 +778,11 @@ litera nie są ucinane) i lead statement (`--muted`, `max-width: 30ch`). Od 1024
 
 #### `TeamSheets` / `RolesSplit` / `StickerBoard` — server, bez propsów
 - `TeamSheets` (legacy `.sheets`): ciemny pas (`--dark`), karty `--shade-900`: Magda i Kuba z `people`, trzecia karta agentów AI. Każda karta w osobnym `Reveal`.
+  Nazwa w nagłówku karty: `personCards[id].name` (Kuba: „Jakub M. Fedoszczak”), bez niego `Person.name`; JSON-LD, alt zdjęcia i etykieta linków social zostają przy `Person.name`.
   Poniżej 900 px jest jedna kolumna, a kadry portretów 3:4 mają `max-height: 60svh`; `object-fit: cover` i
   `object-position` biorą punkt twarzy z `photo.focus`. Od 900 px `.cell` i karta (`className`) to subgrid wierszy
-  `.sheets`: 900–1199 px dwie kolumny i układ poziomy (`span 5`), przy czym trzecia karta zajmuje cały ostatni rząd;
-  od 1200 px trzy pionowe karty (`span 6`) ze zdjęciem 4:3. Karty w rzędzie mają zdjęcia, role, bio, fakty i linki na
+  `.sheets`: 900–1199 px dwie kolumny i układ poziomy (`span 4`), przy czym trzecia karta zajmuje cały ostatni rząd;
+  od 1200 px trzy pionowe karty (`span 5`) ze zdjęciem 4:3. Karty w rzędzie mają zdjęcia, role, bio i linki na
   tej samej wysokości mimo różnej liczby linii w nazwie.
   Zdjęcie: gdy `personCards[id].photo` istnieje (Magda i Kuba), `next/image` z klasą `.photo`
   (`sizes="(min-width: 1200px) 33vw, (min-width: 900px) 17vw, 100vw"`, bez `priority`); inaczej `PhotoPlaceholder`
