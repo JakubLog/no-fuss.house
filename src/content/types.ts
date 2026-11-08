@@ -15,6 +15,7 @@ export type SocialNetwork =
   | "behance"
   | "dribbble"
   | "github"
+  | "youtube"
   | "x";
 
 export interface SocialLink {

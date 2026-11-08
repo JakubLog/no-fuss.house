@@ -91,7 +91,7 @@ export const people = [
     jobTitle: "Product Designerka",
     knowsAbout: ["design", "produkt"],
     social: [
-      { network: "linkedin", label: "LinkedIn", href: null },
+      { network: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/in/magdanestor/" },
       { network: "instagram", label: "Instagram", href: null },
       { network: "dribbble", label: "Dribbble", href: null },
       { network: "x", label: "X", href: null },
@@ -106,8 +106,9 @@ export const people = [
     jobTitle: "Developer",
     knowsAbout: ["kod"],
     social: [
-      { network: "linkedin", label: "LinkedIn", href: null },
+      { network: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/in/jakub-fedoszczak/" },
       { network: "github", label: "GitHub", href: "https://github.com/JakubLog" },
+      { network: "youtube", label: "YouTube", href: "https://www.youtube.com/@jakub.m.fedoszczak/" },
       { network: "x", label: "X", href: null },
     ],
   },
