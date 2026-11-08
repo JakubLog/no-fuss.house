@@ -4,7 +4,8 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--section-y) var(--gutter);
+  /* Na dole mniej niż --section-y: wiersz z e-mailem ma własny obrys u góry i domyka stopkę przy krawędzi ekranu. */
+  padding: var(--section-y) var(--gutter) 24px;
   background: var(--hero-sky);
   color: #FFFFFF;
   color-scheme: dark;
@@ -94,14 +95,17 @@
   margin-top: 48px;
 }
 
+/* Wiersz z e-mailem: obrys 1 px oddziela go od formularza, na telefonie elementy jeden pod drugim. */
 .bottom {
   position: relative;
   z-index: 2;
-  margin-top: var(--section-y);
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--alpha-200);
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px 32px;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .link {
@@ -133,6 +137,14 @@
 }
 
 @media (min-width: 768px) {
+  .bottom {
+    margin-top: var(--section-y);
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px 32px;
+    justify-content: space-between;
+  }
+
   .form {
     margin-left: calc((100% - 11 * var(--gap)) / 12 * 2 + 2 * var(--gap));
   }
@@ -148,6 +160,10 @@
 }
 
 @media (min-width: 1024px) {
+  .footer {
+    padding-bottom: 32px;
+  }
+
   .form {
     width: calc((100% - 11 * var(--gap)) / 12 * 8 + 7 * var(--gap));
   }

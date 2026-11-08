@@ -114,7 +114,7 @@ i `body`, a mono zostaje dla metadanych.
 ## Layout
 
 Siatka 12 kolumn, gutter 16 px (mobile) / 56 px (desktop), sekcje z paddingiem pionowym
-72 / 96 px. Hero ma pełną wysokość ekranu, stopka co najmniej pełną (z formularzem bywa wyższa). Hero strony głównej od 768 px stoi po przekątnej:
+72 / 96 px. Hero ma pełną wysokość ekranu, stopka co najmniej pełną (z formularzem bywa wyższa); na dole stopki tylko 24 / 32 px, bo domyka ją wiersz z e-mailem pod obrysem 1 px. Hero strony głównej od 768 px stoi po przekątnej:
 h1 w lewym górnym rogu, lead i CTA w prawym dolnym, napis 3D w pasie między nimi (dopasowany do wysokości
 pasa); na telefonie napis nad tekstem, tekst na dole ekranu. Kafle realizacji układają się
 asymetrycznie (od 1024 px): duży kafel na 8 kolumn dosunięty do prawej, potem pary 5+5, potem trójki
