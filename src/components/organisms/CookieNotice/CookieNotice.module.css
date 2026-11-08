@@ -1,8 +1,10 @@
 /*
  * Komunikat o ciasteczkach: ciemna karta (`tone-dark`, tło `--shade-900` odcina się od ciemnego hero i stopki,
- * obrys `--alpha-200`), zero radius, bez cienia. Telefon: na całą szerokość nad dolną krawędzią, kompaktowo
- * (bez etykiety i akapitu: tytuł, paragon i link do polityki mówią to samo), żeby nie zasłaniać pół ekranu;
- * od 640 px 384 px w lewym dolnym rogu. Warstwa 48: pod HUD (50) i menu mobilnym (49), pod kursorem (90).
+ * obrys `--alpha-200`), zero radius, bez cienia. Od 640 px 384 px w lewym dolnym rogu, poniżej na całą szerokość
+ * nad dolną krawędzią. Pełna karta to tytuł, paragon i akcje (ok. 300 px): bez etykiety i akapitu, bo tytuł
+ * i paragon mówią to samo, a wyższa karta zasłaniała logo 3D w hero. Telefon pionowo i każdy niski ekran
+ * (telefon poziomo): kompakt, sam tytuł i wiersz akcji (ok. 120 px), bo z paragonem karta zasłania pół ekranu,
+ * a w poziomie wystaje ponad górną krawędź. Warstwa 48: pod HUD (50) i menu mobilnym (49), pod kursorem (90).
  */
 .notice {
   position: fixed;
@@ -22,10 +24,6 @@
 
 .leaving {
   animation: sink 300ms ease-in both;
-}
-
-.label {
-  color: var(--muted);
 }
 
 .title {
@@ -79,10 +77,6 @@
   content: counter(nf-count);
 }
 
-.text {
-  color: var(--muted);
-}
-
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -131,19 +125,26 @@
   }
 }
 
-@media (max-width: 639px) {
+/*
+ * Kompakt: tytuł z limonkowym „Zero” i link do polityki mówią to samo co paragon.
+ * Link w `--t-mono-sm`, żeby „Jasne” i link zmieściły się w jednym wierszu od 320 px.
+ */
+@media (max-width: 639px), (max-height: 539px) {
   .notice {
     gap: 12px;
     padding: 16px;
   }
 
-  .label,
-  .text {
+  .tally {
     display: none;
   }
 
-  .tally {
-    padding: 12px 0;
+  .actions {
+    gap: 16px;
+  }
+
+  .more {
+    font: var(--t-mono-sm);
   }
 }
 

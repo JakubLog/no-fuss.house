@@ -56,14 +56,11 @@ export interface CookieNoticeRow extends TallyRow {
 export interface CookieNoticeCopy {
   storageKey: string;
   version: string;
-  /** Etykieta mono nad tytułem. */
-  label: string;
   /** Tytuł: `mark` na limonce (`Mark`), potem `rest`. */
   title: { mark: string; rest: string };
   /** Nazwa paragonu dla czytników. */
   tallyLabel: string;
   rows: readonly CookieNoticeRow[];
-  text: string;
   accept: string;
   more: LegalLink;
 }
@@ -71,7 +68,6 @@ export interface CookieNoticeCopy {
 export const cookieNotice = {
   storageKey: "nf:cookie-notice",
   version: LEGAL_EFFECTIVE_FROM,
-  label: "Prywatność",
   title: { mark: "Zero", rest: "ciasteczek. Serio." },
   tallyLabel: "Co zapisujemy o Tobie",
   rows: [
@@ -80,7 +76,6 @@ export const cookieNotice = {
     { label: "Reklamy i piksele", value: "0", from: 7 },
     { label: "Zamieszanie", value: "0", from: 404 },
   ],
-  text: "Nie śledzimy Cię i nie mamy analityki ani reklam. Przeglądarka zapamięta tylko, że zamknięto ten komunikat.",
   accept: "Jasne",
   more: privacyLink,
 } as const satisfies CookieNoticeCopy;

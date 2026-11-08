@@ -23,7 +23,8 @@ const serverDismissed = () => true;
 /**
  * Komunikat o ciasteczkach w chrome (`layout.tsx`): ciemna karta w lewym dolnym rogu (na telefonie na całą
  * szerokość), limonkowe „Zero” w tytule, paragon `Tally`, w którym liczniki odliczają do 0 (CSS `@property`),
- * przycisk „Jasne” i link do polityki. Strona nie ustawia ciasteczek, więc to informacja, nie zgoda:
+ * przycisk „Jasne” i link do polityki; bez etykiety i akapitu (tytuł i paragon mówią to samo); telefon i niski
+ * ekran: kompakt bez paragonu (CSS). Strona nie ustawia ciasteczek, więc to informacja, nie zgoda:
  * bez „Odrzuć” i bez blokowania strony (nie łapie fokusu, Esc zamyka).
  *
  * Pojawia się po starcie wejścia + `SHOW_DELAY_MS`, jeśli `localStorage` nie ma bieżącej wersji
@@ -65,7 +66,6 @@ export function CookieNotice() {
         if (event.key === "Escape") close();
       }}
     >
-      <p className={cx("mono-sm", styles.label)}>{cookieNotice.label}</p>
       <h2 id={titleId} className={styles.title}>
         <Mark>{cookieNotice.title.mark}</Mark> {cookieNotice.title.rest}
       </h2>
@@ -82,7 +82,6 @@ export function CookieNotice() {
           ),
         }))}
       />
-      <p className={styles.text}>{cookieNotice.text}</p>
       <div className={styles.actions}>
         <Button onClick={close}>{cookieNotice.accept}</Button>
         <ArrowLink href={cookieNotice.more.href} variant="underline" arrow={null} className={styles.more}>

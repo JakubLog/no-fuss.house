@@ -114,7 +114,7 @@ i `body`, a mono zostaje dla metadanych.
 ## Layout
 
 Siatka 12 kolumn, gutter 16 px (mobile) / 56 px (desktop), sekcje z paddingiem pionowym
-72 / 96 px. Hero ma pełną wysokość ekranu, stopka co najmniej pełną (z formularzem bywa wyższa); na dole stopki tylko 24 / 32 px, bo domyka ją wiersz z e-mailem pod obrysem 1 px. Hero strony głównej od 768 px stoi po przekątnej:
+72 / 96 px. Hero ma pełną wysokość ekranu, stopka co najmniej pełną (z formularzem bywa wyższa). Hero strony głównej od 768 px stoi po przekątnej:
 h1 w lewym górnym rogu, lead i CTA w prawym dolnym, napis 3D w pasie między nimi (dopasowany do wysokości
 pasa); na telefonie napis nad tekstem, tekst na dole ekranu. Kafle realizacji układają się
 asymetrycznie (od 1024 px): duży kafel na 8 kolumn dosunięty do prawej, potem pary 5+5, potem trójki
@@ -355,11 +355,12 @@ do Góry Przeznaczenia 184 dni.
 Strona nie ustawia ciasteczek, więc zamiast banera zgody jest komunikat w tonie marki: „Zero ciasteczek. Serio.”
 
 - **Komunikat** (chrome, każda strona): ciemna karta `#15181D` z obrysem 1 px w bieli alpha, zero radius, bez cienia. Od 640 px
-  384 px w lewym dolnym rogu, niżej na całą szerokość (bez etykiety i akapitu, żeby nie zasłaniać pół ekranu). Etykieta mono,
-  tytuł w roli title z limonkowym `Mark` na „Zero”, pod nim paragon mono (etykieta, kropki, wartość) między przerywanymi kreskami:
-  Ciasteczka, Analityka, Reklamy i piksele, Zamieszanie. Wiersze „drukują się” po kolei, a liczniki odliczają do 0 (Zamieszanie od 404).
-  Na dole przycisk „Jasne” (accent) i link mono do polityki. Wjeżdża od dołu 1,2 s po starcie wejścia, wyjeżdża w 0,3 s;
-  przy reduced motion bez ruchu. Nie blokuje strony i nie łapie fokusu, Esc zamyka.
+  384 px w lewym dolnym rogu (ok. 300 px wysokości, żeby nie zasłaniać logo 3D w hero), niżej na całą szerokość. Tytuł w roli title
+  z limonkowym `Mark` na „Zero”, pod nim paragon mono (etykieta, kropki, wartość) między przerywanymi kreskami: Ciasteczka, Analityka,
+  Reklamy i piksele, Zamieszanie. Wiersze „drukują się” po kolei, a liczniki odliczają do 0 (Zamieszanie od 404). Bez etykiety
+  i akapitu: tytuł i paragon mówią to samo. Na dole przycisk „Jasne” (accent) i link mono do polityki. Telefon i niski ekran: sam
+  tytuł i akcje (ok. 120 px). Wjeżdża od dołu 1,2 s po starcie wejścia, wyjeżdża w 0,3 s; przy reduced motion bez ruchu. Nie blokuje
+  strony i nie łapie fokusu, Esc zamyka.
 - **Regulamin i polityka prywatności**: hero jak na „O nas”, pod nim jasny dokument. Od 1024 px spis treści mono przyklejony po lewej
   (kolumny 1–3), treść w kolumnach 5–11, wiersz do 68 znaków. Sekcje oddzielone kreską 1 px, tytuł w roli title z numerem mono
   („§ 1” w regulaminie, „01” w polityce). Nad polityką paragon „W skrócie” w ramce 1 px. Linki w tekście: podkreślenie, hover limonkowy.
