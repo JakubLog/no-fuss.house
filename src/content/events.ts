@@ -62,6 +62,8 @@ export interface KnowledgeEvent {
   photo?: Required<CaseStudyImage>;
   /** Wyróżnione: tylko takie trafiają do zajawki na `/` (`teaserEvents`). */
   featured?: boolean;
+  /** Schowane na razie: dane zostają w `allEvents`, ale wydarzenia nie ma nigdzie (`/wiedza`, `/`, `/o-nas`, JSON-LD). */
+  hidden?: boolean;
 }
 
 export const eventsHero = {
@@ -105,8 +107,8 @@ export interface TeaserEvent {
 /** Podpis placeholdera zdjęcia w kaflu minionego wydarzenia. */
 export const eventPhotoLabel = "Zdjęcie z wydarzenia 16:10";
 
-/** Wydarzenia w dowolnej kolejności; stronę sortuje `splitEvents`. */
-export const events: readonly KnowledgeEvent[] = [
+/** Wydarzenia w dowolnej kolejności, także schowane (`hidden`); stronę sortuje `splitEvents`. */
+const allEvents: readonly KnowledgeEvent[] = [
   {
     id: "infoshare-katowice-2026",
     featured: true,
@@ -127,7 +129,27 @@ export const events: readonly KnowledgeEvent[] = [
     },
   },
   {
+    id: "kwanty-gospodarki-2026",
+    title: "AI Powered CEO",
+    format: "Prelekcja",
+    date: "2026-11-20",
+    time: "15:00",
+    host: "Kwanty Gospodarki",
+    place: "Łódź",
+    venue: "Hotel Andel's",
+    people: ["kuba"],
+    link: { label: "Rejestracja", href: "https://kwantygospodarki.lodzkie.pl/en" },
+    logo: {
+      src: "/assets/events/kwanty-gospodarki-logo.webp",
+      width: 760,
+      height: 615,
+      alt: "Kwanty Gospodarki",
+    },
+  },
+  {
     id: "data-science-summit-2026",
+    /* Schowane na razie: w tym slocie Kwanty Gospodarki (decyzja Kuby). */
+    hidden: true,
     title: `Czy no/${WJ}low-${WJ}code automatyzacja jaką znamy, jeszcze ma sens w${NBSP}czasach AI?`,
     format: "Prelekcja",
     date: "2026-11-27",
@@ -196,6 +218,9 @@ export const events: readonly KnowledgeEvent[] = [
     },
   },
 ];
+
+/** Wydarzenia widoczne na stronie: bez schowanych (`hidden`). */
+export const events: readonly KnowledgeEvent[] = allEvents.filter((e) => !e.hidden);
 
 const ISO_DAY = new Intl.DateTimeFormat("sv-SE", {
   timeZone: site.timeZone,
